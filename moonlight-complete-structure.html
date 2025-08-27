@@ -69,9 +69,10 @@
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            padding: 0 20px;
+            padding: 0 10px;
+            gap: 3rem;
         }
         
         .logo {
@@ -126,6 +127,7 @@
             display: flex;
             list-style: none;
             gap: 2.5rem;
+            margin-left: auto;
         }
         
         .nav-link {
@@ -141,6 +143,118 @@
         .nav-link:hover {
             color: var(--primary-color);
             transform: translateY(-2px);
+        }
+        
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-toggle:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 12px;
+            padding: 15px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 191, 255, 0.15),
+                0 0 80px rgba(135, 206, 235, 0.1),
+                inset 0 0 20px rgba(135, 206, 235, 0.05);
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #00bfff, transparent);
+            transition: height 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(135, 206, 235, 0.1);
+            color: #00bfff;
+            padding-left: 30px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .dropdown-item:hover::before {
+            height: 100%;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.3), transparent);
+            margin: 10px 20px;
+        }
+        
+        .dropdown-label {
+            padding: 5px 25px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
         
         /* Section Base Styles */
@@ -708,9 +822,28 @@
             </a>
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="products.html" class="nav-link">Products</a></li>
-                <li><a href="insights.html" class="nav-link">Insights</a></li>
-                <li><a href="updates.html" class="nav-link">Updates</a></li>
+                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                    </div>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Products</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-label">Discover</span>
+                        <a href="products-discovery.html" class="dropdown-item">Today's Launches</a>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-label">Categories</span>
+                        <a href="products-discovery.html#ai-tools" class="dropdown-item">AI Tools</a>
+                        <a href="products-discovery.html#saas" class="dropdown-item">SaaS Solutions</a>
+                        <a href="products-discovery.html#developer" class="dropdown-item">Developer Tools</a>
+                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                    </div>
+                </li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
         </div>

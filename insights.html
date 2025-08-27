@@ -89,9 +89,10 @@
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            padding: 0 20px;
+            gap: 3rem;
+            padding: 0 10px;
         }
         
         .logo {
@@ -115,6 +116,7 @@
             display: flex;
             list-style: none;
             gap: 2.5rem;
+            margin-left: auto;
         }
         
         .nav-link {
@@ -129,6 +131,128 @@
         .nav-link:hover, .nav-link.active {
             color: var(--primary-color);
             transform: translateY(-2px);
+        }
+        
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-dropdown-toggle.active {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .nav-dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-toggle:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 12px;
+            padding: 15px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 191, 255, 0.15),
+                0 0 80px rgba(135, 206, 235, 0.1),
+                inset 0 0 20px rgba(135, 206, 235, 0.05);
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dropdown-item.active {
+            color: var(--primary-color);
+            background: rgba(135, 206, 235, 0.1);
+        }
+        
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #00bfff, transparent);
+            transition: height 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(135, 206, 235, 0.1);
+            color: #00bfff;
+            padding-left: 30px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .dropdown-item:hover::before {
+            height: 100%;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.3), transparent);
+            margin: 10px 20px;
+        }
+        
+        .dropdown-label {
+            padding: 5px 25px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
         
         /* Main Content */
@@ -403,42 +527,198 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80">
+                <svg class="logo-icon" width="40" height="40" viewBox="0 0 120 120">
                     <defs>
-                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffffff"/>
-                            <stop offset="50%" style="stop-color:#e5e7eb"/>
-                            <stop offset="100%" style="stop-color:#9ca3af"/>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#87ceeb">
+                                <animate attributeName="stop-color" values="#87ceeb;#00bfff;#4682b4;#87ceeb" dur="4s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="50%" style="stop-color:#00bfff">
+                                <animate attributeName="stop-color" values="#00bfff;#4682b4;#87ceeb;#00bfff" dur="4s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#4682b4">
+                                <animate attributeName="stop-color" values="#4682b4;#87ceeb;#00bfff;#4682b4" dur="4s" repeatCount="indefinite"/>
+                            </stop>
                         </linearGradient>
+                        
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        
+                        <radialGradient id="pulseGradient" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" style="stop-color:#00bfff;stop-opacity:0.8">
+                                <animate attributeName="stop-opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#4682b4;stop-opacity:0">
+                                <animate attributeName="stop-opacity" values="0;0.2;0" dur="2s" repeatCount="indefinite"/>
+                            </stop>
+                        </radialGradient>
                     </defs>
-                    <g transform="translate(40, 40)">
-                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                    
+                    <!-- Outer pulsing ring -->
+                    <circle cx="60" cy="60" r="55" fill="url(#pulseGradient)" opacity="0.3"/>
+                    
+                    <!-- 3D Cube Structure -->
+                    <g transform="translate(60, 60)">
+                        <!-- Cube faces with circuit patterns -->
+                        <!-- Front face -->
+                        <g transform="rotateX(-15deg) rotateY(15deg)" style="transform-style: preserve-3d;">
+                            <path d="M -20,-20 L 20,-20 L 20,20 L -20,20 Z" 
+                                  fill="url(#logoGradient)" 
+                                  stroke="#00bfff" 
+                                  stroke-width="1" 
+                                  opacity="0.9"
+                                  filter="url(#glow)">
+                                <animateTransform attributeName="transform" 
+                                                type="rotate" 
+                                                values="0;5;0;-5;0" 
+                                                dur="6s" 
+                                                repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Circuit patterns -->
+                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.8">
+                                <path d="M -15,-15 L -5,-15 L -5,-5 L 5,-5 L 5,5 L 15,5 L 15,15">
+                                    <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+                                </path>
+                                <path d="M -15,15 L -5,15 L -5,5 L 5,5 L 5,-5 L 15,-5 L 15,-15">
+                                    <animate attributeName="stroke-opacity" values="1;0.4;1" dur="3s" repeatCount="indefinite"/>
+                                </path>
+                                <circle cx="0" cy="0" r="3" fill="none" stroke="#ffffff" stroke-width="1">
+                                    <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                                </circle>
+                            </g>
+                        </g>
+                        
+                        <!-- Right face -->
+                        <g transform="rotateX(-15deg) rotateY(15deg) translate(20, 0) rotateY(90deg)" style="transform-style: preserve-3d;">
+                            <path d="M 0,-20 L 20,-20 L 20,20 L 0,20 Z" 
+                                  fill="url(#logoGradient)" 
+                                  stroke="#00bfff" 
+                                  stroke-width="1" 
+                                  opacity="0.7"
+                                  filter="url(#glow)">
+                                <animateTransform attributeName="transform" 
+                                                type="rotate" 
+                                                values="0;-5;0;5;0" 
+                                                dur="6s" 
+                                                repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Circuit patterns -->
+                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.6">
+                                <path d="M 2,-15 L 8,-15 L 8,-8 L 15,-8 L 15,8 L 8,8 L 8,15">
+                                    <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
+                                </path>
+                                <circle cx="8" cy="0" r="2" fill="none" stroke="#ffffff" stroke-width="0.8">
+                                    <animate attributeName="stroke-opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite"/>
+                                </circle>
+                            </g>
+                        </g>
+                        
+                        <!-- Top face -->
+                        <g transform="rotateX(-15deg) rotateY(15deg) translate(0, -20) rotateX(90deg)" style="transform-style: preserve-3d;">
+                            <path d="M -20,0 L 20,0 L 20,20 L -20,20 Z" 
+                                  fill="url(#logoGradient)" 
+                                  stroke="#00bfff" 
+                                  stroke-width="1" 
+                                  opacity="0.8"
+                                  filter="url(#glow)">
+                                <animateTransform attributeName="transform" 
+                                                type="rotate" 
+                                                values="0;3;0;-3;0" 
+                                                dur="8s" 
+                                                repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Circuit patterns -->
+                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.7">
+                                <path d="M -15,5 L -8,5 L -8,12 L 0,12 L 0,18 L 8,18 L 15,18">
+                                    <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite"/>
+                                </path>
+                                <path d="M -15,18 L -8,18 L -8,12 L 8,12 L 8,5 L 15,5">
+                                    <animate attributeName="stroke-opacity" values="1;0.5;1" dur="3.5s" repeatCount="indefinite"/>
+                                </path>
+                            </g>
+                        </g>
+                        
+                        <!-- Floating data points -->
+                        <g>
+                            <circle cx="-25" cy="-25" r="1.5" fill="#00bfff" opacity="0.8">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; 3,-2; 0,0; -3,2; 0,0" 
+                                                dur="5s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="25" cy="-25" r="1" fill="#87ceeb" opacity="0.6">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; -2,3; 0,0; 2,-3; 0,0" 
+                                                dur="7s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.3;0.9;0.3" dur="3s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="-25" cy="25" r="1.2" fill="#4682b4" opacity="0.7">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; 4,1; 0,0; -4,-1; 0,0" 
+                                                dur="6s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="25" cy="25" r="0.8" fill="#00bfff" opacity="0.5">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; -1,4; 0,0; 1,-4; 0,0" 
+                                                dur="8s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                        </g>
+                        
+                        <!-- Central rotating ring -->
+                        <circle cx="0" cy="0" r="28" fill="none" stroke="url(#logoGradient)" stroke-width="1" opacity="0.4">
+                            <animateTransform attributeName="transform" 
+                                            type="rotate" 
+                                            values="0;360" 
+                                            dur="20s" 
+                                            repeatCount="indefinite"/>
+                            <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur="4s" repeatCount="indefinite"/>
                         </circle>
-                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                        </circle>
-                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
-                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
-                        </path>
                     </g>
                 </svg>
                 Moonlight Analytica
             </a>
             <ul class="nav-menu">
                 <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
-                <li><a href="products.html" class="nav-link">Products</a></li>
-                <li><a href="insights.html" class="nav-link active">Insights</a></li>
-                <li><a href="updates.html" class="nav-link">Updates</a></li>
+                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle active">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item active">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                    </div>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Products</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-label">Discover</span>
+                        <a href="products-discovery.html" class="dropdown-item">Today's Launches</a>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-label">Categories</span>
+                        <a href="products-discovery.html#ai-tools" class="dropdown-item">AI Tools</a>
+                        <a href="products-discovery.html#saas" class="dropdown-item">SaaS Solutions</a>
+                        <a href="products-discovery.html#developer" class="dropdown-item">Developer Tools</a>
+                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                    </div>
+                </li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
         </div>
