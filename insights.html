@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #e5e7eb;
+            --secondary-color: #f3f4f6;
+            --accent-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #e5e7eb;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-light);
+        }
+        
+        /* Simplified particle background */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #87ceeb;
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 20%; left: 80%; animation-delay: 1.5s; }
+        .particle:nth-child(3) { top: 70%; left: 20%; animation-delay: 3s; }
+        .particle:nth-child(4) { top: 80%; left: 90%; animation-delay: 4.5s; }
+        .particle:nth-child(5) { top: 40%; left: 60%; animation-delay: 6s; }
+        .particle:nth-child(6) { top: 60%; left: 40%; animation-delay: 7.5s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.5; }
+            50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 3rem;
+            padding: 0 10px;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            margin-left: auto;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-dropdown-toggle.active {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .nav-dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-toggle:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 12px;
+            padding: 15px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 191, 255, 0.15),
+                0 0 80px rgba(135, 206, 235, 0.1),
+                inset 0 0 20px rgba(135, 206, 235, 0.05);
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dropdown-item.active {
+            color: var(--primary-color);
+            background: rgba(135, 206, 235, 0.1);
+        }
+        
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #00bfff, transparent);
+            transition: height 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(135, 206, 235, 0.1);
+            color: #00bfff;
+            padding-left: 30px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .dropdown-item:hover::before {
+            height: 100%;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.3), transparent);
+            margin: 10px 20px;
+        }
+        
+        .dropdown-label {
+            padding: 5px 25px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 120px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Featured Article */
+        .featured-article {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 4rem;
+            transition: all 0.3s ease;
+        }
+        
+        .featured-article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+        
+        .featured-image {
+            height: 300px;
+            background: linear-gradient(135deg, #1a3352, #87ceeb);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .featured-icon {
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+        
+        .featured-content {
+            padding: 2.5rem;
+        }
+        
+        .featured-badge {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .featured-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
+        .featured-excerpt {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .featured-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Blog Grid */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .blog-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+        }
+        
+        .blog-image {
+            height: 200px;
+            background: linear-gradient(45deg, #1a3352, #87ceeb);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .blog-icon {
+            font-size: 2rem;
+            opacity: 0.7;
+        }
+        
+        .blog-content {
+            padding: 1.5rem;
+        }
+        
+        .blog-category {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--text-dark);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .blog-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+        }
+        
+        .blog-excerpt {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .read-time {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        /* Categories Filter */
+        .categories-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: var(--primary-color);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Load More */
+        .load-more {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .load-more-btn {
+            padding: 16px 32px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: var(--backdrop-blur);
+        }
+        
+        .load-more-btn:hover {
+            background: var(--primary-color);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .featured-content {
+                padding: 1.5rem;
+            }
+            
+            .featured-title {
+                font-size: 1.5rem;
+            }
+            
+            .categories-filter {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple particle background -->
+    <div class="particle-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="moonlight-complete-structure.html" class="logo">
+                <svg class="logo-icon" width="40" height="40" viewBox="0 0 120 120">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#87ceeb">
+                                <animate attributeName="stop-color" values="#87ceeb;#00bfff;#4682b4;#87ceeb" dur="4s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="50%" style="stop-color:#00bfff">
+                                <animate attributeName="stop-color" values="#00bfff;#4682b4;#87ceeb;#00bfff" dur="4s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#4682b4">
+                                <animate attributeName="stop-color" values="#4682b4;#87ceeb;#00bfff;#4682b4" dur="4s" repeatCount="indefinite"/>
+                            </stop>
+                        </linearGradient>
+                        
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        
+                        <radialGradient id="pulseGradient" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" style="stop-color:#00bfff;stop-opacity:0.8">
+                                <animate attributeName="stop-opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#4682b4;stop-opacity:0">
+                                <animate attributeName="stop-opacity" values="0;0.2;0" dur="2s" repeatCount="indefinite"/>
+                            </stop>
+                        </radialGradient>
+                    </defs>
+                    
+                    <!-- Outer pulsing ring -->
+                    <circle cx="60" cy="60" r="55" fill="url(#pulseGradient)" opacity="0.3"/>
+                    
+                    <!-- 3D Cube Structure -->
+                    <g transform="translate(60, 60)">
+                        <!-- Cube faces with circuit patterns -->
+                        <!-- Front face -->
+                        <g transform="rotateX(-15deg) rotateY(15deg)" style="transform-style: preserve-3d;">
+                            <path d="M -20,-20 L 20,-20 L 20,20 L -20,20 Z" 
+                                  fill="url(#logoGradient)" 
+                                  stroke="#00bfff" 
+                                  stroke-width="1" 
+                                  opacity="0.9"
+                                  filter="url(#glow)">
+                                <animateTransform attributeName="transform" 
+                                                type="rotate" 
+                                                values="0;5;0;-5;0" 
+                                                dur="6s" 
+                                                repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Circuit patterns -->
+                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.8">
+                                <path d="M -15,-15 L -5,-15 L -5,-5 L 5,-5 L 5,5 L 15,5 L 15,15">
+                                    <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+                                </path>
+                                <path d="M -15,15 L -5,15 L -5,5 L 5,5 L 5,-5 L 15,-5 L 15,-15">
+                                    <animate attributeName="stroke-opacity" values="1;0.4;1" dur="3s" repeatCount="indefinite"/>
+                                </path>
+                                <circle cx="0" cy="0" r="3" fill="none" stroke="#ffffff" stroke-width="1">
+                                    <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                                </circle>
+                            </g>
+                        </g>
+                        
+                        <!-- Right face -->
+                        <g transform="rotateX(-15deg) rotateY(15deg) translate(20, 0) rotateY(90deg)" style="transform-style: preserve-3d;">
+                            <path d="M 0,-20 L 20,-20 L 20,20 L 0,20 Z" 
+                                  fill="url(#logoGradient)" 
+                                  stroke="#00bfff" 
+                                  stroke-width="1" 
+                                  opacity="0.7"
+                                  filter="url(#glow)">
+                                <animateTransform attributeName="transform" 
+                                                type="rotate" 
+                                                values="0;-5;0;5;0" 
+                                                dur="6s" 
+                                                repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Circuit patterns -->
+                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.6">
+                                <path d="M 2,-15 L 8,-15 L 8,-8 L 15,-8 L 15,8 L 8,8 L 8,15">
+                                    <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
+                                </path>
+                                <circle cx="8" cy="0" r="2" fill="none" stroke="#ffffff" stroke-width="0.8">
+                                    <animate attributeName="stroke-opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite"/>
+                                </circle>
+                            </g>
+                        </g>
+                        
+                        <!-- Top face -->
+                        <g transform="rotateX(-15deg) rotateY(15deg) translate(0, -20) rotateX(90deg)" style="transform-style: preserve-3d;">
+                            <path d="M -20,0 L 20,0 L 20,20 L -20,20 Z" 
+                                  fill="url(#logoGradient)" 
+                                  stroke="#00bfff" 
+                                  stroke-width="1" 
+                                  opacity="0.8"
+                                  filter="url(#glow)">
+                                <animateTransform attributeName="transform" 
+                                                type="rotate" 
+                                                values="0;3;0;-3;0" 
+                                                dur="8s" 
+                                                repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Circuit patterns -->
+                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.7">
+                                <path d="M -15,5 L -8,5 L -8,12 L 0,12 L 0,18 L 8,18 L 15,18">
+                                    <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite"/>
+                                </path>
+                                <path d="M -15,18 L -8,18 L -8,12 L 8,12 L 8,5 L 15,5">
+                                    <animate attributeName="stroke-opacity" values="1;0.5;1" dur="3.5s" repeatCount="indefinite"/>
+                                </path>
+                            </g>
+                        </g>
+                        
+                        <!-- Floating data points -->
+                        <g>
+                            <circle cx="-25" cy="-25" r="1.5" fill="#00bfff" opacity="0.8">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; 3,-2; 0,0; -3,2; 0,0" 
+                                                dur="5s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="25" cy="-25" r="1" fill="#87ceeb" opacity="0.6">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; -2,3; 0,0; 2,-3; 0,0" 
+                                                dur="7s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.3;0.9;0.3" dur="3s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="-25" cy="25" r="1.2" fill="#4682b4" opacity="0.7">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; 4,1; 0,0; -4,-1; 0,0" 
+                                                dur="6s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="25" cy="25" r="0.8" fill="#00bfff" opacity="0.5">
+                                <animateTransform attributeName="transform" 
+                                                type="translate" 
+                                                values="0,0; -1,4; 0,0; 1,-4; 0,0" 
+                                                dur="8s" 
+                                                repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                        </g>
+                        
+                        <!-- Central rotating ring -->
+                        <circle cx="0" cy="0" r="28" fill="none" stroke="url(#logoGradient)" stroke-width="1" opacity="0.4">
+                            <animateTransform attributeName="transform" 
+                                            type="rotate" 
+                                            values="0;360" 
+                                            dur="20s" 
+                                            repeatCount="indefinite"/>
+                            <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur="4s" repeatCount="indefinite"/>
+                        </circle>
+                    </g>
+                </svg>
+                Moonlight Analytica
+            </a>
+            <ul class="nav-menu">
+                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
+                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle active">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item active">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                    </div>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Products</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-label">Discover</span>
+                        <a href="products-discovery.html" class="dropdown-item">Today's Launches</a>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-label">Categories</span>
+                        <a href="products-discovery.html#ai-tools" class="dropdown-item">AI Tools</a>
+                        <a href="products-discovery.html#saas" class="dropdown-item">SaaS Solutions</a>
+                        <a href="products-discovery.html#developer" class="dropdown-item">Developer Tools</a>
+                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                    </div>
+                </li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <header class="page-header">
+                <h1 class="page-title">Insights & Analysis</h1>
+                <p class="page-subtitle">
+                    Deep dives into AI trends, SaaS innovations, and data analytics insights that shape the future of technology.
+                </p>
+            </header>
+
+            <!-- Featured Article -->
+            <article class="featured-article">
+                <div class="featured-image">
+                    <span class="featured-icon">🤖</span>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-badge">Featured</span>
+                    <h2 class="featured-title">The AI Revolution in SaaS: Transforming Business Operations</h2>
+                    <p class="featured-excerpt">
+                        Artificial Intelligence is reshaping how SaaS applications operate, from automated customer service to predictive analytics. We explore the key trends, implementation strategies, and the future landscape of AI-powered software solutions that are driving unprecedented efficiency gains across industries.
+                    </p>
+                    <div class="featured-meta">
+                        <span>Published today</span>
+                        <span class="read-time">8 min read</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Categories Filter -->
+            <div class="categories-filter">
+                <a href="#" class="category-btn active">All</a>
+                <a href="#" class="category-btn">AI & Machine Learning</a>
+                <a href="#" class="category-btn">SaaS Trends</a>
+                <a href="#" class="category-btn">Data Analytics</a>
+                <a href="#" class="category-btn">Productivity</a>
+                <a href="#" class="category-btn">Tech Industry</a>
+            </div>
+
+            <!-- Blog Grid -->
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <span class="blog-icon">📊</span>
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">Data Analytics</span>
+                        <h3 class="blog-title">Real-Time Analytics: The New Competitive Edge</h3>
+                        <p class="blog-excerpt">
+                            How businesses are leveraging real-time data processing to make instant decisions and stay ahead of market changes.
+                        </p>
+                        <div class="blog-meta">
+                            <span>Yesterday</span>
+                            <span class="read-time">5 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <span class="blog-icon">🚀</span>
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">SaaS Trends</span>
+                        <h3 class="blog-title">Micro-SaaS: The Rise of Niche Solutions</h3>
+                        <p class="blog-excerpt">
+                            Small, focused software solutions are capturing significant market share by solving specific problems exceptionally well.
+                        </p>
+                        <div class="blog-meta">
+                            <span>2 days ago</span>
+                            <span class="read-time">6 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <span class="blog-icon">⚡</span>
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">Productivity</span>
+                        <h3 class="blog-title">Automation vs. Human Creativity: Finding the Balance</h3>
+                        <p class="blog-excerpt">
+                            Exploring where automation enhances productivity and where human creativity remains irreplaceable.
+                        </p>
+                        <div class="blog-meta">
+                            <span>3 days ago</span>
+                            <span class="read-time">7 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <span class="blog-icon">🔮</span>
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">AI & Machine Learning</span>
+                        <h3 class="blog-title">Predictive Analytics: Seeing the Future of Your Business</h3>
+                        <p class="blog-excerpt">
+                            Machine learning models that can forecast trends, customer behavior, and market opportunities with remarkable accuracy.
+                        </p>
+                        <div class="blog-meta">
+                            <span>4 days ago</span>
+                            <span class="read-time">9 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <span class="blog-icon">🛡️</span>
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">Tech Industry</span>
+                        <h3 class="blog-title">Privacy-First Analytics: Building Trust Through Transparency</h3>
+                        <p class="blog-excerpt">
+                            How modern analytics platforms are prioritizing user privacy while still delivering powerful insights.
+                        </p>
+                        <div class="blog-meta">
+                            <span>5 days ago</span>
+                            <span class="read-time">6 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <span class="blog-icon">🎯</span>
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">SaaS Trends</span>
+                        <h3 class="blog-title">Customer Success: The Heart of SaaS Growth</h3>
+                        <p class="blog-excerpt">
+                            Why customer success teams are becoming the most critical component of sustainable SaaS business models.
+                        </p>
+                        <div class="blog-meta">
+                            <span>1 week ago</span>
+                            <span class="read-time">8 min read</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Load More -->
+            <div class="load-more">
+                <a href="#" class="load-more-btn">Load More Articles</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

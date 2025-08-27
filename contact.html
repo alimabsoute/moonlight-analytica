@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #e5e7eb;
+            --secondary-color: #f3f4f6;
+            --accent-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #e5e7eb;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-light);
+        }
+        
+        /* Simplified particle background */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #87ceeb, #4682b4);
+            border-radius: 50%;
+            animation: float 12s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 80%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { top: 40%; left: 70%; animation-delay: 4s; }
+        .particle:nth-child(4) { top: 60%; left: 30%; animation-delay: 6s; }
+        .particle:nth-child(5) { top: 10%; left: 60%; animation-delay: 8s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
+            50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 3rem;
+            padding: 0 10px;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            margin-left: auto;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-dropdown-toggle.active {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .nav-dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-toggle:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 12px;
+            padding: 15px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 191, 255, 0.15),
+                0 0 80px rgba(135, 206, 235, 0.1),
+                inset 0 0 20px rgba(135, 206, 235, 0.05);
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dropdown-item.active {
+            color: var(--primary-color);
+            background: rgba(135, 206, 235, 0.1);
+        }
+        
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #00bfff, transparent);
+            transition: height 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(135, 206, 235, 0.1);
+            color: #00bfff;
+            padding-left: 30px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .dropdown-item:hover::before {
+            height: 100%;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.3), transparent);
+            margin: 10px 20px;
+        }
+        
+        .dropdown-label {
+            padding: 5px 25px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 120px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Contact Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        /* Contact Form */
+        .contact-form {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            backdrop-filter: var(--backdrop-blur);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(229, 231, 235, 0.3);
+        }
+        
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-color);
+            color: var(--text-dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 231, 235, 0.4);
+        }
+        
+        /* Contact Info */
+        .contact-info {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+        }
+        
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .info-content h3 {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-content p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .info-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .info-content a:hover {
+            text-decoration: underline;
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            margin-top: 4rem;
+        }
+        
+        .faq-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .faq-item {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .faq-answer {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        /* Response Time Indicator */
+        .response-indicator {
+            background: var(--success-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .contact-form, .contact-info {
+                padding: 1.5rem;
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple particle background -->
+    <div class="particle-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="moonlight-complete-structure.html" class="logo">
+                <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80">
+                    <defs>
+                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff"/>
+                            <stop offset="50%" style="stop-color:#e5e7eb"/>
+                            <stop offset="100%" style="stop-color:#9ca3af"/>
+                        </linearGradient>
+                    </defs>
+                    <g transform="translate(40, 40)">
+                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
+                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+                Moonlight Analytica
+            </a>
+            <ul class="nav-menu">
+                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
+                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                    </div>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Products</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-label">Discover</span>
+                        <a href="products-discovery.html" class="dropdown-item">Today's Launches</a>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-label">Categories</span>
+                        <a href="products-discovery.html#ai-tools" class="dropdown-item">AI Tools</a>
+                        <a href="products-discovery.html#saas" class="dropdown-item">SaaS Solutions</a>
+                        <a href="products-discovery.html#developer" class="dropdown-item">Developer Tools</a>
+                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                    </div>
+                </li>
+                <li><a href="contact.html" class="nav-link active">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <header class="page-header">
+                <h1 class="page-title">Get In Touch</h1>
+                <p class="page-subtitle">
+                    Have questions about our products? Need support? Want to discuss a partnership? We'd love to hear from you.
+                </p>
+            </header>
+
+            <!-- Contact Grid -->
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="contact-form">
+                    <h2 class="form-title">Send us a Message</h2>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Full Name *</label>
+                            <input type="text" id="name" class="form-input" placeholder="Your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <input type="email" id="email" class="form-input" placeholder="your.email@company.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="company" class="form-label">Company</label>
+                            <input type="text" id="company" class="form-input" placeholder="Your company name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject *</label>
+                            <select id="subject" class="form-select" required>
+                                <option value="">Select a topic</option>
+                                <option value="product-inquiry">Product Inquiry</option>
+                                <option value="support">Technical Support</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message *</label>
+                            <textarea id="message" class="form-textarea" placeholder="Tell us how we can help you..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                    
+                    <div class="response-indicator">
+                        ⚡ We typically respond within 24 hours
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="contact-info">
+                    <h2 class="info-title">Contact Information</h2>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">📧</div>
+                        <div class="info-content">
+                            <h3>Email Us</h3>
+                            <p>For general inquiries and support</p>
+                            <a href="mailto:hello@moonlightanalytica.com">hello@moonlightanalytica.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">🚀</div>
+                        <div class="info-content">
+                            <h3>Product Support</h3>
+                            <p>Technical questions and product help</p>
+                            <a href="mailto:support@moonlightanalytica.com">support@moonlightanalytica.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">🤝</div>
+                        <div class="info-content">
+                            <h3>Partnerships</h3>
+                            <p>Business partnerships and collaborations</p>
+                            <a href="mailto:partners@moonlightanalytica.com">partners@moonlightanalytica.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">🐦</div>
+                        <div class="info-content">
+                            <h3>Follow Us</h3>
+                            <p>Stay updated with our latest news</p>
+                            <a href="#">@MoonlightAnalytica</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <section class="faq-section">
+                <h2 class="faq-title">Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3 class="faq-question">How can I get started with your products?</h3>
+                        <p class="faq-answer">
+                            Visit our Products page to explore PhynxTimer (live), request beta access for ATS Resume Helper, or join the waitlist for Line Vision Analytics. Each product has its own onboarding process.
+                        </p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3 class="faq-question">Do you offer custom analytics solutions?</h3>
+                        <p class="faq-answer">
+                            Yes! We specialize in creating tailored analytics solutions for businesses. Contact our partnerships team to discuss your specific requirements and how we can help.
+                        </p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3 class="faq-question">What's included in your product support?</h3>
+                        <p class="faq-answer">
+                            Our support includes technical assistance, product guidance, integration help, and regular updates. Premium users get priority support with faster response times.
+                        </p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3 class="faq-question">How do you ensure data privacy and security?</h3>
+                        <p class="faq-answer">
+                            We implement industry-standard security measures, including data encryption, secure APIs, and compliance with privacy regulations like GDPR. Your data security is our top priority.
+                        </p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3 class="faq-question">Can I integrate your tools with existing systems?</h3>
+                        <p class="faq-answer">
+                            Absolutely! Our products are designed with integration in mind. We provide APIs and support for popular platforms. Contact our technical team for specific integration questions.
+                        </p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3 class="faq-question">Do you offer team or enterprise pricing?</h3>
+                        <p class="faq-answer">
+                            Yes, we have special pricing for teams and enterprises. Contact us with your team size and requirements, and we'll provide a customized quote that fits your needs.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Contact Form Handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                company: document.getElementById('company').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Here you would integrate with your form service
+            alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+            
+            // Reset form
+            this.reset();
+        });
+    </script>
+</body>
+</html>

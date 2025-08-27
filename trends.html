@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trends - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #e5e7eb;
+            --secondary-color: #f3f4f6;
+            --accent-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #00bfff;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+            --neon-blue: #00bfff;
+            --neon-purple: #9945ff;
+            --neon-cyan: #87ceeb;
+            --neon-green: #00ff88;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(153, 69, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 191, 255, 0.03) 0%, transparent 50%);
+            animation: bgPulse 30s ease-in-out infinite;
+        }
+        
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        /* Navigation (Same as news.html) */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 10px;
+            gap: 3rem;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
+            animation-duration: 1.5s;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            animation: iconPulse 3s ease-in-out infinite 1.5s;
+        }
+        
+        @keyframes logoPulse {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+                color: var(--primary-color);
+            }
+            50% {
+                text-shadow: 0 0 50px rgba(135, 206, 235, 1.0), 0 0 80px rgba(70, 130, 180, 0.8);
+                color: #00bfff;
+            }
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 50px rgba(135, 206, 235, 1.0)) drop-shadow(0 0 80px rgba(70, 130, 180, 0.8));
+            }
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            margin-left: auto;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-dropdown-toggle.active {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .nav-dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-toggle:hover {
+            color: var(--neon-blue);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 12px;
+            padding: 15px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 191, 255, 0.15),
+                0 0 80px rgba(135, 206, 235, 0.1),
+                inset 0 0 20px rgba(135, 206, 235, 0.05);
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dropdown-item.active {
+            color: var(--neon-blue);
+            background: rgba(135, 206, 235, 0.1);
+        }
+        
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #00bfff, transparent);
+            transition: height 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(135, 206, 235, 0.1);
+            color: #00bfff;
+            padding-left: 30px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .dropdown-item:hover::before {
+            height: 100%;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.3), transparent);
+            margin: 10px 20px;
+        }
+        
+        .dropdown-label {
+            padding: 5px 25px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 120px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff88, #00bfff, #9945ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: gradientShift 5s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Trends Dashboard */
+        .trends-dashboard {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        /* Trending Topics */
+        .trending-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .trending-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00bfff, #9945ff);
+            animation: slideGradient 3s linear infinite;
+        }
+        
+        @keyframes slideGradient {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        
+        .time-filter {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .time-btn {
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .time-btn:hover {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+        
+        .time-btn.active {
+            background: rgba(0, 191, 255, 0.1);
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+        
+        /* Trending List */
+        .trending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .trend-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .trend-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(10px);
+        }
+        
+        .trend-rank {
+            font-size: 2rem;
+            font-weight: 700;
+            width: 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #00ff88, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .trend-info {
+            flex: 1;
+        }
+        
+        .trend-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+        
+        .trend-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .trend-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .trend-up {
+            color: var(--success-color);
+        }
+        
+        .trend-down {
+            color: var(--danger-color);
+        }
+        
+        .trend-stable {
+            color: var(--warning-color);
+        }
+        
+        /* Market Analysis Grid */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .analysis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 191, 255, 0.15);
+        }
+        
+        .analysis-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(153, 69, 255, 0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .analysis-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .analysis-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .analysis-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        .chart-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Pulse Animation */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .trend-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .trend-change {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-menu {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="moonlight-complete-structure.html" class="logo">
+                <svg class="logo-icon" width="50" height="50" viewBox="0 0 80 80">
+                    <defs>
+                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff">
+                                <animate attributeName="stop-color" values="#ffffff;#00bfff;#ffffff" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="50%" style="stop-color:#e5e7eb">
+                                <animate attributeName="stop-color" values="#e5e7eb;#87ceeb;#e5e7eb" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#9ca3af">
+                                <animate attributeName="stop-color" values="#9ca3af;#4682b4;#9ca3af" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                        </linearGradient>
+                        <filter id="glowFilter">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge> 
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                            <animate attributeName="stdDeviation" values="3;8;3" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </filter>
+                    </defs>
+                    <g transform="translate(40, 40)" filter="url(#glowFilter)">
+                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;1.0;0.8" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.9;1.0;0.9" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;1.0;0.6" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.7;1.0;0.7" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
+                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+                Moonlight Analytica
+            </a>
+            <ul class="nav-menu">
+                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
+                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle active">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="trends.html" class="dropdown-item active">Trends</a>
+                    </div>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Products</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-label">Discover</span>
+                        <a href="products-discovery.html" class="dropdown-item">Today's Launches</a>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-label">Categories</span>
+                        <a href="products-discovery.html#ai-tools" class="dropdown-item">AI Tools</a>
+                        <a href="products-discovery.html#saas" class="dropdown-item">SaaS Solutions</a>
+                        <a href="products-discovery.html#developer" class="dropdown-item">Developer Tools</a>
+                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                    </div>
+                </li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Market Trends</h1>
+                <p class="page-subtitle">Real-time analysis of technology trends and emerging patterns</p>
+            </div>
+            
+            <!-- Trends Dashboard -->
+            <div class="trends-dashboard">
+                <!-- Trending Topics Section -->
+                <div class="trending-section">
+                    <div class="section-header">
+                        <h2 class="section-title">🔥 Trending Technologies</h2>
+                        <div class="time-filter">
+                            <button class="time-btn active">24h</button>
+                            <button class="time-btn">7d</button>
+                            <button class="time-btn">30d</button>
+                        </div>
+                    </div>
+                    
+                    <div class="trending-list">
+                        <div class="trend-item">
+                            <span class="trend-rank">1</span>
+                            <div class="trend-info">
+                                <h3 class="trend-title">Artificial General Intelligence (AGI)</h3>
+                                <div class="trend-meta">
+                                    <span>📊 458K mentions</span>
+                                    <span>💬 12.3K discussions</span>
+                                    <span>📈 Growing rapidly</span>
+                                </div>
+                            </div>
+                            <div class="trend-change trend-up">
+                                ↑ 145%
+                            </div>
+                        </div>
+                        
+                        <div class="trend-item">
+                            <span class="trend-rank">2</span>
+                            <div class="trend-info">
+                                <h3 class="trend-title">Quantum Computing Breakthrough</h3>
+                                <div class="trend-meta">
+                                    <span>📊 324K mentions</span>
+                                    <span>💬 8.7K discussions</span>
+                                    <span>📈 Accelerating</span>
+                                </div>
+                            </div>
+                            <div class="trend-change trend-up">
+                                ↑ 89%
+                            </div>
+                        </div>
+                        
+                        <div class="trend-item">
+                            <span class="trend-rank">3</span>
+                            <div class="trend-info">
+                                <h3 class="trend-title">Web3 Infrastructure</h3>
+                                <div class="trend-meta">
+                                    <span>📊 267K mentions</span>
+                                    <span>💬 6.2K discussions</span>
+                                    <span>📊 Stable growth</span>
+                                </div>
+                            </div>
+                            <div class="trend-change trend-stable">
+                                → 12%
+                            </div>
+                        </div>
+                        
+                        <div class="trend-item">
+                            <span class="trend-rank">4</span>
+                            <div class="trend-info">
+                                <h3 class="trend-title">Edge AI Computing</h3>
+                                <div class="trend-meta">
+                                    <span>📊 198K mentions</span>
+                                    <span>💬 4.5K discussions</span>
+                                    <span>📈 Emerging</span>
+                                </div>
+                            </div>
+                            <div class="trend-change trend-up">
+                                ↑ 67%
+                            </div>
+                        </div>
+                        
+                        <div class="trend-item">
+                            <span class="trend-rank">5</span>
+                            <div class="trend-info">
+                                <h3 class="trend-title">Autonomous Systems</h3>
+                                <div class="trend-meta">
+                                    <span>📊 156K mentions</span>
+                                    <span>💬 3.8K discussions</span>
+                                    <span>📉 Cooling</span>
+                                </div>
+                            </div>
+                            <div class="trend-change trend-down">
+                                ↓ 23%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Market Analysis Grid -->
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <div class="analysis-icon">🚀</div>
+                    <h3 class="analysis-title">Startup Funding</h3>
+                    <div class="analysis-value">$42.3B</div>
+                    <p class="analysis-description">
+                        Q4 2024 venture capital investments in tech startups, up 34% from last quarter
+                    </p>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="analysis-icon">🤖</div>
+                    <h3 class="analysis-title">AI Adoption Rate</h3>
+                    <div class="analysis-value">78%</div>
+                    <p class="analysis-description">
+                        Enterprise companies implementing AI solutions, growing at 15% quarterly
+                    </p>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="analysis-icon">☁️</div>
+                    <h3 class="analysis-title">Cloud Migration</h3>
+                    <div class="analysis-value">92%</div>
+                    <p class="analysis-description">
+                        Organizations with active cloud transformation initiatives in 2024
+                    </p>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="analysis-icon">🔒</div>
+                    <h3 class="analysis-title">Security Investment</h3>
+                    <div class="analysis-value">+126%</div>
+                    <p class="analysis-description">
+                        Year-over-year increase in cybersecurity spending across industries
+                    </p>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="analysis-icon">⚡</div>
+                    <h3 class="analysis-title">5G Deployment</h3>
+                    <div class="analysis-value">64%</div>
+                    <p class="analysis-description">
+                        Global coverage of 5G networks, expected to reach 85% by Q2 2025
+                    </p>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="analysis-icon pulse">💡</div>
+                    <h3 class="analysis-title">Innovation Index</h3>
+                    <div class="analysis-value">8.7/10</div>
+                    <p class="analysis-description">
+                        Technology sector innovation score, highest in the past decade
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Chart Container -->
+            <div class="chart-container">
+                <div class="chart-placeholder">
+                    <div class="chart-icon">📈</div>
+                    <h3>Interactive Trend Analysis</h3>
+                    <p>Advanced visualizations coming soon</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Time Filter Functionality
+        const timeButtons = document.querySelectorAll('.time-btn');
+        
+        timeButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                timeButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // Here you would update the trending data based on timeframe
+            });
+        });
+        
+        // Add hover effect to trend items
+        const trendItems = document.querySelectorAll('.trend-item');
+        
+        trendItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.borderLeft = '3px solid #00bfff';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.borderLeft = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
