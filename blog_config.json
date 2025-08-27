@@ -1,0 +1,33 @@
+{
+  "openai_api_key": "your-openai-api-key-here",
+  "posts_per_day": 4,
+  "min_words_per_post": 800,
+  "max_words_per_post": 1200,
+  "include_images": true,
+  "seo_optimize": true,
+  "product_mention_chance": 0.25,
+  "publishing_hours": [9, 13, 17, 21],
+  "content_categories": {
+    "ai_news": 0.35,
+    "tech_news": 0.3,
+    "gaming_news": 0.25,
+    "product_reviews": 0.1
+  },
+  "blog_platform": {
+    "type": "wordpress",
+    "api_endpoint": "https://yourblog.com/wp-json/wp/v2/",
+    "username": "your-username",
+    "application_password": "your-app-password"
+  },
+  "seo_settings": {
+    "focus_keywords": ["AI tools", "SaaS solutions", "productivity apps", "tech reviews", "gaming technology"],
+    "target_domains": ["phynxtimer.com"],
+    "internal_linking": true,
+    "meta_optimization": true
+  },
+  "social_media": {
+    "auto_share": true,
+    "platforms": ["twitter", "linkedin"],
+    "hashtag_strategy": "category_based"
+  }
+}

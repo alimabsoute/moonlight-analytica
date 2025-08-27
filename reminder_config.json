@@ -1,0 +1,15 @@
+{
+  "reminder_title": "PMP Continuing Education",
+  "reminder_message": "Complete your PMP requirements by end of January!",
+  "deadline": "2025-08-31",
+  "interval_hours": 5.5,
+  "postit_color": "#FFEB3B",
+  "urgent_color": "#FF6B6B",
+  "text_color": "#333333",
+  "font_family": "Comic Sans MS",
+  "font_size": 12,
+  "auto_close_seconds": 10,
+  "position": "top-right",
+  "show_countdown": true,
+  "play_sound": false
+}

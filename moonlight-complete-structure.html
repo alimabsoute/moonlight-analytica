@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight Analytica - Premium SaaS Analytics Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #e5e7eb;
+            --secondary-color: #f3f4f6;
+            --accent-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #e5e7eb;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-light);
+        }
+        
+        /* 3D Background Canvas */
+        #glass-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
+            animation-duration: 1.5s;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            animation: iconPulse 3s ease-in-out infinite 1.5s;
+        }
+        
+        @keyframes logoPulse {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+                color: var(--primary-color);
+            }
+            50% {
+                text-shadow: 0 0 50px rgba(135, 206, 235, 1.0), 0 0 80px rgba(70, 130, 180, 0.8);
+                color: #00bfff;
+            }
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 50px rgba(135, 206, 235, 1.0)) drop-shadow(0 0 80px rgba(70, 130, 180, 0.8));
+            }
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Section Base Styles */
+        .section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-light);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .hero-content {
+            max-width: 1000px;
+            z-index: 10;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+            line-height: 1.1;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 3rem;
+        }
+        
+        /* Email Capture Form - Neon Cyber Style */
+        .email-capture {
+            display: flex;
+            max-width: 420px;
+            margin: 0 auto 2rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 50px;
+            overflow: hidden;
+            padding: 6px;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .email-capture::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #00bfff, #87ceeb, #4682b4, #00bfff);
+            background-size: 300% 300%;
+            z-index: -1;
+            border-radius: 52px;
+            animation: borderGlow 3s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .email-capture:hover {
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.4);
+            border-color: rgba(0, 191, 255, 0.5);
+        }
+        
+        .email-capture:hover::before {
+            opacity: 1;
+        }
+        
+        .email-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 16px 24px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .email-input::placeholder {
+            color: rgba(135, 206, 235, 0.6);
+        }
+        
+        .email-submit {
+            padding: 16px 28px;
+            background: linear-gradient(135deg, #87ceeb, #4682b4);
+            color: #000000;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .email-submit:hover {
+            background: linear-gradient(135deg, #00bfff, #87ceeb);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+        }
+        
+        /* CTA Buttons - Neon Cyber Style */
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .cta-btn {
+            padding: 18px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+        }
+        
+        .cta-btn.primary {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(70, 130, 180, 0.2));
+            border: 2px solid #00bfff;
+            color: #00bfff;
+            text-shadow: 0 0 10px #00bfff;
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.4), inset 0 0 25px rgba(0, 191, 255, 0.1);
+        }
+        
+        .cta-btn.primary::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .cta-btn.primary:hover {
+            box-shadow: 0 0 35px rgba(0, 191, 255, 0.6), inset 0 0 35px rgba(0, 191, 255, 0.2);
+            text-shadow: 0 0 15px #00bfff;
+            transform: translateY(-2px);
+        }
+        
+        .cta-btn.primary:hover::after {
+            left: 100%;
+        }
+        
+        .cta-btn.secondary {
+            background: transparent;
+            border: 2px solid rgba(0, 191, 255, 0.5);
+            color: #87ceeb;
+            text-shadow: 0 0 8px rgba(135, 206, 235, 0.6);
+            position: relative;
+        }
+        
+        .cta-btn.secondary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(135, 206, 235, 0.1));
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+        
+        .cta-btn.secondary:hover {
+            border-color: #00bfff;
+            color: #00bfff;
+            text-shadow: 0 0 12px #00bfff;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .cta-btn.secondary:hover::before {
+            left: 0;
+        }
+        
+        /* Products Section */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .product-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+        
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .product-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .status-live {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .status-beta {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .status-coming {
+            background: var(--info-color);
+            color: var(--text-dark);
+        }
+        
+        .product-description {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Blog Section */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .blog-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+        }
+        
+        .blog-image {
+            height: 200px;
+            background: linear-gradient(45deg, #1a3352, #87ceeb);
+            position: relative;
+        }
+        
+        .blog-content {
+            padding: 1.5rem;
+        }
+        
+        .blog-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .blog-excerpt {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .blog-date {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        /* Product Updates Section */
+        .updates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .update-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .update-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+        }
+        
+        .update-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .update-category {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--primary-color);
+            color: var(--text-dark);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .update-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Contact Section */
+        .contact-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            backdrop-filter: var(--backdrop-blur);
+            transition: all 0.3s ease;
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(229, 231, 235, 0.3);
+        }
+        
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: var(--text-muted);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 80px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .email-capture {
+                max-width: 100%;
+                margin: 0 auto 1.5rem;
+                border-radius: 25px;
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+            
+            .email-input {
+                min-width: 100%;
+                text-align: center;
+                padding: 14px 20px;
+            }
+            
+            .email-submit {
+                width: 100%;
+                border-radius: 20px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .cta-btn {
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
+                padding: 16px 24px;
+            }
+            
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cta-btn {
+                font-size: 0.9rem;
+                padding: 14px 20px;
+            }
+            
+            .email-capture {
+                border-radius: 20px;
+            }
+            
+            .hero-content {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <canvas id="glass-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80">
+                    <defs>
+                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff">
+                                <animate attributeName="stop-color" values="#ffffff;#00bfff;#ffffff" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="50%" style="stop-color:#e5e7eb">
+                                <animate attributeName="stop-color" values="#e5e7eb;#87ceeb;#e5e7eb" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#9ca3af">
+                                <animate attributeName="stop-color" values="#9ca3af;#4682b4;#9ca3af" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                        </linearGradient>
+                        <filter id="glowFilter">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge> 
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                            <animate attributeName="stdDeviation" values="3;8;3" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </filter>
+                    </defs>
+                    <g transform="translate(40, 40)" filter="url(#glowFilter)">
+                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;1.0;0.8" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.9;1.0;0.9" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;1.0;0.6" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.7;1.0;0.7" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
+                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+                Moonlight Analytica
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="insights.html" class="nav-link">Insights</a></li>
+                <li><a href="updates.html" class="nav-link">Updates</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">Analytics Platform</div>
+            <h1 class="hero-title">Premium Analytics Solutions</h1>
+            <p class="hero-subtitle">
+                Powerful tools for modern businesses
+            </p>
+            
+            <!-- Email Capture Form -->
+            <form class="email-capture" id="emailForm">
+                <input type="email" class="email-input" placeholder="Enter your email for updates" required>
+                <button type="submit" class="email-submit">Get Updates</button>
+            </form>
+            
+            <div class="cta-buttons">
+                <a href="products.html" class="cta-btn primary">Explore Products</a>
+                <a href="#" class="cta-btn secondary">Request Janus Beta Access</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="section" id="products">
+        <h2 class="section-title">Our Products</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <h3 class="product-title">PhynxTimer</h3>
+                <span class="product-status status-live">Live</span>
+                <p class="product-description">
+                    Advanced productivity timer with intelligent analytics and team collaboration features.
+                </p>
+                <a href="https://phynxtimer.com" class="cta-btn primary" target="_blank">Visit PhynxTimer</a>
+            </div>
+            
+            <div class="product-card">
+                <h3 class="product-title">ATS Resume Helper</h3>
+                <span class="product-status status-beta">Beta</span>
+                <p class="product-description">
+                    AI-powered resume optimization tool that helps you pass through Applicant Tracking Systems.
+                </p>
+                <a href="#" class="cta-btn secondary">Request Beta Access</a>
+            </div>
+            
+            <div class="product-card">
+                <h3 class="product-title">Line Vision Analytics</h3>
+                <span class="product-status status-coming">Coming Soon</span>
+                <p class="product-description">
+                    Next-generation data visualization platform for complex analytics and business intelligence.
+                </p>
+                <a href="#" class="cta-btn secondary">Join Waitlist</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Insights/Blog Section -->
+    <section class="section" id="insights">
+        <h2 class="section-title">Latest Insights</h2>
+        <div class="blog-grid">
+            <article class="blog-card">
+                <div class="blog-image"></div>
+                <div class="blog-content">
+                    <h3 class="blog-title">The Future of AI in SaaS Applications</h3>
+                    <p class="blog-excerpt">Exploring how artificial intelligence is reshaping the software-as-a-service landscape...</p>
+                    <span class="blog-date">Today</span>
+                </div>
+            </article>
+            
+            <article class="blog-card">
+                <div class="blog-image"></div>
+                <div class="blog-content">
+                    <h3 class="blog-title">Data Analytics Trends for 2024</h3>
+                    <p class="blog-excerpt">Key trends and technologies that will define data analytics in the coming year...</p>
+                    <span class="blog-date">Yesterday</span>
+                </div>
+            </article>
+            
+            <article class="blog-card">
+                <div class="blog-image"></div>
+                <div class="blog-content">
+                    <h3 class="blog-title">Building Scalable Analytics Platforms</h3>
+                    <p class="blog-excerpt">Best practices for creating analytics solutions that grow with your business...</p>
+                    <span class="blog-date">2 days ago</span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Product Updates Section -->
+    <section class="section" id="updates">
+        <h2 class="section-title">Daily Product Discoveries</h2>
+        <div class="updates-grid">
+            <div class="update-card">
+                <span class="update-category">AI Tool</span>
+                <h3 class="update-title">Revolutionary Code Assistant</h3>
+                <p class="update-description">New AI-powered coding companion that understands context and provides intelligent suggestions.</p>
+            </div>
+            
+            <div class="update-card">
+                <span class="update-category">SaaS</span>
+                <h3 class="update-title">Team Collaboration Hub</h3>
+                <p class="update-description">Innovative platform combining project management, communication, and file sharing in one interface.</p>
+            </div>
+            
+            <div class="update-card">
+                <span class="update-category">Analytics</span>
+                <h3 class="update-title">Real-time Data Visualizer</h3>
+                <p class="update-description">Interactive dashboard builder with advanced charting capabilities and live data streaming.</p>
+            </div>
+            
+            <div class="update-card">
+                <span class="update-category">Productivity</span>
+                <h3 class="update-title">Smart Task Organizer</h3>
+                <p class="update-description">AI-driven task management that learns from your workflow patterns and optimizes productivity.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <form class="contact-form">
+            <div class="form-group">
+                <input type="text" class="form-input" placeholder="Your Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-input" placeholder="Your Email" required>
+            </div>
+            <div class="form-group">
+                <textarea class="form-textarea" placeholder="Your Message" required></textarea>
+            </div>
+            <button type="submit" class="cta-btn primary">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">&copy; 2024 Moonlight Analytica. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // 3D Cube and Particles System (Same as before)
+        class GlassCube3D {
+            constructor() {
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createGlassCube();
+                this.createParticles();
+                this.setupControls();
+                this.animate();
+            }
+
+            init() {
+                this.canvas = document.getElementById('glass-canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 0, 30);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                this.mouse = new THREE.Vector2();
+                this.time = 0;
+            }
+
+            createScene() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 2;
+                canvas.height = 256;
+                const context = canvas.getContext('2d');
+                
+                const gradient = context.createLinearGradient(0, 0, 0, 256);
+                gradient.addColorStop(0, '#000000');
+                gradient.addColorStop(0.5, '#111111');
+                gradient.addColorStop(1, '#222222');
+                
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 2, 256);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const geometry = new THREE.SphereGeometry(100, 32, 16);
+                const material = new THREE.MeshBasicMaterial({ 
+                    map: texture, 
+                    side: THREE.BackSide 
+                });
+                
+                this.backgroundSphere = new THREE.Mesh(geometry, material);
+                this.scene.add(this.backgroundSphere);
+            }
+
+            createLights() {
+                this.ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+                this.scene.add(this.ambientLight);
+                
+                this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+                this.directionalLight.position.set(20, 20, 15);
+                this.directionalLight.castShadow = true;
+                this.scene.add(this.directionalLight);
+                
+                this.pointLight1 = new THREE.PointLight(0xffffff, 2.5, 60);
+                this.pointLight1.position.set(-15, 10, 10);
+                this.scene.add(this.pointLight1);
+                
+                this.pointLight2 = new THREE.PointLight(0xe5e7eb, 2.0, 60);
+                this.pointLight2.position.set(15, -10, -10);
+                this.scene.add(this.pointLight2);
+                
+                this.rimLight = new THREE.PointLight(0xf3f4f6, 1.5, 40);
+                this.rimLight.position.set(0, 20, 0);
+                this.scene.add(this.rimLight);
+                
+                this.cubeLight = new THREE.PointLight(0x87ceeb, 0.8, 35);
+                this.cubeLight.position.set(0, 0, 0);
+                this.scene.add(this.cubeLight);
+            }
+
+            createGlassCube() {
+                this.cubeGroup = new THREE.Group();
+                this.scene.add(this.cubeGroup);
+                
+                const cubeGeometry = new THREE.BoxGeometry(12, 12, 12);
+                const glassMaterial = new THREE.MeshPhysicalMaterial({ 
+                    color: 0xffffff, 
+                    metalness: 0.9, 
+                    roughness: 0.1, 
+                    transmission: 0.3, 
+                    transparent: true, 
+                    opacity: 0.8,
+                    thickness: 0.5,
+                    ior: 1.5,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.0,
+                    emissive: 0x222222,
+                    emissiveIntensity: 0.1
+                });
+                
+                this.mainCube = new THREE.Mesh(cubeGeometry, glassMaterial);
+                this.mainCube.castShadow = true;
+                this.cubeGroup.add(this.mainCube);
+                
+                const coreGeometry = new THREE.SphereGeometry(3, 32, 16);
+                const coreMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 1.0,
+                    roughness: 0.1,
+                    transmission: 0.1,
+                    transparent: true,
+                    opacity: 0.8,
+                    thickness: 1.0,
+                    ior: 1.5,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.0,
+                    emissive: 0x1a3352,
+                    emissiveIntensity: 0.2
+                });
+                this.innerCore = new THREE.Mesh(coreGeometry, coreMaterial);
+                this.cubeGroup.add(this.innerCore);
+                
+                this.createCircuitLines();
+                this.createWireframe();
+            }
+            
+            createCircuitLines() {
+                this.circuitLines = [];
+                
+                const lineMaterial = new THREE.LineBasicMaterial({
+                    color: 0x87ceeb,
+                    transparent: true,
+                    opacity: 0.9,
+                    linewidth: 3
+                });
+                
+                const patterns = [
+                    // Front face (z = 6.01) - Full coverage circuit traces
+                    [[-6, -6, 6.01], [-6, -4, 6.01], [-4, -4, 6.01], [-4, -2, 6.01], [-2, -2, 6.01], [-2, 0, 6.01], [0, 0, 6.01], [0, 2, 6.01], [2, 2, 6.01], [2, 4, 6.01], [4, 4, 6.01], [4, 6, 6.01], [6, 6, 6.01]],
+                    [[-5, -6, 6.01], [-5, -3, 6.01], [-3, -3, 6.01], [-3, -1, 6.01], [-1, -1, 6.01], [-1, 1, 6.01], [1, 1, 6.01], [1, 3, 6.01], [3, 3, 6.01], [3, 5, 6.01], [5, 5, 6.01], [5, 6, 6.01]],
+                    [[-6, -2, 6.01], [-4.5, -2, 6.01], [-4.5, -3.5, 6.01], [-3, -3.5, 6.01], [-3, -1.5, 6.01], [-1.5, -1.5, 6.01]],
+                    [[6, -2, 6.01], [4.5, -2, 6.01], [4.5, -0.5, 6.01], [3, -0.5, 6.01], [3, 1.5, 6.01], [1.5, 1.5, 6.01]],
+                    [[-2.5, -5.5, 6.01], [-2.5, -4.5, 6.01], [-1, -4.5, 6.01], [-1, -3, 6.01], [0.5, -3, 6.01], [0.5, -1.5, 6.01]],
+                    [[2.5, 5.5, 6.01], [2.5, 4.5, 6.01], [1, 4.5, 6.01], [1, 3, 6.01], [-0.5, 3, 6.01], [-0.5, 1.5, 6.01]],
+                    [[-6, 2, 6.01], [-3.5, 2, 6.01], [-3.5, 0.5, 6.01], [-2, 0.5, 6.01]],
+                    [[6, 2, 6.01], [3.5, 2, 6.01], [3.5, 3.5, 6.01], [2, 3.5, 6.01]],
+                    [[-4, 6, 6.01], [-4, 4.5, 6.01], [-2.5, 4.5, 6.01], [-2.5, 3, 6.01]],
+                    [[4, -6, 6.01], [4, -4.5, 6.01], [2.5, -4.5, 6.01], [2.5, -3, 6.01]],
+                    
+                    // Back face (z = -6.01) - Full coverage mirror
+                    [[-6, -6, -6.01], [-6, -4, -6.01], [-4, -4, -6.01], [-4, -2, -6.01], [-2, -2, -6.01], [-2, 0, -6.01], [0, 0, -6.01], [0, 2, -6.01], [2, 2, -6.01], [2, 4, -6.01], [4, 4, -6.01], [4, 6, -6.01], [6, 6, -6.01]],
+                    [[-5, -6, -6.01], [-5, -3, -6.01], [-3, -3, -6.01], [-3, -1, -6.01], [-1, -1, -6.01], [-1, 1, -6.01], [1, 1, -6.01], [1, 3, -6.01], [3, 3, -6.01], [3, 5, -6.01], [5, 5, -6.01], [5, 6, -6.01]],
+                    [[-6, -2, -6.01], [-4.5, -2, -6.01], [-4.5, 0.5, -6.01], [-3, 0.5, -6.01], [-3, 2, -6.01], [-1.5, 2, -6.01]],
+                    [[6, -2, -6.01], [4.5, -2, -6.01], [4.5, -3.5, -6.01], [3, -3.5, -6.01], [3, -1.5, -6.01], [1.5, -1.5, -6.01]],
+                    [[-2.5, 5.5, -6.01], [-2.5, 4.5, -6.01], [-1, 4.5, -6.01], [-1, 3, -6.01], [0.5, 3, -6.01], [0.5, 1.5, -6.01]],
+                    [[2.5, -5.5, -6.01], [2.5, -4.5, -6.01], [1, -4.5, -6.01], [1, -3, -6.01], [-0.5, -3, -6.01], [-0.5, -1.5, -6.01]],
+                    [[-6, 2, -6.01], [-3.5, 2, -6.01], [-3.5, 3.5, -6.01], [-2, 3.5, -6.01]],
+                    [[6, 2, -6.01], [3.5, 2, -6.01], [3.5, 0.5, -6.01], [2, 0.5, -6.01]],
+                    [[-4, -6, -6.01], [-4, -4.5, -6.01], [-2.5, -4.5, -6.01], [-2.5, -3, -6.01]],
+                    [[4, 6, -6.01], [4, 4.5, -6.01], [2.5, 4.5, -6.01], [2.5, 3, -6.01]],
+                    
+                    // Right face (x = 6.01) - Full vertical coverage
+                    [[6.01, -6, -6], [6.01, -6, -4], [6.01, -4, -4], [6.01, -4, -2], [6.01, -2, -2], [6.01, -2, 0], [6.01, 0, 0], [6.01, 0, 2], [6.01, 2, 2], [6.01, 2, 4], [6.01, 4, 4], [6.01, 4, 6], [6.01, 6, 6]],
+                    [[6.01, -5, -6], [6.01, -5, -3], [6.01, -3, -3], [6.01, -3, -1], [6.01, -1, -1], [6.01, -1, 1], [6.01, 1, 1], [6.01, 1, 3], [6.01, 3, 3], [6.01, 3, 5], [6.01, 5, 5], [6.01, 5, 6]],
+                    [[6.01, -2, -6], [6.01, -2, -4.5], [6.01, -3.5, -4.5], [6.01, -3.5, -3], [6.01, -1.5, -3], [6.01, -1.5, -1.5]],
+                    [[6.01, -2, 6], [6.01, -2, 4.5], [6.01, -0.5, 4.5], [6.01, -0.5, 3], [6.01, 1.5, 3], [6.01, 1.5, 1.5]],
+                    [[6.01, -5.5, -2.5], [6.01, -4.5, -2.5], [6.01, -4.5, -1], [6.01, -3, -1], [6.01, -3, 0.5], [6.01, -1.5, 0.5]],
+                    [[6.01, 5.5, 2.5], [6.01, 4.5, 2.5], [6.01, 4.5, 1], [6.01, 3, 1], [6.01, 3, -0.5], [6.01, 1.5, -0.5]],
+                    [[6.01, 2, -6], [6.01, 2, -3.5], [6.01, 0.5, -3.5], [6.01, 0.5, -2]],
+                    [[6.01, 2, 6], [6.01, 2, 3.5], [6.01, 3.5, 3.5], [6.01, 3.5, 2]],
+                    [[6.01, 6, -4], [6.01, 4.5, -4], [6.01, 4.5, -2.5], [6.01, 3, -2.5]],
+                    [[6.01, -6, 4], [6.01, -4.5, 4], [6.01, -4.5, 2.5], [6.01, -3, 2.5]],
+                    
+                    // Left face (x = -6.01) - Full vertical coverage mirror
+                    [[-6.01, -6, -6], [-6.01, -6, -4], [-6.01, -4, -4], [-6.01, -4, -2], [-6.01, -2, -2], [-6.01, -2, 0], [-6.01, 0, 0], [-6.01, 0, 2], [-6.01, 2, 2], [-6.01, 2, 4], [-6.01, 4, 4], [-6.01, 4, 6], [-6.01, 6, 6]],
+                    [[-6.01, -5, -6], [-6.01, -5, -3], [-6.01, -3, -3], [-6.01, -3, -1], [-6.01, -1, -1], [-6.01, -1, 1], [-6.01, 1, 1], [-6.01, 1, 3], [-6.01, 3, 3], [-6.01, 3, 5], [-6.01, 5, 5], [-6.01, 5, 6]],
+                    [[-6.01, -2, -6], [-6.01, -2, -4.5], [-6.01, 0.5, -4.5], [-6.01, 0.5, -3], [-6.01, 2, -3], [-6.01, 2, -1.5]],
+                    [[-6.01, -2, 6], [-6.01, -2, 4.5], [-6.01, -3.5, 4.5], [-6.01, -3.5, 3], [-6.01, -1.5, 3], [-6.01, -1.5, 1.5]],
+                    [[-6.01, -5.5, 2.5], [-6.01, -4.5, 2.5], [-6.01, -4.5, 1], [-6.01, -3, 1], [-6.01, -3, -0.5], [-6.01, -1.5, -0.5]],
+                    [[-6.01, 5.5, -2.5], [-6.01, 4.5, -2.5], [-6.01, 4.5, -1], [-6.01, 3, -1], [-6.01, 3, 0.5], [-6.01, 1.5, 0.5]],
+                    [[-6.01, 2, -6], [-6.01, 2, -3.5], [-6.01, 3.5, -3.5], [-6.01, 3.5, -2]],
+                    [[-6.01, 2, 6], [-6.01, 2, 3.5], [-6.01, 0.5, 3.5], [-6.01, 0.5, 2]],
+                    [[-6.01, 6, 4], [-6.01, 4.5, 4], [-6.01, 4.5, 2.5], [-6.01, 3, 2.5]],
+                    [[-6.01, -6, -4], [-6.01, -4.5, -4], [-6.01, -4.5, -2.5], [-6.01, -3, -2.5]],
+                    
+                    // Top face (y = 6.01) - Full surface grid
+                    [[-6, 6.01, -6], [-6, 6.01, -4], [-4, 6.01, -4], [-4, 6.01, -2], [-2, 6.01, -2], [-2, 6.01, 0], [0, 6.01, 0], [0, 6.01, 2], [2, 6.01, 2], [2, 6.01, 4], [4, 6.01, 4], [4, 6.01, 6], [6, 6.01, 6]],
+                    [[-5, 6.01, -6], [-5, 6.01, -3], [-3, 6.01, -3], [-3, 6.01, -1], [-1, 6.01, -1], [-1, 6.01, 1], [1, 6.01, 1], [1, 6.01, 3], [3, 6.01, 3], [3, 6.01, 5], [5, 6.01, 5], [5, 6.01, 6]],
+                    [[-2, 6.01, -6], [-2, 6.01, -4.5], [-3.5, 6.01, -4.5], [-3.5, 6.01, -3], [-1.5, 6.01, -3], [-1.5, 6.01, -1.5]],
+                    [[2, 6.01, 6], [2, 6.01, 4.5], [0.5, 6.01, 4.5], [0.5, 6.01, 3], [1.5, 6.01, 3], [1.5, 6.01, 1.5]],
+                    [[-5.5, 6.01, -2.5], [-4.5, 6.01, -2.5], [-4.5, 6.01, -1], [-3, 6.01, -1], [-3, 6.01, 0.5], [-1.5, 6.01, 0.5]],
+                    [[5.5, 6.01, 2.5], [4.5, 6.01, 2.5], [4.5, 6.01, 1], [3, 6.01, 1], [3, 6.01, -0.5], [1.5, 6.01, -0.5]],
+                    [[2, 6.01, -6], [2, 6.01, -3.5], [0.5, 6.01, -3.5], [0.5, 6.01, -2]],
+                    [[-2, 6.01, 6], [-2, 6.01, 3.5], [-3.5, 6.01, 3.5], [-3.5, 6.01, 2]],
+                    [[6, 6.01, -4], [4.5, 6.01, -4], [4.5, 6.01, -2.5], [3, 6.01, -2.5]],
+                    [[-6, 6.01, 4], [-4.5, 6.01, 4], [-4.5, 6.01, 2.5], [-3, 6.01, 2.5]],
+                    
+                    // Bottom face (y = -6.01) - Full surface grid inverted
+                    [[-6, -6.01, -6], [-6, -6.01, -4], [-4, -6.01, -4], [-4, -6.01, -2], [-2, -6.01, -2], [-2, -6.01, 0], [0, -6.01, 0], [0, -6.01, 2], [2, -6.01, 2], [2, -6.01, 4], [4, -6.01, 4], [4, -6.01, 6], [6, -6.01, 6]],
+                    [[-5, -6.01, -6], [-5, -6.01, -3], [-3, -6.01, -3], [-3, -6.01, -1], [-1, -6.01, -1], [-1, -6.01, 1], [1, -6.01, 1], [1, -6.01, 3], [3, -6.01, 3], [3, -6.01, 5], [5, -6.01, 5], [5, -6.01, 6]],
+                    [[-2, -6.01, -6], [-2, -6.01, -4.5], [0.5, -6.01, -4.5], [0.5, -6.01, -3], [2, -6.01, -3], [2, -6.01, -1.5]],
+                    [[2, -6.01, 6], [2, -6.01, 4.5], [-0.5, -6.01, 4.5], [-0.5, -6.01, 3], [-1.5, -6.01, 3], [-1.5, -6.01, 1.5]],
+                    [[-5.5, -6.01, 2.5], [-4.5, -6.01, 2.5], [-4.5, -6.01, 1], [-3, -6.01, 1], [-3, -6.01, -0.5], [-1.5, -6.01, -0.5]],
+                    [[5.5, -6.01, -2.5], [4.5, -6.01, -2.5], [4.5, -6.01, -1], [3, -6.01, -1], [3, -6.01, 0.5], [1.5, -6.01, 0.5]],
+                    [[2, -6.01, -6], [2, -6.01, -3.5], [3.5, -6.01, -3.5], [3.5, -6.01, -2]],
+                    [[-2, -6.01, 6], [-2, -6.01, 3.5], [0.5, -6.01, 3.5], [0.5, -6.01, 2]],
+                    [[6, -6.01, 4], [4.5, -6.01, 4], [4.5, -6.01, 2.5], [3, -6.01, 2.5]],
+                    [[-6, -6.01, -4], [-4.5, -6.01, -4], [-4.5, -6.01, -2.5], [-3, -6.01, -2.5]]
+                ];
+                
+                patterns.forEach((pattern, i) => {
+                    const geometry = new THREE.BufferGeometry().setFromPoints(
+                        pattern.map(p => new THREE.Vector3(...p))
+                    );
+                    const line = new THREE.Line(geometry, lineMaterial.clone());
+                    line.userData = { 
+                        patternIndex: i, 
+                        originalOpacity: 0.9,
+                        baseColor: 0x87ceeb
+                    };
+                    this.circuitLines.push(line);
+                    this.cubeGroup.add(line);
+                });
+            }
+            
+            createWireframe() {
+                const wireframeGeometry = new THREE.EdgesGeometry(this.mainCube.geometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: 0x4682b4,
+                    transparent: true, 
+                    opacity: 0.5
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cubeGroup.add(this.wireframe);
+            }
+            
+            createParticles() {
+                this.particles = [];
+                this.maxParticles = 800;
+                
+                this.particleGeometries = [
+                    new THREE.SphereGeometry(0.05, 6, 4),
+                    new THREE.SphereGeometry(0.08, 8, 6),
+                    new THREE.SphereGeometry(0.12, 10, 8),
+                    new THREE.SphereGeometry(0.15, 12, 10)
+                ];
+                
+                this.particleMaterials = [
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x87ceeb, 
+                        emissive: 0x4682b4, 
+                        emissiveIntensity: 0.8,
+                        transparent: true, opacity: 0.9
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xdda0dd, 
+                        emissive: 0x9370db, 
+                        emissiveIntensity: 0.7,
+                        transparent: true, opacity: 0.85
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xffb6c1, 
+                        emissive: 0xff69b4, 
+                        emissiveIntensity: 0.6,
+                        transparent: true, opacity: 0.8
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x98fb98, 
+                        emissive: 0x00ff7f, 
+                        emissiveIntensity: 0.7,
+                        transparent: true, opacity: 0.85
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xffffe0, 
+                        emissive: 0xffd700, 
+                        emissiveIntensity: 0.6,
+                        transparent: true, opacity: 0.8
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xffdab9, 
+                        emissive: 0xff8c00, 
+                        emissiveIntensity: 0.7,
+                        transparent: true, opacity: 0.85
+                    })
+                ];
+            }
+            
+            createParticle() {
+                if (this.particles.length >= this.maxParticles) return;
+                
+                const geometryIndex = Math.floor(Math.random() * this.particleGeometries.length);
+                const materialIndex = Math.floor(Math.random() * this.particleMaterials.length);
+                const geometry = this.particleGeometries[geometryIndex];
+                const material = this.particleMaterials[materialIndex].clone();
+                
+                const particle = new THREE.Mesh(geometry, material);
+                
+                const flowDirection = Math.random() < 0.7 ? 'in' : 'out';
+                
+                if (flowDirection === 'in') {
+                    const angle = Math.random() * Math.PI * 2;
+                    const elevation = (Math.random() - 0.5) * Math.PI;
+                    const distance = 40 + Math.random() * 20;
+                    
+                    particle.position.set(
+                        Math.cos(angle) * Math.cos(elevation) * distance,
+                        Math.sin(elevation) * distance,
+                        Math.sin(angle) * Math.cos(elevation) * distance
+                    );
+                } else {
+                    particle.position.set(
+                        (Math.random() - 0.5) * 8,
+                        (Math.random() - 0.5) * 8,
+                        (Math.random() - 0.5) * 8
+                    );
+                }
+                
+                const sizeMultiplier = geometryIndex + 1;
+                const baseSpeed = 0.01 + Math.random() * 0.03;
+                
+                particle.userData = {
+                    speed: baseSpeed * (flowDirection === 'out' ? 1.5 : 1),
+                    life: 1.0,
+                    flowDirection: flowDirection,
+                    size: sizeMultiplier,
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.06 / sizeMultiplier,
+                        y: (Math.random() - 0.5) * 0.06 / sizeMultiplier,
+                        z: (Math.random() - 0.5) * 0.06 / sizeMultiplier
+                    },
+                    shimmer: Math.random() * Math.PI * 2
+                };
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+            
+            updateParticles() {
+                if (Math.random() < 0.35) {
+                    this.createParticle();
+                }
+                
+                if (Math.random() < 0.08) {
+                    this.createParticle();
+                    this.createParticle();
+                }
+                
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    particle.rotation.x += userData.rotationSpeed.x;
+                    particle.rotation.y += userData.rotationSpeed.y;
+                    particle.rotation.z += userData.rotationSpeed.z;
+                    
+                    userData.shimmer += 0.05;
+                    const shimmerIntensity = Math.sin(userData.shimmer) * 0.3 + 0.7;
+                    particle.material.emissiveIntensity = particle.material.emissiveIntensity * shimmerIntensity;
+                    
+                    if (userData.flowDirection === 'in') {
+                        const direction = new THREE.Vector3()
+                            .subVectors(this.cubeGroup.position, particle.position)
+                            .normalize();
+                        particle.position.add(direction.multiplyScalar(userData.speed));
+                        
+                        const distance = particle.position.distanceTo(this.cubeGroup.position);
+                        
+                        if (distance < 12.0) {
+                            userData.life -= 0.02;
+                            particle.material.opacity = userData.life * 0.8;
+                        }
+                        
+                        if (userData.life <= 0 || distance < 6.0) {
+                            this.scene.remove(particle);
+                            this.particles.splice(i, 1);
+                        }
+                        
+                    } else {
+                        const direction = new THREE.Vector3()
+                            .subVectors(particle.position, this.cubeGroup.position)
+                            .normalize();
+                        particle.position.add(direction.multiplyScalar(userData.speed));
+                        
+                        const distance = particle.position.distanceTo(this.cubeGroup.position);
+                        
+                        if (distance > 25.0) {
+                            userData.life -= 0.025;
+                            particle.material.opacity = userData.life * 0.6;
+                        }
+                        
+                        if (userData.life <= 0 || distance > 60.0) {
+                            this.scene.remove(particle);
+                            this.particles.splice(i, 1);
+                        }
+                    }
+                }
+            }
+            
+            setupControls() {
+                document.addEventListener('mousemove', (e) => {
+                    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.016;
+                
+                this.cubeGroup.rotation.x += 0.008;
+                this.cubeGroup.rotation.y += 0.012;
+                this.cubeGroup.rotation.z += 0.005;
+                
+                this.cubeGroup.position.y = Math.sin(this.time * 0.8) * 1.5;
+                this.cubeGroup.position.x = Math.cos(this.time * 0.6) * 0.8;
+                
+                if (this.innerCore) {
+                    this.innerCore.rotation.x -= 0.015;
+                    this.innerCore.rotation.y += 0.018;
+                    const pulse = 1 + Math.sin(this.time * 3) * 0.1;
+                    this.innerCore.scale.setScalar(pulse);
+                    
+                    const bluePulse = Math.sin(this.time * 2.5) * 0.3 + 0.7;
+                    this.cubeLight.intensity = 0.6 * bluePulse;
+                    this.cubeLight.position.copy(this.cubeGroup.position);
+                    
+                    this.innerCore.material.emissiveIntensity = 0.15 * bluePulse;
+                }
+                
+                if (this.circuitLines) {
+                    this.circuitLines.forEach((line, i) => {
+                        const flow = Math.sin(this.time * 3 + i * 0.5) * 0.4 + 0.6;
+                        const blueIntensity = Math.sin(this.time * 2 + i * 0.3) * 0.3 + 0.7;
+                        line.material.opacity = line.userData.originalOpacity * flow;
+                        
+                        const r = ((line.userData.baseColor >> 16) & 255) / 255;
+                        const g = ((line.userData.baseColor >> 8) & 255) / 255;
+                        const b = (line.userData.baseColor & 255) / 255;
+                        
+                        line.material.color.setRGB(
+                            r * blueIntensity,
+                            g * blueIntensity,
+                            b * blueIntensity
+                        );
+                    });
+                }
+                
+                if (this.wireframe) {
+                    const wireGlow = Math.sin(this.time * 1.8) * 0.3 + 0.4;
+                    this.wireframe.material.opacity = 0.3 + wireGlow * 0.4;
+                }
+                
+                this.cubeGroup.rotation.x += this.mouse.y * 0.0008;
+                this.cubeGroup.rotation.y += this.mouse.x * 0.0008;
+                
+                this.updateParticles();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize 3D Scene
+        window.addEventListener('load', () => {
+            new GlassCube3D();
+        });
+
+        // Email Form Handler
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('.email-input').value;
+            
+            // Here you would integrate with your email service
+            alert('Thank you! We\'ll keep you updated at: ' + email);
+            
+            // Reset form
+            this.querySelector('.email-input').value = '';
+        });
+    </script>
+</body>
+</html>

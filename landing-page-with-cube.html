@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Landing Page with 3D Cube</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: #000;
+        }
+        
+        /* 3D Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.8;
+        }
+        
+        /* Content Overlay */
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(1px);
+        }
+        
+        .hero-section {
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 300;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00ffff, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInUp 1s ease-out;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+            animation: slideInUp 1s ease-out 0.3s both;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: slideInUp 1s ease-out 0.6s both;
+        }
+        
+        .cta-btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-3px);
+        }
+        
+        /* Features section */
+        .features-section {
+            position: relative;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 100px 20px;
+            color: white;
+        }
+        
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00ffff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            z-index: 20;
+            text-align: right;
+        }
+        
+        .controls div {
+            margin-bottom: 5px;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- Main Content -->
+    <main class="content-overlay">
+        <section class="hero-section">
+            <h1 class="hero-title">Next-Gen Technology</h1>
+            <p class="hero-subtitle">
+                Experience the future of digital innovation with our advanced quantum processing platform. 
+                Witness data transformation in real-time through our revolutionary visualization engine.
+            </p>
+            <div class="cta-buttons">
+                <a href="#features" class="cta-btn btn-primary">Explore Features</a>
+                <a href="#demo" class="cta-btn btn-secondary">Watch Demo</a>
+            </div>
+        </section>
+    </main>
+    
+    <section class="features-section" id="features">
+        <div class="features-container">
+            <h2 class="section-title">Powerful Features</h2>
+            <p class="section-subtitle">
+                Discover the advanced capabilities that make our platform the perfect choice for modern enterprises
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">Lightning Fast</h3>
+                    <p class="feature-description">
+                        Process millions of data points in real-time with our optimized quantum algorithms and advanced caching mechanisms.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3 class="feature-title">Ultra Secure</h3>
+                    <p class="feature-description">
+                        Enterprise-grade security with end-to-end encryption, multi-factor authentication, and zero-trust architecture.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🌐</span>
+                    <h3 class="feature-title">Global Scale</h3>
+                    <p class="feature-description">
+                        Deploy across multiple regions with automatic load balancing and 99.99% uptime guarantee for mission-critical applications.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <h3 class="feature-title">Precision Analytics</h3>
+                    <p class="feature-description">
+                        Get actionable insights with AI-powered analytics, predictive modeling, and customizable reporting dashboards.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🚀</span>
+                    <h3 class="feature-title">Easy Integration</h3>
+                    <p class="feature-description">
+                        Seamlessly integrate with existing systems using our comprehensive API suite and developer-friendly SDKs.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Real-time Visualization</h3>
+                    <p class="feature-description">
+                        Monitor your data flows with stunning 3D visualizations and interactive dashboards that update in real-time.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="controls">
+        <div>Mouse: Rotate Cube</div>
+        <div>Scroll: Zoom</div>
+        <div>Space: Toggle Particles</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Same 3D cube code as before, but optimized for background use
+        class BackgroundCube {
+            constructor() {
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createCube();
+                this.createParticleSystem();
+                this.setupControls();
+                this.animate();
+            }
+            
+            init() {
+                this.canvas = document.getElementById('bg-canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                this.camera.position.set(0, 0, 10);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                this.mouse = new THREE.Vector2();
+                this.mouseTarget = new THREE.Vector2();
+                this.time = 0;
+            }
+            
+            createScene() {
+                this.scene.fog = new THREE.Fog(0x000000, 15, 50);
+            }
+            
+            createLights() {
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(10, 10, 5);
+                directionalLight.castShadow = true;
+                this.scene.add(directionalLight);
+                
+                const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+                this.scene.add(ambientLight);
+                
+                const pointLight1 = new THREE.PointLight(0x00ffff, 0.6, 25);
+                pointLight1.position.set(-10, 8, 5);
+                this.scene.add(pointLight1);
+                
+                const pointLight2 = new THREE.PointLight(0xff6b6b, 0.6, 25);
+                pointLight2.position.set(10, -8, -5);
+                this.scene.add(pointLight2);
+                
+                const pointLight3 = new THREE.PointLight(0x4ecdc4, 0.4, 20);
+                pointLight3.position.set(0, 10, 8);
+                this.scene.add(pointLight3);
+            }
+            
+            createCube() {
+                const cubeGeometry = new THREE.BoxGeometry(3, 3, 3);
+                
+                const materials = [
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x2c3e50, metalness: 0.8, roughness: 0.1, 
+                        transparent: true, opacity: 0.7
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x3498db, metalness: 0.7, roughness: 0.2, 
+                        transparent: true, opacity: 0.7
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xe74c3c, metalness: 0.6, roughness: 0.3, 
+                        transparent: true, opacity: 0.7
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xf39c12, metalness: 0.7, roughness: 0.2, 
+                        transparent: true, opacity: 0.7
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x9b59b6, metalness: 0.8, roughness: 0.1, 
+                        transparent: true, opacity: 0.7
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x1abc9c, metalness: 0.6, roughness: 0.3, 
+                        transparent: true, opacity: 0.7
+                    })
+                ];
+                
+                this.cube = new THREE.Mesh(cubeGeometry, materials);
+                this.cube.castShadow = true;
+                this.cube.receiveShadow = true;
+                this.scene.add(this.cube);
+                
+                const wireframeGeometry = new THREE.EdgesGeometry(cubeGeometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: 0x00ffff, 
+                    transparent: true, 
+                    opacity: 0.4 
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cube.add(this.wireframe);
+            }
+            
+            createParticleSystem() {
+                this.particles = [];
+                this.maxParticles = 150;
+                this.particlesEnabled = true;
+                
+                this.particleGeometries = [
+                    new THREE.BoxGeometry(0.08, 0.08, 0.08),
+                    new THREE.BoxGeometry(0.12, 0.04, 0.04),
+                    new THREE.BoxGeometry(0.04, 0.12, 0.04)
+                ];
+                
+                this.particleMaterials = [
+                    new THREE.MeshLambertMaterial({ color: 0x00ffff, transparent: true }),
+                    new THREE.MeshLambertMaterial({ color: 0xff6b6b, transparent: true }),
+                    new THREE.MeshLambertMaterial({ color: 0x4ecdc4, transparent: true }),
+                    new THREE.MeshLambertMaterial({ color: 0xffe66d, transparent: true })
+                ];
+            }
+            
+            createParticle(type = 'incoming') {
+                const geometry = this.particleGeometries[Math.floor(Math.random() * this.particleGeometries.length)];
+                const material = this.particleMaterials[Math.floor(Math.random() * this.particleMaterials.length)].clone();
+                
+                const particle = new THREE.Mesh(geometry, material);
+                
+                if (type === 'incoming') {
+                    const angle = Math.random() * Math.PI * 2;
+                    const elevation = (Math.random() - 0.5) * Math.PI;
+                    const distance = 20 + Math.random() * 15;
+                    
+                    particle.position.set(
+                        Math.cos(angle) * Math.cos(elevation) * distance,
+                        Math.sin(elevation) * distance,
+                        Math.sin(angle) * Math.cos(elevation) * distance
+                    );
+                    
+                    particle.userData = {
+                        type: 'incoming',
+                        speed: 0.025 + Math.random() * 0.035,
+                        life: 1.0,
+                        rotationSpeed: {
+                            x: (Math.random() - 0.5) * 0.15,
+                            y: (Math.random() - 0.5) * 0.15,
+                            z: (Math.random() - 0.5) * 0.15
+                        }
+                    };
+                } else {
+                    particle.position.set(
+                        (Math.random() - 0.5) * 3,
+                        (Math.random() - 0.5) * 3,
+                        (Math.random() - 0.5) * 3
+                    );
+                    
+                    const direction = new THREE.Vector3(
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2
+                    ).normalize();
+                    
+                    particle.userData = {
+                        type: 'outgoing',
+                        direction: direction,
+                        speed: 0.04 + Math.random() * 0.06,
+                        life: 1.0,
+                        rotationSpeed: {
+                            x: (Math.random() - 0.5) * 0.2,
+                            y: (Math.random() - 0.5) * 0.2,
+                            z: (Math.random() - 0.5) * 0.2
+                        }
+                    };
+                }
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+            
+            updateParticles() {
+                if (!this.particlesEnabled) return;
+                
+                if (Math.random() < 0.25 && this.particles.length < this.maxParticles) {
+                    this.createParticle(Math.random() < 0.65 ? 'incoming' : 'outgoing');
+                }
+                
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    particle.rotation.x += userData.rotationSpeed.x;
+                    particle.rotation.y += userData.rotationSpeed.y;
+                    particle.rotation.z += userData.rotationSpeed.z;
+                    
+                    if (userData.type === 'incoming') {
+                        const direction = new THREE.Vector3().subVectors(this.cube.position, particle.position).normalize();
+                        particle.position.add(direction.multiplyScalar(userData.speed));
+                        
+                        const distance = particle.position.distanceTo(this.cube.position);
+                        if (distance < 2.0) {
+                            userData.life -= 0.06;
+                            particle.material.opacity = userData.life;
+                            particle.scale.setScalar(userData.life);
+                        }
+                        
+                        if (userData.life <= 0 || distance < 0.8) {
+                            this.removeParticle(i);
+                        }
+                    } else {
+                        particle.position.add(userData.direction.clone().multiplyScalar(userData.speed));
+                        userData.life -= 0.01;
+                        particle.material.opacity = userData.life * 0.8;
+                        
+                        if (userData.life <= 0) {
+                            this.removeParticle(i);
+                        }
+                    }
+                }
+            }
+            
+            removeParticle(index) {
+                this.scene.remove(this.particles[index]);
+                this.particles[index].geometry.dispose();
+                this.particles[index].material.dispose();
+                this.particles.splice(index, 1);
+            }
+            
+            setupControls() {
+                this.canvas.addEventListener('mousemove', (e) => {
+                    this.mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouseTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                setInterval(() => {
+                    this.mouse.lerp(this.mouseTarget, 0.03);
+                }, 16);
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.particlesEnabled = !this.particlesEnabled;
+                    }
+                });
+                
+                this.canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    this.camera.position.z += e.deltaY * 0.01;
+                    this.camera.position.z = Math.max(5, Math.min(25, this.camera.position.z));
+                });
+                
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.008;
+                
+                // Cube animations
+                this.cube.rotation.x += 0.004;
+                this.cube.rotation.y += 0.007;
+                this.cube.rotation.z += 0.002;
+                
+                // Floating motion
+                this.cube.position.y = Math.sin(this.time * 0.6) * 0.5;
+                this.cube.position.x = Math.cos(this.time * 0.4) * 0.3;
+                
+                // Breathing effect
+                const scale = 1 + Math.sin(this.time * 1.5) * 0.08;
+                this.cube.scale.setScalar(scale);
+                
+                // Mouse interaction (subtle for background)
+                this.cube.rotation.x += this.mouse.y * 0.005;
+                this.cube.rotation.y += this.mouse.x * 0.005;
+                
+                // Wireframe effects
+                this.wireframe.material.opacity = 0.4 + Math.sin(this.time * 2) * 0.2;
+                
+                this.updateParticles();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new BackgroundCube();
+        });
+        
+    </script>
+</body>
+</html>

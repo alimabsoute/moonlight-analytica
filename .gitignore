@@ -1,0 +1,64 @@
+# System Files
+AppData/
+Local Settings/
+Documents/
+My Documents/
+Cookies/
+Recent/
+Start Menu/
+Templates/
+PrintHood/
+NetHood/
+SendTo/
+Application Data/
+
+# Cache & Temp Files
+.cache/
+.vscode/
+.claude/
+node_modules/
+*.log
+*.tmp
+Temp/
+temp/
+tmp/
+
+# OS Files
+Thumbs.db
+desktop.ini
+.DS_Store
+.idea/
+
+# Personal Files
+Downloads/
+3D Objects/
+Music/
+Videos/
+Searches/
+Favorites/
+Links/
+Saved Games/
+IntelGraphicsProfiles/
+
+# Python
+my-jupyter-env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.venv/
+
+# Environment
+.env
+.env.local
+.env.staging
+.env.production
+
+# Project specific
+paddle2_x
+nul
+jcef_*.log
+ntuser.*
+NTUSER.DAT*
