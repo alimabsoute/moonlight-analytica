@@ -325,111 +325,112 @@
             margin-right: auto;
         }
         
-        /* Holographic Data Cards */
+        /* Why Choose Us Section */
+        .why-choose-us {
+            margin-top: 4rem;
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .why-choose-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 400;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .why-choose-title span {
+            font-style: italic;
+            color: #87ceeb;
+        }
+        
+        .why-choose-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+            font-weight: 400;
+        }
+        
         .value-points {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            max-width: 900px;
-            margin: 0 auto 2.5rem;
-            padding: 0 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         .value-point {
-            position: relative;
-            padding: 20px 24px;
-            background: linear-gradient(135deg, rgba(0, 191, 255, 0.03), rgba(135, 206, 235, 0.02));
-            border: 1px solid rgba(0, 191, 255, 0.2);
-            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
             transition: all 0.4s ease;
-            overflow: hidden;
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
         
         .value-point::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #00bfff, transparent);
-            animation: scanLine 3s linear infinite;
-            animation-delay: var(--scan-delay, 0s);
-        }
-        
-        .value-point::after {
-            content: '';
-            position: absolute;
-            top: 0;
+            left: 0;
             right: 0;
             bottom: 0;
-            left: 0;
-            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), transparent 50%, rgba(135, 206, 235, 0.05));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
             opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
+            transition: opacity 0.4s ease;
         }
         
         .value-point:hover {
-            border-color: rgba(0, 191, 255, 0.5);
-            background: linear-gradient(135deg, rgba(0, 191, 255, 0.08), rgba(135, 206, 235, 0.04));
-            transform: translateY(-3px);
-            box-shadow: 0 8px 32px rgba(0, 191, 255, 0.2);
+            transform: translateY(-8px);
+            border-color: rgba(135, 206, 235, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
         
-        .value-point:hover::after {
+        .value-point:hover::before {
             opacity: 1;
         }
         
-        .value-point-indicator {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 8px;
-            height: 8px;
-            background: #00bfff;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.8);
-            animation: pulse 2s ease-in-out infinite;
+        .value-point-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .value-point-icon svg {
+            width: 48px;
+            height: 48px;
+            transition: all 0.4s ease;
+        }
+        
+        .value-point:hover .value-point-icon svg {
+            transform: scale(1.1);
+        }
+        
+        .value-point-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 16px;
         }
         
         .value-point-text {
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 1rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            line-height: 1.4;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .value-point-label {
-            display: block;
-            color: #87ceeb;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            opacity: 0.8;
-        }
-        
-        @keyframes scanLine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { 
-                transform: scale(1);
-                box-shadow: 0 0 10px rgba(0, 191, 255, 0.8);
-            }
-            50% { 
-                transform: scale(1.2);
-                box-shadow: 0 0 20px rgba(0, 191, 255, 1);
-            }
+            line-height: 1.6;
+            font-weight: 400;
         }
         
         /* Email Capture Form - Neon Cyber Style */
@@ -801,8 +802,12 @@
         /* Responsive Design */
         @media (max-width: 1024px) {
             .value-points {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.2rem;
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .why-choose-us {
+                padding: 40px 20px;
             }
         }
         
@@ -873,25 +878,32 @@
                 padding: 0 10px;
             }
             
-            .value-points {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                padding: 0 10px;
-                margin-bottom: 2rem;
+            .why-choose-us {
+                padding: 40px 10px;
+                margin-top: 2rem;
+            }
+            
+            .why-choose-title {
+                font-size: 2rem;
+            }
+            
+            .why-choose-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2.5rem;
             }
             
             .value-point {
-                padding: 16px 20px;
-                clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+                padding: 32px 24px;
+            }
+            
+            .value-point-title {
+                font-size: 1.3rem;
             }
             
             .value-point-text {
                 font-size: 0.9rem;
             }
             
-            .value-point-label {
-                font-size: 0.7rem;
-            }
         }
     </style>
 </head>
@@ -991,30 +1003,6 @@
                 Advanced analytics solutions that turn complex datasets into actionable insights. From machine vision enterprise platforms to automated time tracking and AI-powered resume optimization, we build tools that work as hard as you do.
             </p>
             
-            <!-- Value Proposition Points -->
-            <div class="value-points">
-                <div class="value-point" style="--scan-delay: 0s;">
-                    <div class="value-point-indicator"></div>
-                    <span class="value-point-label">Performance</span>
-                    <span class="value-point-text">Real-time analytics that scale with your business</span>
-                </div>
-                <div class="value-point" style="--scan-delay: 0.7s;">
-                    <div class="value-point-indicator"></div>
-                    <span class="value-point-label">Productivity</span>
-                    <span class="value-point-text">Custom-built solutions for productivity and performance</span>
-                </div>
-                <div class="value-point" style="--scan-delay: 1.4s;">
-                    <div class="value-point-indicator"></div>
-                    <span class="value-point-label">Vision AI</span>
-                    <span class="value-point-text">Machine vision enterprise analytics platforms</span>
-                </div>
-                <div class="value-point" style="--scan-delay: 2.1s;">
-                    <div class="value-point-indicator"></div>
-                    <span class="value-point-label">Visualization</span>
-                    <span class="value-point-text">Data visualization that drives decision-making</span>
-                </div>
-            </div>
-            
             <!-- Email Capture Form -->
             <form class="email-capture" id="emailForm">
                 <input type="email" class="email-input" placeholder="Get weekly insights on analytics trends and productivity tools" required>
@@ -1024,6 +1012,85 @@
             <div class="cta-buttons">
                 <a href="solutions.html" class="cta-btn primary">See What We've Built</a>
                 <a href="#" class="cta-btn secondary">Join the Beta Program</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-us">
+        <h2 class="why-choose-title">Why Choose <span>Us</span>?</h2>
+        <p class="why-choose-subtitle">Everything you need to automate, optimize, and scale</p>
+        
+        <div class="value-points">
+            <div class="value-point">
+                <div class="value-point-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="20" stroke="#87ceeb" stroke-width="2" fill="none">
+                            <animate attributeName="stroke-dasharray" values="0,126;63,63;0,126" dur="3s" repeatCount="indefinite"/>
+                            <animateTransform attributeName="transform" type="rotate" values="0 24 24;360 24 24" dur="4s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="24" cy="24" r="3" fill="#00bfff">
+                            <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="fill" values="#00bfff;#87ceeb;#00bfff" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M24 12L24 8M36 24L40 24M24 36L24 40M12 24L8 24" stroke="#4682b4" stroke-width="2" stroke-linecap="round">
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="value-point-title">Real-Time Intelligence</h3>
+                <p class="value-point-text">Access accurate, real-time data to drive smarter decisions with enterprise-grade analytics platforms.</p>
+            </div>
+            
+            <div class="value-point">
+                <div class="value-point-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="32" width="6" height="12" fill="#4682b4">
+                            <animate attributeName="height" values="12;20;12" dur="2s" repeatCount="indefinite" begin="0s"/>
+                        </rect>
+                        <rect x="16" y="24" width="6" height="20" fill="#87ceeb">
+                            <animate attributeName="height" values="20;28;20" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+                        </rect>
+                        <rect x="24" y="16" width="6" height="28" fill="#00bfff">
+                            <animate attributeName="height" values="28;36;28" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+                        </rect>
+                        <rect x="32" y="20" width="6" height="24" fill="#87ceeb">
+                            <animate attributeName="height" values="24;32;24" dur="2s" repeatCount="indefinite" begin="0.9s"/>
+                        </rect>
+                        <path d="M8 8L14 14L22 6L30 12L40 4" stroke="#00bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <animate attributeName="stroke-dasharray" values="0,60;30,30;60,0" dur="3s" repeatCount="indefinite"/>
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="value-point-title">Measurable Impact</h3>
+                <p class="value-point-text">Track performance, uncover insights, and achieve data-backed growth with comprehensive analytics.</p>
+            </div>
+            
+            <div class="value-point">
+                <div class="value-point-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="24" r="8" stroke="#4682b4" stroke-width="2" fill="none"/>
+                        <circle cx="36" cy="24" r="8" stroke="#4682b4" stroke-width="2" fill="none"/>
+                        <circle cx="24" cy="12" r="6" stroke="#87ceeb" stroke-width="2" fill="none"/>
+                        <circle cx="24" cy="36" r="6" stroke="#87ceeb" stroke-width="2" fill="none"/>
+                        
+                        <line x1="18.4" y1="20.4" x2="28.4" y2="15.6" stroke="#00bfff" stroke-width="2">
+                            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="28.4" y1="28.4" x2="18.4" y2="32.4" stroke="#00bfff" stroke-width="2">
+                            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                        </line>
+                        <line x1="30" y1="18" x2="30" y2="30" stroke="#00bfff" stroke-width="2">
+                            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" begin="1s"/>
+                        </line>
+                        
+                        <circle cx="24" cy="24" r="2" fill="#00bfff">
+                            <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </div>
+                <h3 class="value-point-title">Seamless Integration</h3>
+                <p class="value-point-text">Connect tools, teams, and workflows with intelligent automation and machine vision platforms.</p>
             </div>
         </div>
     </section>
