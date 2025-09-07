@@ -589,44 +589,328 @@
             margin-right: auto;
         }
         
-        /* Value Proposition Points */
-        .value-points {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-            max-width: 800px;
-            margin: 0 auto 2.5rem;
-            padding: 0 20px;
+        /* Why Choose Us Section */
+        .why-choose-us {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(13, 13, 40, 0.9) 100%);
+            border-top: 1px solid var(--glass-border);
+            margin-top: -1px;
+            padding: 80px 20px;
         }
-        
-        .value-point {
+
+        .benefits-header {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 12px;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(135, 206, 235, 0.2);
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            margin-bottom: 1rem;
         }
-        
-        .value-point:hover {
-            border-color: rgba(135, 206, 235, 0.4);
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
+
+        .capabilities-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 16px;
         }
-        
-        .value-point-icon {
-            color: #00bfff;
-            font-size: 1.1rem;
-            min-width: 20px;
+
+        .pulse-line {
+            animation: pulseGlow 3s ease-in-out infinite;
+            background: transparent;
+            fill: none;
         }
-        
-        .value-point-text {
-            color: var(--text-light);
+
+        .pulse-path {
+            stroke-dasharray: 60;
+            animation: pulseDraw 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px var(--primary-color));
+        }
+
+        @keyframes pulseDraw {
+            0% {
+                stroke-dashoffset: 60;
+                stroke: var(--primary-color);
+            }
+            50% {
+                stroke-dashoffset: 0;
+                stroke: rgba(138, 43, 226, 0.9);
+            }
+            100% {
+                stroke-dashoffset: -60;
+                stroke: var(--primary-color);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px var(--primary-color)) drop-shadow(0 0 12px rgba(138, 43, 226, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.7)) drop-shadow(0 0 20px var(--primary-color));
+            }
+        }
+
+        .benefits-label {
             font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.3px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .why-choose-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .why-choose-title em {
+            color: var(--primary-color);
+            font-style: italic;
+        }
+
+        .why-choose-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .capability-card {
+            background: rgba(15, 15, 25, 0.8);
+            border: 1px solid rgba(135, 206, 235, 0.15);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .capability-card:hover::before {
+            left: 100%;
+        }
+        
+        .capability-card:hover {
+            background: rgba(25, 25, 40, 0.9);
+            border-color: var(--primary-color);
+            box-shadow: 
+                0 20px 40px rgba(0, 191, 255, 0.2),
+                0 0 60px rgba(138, 43, 226, 0.4),
+                inset 0 0 30px rgba(0, 191, 255, 0.1);
+            transform: translateY(-5px);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 
+                    0 20px 40px rgba(0, 191, 255, 0.2),
+                    0 0 60px rgba(138, 43, 226, 0.4),
+                    inset 0 0 30px rgba(0, 191, 255, 0.1);
+            }
+            50% {
+                box-shadow: 
+                    0 20px 40px rgba(0, 191, 255, 0.4),
+                    0 0 80px rgba(138, 43, 226, 0.6),
+                    inset 0 0 40px rgba(0, 191, 255, 0.2);
+            }
+        }
+
+        .analytics-viz {
+            height: 140px;
+            margin-bottom: 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .capability-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .capability-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Enhanced Bar Chart */
+        .bar-chart-enhanced {
+            display: flex;
+            align-items: end;
+            gap: 6px;
+            height: 100px;
+            position: relative;
+        }
+
+        .bar-enhanced {
+            width: 16px;
+            background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+            border-radius: 3px;
+            transition: all 0.8s ease;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+        }
+
+        .bar-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 3px 3px 0 0;
+            transition: all 0.8s ease;
+        }
+
+        .bar-enhanced:nth-child(1) { height: 40px; }
+        .bar-enhanced:nth-child(2) { height: 65px; }
+        .bar-enhanced:nth-child(3) { height: 85px; }
+        .bar-enhanced:nth-child(4) { height: 55px; }
+        .bar-enhanced:nth-child(5) { height: 75px; }
+        .bar-enhanced:nth-child(6) { height: 45px; }
+        .bar-enhanced:nth-child(7) { height: 90px; }
+
+        .capability-card:hover .bar-enhanced:nth-child(1) { height: 70px; }
+        .capability-card:hover .bar-enhanced:nth-child(2) { height: 40px; }
+        .capability-card:hover .bar-enhanced:nth-child(3) { height: 95px; }
+        .capability-card:hover .bar-enhanced:nth-child(4) { height: 80px; }
+        .capability-card:hover .bar-enhanced:nth-child(5) { height: 35px; }
+        .capability-card:hover .bar-enhanced:nth-child(6) { height: 85px; }
+        .capability-card:hover .bar-enhanced:nth-child(7) { height: 60px; }
+
+        .capability-card:hover .bar-enhanced {
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
+            filter: brightness(1.2);
+        }
+
+        /* Analytics Compass */
+        .compass {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 50%;
+        }
+
+        .compass-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+            transform-origin: left center;
+            transform: translate(-50%, -50%) rotate(45deg);
+            transition: all 1s ease;
+        }
+
+        .compass-point {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        .compass-point:nth-child(2) { top: 5px; left: 48px; }
+        .compass-point:nth-child(3) { right: 5px; top: 48px; }
+        .compass-point:nth-child(4) { bottom: 5px; left: 48px; }
+        .compass-point:nth-child(5) { left: 5px; top: 48px; }
+
+        .capability-card:hover .compass-needle {
+            transform: translate(-50%, -50%) rotate(225deg);
+            background: linear-gradient(90deg, rgba(138, 43, 226, 1), var(--primary-color));
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6);
+        }
+
+        /* Connected Network */
+        .node-network {
+            width: 120px;
+            height: 100px;
+            position: relative;
+        }
+
+        .network-node-main {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+        }
+
+        .network-connection-main {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.6s ease;
+        }
+
+        .network-node-main:nth-child(1) { top: 20px; left: 20px; }
+        .network-node-main:nth-child(3) { top: 20px; right: 20px; }
+        .network-node-main:nth-child(5) { bottom: 20px; left: 30px; }
+        .network-node-main:nth-child(7) { bottom: 20px; right: 30px; }
+        .network-node-main:nth-child(9) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        .network-connection-main:nth-child(2) { 
+            top: 26px; left: 32px; width: 56px; 
+            transform: rotate(0deg);
+        }
+        .network-connection-main:nth-child(4) { 
+            top: 32px; left: 26px; width: 40px; 
+            transform: rotate(45deg);
+        }
+        .network-connection-main:nth-child(6) { 
+            top: 32px; right: 26px; width: 40px; 
+            transform: rotate(-45deg);
+        }
+        .network-connection-main:nth-child(8) { 
+            bottom: 26px; left: 42px; width: 36px; 
+            transform: rotate(0deg);
+        }
+
+        .capability-card:hover .network-node-main {
+            background: rgba(138, 43, 226, 1);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+            transform: scale(1.5);
+        }
+
+        .capability-card:hover .network-connection-main {
+            background: linear-gradient(90deg, rgba(138, 43, 226, 1), var(--primary-color));
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
         }
         
         /* Email Capture Form - Neon Cyber Style */
@@ -780,6 +1064,213 @@
         .cta-btn.secondary:hover::before {
             left: 0;
         }
+
+        /* Analytics Quote Section */
+        .analytics-quote-section {
+            max-width: 800px;
+            margin: 80px auto 0;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .quote-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .wave-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 20px;
+            position: relative;
+        }
+
+        .sine-wave {
+            animation: waveGlow 3s ease-in-out infinite;
+        }
+
+        .wave-path {
+            stroke-dasharray: 50;
+            animation: waveFlow 2s linear infinite;
+            filter: drop-shadow(0 0 10px var(--primary-color));
+        }
+
+        @keyframes waveFlow {
+            0% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: -50;
+            }
+        }
+
+        @keyframes waveGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px var(--primary-color)) drop-shadow(0 0 15px rgba(138, 43, 226, 0.4));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.8)) drop-shadow(0 0 25px var(--primary-color));
+                transform: scale(1.1);
+            }
+        }
+
+        .quote-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: white;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            animation: textPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes textPulse {
+            0%, 100% {
+                text-shadow: 
+                    0 0 15px rgba(0, 191, 255, 0.5),
+                    0 0 30px rgba(138, 43, 226, 0.3);
+                opacity: 0.9;
+            }
+            50% {
+                text-shadow: 
+                    0 0 25px rgba(0, 191, 255, 0.8),
+                    0 0 40px rgba(138, 43, 226, 0.6);
+                opacity: 1;
+            }
+        }
+
+        .quote-content {
+            margin-bottom: 3rem;
+        }
+
+        .quote-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            line-height: 1.5;
+            color: white;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            animation: mainTextPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes mainTextPulse {
+            0%, 100% {
+                color: white;
+                text-shadow: 
+                    0 0 20px rgba(0, 191, 255, 0.4),
+                    0 0 40px rgba(138, 43, 226, 0.2);
+            }
+            25% {
+                text-shadow: 
+                    0 0 25px rgba(0, 191, 255, 0.6),
+                    0 0 50px rgba(138, 43, 226, 0.4);
+            }
+            50% {
+                text-shadow: 
+                    0 0 30px rgba(138, 43, 226, 0.6),
+                    0 0 60px rgba(0, 191, 255, 0.4);
+            }
+            75% {
+                text-shadow: 
+                    0 0 25px rgba(0, 191, 255, 0.6),
+                    0 0 50px rgba(138, 43, 226, 0.4);
+            }
+        }
+
+        .quote-text em {
+            font-style: italic;
+            color: white;
+            font-weight: 400;
+            position: relative;
+            animation: emphasisPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes emphasisPulse {
+            0%, 100% {
+                color: white;
+                text-shadow: 
+                    0 0 15px var(--primary-color),
+                    0 0 25px rgba(138, 43, 226, 0.5);
+            }
+            50% {
+                color: #f0f0ff;
+                text-shadow: 
+                    0 0 20px rgba(138, 43, 226, 0.8),
+                    0 0 35px var(--primary-color);
+            }
+        }
+
+        .quote-attribution {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .quote-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), rgba(138, 43, 226, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+            animation: avatarPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
+                transform: scale(1.05);
+            }
+        }
+
+        .avatar-placeholder {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .quote-author {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Mobile responsiveness for quote section */
+        @media (max-width: 768px) {
+            .analytics-quote-section {
+                margin: 60px auto 0;
+            }
+
+            .quote-text {
+                font-size: 1.3rem;
+            }
+
+            .quote-label {
+                font-size: 0.75rem;
+            }
+        }
         
         /* Products Section */
         .products-grid {
@@ -797,11 +1288,71 @@
             padding: 2rem;
             text-align: center;
             transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
         }
         
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Featured Product Card with Logo */
+        .featured-product {
+            background: linear-gradient(135deg, rgba(20, 20, 35, 0.9) 0%, rgba(15, 15, 25, 0.95) 100%);
+            border: 1px solid rgba(255, 69, 58, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-product::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 69, 58, 0.05) 0%, transparent 70%);
+            animation: subtleGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes subtleGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .featured-product:hover {
+            border-color: rgba(255, 69, 58, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(255, 69, 58, 0.15),
+                0 0 60px rgba(255, 69, 58, 0.1);
+        }
+
+        .product-logo-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border-radius: 50%;
+            padding: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(255, 69, 58, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .featured-product:hover .product-logo {
+            filter: drop-shadow(0 0 30px rgba(255, 69, 58, 0.5));
+            transform: scale(1.05);
         }
         
         .product-title {
@@ -1047,6 +1598,44 @@
             .products-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0 10px;
+            }
+            
+            .capability-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .analytics-viz {
+                height: 120px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .capability-title {
+                font-size: 1.3rem;
+            }
+
+            .why-choose-title {
+                font-size: 2.5rem;
+            }
+
+            .bar-enhanced {
+                width: 14px;
+                gap: 5px;
+            }
+
+            .compass {
+                width: 80px;
+                height: 80px;
+            }
+
+            .node-network {
+                width: 100px;
+                height: 80px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1177,25 +1766,6 @@
                 Advanced analytics solutions that turn complex datasets into actionable insights. From automated time tracking to AI-powered resume optimization, we build tools that work as hard as you do.
             </p>
             
-            <!-- Value Proposition Points -->
-            <div class="value-points">
-                <div class="value-point">
-                    <span class="value-point-icon">⚡</span>
-                    <span class="value-point-text">Real-time analytics that scale with your business</span>
-                </div>
-                <div class="value-point">
-                    <span class="value-point-icon">🎯</span>
-                    <span class="value-point-text">Custom-built solutions for productivity and performance</span>
-                </div>
-                <div class="value-point">
-                    <span class="value-point-icon">📊</span>
-                    <span class="value-point-text">Data visualization that drives decision-making</span>
-                </div>
-                <div class="value-point">
-                    <span class="value-point-icon">🔒</span>
-                    <span class="value-point-text">Enterprise-grade security with startup agility</span>
-                </div>
-            </div>
             
             <!-- Email Capture Form -->
             <form class="email-capture" id="emailForm">
@@ -1210,12 +1780,107 @@
         </div>
     </section>
 
+    
+    <!-- Why Choose Us Section -->
+    <section class="section why-choose-us" id="why-choose-us">
+        <div class="section-content">
+            <div class="benefits-header">
+                <div class="capabilities-icon">
+                    <svg width="24" height="16" viewBox="0 0 24 16" class="pulse-line">
+                        <polyline class="pulse-path" points="0,8 4,8 6,2 8,14 10,8 24,8" stroke="white" stroke-width="1.5" fill="none"/>
+                    </svg>
+                </div>
+                <span class="benefits-label">Capabilities</span>
+            </div>
+            
+            <h2 class="why-choose-title">Why Choose <em>Us</em>?</h2>
+            <p class="why-choose-subtitle">Everything you need to automate, optimize, and scale</p>
+            
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <div class="analytics-viz">
+                        <div class="bar-chart-enhanced">
+                            <div class="bar-enhanced"></div>
+                            <div class="bar-enhanced"></div>
+                            <div class="bar-enhanced"></div>
+                            <div class="bar-enhanced"></div>
+                            <div class="bar-enhanced"></div>
+                            <div class="bar-enhanced"></div>
+                            <div class="bar-enhanced"></div>
+                        </div>
+                    </div>
+                    <h3 class="capability-title">Real-Time Intelligence</h3>
+                    <p class="capability-description">Access accurate, real-time data to drive smarter decisions</p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="analytics-viz">
+                        <div class="compass">
+                            <div class="compass-needle"></div>
+                            <div class="compass-point"></div>
+                            <div class="compass-point"></div>
+                            <div class="compass-point"></div>
+                            <div class="compass-point"></div>
+                        </div>
+                    </div>
+                    <h3 class="capability-title">Measurable Impact</h3>
+                    <p class="capability-description">Track performance, uncover insights, and achieve data-backed growth</p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="analytics-viz">
+                        <div class="node-network">
+                            <div class="network-node-main"></div>
+                            <div class="network-connection-main"></div>
+                            <div class="network-node-main"></div>
+                            <div class="network-connection-main"></div>
+                            <div class="network-node-main"></div>
+                            <div class="network-connection-main"></div>
+                            <div class="network-node-main"></div>
+                            <div class="network-connection-main"></div>
+                            <div class="network-node-main"></div>
+                        </div>
+                    </div>
+                    <h3 class="capability-title">Seamless Integration</h3>
+                    <p class="capability-description">Connect tools, teams, and workflows with intelligent automation</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analytics Quote Section -->
+        <div class="analytics-quote-section">
+            <div class="quote-header">
+                <div class="wave-icon">
+                    <svg width="30" height="20" viewBox="0 0 30 20" class="sine-wave">
+                        <path class="wave-path" d="M0,10 Q7.5,0 15,10 T30,10" stroke="white" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <span class="quote-label">We Analyze Your Data and Build Custom Solutions to Drive Value to Your Bottom Line</span>
+            </div>
+            
+            <div class="quote-content">
+                <p class="quote-text">
+                    We find what to <em>automate</em>, who your users are & how AI can optimize your <em>workflow</em>. Best part is we also build and launch <em>real solutions</em>."
+                </p>
+            </div>
+            
+            <div class="quote-attribution">
+                <div class="quote-avatar">
+                    <img src="profile.png" alt="Ali" class="avatar-image" />
+                </div>
+                <span class="quote-author">Co-Founder and New Product Lead</span>
+            </div>
+        </div>
+    </section>
+    
     <!-- Products Section -->
     <section class="section" id="products">
         <h2 class="section-title">Our Products</h2>
         <div class="products-grid">
-            <div class="product-card">
-                <h3 class="product-title">PhynxTimer</h3>
+            <div class="product-card featured-product">
+                <div class="product-logo-container">
+                    <img src="phynxtimer-logo.png" alt="PhynxTimer" class="product-logo" />
+                </div>
                 <span class="product-status status-live">Live</span>
                 <p class="product-description">
                     Advanced productivity timer with intelligent analytics and team collaboration features.

@@ -1,0 +1,43 @@
+# Moonlight Analytica Robots.txt
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+Disallow: /scripts/
+Disallow: /.config/
+Disallow: /.docker/
+Disallow: /moonlight-backup*/
+Disallow: /hyatt-review-analytics/
+Disallow: /meeting-notes-ai/
+Disallow: /momentum-stock-picker/
+Disallow: /paint-app/
+Disallow: /product-hunt-app/
+Disallow: /reminder-app/
+Disallow: /*.pyw
+Disallow: /*.py
+Disallow: /*.js
+Disallow: /*.sql
+Disallow: /*.md
+Disallow: /*.bat
+Disallow: /*.ps1
+Disallow: /*.vbs
+Disallow: /*.ipynb
+
+# Sitemap location
+Sitemap: https://moonlightanalytica.com/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Special directives for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /

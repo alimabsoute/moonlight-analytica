@@ -2,6 +2,114 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+# 🚨 PROJECT IDENTITY - NEVER FORGET THESE FACTS 🚨
+
+## MOONLIGHT ANALYTICA - LIVE PRODUCTION WEBSITE
+- **Project Name**: Moonlight Analytica  
+- **Live Production URL**: https://moonlightanalytica.com
+- **Current Deployment URL**: https://moonlight-deploy-qxrzdiuyl-alimabsoute-3065s-projects.vercel.app
+- **Deployment Method**: Vercel from `moonlight-deploy/` directory
+- **Last Deployment**: January 7, 2025 (Article system updates)
+- **Status**: Active production website with ongoing development
+
+## CRITICAL DEPLOYMENT FACTS - ⚠️ NEVER FORGET ⚠️
+- **ONLY USE THIS DIRECTORY**: `C:\Users\alima\moonlight-deploy\`
+- **ONLY USE THIS COMMAND**: `cd moonlight-deploy && vercel --prod --force --yes`
+- **Domain**: moonlightanalytica.com points DIRECTLY to moonlight-deploy project
+- **ACTIVE DEPLOYMENT DIRECTORY**: moonlight-deploy/ (this is where we deploy from)
+- **Project Type**: Long-term ongoing website project
+- **Latest Features**: Google-style article headers, updated company logos, news system
+
+## 🔥 HOMEPAGE BACKUP & RESTORATION - CRITICAL
+**KNOWN ISSUE**: Quote section HTML structure was malformed causing Vercel rendering issues
+**FIXED**: January 7, 2025 - Properly wrapped quote section in `<section>` tags
+
+### Backup Locations
+- **Master Backup**: `C:\Users\alima\moonlight-MASTER-BACKUP-20250907.html`
+- **Deploy Backup**: `C:\Users\alima\moonlight-deploy\homepage-ORIGINAL-BACKUP-20250907.html`
+- **Working Version**: Current file with fixed HTML structure (112KB)
+
+### Emergency Restoration Commands
+```bash
+# Restore from master backup
+cp C:\Users\alima\moonlight-MASTER-BACKUP-20250907.html C:\Users\alima\moonlight-deploy\moonlight-complete-structure.html
+
+# Deploy with force flag to bypass cache
+cd moonlight-deploy && vercel --prod --force --yes
+```
+
+### 🚨 CRITICAL WARNING: CORRECT DEPLOYMENT DIRECTORY 🚨
+- **moonlightanalytica.com is REGISTERED THROUGH VERCEL**
+- **The domain points to moonlight-deploy project**  
+- **ALL work must be done in moonlight-deploy/ directory**
+- **File updates go directly to moonlight-deploy/ directory**
+
+## KEY FILES & LOCATIONS
+- **Main Site**: `moonlight-complete-structure.html` (homepage)
+- **News System**: `news.html` (10 articles with company logos) 
+- **Article Templates**: `article-header-template.html`, `ARTICLE-WORKFLOW.md`
+- **Company Logos**: `4a.png` (Amazon), `5a.png` (NVIDIA), `7a.png` (Intel)
+- **Vercel Config**: `vercel.json` (routes, headers, rewrites)
+
+## ⚡ QUICK REFERENCE COMMANDS - ESSENTIAL DAILY USAGE
+
+### 🔥 INSTANT DEPLOYMENT (MOST USED) - ⚠️ UPDATED ⚠️
+```bash
+cd moonlight-deploy && vercel --prod --yes
+```
+
+### 📊 CHECK LIVE STATUS
+```bash
+# View current deployments  
+cd moonlight-deploy && vercel ls
+
+# Check if moonlightanalytica.com is live
+curl -I https://moonlightanalytica.com
+
+# Open live site
+start https://moonlightanalytica.com
+```
+
+### 📁 NAVIGATE TO PROJECT DIRECTORIES
+```bash
+# Main working directory
+cd C:\Users\alima\
+
+# DEPLOYMENT DIRECTORY (this is correct)
+cd C:\Users\alima\moonlight-deploy\
+
+# Check git status
+git status
+```
+
+### 🚨 EMERGENCY - NEVER FORGET THESE FACTS
+- **We are working on**: moonlightanalytica.com (LIVE PRODUCTION SITE)
+- **DEPLOYMENT DIRECTORY**: moonlight-deploy/ (this is correct)
+- **This is**: Long-term ongoing website project  
+- **Always deploy from**: C:\Users\alima\moonlight-deploy\
+- **Production URL**: https://moonlightanalytica.com
+- **Domain registered through**: VERCEL (not external registrar)
+
+## CRITICAL REQUIREMENTS
+
+### 🔥 MOBILE-FIRST OPTIMIZATION (MANDATORY)
+**EVERY change must be mobile-optimized. This is non-negotiable.**
+
+- **Mobile viewport testing**: Test all layouts on mobile devices (320px-768px)
+- **Touch-friendly interactions**: Minimum 44px touch targets, proper spacing
+- **Responsive typography**: Use clamp() for scalable font sizes
+- **Mobile navigation**: Hamburger menus, collapsible sections, touch-friendly dropdowns
+- **Performance on mobile**: Optimize images, minimize bundle size, lazy loading
+- **Mobile-first CSS**: Write CSS mobile-first, then enhance for larger screens
+- **Form optimization**: Mobile-friendly forms with proper input types and validation
+
+### Development Workflow Requirements
+1. **Always test mobile-first** - Start with 320px viewport
+2. **Use responsive units** - rem, em, %, vw, vh, clamp()
+3. **Optimize images** - WebP format, responsive images, lazy loading
+4. **Touch interactions** - Hover effects have touch alternatives
+5. **Performance budget** - Keep bundle size under 1MB for mobile
+
 ## Project Overview
 
 This is a personal development environment with a Supabase-based project setup. The workspace includes:
@@ -48,6 +156,61 @@ npm install -g supabase
 npm update
 ```
 
+### 🚀 MOONLIGHT ANALYTICA DEPLOYMENT COMMANDS
+
+#### Production Deployment (CRITICAL)
+```bash
+# STANDARD DEPLOYMENT WORKFLOW - USE EVERY TIME
+cd C:\Users\alima\moonlight-deploy\
+vercel --prod --yes
+
+# Check deployment status
+vercel ls
+
+# Verify live deployment
+curl -I https://moonlightanalytica.com
+```
+
+#### File Management for Deployment
+```bash
+# Copy updated files to deployment directory
+cd C:\Users\alima\
+cp filename.html moonlight-deploy/
+cp image.png moonlight-deploy/
+cp *.md moonlight-deploy/
+
+# Navigate and deploy
+cd moonlight-deploy
+vercel --prod --yes
+```
+
+#### Deployment Verification
+```bash
+# Check current deployments
+cd moonlight-deploy && vercel ls
+
+# View deployment logs
+vercel logs [DEPLOYMENT_URL]
+
+# Check domain status
+vercel domains ls
+
+# Verify SSL certificate
+curl -I https://moonlightanalytica.com | grep -i ssl
+```
+
+#### Emergency Rollback
+```bash
+# View deployment history
+cd moonlight-deploy && vercel ls
+
+# Promote previous deployment
+vercel promote [PREVIOUS_DEPLOYMENT_URL] --scope=alimabsoute-3065s-projects
+
+# Verify rollback success
+curl -I https://moonlightanalytica.com
+```
+
 ### Python/Jupyter Development
 ```bash
 # Activate Jupyter environment
@@ -89,7 +252,7 @@ pip install <package_name>
   - **Secondary CTA**: "Request Janus Beta Access" (for visual line counter solution)
   - **Email Capture**: Neon capsule design with animated gradient borders
   - **Responsive**: Mobile-optimized with stacked layout
-- **Products Page**: PhynxTimer (live), ATS Resume Helper (beta), Janus Beta (visual line counter - major project)
+- **Products Page**: PhynxTimer (live), ATS Resume Helper (beta), Janus Beta (visual line counter & code analysis - major project)
 - **Insights/Blog Page**: Ready for automated content system
 - **Updates Page**: Product Hunt-style daily product discoveries
 - **Contact Page**: Contact forms and company information

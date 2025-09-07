@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Updated Logos - Moonlight Analytica</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            padding: 2rem;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .logo-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .logo-card h3 {
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-card img {
+            max-width: 200px;
+            max-height: 100px;
+            object-fit: contain;
+            border: 1px dashed #e5e7eb;
+            padding: 1rem;
+            background: white;
+        }
+        
+        .test-backgrounds {
+            margin-top: 3rem;
+        }
+        
+        .background-test {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .bg-test {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+        }
+        
+        .bg-white { background: white; }
+        .bg-gray { background: #f3f4f6; }
+        .bg-dark { background: #1f2937; }
+        .bg-blue { background: #3b82f6; }
+        
+        .bg-test img {
+            max-width: 80px;
+            max-height: 40px;
+            object-fit: contain;
+        }
+        
+        .bg-test span {
+            display: block;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: #6b7280;
+        }
+        
+        .bg-dark span {
+            color: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Updated Logo Test Page</h1>
+        
+        <div class="logo-grid">
+            <div class="logo-card">
+                <h3>Amazon Logo (4a.png)</h3>
+                <img src="4a.png" alt="Amazon Logo" />
+                <p>Should have transparent background</p>
+            </div>
+            
+            <div class="logo-card">
+                <h3>NVIDIA Logo (5a.png)</h3>
+                <img src="5a.png" alt="NVIDIA Logo" />
+                <p>Should have transparent background</p>
+            </div>
+            
+            <div class="logo-card">
+                <h3>Intel Logo (7a.png)</h3>
+                <img src="7a.png" alt="Intel Logo" />
+                <p>Should have transparent background</p>
+            </div>
+        </div>
+        
+        <div class="test-backgrounds">
+            <h2>Background Transparency Test</h2>
+            <p>If logos have transparent backgrounds, they should blend seamlessly with all background colors:</p>
+            
+            <h3>Amazon Logo on Different Backgrounds:</h3>
+            <div class="background-test">
+                <div class="bg-test bg-white">
+                    <img src="4a.png" alt="Amazon on White" />
+                    <span>White BG</span>
+                </div>
+                <div class="bg-test bg-gray">
+                    <img src="4a.png" alt="Amazon on Gray" />
+                    <span>Gray BG</span>
+                </div>
+                <div class="bg-test bg-dark">
+                    <img src="4a.png" alt="Amazon on Dark" />
+                    <span>Dark BG</span>
+                </div>
+                <div class="bg-test bg-blue">
+                    <img src="4a.png" alt="Amazon on Blue" />
+                    <span>Blue BG</span>
+                </div>
+            </div>
+            
+            <h3>NVIDIA Logo on Different Backgrounds:</h3>
+            <div class="background-test">
+                <div class="bg-test bg-white">
+                    <img src="5a.png" alt="NVIDIA on White" />
+                    <span>White BG</span>
+                </div>
+                <div class="bg-test bg-gray">
+                    <img src="5a.png" alt="NVIDIA on Gray" />
+                    <span>Gray BG</span>
+                </div>
+                <div class="bg-test bg-dark">
+                    <img src="5a.png" alt="NVIDIA on Dark" />
+                    <span>Dark BG</span>
+                </div>
+                <div class="bg-test bg-blue">
+                    <img src="5a.png" alt="NVIDIA on Blue" />
+                    <span>Blue BG</span>
+                </div>
+            </div>
+            
+            <h3>Intel Logo on Different Backgrounds:</h3>
+            <div class="background-test">
+                <div class="bg-test bg-white">
+                    <img src="7a.png" alt="Intel on White" />
+                    <span>White BG</span>
+                </div>
+                <div class="bg-test bg-gray">
+                    <img src="7a.png" alt="Intel on Gray" />
+                    <span>Gray BG</span>
+                </div>
+                <div class="bg-test bg-dark">
+                    <img src="7a.png" alt="Intel on Dark" />
+                    <span>Dark BG</span>
+                </div>
+                <div class="bg-test bg-blue">
+                    <img src="7a.png" alt="Intel on Blue" />
+                    <span>Blue BG</span>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: #fef3c7; border-radius: 8px;">
+            <strong>Test Instructions:</strong>
+            <p>If the logos have white backgrounds, you'll see white boxes around them on the gray, dark, and blue backgrounds. If they're truly transparent, they should blend seamlessly with all background colors.</p>
+        </div>
+    </div>
+</body>
+</html>
