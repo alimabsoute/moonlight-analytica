@@ -7,17 +7,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## MOONLIGHT ANALYTICA - LIVE PRODUCTION WEBSITE
 - **Project Name**: Moonlight Analytica  
 - **Live Production URL**: https://moonlightanalytica.com
-- **Current Deployment URL**: https://moonlight-deploy-qxrzdiuyl-alimabsoute-3065s-projects.vercel.app
-- **Deployment Method**: Vercel from `moonlight-deploy/` directory
-- **Last Deployment**: January 7, 2025 (Article system updates)
-- **Status**: Active production website with ongoing development
+- **Current Deployment URL**: https://moonlight-deploy-97e34irh0-alimabsoute-3065s-projects.vercel.app
+- **GitHub Repository**: https://github.com/alimabsoute/moonlight-analytica
+- **Working Directory**: `C:\Users\alima\moonlight-analytica\`
+- **Last Deployment**: September 7, 2025 (Domain fix + complete feature update)
+- **Status**: Active production website with GitHub backup and version control
 
-## CRITICAL DEPLOYMENT FACTS
-- **Deployment Directory**: `C:\Users\alima\moonlight-deploy\`
-- **Deployment Command**: `cd moonlight-deploy && vercel --prod --yes`
-- **Domain Mapping**: moonlightanalytica.com → Vercel deployment
-- **Project Type**: Long-term ongoing website project
-- **Latest Features**: Google-style article headers, updated company logos, news system
+## CRITICAL DEPLOYMENT FACTS ⚠️ UPDATED PATHS ⚠️
+- **Primary Working Directory**: `C:\Users\alima\moonlight-analytica\`
+- **Deployment Command**: `cd moonlight-analytica && vercel --prod --yes`
+- **GitHub Integration**: All changes committed to main branch
+- **Domain Mapping**: moonlightanalytica.com → Vercel deployment (Content-Type fixed)
+- **Project Type**: Long-term ongoing website project with full version control
+- **Latest Features**: Domain download fix, Quantum Field animations, updated company logos
 
 ## KEY FILES & LOCATIONS
 - **Main Site**: `moonlight-complete-structure.html` (homepage)
@@ -28,40 +30,92 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## ⚡ QUICK REFERENCE COMMANDS - ESSENTIAL DAILY USAGE
 
-### 🔥 INSTANT DEPLOYMENT (MOST USED)
+### 🔥 INSTANT DEPLOYMENT (MOST USED) - ⚠️ UPDATED ⚠️
 ```bash
-cd moonlight-deploy && vercel --prod --yes
+cd moonlight-analytica && vercel --prod --yes
 ```
 
 ### 📊 CHECK LIVE STATUS
 ```bash
-# View current deployments
-cd moonlight-deploy && vercel ls
+# View current deployments  
+cd moonlight-analytica && vercel ls
 
 # Check if moonlightanalytica.com is live
 curl -I https://moonlightanalytica.com
 
 # Open live site
 start https://moonlightanalytica.com
+
+# Check git status and GitHub sync
+git status
+git log --oneline -5
 ```
+
+### 🗂️ GITHUB WORKFLOW (ESSENTIAL)
+```bash
+# 1. Check current status
+cd moonlight-analytica && git status
+
+# 2. Pull latest changes from GitHub
+git pull origin main
+
+# 3. Stage changes after making updates
+git add -A
+
+# 4. Commit with descriptive message
+git commit -m "Description of changes
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+# 5. Push to GitHub
+git push origin main
+
+# 6. Deploy to production
+vercel --prod --yes
+```
+
+### ⏰ AUTOMATED COMMIT SYSTEM (30-MINUTE INTERVALS)
+```bash
+# Start automatic GitHub commits every 30 minutes
+start-auto-commit.bat
+
+# OR manually run PowerShell script
+powershell -ExecutionPolicy Bypass -File auto-commit-30min.ps1
+```
+
+**Auto-Commit Features:**
+- ✅ Commits changes every 30 minutes automatically
+- ✅ Only commits when changes are detected
+- ✅ Includes timestamp and project information
+- ✅ Pushes to GitHub repository: https://github.com/alimabsoute/moonlight-analytica
+- ✅ Runs continuously until stopped with Ctrl+C
+
+**Files:**
+- `auto-commit-30min.ps1` - PowerShell script for automated commits
+- `start-auto-commit.bat` - Easy launcher for the auto-commit system
 
 ### 📁 NAVIGATE TO PROJECT DIRECTORIES
 ```bash
-# Main working directory
+# Main working directory (CORRECTED)
 cd C:\Users\alima\
 
-# Deployment directory  
-cd C:\Users\alima\moonlight-deploy\
+# Primary project directory - USE THIS ONE
+cd C:\Users\alima\moonlight-analytica\
 
-# Check git status
+# Check git status and sync with GitHub
 git status
+git pull  # Get latest from GitHub
 ```
 
 ### 🚨 EMERGENCY - NEVER FORGET THESE FACTS
 - **We are working on**: moonlightanalytica.com (LIVE PRODUCTION SITE)
-- **Deployment method**: Vercel from moonlight-deploy/ directory
-- **This is**: Long-term ongoing website project
-- **Always deploy from**: C:\Users\alima\moonlight-deploy\
+- **GitHub Repository**: https://github.com/alimabsoute/moonlight-analytica
+- **Working Directory**: C:\Users\alima\moonlight-analytica\ (NOT moonlight-deploy)
+- **Deployment method**: Vercel from moonlight-analytica/ directory
+- **Always deploy from**: C:\Users\alima\moonlight-analytica\
+- **Version Control**: All changes committed to GitHub main branch
 - **Production URL**: https://moonlightanalytica.com
 
 ## CRITICAL REQUIREMENTS
@@ -132,10 +186,11 @@ npm update
 
 ### 🚀 MOONLIGHT ANALYTICA DEPLOYMENT COMMANDS
 
-#### Production Deployment (CRITICAL)
+#### Production Deployment (CRITICAL) - ⚠️ UPDATED ⚠️
 ```bash
 # STANDARD DEPLOYMENT WORKFLOW - USE EVERY TIME
-cd C:\Users\alima\moonlight-deploy\
+cd C:\Users\alima\moonlight-analytica\
+git add -A && git commit -m "Update $(date)" && git push
 vercel --prod --yes
 
 # Check deployment status
@@ -145,17 +200,27 @@ vercel ls
 curl -I https://moonlightanalytica.com
 ```
 
-#### File Management for Deployment
+#### Complete Development Workflow (RECOMMENDED)
 ```bash
-# Copy updated files to deployment directory
-cd C:\Users\alima\
-cp filename.html moonlight-deploy/
-cp image.png moonlight-deploy/
-cp *.md moonlight-deploy/
+# 1. Navigate to correct directory
+cd C:\Users\alima\moonlight-analytica\
 
-# Navigate and deploy
-cd moonlight-deploy
+# 2. Pull latest changes from GitHub
+git pull origin main
+
+# 3. Make your changes to files
+# (edit moonlight-complete-structure.html, etc.)
+
+# 4. Commit changes to GitHub
+git add -A
+git commit -m "Your change description"
+git push origin main
+
+# 5. Deploy to production
 vercel --prod --yes
+
+# 6. Verify deployment
+curl -I https://moonlightanalytica.com
 ```
 
 #### Deployment Verification
