@@ -39,12 +39,12 @@
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
-            background: var(--bg-primary);
-            color: var(--text-light);
+            background: #faf8f3;
+            color: #1f2937;
             min-height: 100vh;
         }
         
-        /* Animated Background */
+        /* Background Elements */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -53,9 +53,9 @@
             height: 100%;
             z-index: -1;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(0, 191, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(70, 130, 180, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(0, 191, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(70, 130, 180, 0.02) 0%, transparent 50%);
             animation: bgShift 20s ease-in-out infinite;
         }
         
@@ -64,6 +64,141 @@
             33% { transform: translate(-20px, -20px) rotate(120deg); }
             66% { transform: translate(20px, -10px) rotate(240deg); }
         }
+
+        /* Code Rain Background */
+        .code-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        .code-column {
+            position: absolute;
+            top: -200px;
+            white-space: pre;
+            opacity: 0.4;
+            animation: fall linear infinite;
+            line-height: 18px;
+        }
+
+        /* Different columns with dark blue/purple theme */
+        .code-column:nth-child(1) {
+            left: 5%;
+            color: #2d3748;
+            animation-duration: 20s;
+            animation-delay: 0s;
+        }
+
+        .code-column:nth-child(2) {
+            left: 15%;
+            color: #4c51bf;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        .code-column:nth-child(3) {
+            left: 25%;
+            color: #553c9a;
+            animation-duration: 18s;
+            animation-delay: -10s;
+        }
+
+        .code-column:nth-child(4) {
+            left: 40%;
+            color: #2d3748;
+            animation-duration: 22s;
+            animation-delay: -3s;
+        }
+
+        .code-column:nth-child(5) {
+            left: 55%;
+            color: #4c51bf;
+            animation-duration: 16s;
+            animation-delay: -12s;
+        }
+
+        .code-column:nth-child(6) {
+            left: 70%;
+            color: #553c9a;
+            animation-duration: 24s;
+            animation-delay: -7s;
+        }
+
+        .code-column:nth-child(7) {
+            left: 85%;
+            color: #2d3748;
+            animation-duration: 19s;
+            animation-delay: -15s;
+        }
+
+        .code-column:nth-child(8) {
+            left: 95%;
+            color: #4c51bf;
+            animation-duration: 21s;
+            animation-delay: -2s;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-200px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(calc(100vh + 200px));
+                opacity: 0;
+            }
+        }
+
+        /* Syntax highlighting with blue/purple theme */
+        .keyword { 
+            color: #4c51bf; 
+            font-weight: 600;
+        }
+        .string { 
+            color: #553c9a; 
+        }
+        .comment { 
+            color: #718096; 
+            font-style: italic;
+        }
+        .number { 
+            color: #2d3748; 
+            font-weight: 500;
+        }
+
+        /* Random glow effect similar to logo */
+        @keyframes randomGlow {
+            0%, 70%, 100% {
+                text-shadow: none;
+                color: inherit;
+            }
+            15%, 55% {
+                text-shadow: 0 0 10px rgba(0, 191, 255, 0.8), 0 0 20px rgba(0, 191, 255, 0.6);
+                color: #00bfff;
+            }
+        }
+
+        .glow-1 { animation: randomGlow 4s infinite; animation-delay: 0.5s; }
+        .glow-2 { animation: randomGlow 3.5s infinite; animation-delay: 1.2s; }
+        .glow-3 { animation: randomGlow 5s infinite; animation-delay: 2.1s; }
+        .glow-4 { animation: randomGlow 4.2s infinite; animation-delay: 0.8s; }
+        .glow-5 { animation: randomGlow 3.8s infinite; animation-delay: 1.7s; }
+        .glow-6 { animation: randomGlow 4.5s infinite; animation-delay: 2.3s; }
+        .glow-7 { animation: randomGlow 3.2s infinite; animation-delay: 1.1s; }
+        .glow-8 { animation: randomGlow 4.8s infinite; animation-delay: 0.3s; }
         
         /* Navigation */
         .navbar {
@@ -312,7 +447,7 @@
         }
         
         .page-subtitle {
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
@@ -329,10 +464,10 @@
         
         .filter-btn {
             padding: 10px 24px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 191, 255, 0.05);
             border: 1px solid rgba(135, 206, 235, 0.3);
             border-radius: 25px;
-            color: var(--text-light);
+            color: #374151;
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
@@ -496,12 +631,14 @@
         
         /* News Card */
         .news-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(135, 206, 235, 0.2);
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s ease;
             position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
         }
         
         .news-card::after {
@@ -528,13 +665,24 @@
         
         .card-image {
             width: 100%;
-            height: 200px;
+            height: 250px;
             background: linear-gradient(135deg, rgba(0, 191, 255, 0.05), rgba(135, 206, 235, 0.02));
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            opacity: 0.5;
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        .card-image img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            opacity: 1;
+            border-radius: 0;
         }
         
         .card-content {
@@ -555,12 +703,12 @@
             font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 0.75rem;
-            color: var(--text-light);
+            color: #1f2937;
             line-height: 1.3;
         }
         
         .card-excerpt {
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 0.9rem;
             margin-bottom: 1rem;
             line-height: 1.5;
@@ -570,7 +718,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: var(--text-muted);
+            color: #9ca3af;
             font-size: 0.85rem;
         }
         
@@ -636,6 +784,200 @@
 </head>
 <body>
     <div class="bg-animation"></div>
+    
+    <!-- Code Rain Background -->
+    <div class="code-rain">
+        <div class="code-column">
+<span class="keyword glow-1">const</span> analytics = {
+  <span class="string">'users'</span>: <span class="number glow-2">15847</span>,
+  <span class="string">'engagement'</span>: <span class="number">89.7</span>,
+  <span class="string">'conversion'</span>: <span class="number glow-3">3.2</span>
+};
+
+<span class="keyword">function</span> <span class="glow-4">processInsights</span>(data) {
+  <span class="keyword">return</span> data.<span class="glow-5">filter</span>(item => 
+    item.value > <span class="number">threshold</span>
+  );
+}
+
+<span class="comment">// Real-time analytics</span>
+<span class="keyword">const</span> insights = <span class="glow-6">generateInsights</span>(
+  rawData, config
+);
+
+<span class="keyword">if</span> (insights.<span class="glow-7">length</span> > <span class="number">0</span>) {
+  console.<span class="glow-8">log</span>(<span class="string">'Trends detected'</span>);
+}</div>
+
+        <div class="code-column">
+<span class="keyword">SELECT</span> 
+  <span class="glow-1">DATE</span>(created_at) <span class="keyword">as</span> date,
+  <span class="glow-2">COUNT</span>(*) <span class="keyword">as</span> events,
+  <span class="glow-3">AVG</span>(engagement) <span class="keyword">as</span> avg_score
+<span class="keyword">FROM</span> user_analytics
+<span class="keyword">WHERE</span> created_at >= <span class="string glow-4">'2023-09-01'</span>
+<span class="keyword">GROUP BY</span> <span class="glow-5">DATE</span>(created_at)
+<span class="keyword">ORDER BY</span> date <span class="keyword">DESC</span>;
+
+<span class="comment">-- Moonlight Analytics Query</span>
+<span class="keyword">WITH</span> <span class="glow-6">trending_data</span> <span class="keyword">AS</span> (
+  <span class="keyword">SELECT</span> 
+    user_id,
+    <span class="glow-7">SUM</span>(interactions) <span class="keyword">as</span> total
+  <span class="keyword">FROM</span> user_events
+  <span class="keyword">GROUP BY</span> user_id
+)
+
+<span class="keyword">UPDATE</span> analytics_cache 
+<span class="keyword">SET</span> score = <span class="number glow-8">94.8</span>;</div>
+
+        <div class="code-column">
+<span class="keyword">import</span> pandas <span class="keyword">as</span> <span class="glow-1">pd</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> <span class="glow-2">np</span>
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> <span class="glow-3">RandomForest</span>
+
+<span class="comment"># Moonlight analytics pipeline</span>
+<span class="glow-4">df</span> = pd.read_csv(<span class="string">'user_insights.csv'</span>)
+
+<span class="comment"># Feature engineering</span>
+df[<span class="string">'engagement_score'</span>] = (
+  df[<span class="string">'clicks'</span>] * <span class="number glow-5">0.3</span> + 
+  df[<span class="string">'time_spent'</span>] * <span class="number glow-6">0.7</span>
+)
+
+<span class="comment"># Train ML model</span>
+<span class="glow-7">model</span> = RandomForest(n_estimators=<span class="number">100</span>)
+model.<span class="glow-8">fit</span>(X_train, y_train)
+
+predictions = model.predict(X_test)
+print(<span class="string">f'Accuracy: {accuracy:.3f}'</span>)</div>
+
+        <div class="code-column">
+{
+  <span class="string">"moonlight_api"</span>: <span class="string glow-1">"v2.1"</span>,
+  <span class="string">"timestamp"</span>: <span class="number glow-2">1693123456</span>,
+  <span class="string">"analytics"</span>: {
+    <span class="string">"active_users"</span>: <span class="number glow-3">28547</span>,
+    <span class="string">"bounce_rate"</span>: <span class="number">0.18</span>,
+    <span class="string">"conversion"</span>: <span class="number glow-4">0.127</span>
+  },
+  <span class="string">"insights"</span>: [
+    {
+      <span class="string">"type"</span>: <span class="string glow-5">"trend_spike"</span>,
+      <span class="string">"confidence"</span>: <span class="number glow-6">0.97</span>,
+      <span class="string">"desc"</span>: <span class="string glow-7">"Engagement up 34%"</span>
+    }
+  ]
+}
+
+<span class="comment">/* Analytics GraphQL */</span>
+query <span class="glow-8">GetTrends</span>($period: String!) {
+  analytics(timeframe: $period) {
+    users, sessions, insights
+  }
+}</div>
+
+        <div class="code-column">
+<span class="keyword">class</span> <span class="glow-1">MoonlightAnalytics</span>:
+    <span class="keyword">def</span> __init__(self, config):
+        self.config = <span class="glow-2">config</span>
+        self.processor = <span class="glow-3">DataProcessor</span>()
+        
+    <span class="keyword">def</span> <span class="glow-4">process_events</span>(self, events):
+        <span class="string">"""Process real-time analytics"""</span>
+        processed = []
+        <span class="keyword">for</span> event <span class="keyword">in</span> <span class="glow-5">events</span>:
+            <span class="keyword">if</span> self.<span class="glow-6">validate</span>(event):
+                result = self.<span class="glow-7">transform</span>(event)
+                processed.append(result)
+        <span class="keyword">return</span> processed
+    
+    <span class="keyword">def</span> calculate_insights(self):
+        <span class="keyword">return</span> {
+            <span class="string">'engagement'</span>: self.clicks / <span class="glow-8">self.views</span>
+        }</div>
+
+        <div class="code-column">
+<span class="keyword">interface</span> <span class="glow-1">AnalyticsData</span> {
+  userId: string;
+  pageViews: <span class="glow-2">number</span>;
+  sessionTime: number;
+  bounceRate: <span class="glow-3">number</span>;
+}
+
+<span class="keyword">type</span> InsightConfig = {
+  trackingId: <span class="glow-4">string</span>;
+  sampleRate: number;
+  realTime: <span class="glow-5">boolean</span>;
+}
+
+<span class="keyword">const</span> <span class="glow-6">processAnalytics</span> = <span class="keyword">async</span> (
+  config: InsightConfig
+): Promise&lt;<span class="glow-7">AnalyticsData</span>[]&gt; =&gt; {
+  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="glow-8">fetch</span>(
+    <span class="string">`/api/moonlight/${config.trackingId}`</span>
+  );
+  
+  <span class="keyword">return</span> response.json();
+};
+
+<span class="comment">// WebSocket analytics stream</span>
+<span class="keyword">const</span> stream = <span class="keyword">new</span> EventSource(<span class="string">'/insights'</span>);</div>
+
+        <div class="code-column">
+<span class="comment">#!/bin/bash</span>
+<span class="comment"># Moonlight Analytics Deployment</span>
+
+<span class="keyword">echo</span> <span class="string glow-1">"Deploying analytics engine..."</span>
+
+<span class="comment"># Build containers</span>
+docker build -t <span class="glow-2">moonlight-analytics</span>:latest .
+
+<span class="comment"># Deploy to K8s cluster</span>
+kubectl apply -f k8s/<span class="glow-3">deployment.yaml</span>
+kubectl apply -f k8s/<span class="glow-4">service.yaml</span>
+
+<span class="comment"># Monitor rollout status</span>
+kubectl rollout status <span class="glow-5">deployment/analytics</span>
+
+<span class="comment"># Run health validation</span>
+<span class="keyword">if</span> curl -f http://analytics:8080/<span class="glow-6">health</span>; <span class="keyword">then</span>
+  <span class="keyword">echo</span> <span class="string glow-7">"Deployment successful"</span>
+<span class="keyword">else</span>
+  <span class="keyword">echo</span> <span class="string">"Health check failed"</span>
+  exit <span class="number">1</span>
+<span class="keyword">fi</span>
+
+<span class="comment"># Initialize monitoring</span>
+prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
+
+        <div class="code-column">
+<span class="keyword">package</span> main
+
+<span class="keyword">import</span> (
+    <span class="string glow-1">"fmt"</span>
+    <span class="string">"log"</span>
+    <span class="string glow-2">"encoding/json"</span>
+    <span class="string">"net/http"</span>
+)
+
+<span class="keyword">type</span> <span class="glow-3">Insights</span> <span class="keyword">struct</span> {
+    Users     <span class="keyword">int</span>     <span class="string">`json:"users"`</span>
+    Sessions  <span class="keyword">int</span>     <span class="string">`json:"sessions"`</span>
+    Revenue   <span class="keyword glow-4">float64</span> <span class="string">`json:"revenue"`</span>
+    Trends    []<span class="keyword">string</span> <span class="string glow-5">`json:"trends"`</span>
+}
+
+<span class="keyword">func</span> <span class="glow-6">analyticsHandler</span>(w http.ResponseWriter, r *http.Request) {
+    insights := <span class="glow-7">Insights</span>{
+        Users:    <span class="number glow-8">28547</span>,
+        Sessions: <span class="number">41893</span>,
+        Revenue:  <span class="number">87429.75</span>,
+    }
+    
+    json.NewEncoder(w).Encode(insights)
+}</div>
+    </div>
     
     <!-- Navigation -->
     <nav class="navbar">
@@ -741,88 +1083,216 @@
             
             <!-- News Grid -->
             <div class="news-grid">
-                <!-- Featured Article -->
+                <!-- Featured Article - Google Nano Banana vs Adobe -->
                 <article class="featured-article">
-                    <div class="featured-content">
-                        <div class="featured-image">📰</div>
-                        <div class="featured-info">
-                            <span class="featured-badge">Featured</span>
-                            <h2 class="featured-title">OpenAI Announces GPT-5: The Next Leap in AI Technology</h2>
-                            <p class="featured-excerpt">
-                                In a groundbreaking announcement, OpenAI has unveiled GPT-5, promising unprecedented capabilities in natural language understanding and generation. The new model features enhanced reasoning, multimodal capabilities, and improved safety measures.
+                    <div class="featured-content" style="display: block;">
+                        <!-- Large Google Logo at Top -->
+                        <div class="featured-image" style="background: transparent; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 1.5rem; height: auto;">
+                            <svg viewBox="0 0 272 92" style="width: 250px; height: auto;">
+                                <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335"/>
+                                <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#FBBC04"/>
+                                <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#4285F4"/>
+                                <path d="M225 3v65h-9.5V3h9.5z" fill="#34A853"/>
+                                <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
+                                <path d="M35.29 41.41V32H67.8c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Article Preview Content -->
+                        <div class="featured-info" style="text-align: left; padding: 0 1rem;">
+                            <span class="featured-badge">AI & ML</span>
+                            <h2 class="featured-title" style="color: #1f2937;">The 'Photoshop Killer' That Went Viral Before Google Even Announced It</h2>
+                            <p class="featured-excerpt" style="color: #6b7280;">
+                                How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing. A mysterious AI model nicknamed "Nano Banana" has been quietly dominating image editing benchmarks for weeks, leaving the creative industry buzzing with speculation.
                             </p>
+                            
                             <div class="featured-meta">
-                                <span class="meta-item">📅 2 hours ago</span>
-                                <span class="meta-item">⏱️ 5 min read</span>
-                                <span class="meta-item">🏷️ AI & ML</span>
+                                <span class="meta-item">📅 September 3, 2025</span>
+                                <span class="meta-item">⏱️ 12 min read</span>
+                                <span class="meta-item">👤 Tech Analysis Team</span>
                             </div>
-                            <a href="#" class="read-more">Read Full Article →</a>
+                            <a href="https://moonlight-website-deploy-nsj50v0q5-alimabsoute-3065s-projects.vercel.app/google-nano-banana-photoshop-killer.html" class="read-more">Read Full Article →</a>
                         </div>
                     </div>
                 </article>
                 
                 <!-- News Cards -->
-                <article class="news-card">
-                    <div class="card-image">🤖</div>
+                <article class="news-card" onclick="window.open('openai-o1-refusal-pattern-analysis.html', '_blank')">
+                    <div class="card-image">
+                        <img src="1a.png" alt="OpenAI o1 Analysis">
+                    </div>
                     <div class="card-content">
-                        <span class="card-category">AI & Machine Learning</span>
-                        <h3 class="card-title">Google's Gemini Ultra Beats GPT-4 in Benchmark Tests</h3>
-                        <p class="card-excerpt">Latest benchmarks show Google's Gemini Ultra achieving state-of-the-art performance across multiple domains...</p>
+                        <span class="card-category">AI Analysis</span>
+                        <h3 class="card-title">OpenAI o1's Hidden Refusal Pattern: What 47,000 Prompts Revealed</h3>
+                        <p class="card-excerpt">Exclusive data reveals OpenAI o1's systematic refusal behaviors across creative tasks, exposing a fundamental design philosophy that prioritizes safety over user autonomy...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 2 hours ago</span>
+                            <span class="card-read-time">⏱️ 8 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('iphone-17-ai-demo-failure-analysis.html', '_blank')">
+                    <div class="card-image">
+                        <img src="2a.png" alt="iPhone 17 Demo Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Mobile Technology</span>
+                        <h3 class="card-title">iPhone 17 AI Demo Disaster: When Siri Failed on Stage</h3>
+                        <p class="card-excerpt">Apple's most anticipated AI demonstration turned into a public relations nightmare when Siri repeatedly failed to understand basic commands during the iPhone 17 reveal...</p>
                         <div class="card-meta">
                             <span class="card-date">📅 4 hours ago</span>
-                            <span class="card-read-time">⏱️ 3 min</span>
+                            <span class="card-read-time">⏱️ 7 min</span>
                         </div>
                     </div>
                 </article>
                 
-                <article class="news-card">
-                    <div class="card-image">☁️</div>
+                <article class="news-card" onclick="window.open('big-tech-50m-lobbying-california-ai-bill.html', '_blank')">
+                    <div class="card-image">
+                        <img src="3a.png" alt="AI Lobbying Analysis">
+                    </div>
                     <div class="card-content">
-                        <span class="card-category">Cloud Computing</span>
-                        <h3 class="card-title">AWS Launches Quantum Computing Service in 10 New Regions</h3>
-                        <p class="card-excerpt">Amazon Web Services expands its quantum computing offerings, making the technology more accessible to developers worldwide...</p>
+                        <span class="card-category">Policy & Regulation</span>
+                        <h3 class="card-title">Big Tech's $50M California AI Bill Lobbying Blitz Exposed</h3>
+                        <p class="card-excerpt">Internal documents reveal how Silicon Valley giants coordinated a massive lobbying campaign to water down California's landmark AI safety legislation...</p>
                         <div class="card-meta">
                             <span class="card-date">📅 6 hours ago</span>
-                            <span class="card-read-time">⏱️ 4 min</span>
-                        </div>
-                    </div>
-                </article>
-                
-                <article class="news-card">
-                    <div class="card-image">🔒</div>
-                    <div class="card-content">
-                        <span class="card-category">Security</span>
-                        <h3 class="card-title">Major Security Vulnerability Discovered in Popular Framework</h3>
-                        <p class="card-excerpt">Security researchers have identified a critical vulnerability affecting millions of applications using the framework...</p>
-                        <div class="card-meta">
-                            <span class="card-date">📅 8 hours ago</span>
                             <span class="card-read-time">⏱️ 6 min</span>
                         </div>
                     </div>
                 </article>
                 
-                <article class="news-card">
-                    <div class="card-image">🚀</div>
+                <article class="news-card" onclick="window.open('amazon-shadow-workforce-purge-10000-contractors.html', '_blank')">
+                    <div class="card-image">
+                        <img src="4a.png" alt="Amazon Workforce Analysis">
+                    </div>
                     <div class="card-content">
-                        <span class="card-category">Startups</span>
-                        <h3 class="card-title">AI Startup Raises $500M at $10B Valuation</h3>
-                        <p class="card-excerpt">The latest funding round positions the company as one of the most valuable AI startups in Silicon Valley...</p>
+                        <span class="card-category">Corporate Strategy</span>
+                        <h3 class="card-title">Amazon's Shadow Workforce Purge: 10,000 Contractors Vanish</h3>
+                        <p class="card-excerpt">Amazon quietly terminated thousands of contract workers without public disclosure, revealing a hidden cost-cutting strategy that bypasses traditional layoff reporting...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 12 hours ago</span>
+                            <span class="card-date">📅 8 hours ago</span>
+                            <span class="card-read-time">⏱️ 9 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('nvidia-blackwell-chips-sold-out-2027.html', '_blank')">
+                    <div class="card-image">
+                        <img src="5a.png" alt="NVIDIA Blackwell Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Hardware</span>
+                        <h3 class="card-title">NVIDIA's Blackwell Chips Already Sold Out Through 2027</h3>
+                        <p class="card-excerpt">Industry sources confirm that NVIDIA's next-generation Blackwell architecture is completely booked for the next three years, creating a potential AI development bottleneck...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 10 hours ago</span>
                             <span class="card-read-time">⏱️ 5 min</span>
                         </div>
                     </div>
                 </article>
                 
-                <article class="news-card">
-                    <div class="card-image">💻</div>
+                <article class="news-card" onclick="window.open('intel-secret-plan-split-500b-semiconductor-war.html', '_blank')">
+                    <div class="card-image">
+                        <img src="7a.png" alt="Intel Split Analysis">
+                    </div>
                     <div class="card-content">
-                        <span class="card-category">Development</span>
-                        <h3 class="card-title">React 19 Released with Game-Changing Features</h3>
-                        <p class="card-excerpt">The new version introduces server components, improved performance, and revolutionary developer experience enhancements...</p>
+                        <span class="card-category">Semiconductors</span>
+                        <h3 class="card-title">Intel's Secret Plan to Split Will Trigger $500B Semiconductor War</h3>
+                        <p class="card-excerpt">Intel's inevitable foundry separation will trigger the largest supply chain realignment in semiconductor history, with the split potentially happening as soon as Q3 2025...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 1 day ago</span>
+                            <span class="card-date">📅 12 hours ago</span>
                             <span class="card-read-time">⏱️ 7 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('10-million-token-arms-race-chatgpt-calculator.html', '_blank')">
+                    <div class="card-image">
+                        <img src="8a.png" alt="Token Arms Race Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI & ML</span>
+                        <h3 class="card-title">The 10-Million Token Arms Race That Will Make ChatGPT Look Like a Calculator</h3>
+                        <p class="card-excerpt">Context windows will hit 10 million tokens by mid-2026, fundamentally changing AI capabilities and making current models seem primitive...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 14 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('ai-eating-own-tail-chatgpt-dumber-2026.html', '_blank')">
+                    <div class="card-image">
+                        <img src="6a.png" alt="AI Quality Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI Research</span>
+                        <h3 class="card-title">AI Eating Its Own Tail: Why ChatGPT Gets Dumber by 2026</h3>
+                        <p class="card-excerpt">New research reveals how AI models trained on AI-generated content experience rapid quality degradation, potentially leading to a collapse in capabilities...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 12 hours ago</span>
+                            <span class="card-read-time">⏱️ 7 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('meta-google-apple-twitter-killers-march-2026.html', '_blank')">
+                    <div class="card-image">
+                        <img src="7a.png" alt="Social Media Evolution">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Social Media</span>
+                        <h3 class="card-title">Meta, Google, Apple: The Twitter Killers March Toward 2026</h3>
+                        <p class="card-excerpt">Three tech giants are positioning themselves to capture Twitter's displaced user base, each with fundamentally different approaches to social networking...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 14 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('intel-secret-plan-split-500b-semiconductor-war.html', '_blank')">
+                    <div class="card-image">
+                        <img src="8a.png" alt="Intel Strategy Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Semiconductors</span>
+                        <h3 class="card-title">Intel's Secret Plan to Split: The $500B Semiconductor War</h3>
+                        <p class="card-excerpt">Internal documents reveal Intel's drastic restructuring plan to separate its manufacturing and design divisions, marking a seismic shift in the chip industry...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 16 hours ago</span>
+                            <span class="card-read-time">⏱️ 8 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('10-million-token-arms-race-chatgpt-calculator.html', '_blank')">
+                    <div class="card-image">
+                        <img src="9a.png" alt="Token Context Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI Technology</span>
+                        <h3 class="card-title">The 10 Million Token Arms Race: When ChatGPT Became a Calculator</h3>
+                        <p class="card-excerpt">As AI models expand their context windows to unprecedented lengths, they're becoming less conversational and more computational, fundamentally changing their nature...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 18 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('vision-pro-2-ditching-500-feature-wanted.html', '_blank')">
+                    <div class="card-image">
+                        <img src="10a.png" alt="Vision Pro Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">VR/AR Technology</span>
+                        <h3 class="card-title">Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted</h3>
+                        <p class="card-excerpt">Apple plans to remove the controversial EyeSight feature from Vision Pro 2, acknowledging that the external display was more gimmick than genuine innovation...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 20 hours ago</span>
+                            <span class="card-read-time">⏱️ 5 min</span>
                         </div>
                     </div>
                 </article>
@@ -853,5 +1323,6 @@
             document.querySelector('.loading').style.display = 'none';
         }, 2000);
     </script>
+
 </body>
 </html>
