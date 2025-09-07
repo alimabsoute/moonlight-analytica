@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumCore - SaaS Innovation Lab | AI-Powered Business Solutions</title>
+    <meta name="description" content="Discover cutting-edge SaaS solutions: PhynxTimer productivity app, ATS Resume Helper, and Line Vision Analytics. AI-powered tools for modern businesses.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff6b6b;
+            --accent-color: #4ecdc4;
+            --text-light: #ffffff;
+            --text-dark: #2d3748;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-light: rgba(0, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: #000;
+        }
+        
+        /* 3D Cube Background */
+        #cube-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Color Scheme Controls */
+        .color-controls {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 180px;
+        }
+        
+        .controls-title {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .scheme-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .scheme-btn {
+            padding: 6px 8px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-light);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .scheme-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .scheme-btn.active {
+            background: var(--primary-color);
+            color: #000;
+            border-color: var(--primary-color);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            z-index: 10;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+        
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-light), var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.5;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+        
+        .cta-btn {
+            padding: 18px 36px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        .cta-btn.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: #000;
+        }
+        
+        .cta-btn.secondary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            color: var(--text-light);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px var(--shadow-light);
+        }
+        
+        .cta-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-light);
+            font-size: 0.9rem;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+        
+        .scroll-indicator::after {
+            content: '↓';
+            display: block;
+            font-size: 1.5rem;
+            margin-top: 5px;
+            color: var(--primary-color);
+        }
+        
+        /* Products Section */
+        .products {
+            padding: 120px 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(26, 26, 46, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .section-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .section-description {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.75);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2.5rem;
+            margin-top: 80px;
+        }
+        
+        .product-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 0;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 520px;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .product-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-12px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px var(--shadow-dark);
+        }
+        
+        .product-header {
+            padding: 2.5rem 2.5rem 1.5rem 2.5rem;
+            position: relative;
+        }
+        
+        .product-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-live {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-beta {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning-color);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-coming {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--info-color);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .product-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0, 255, 255, 0.3));
+        }
+        
+        .product-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
+        .product-tagline {
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .product-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+        
+        .product-features {
+            padding: 0 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .features-list {
+            list-style: none;
+            display: grid;
+            gap: 0.75rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+        
+        .feature-check {
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .product-footer {
+            padding: 0 2.5rem 2.5rem 2.5rem;
+            margin-top: auto;
+        }
+        
+        .product-cta {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: block;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-live {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+        }
+        
+        .cta-beta {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+            color: white;
+        }
+        
+        .cta-coming {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            color: var(--text-light);
+        }
+        
+        .product-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cta-coming:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        /* Blog Preview Section */
+        .blog-preview {
+            padding: 120px 0;
+            background: rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 60px;
+        }
+        
+        .blog-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px var(--shadow-dark);
+        }
+        
+        .blog-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #000;
+        }
+        
+        .blog-content {
+            padding: 1.5rem;
+        }
+        
+        .blog-category {
+            background: rgba(0, 255, 255, 0.2);
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .blog-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .blog-excerpt {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            padding: 60px 0 40px 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            display: block;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-section h4 {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-copyright {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .color-controls {
+                position: static;
+                margin: 20px auto;
+                width: fit-content;
+            }
+            
+            .hero {
+                padding: 0 15px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .product-card {
+                min-height: auto;
+            }
+            
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: left;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease;
+        }
+        
+        .loading-text {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-text">Launching SaaS Portfolio...</div>
+    </div>
+
+    <!-- 3D Cube Background -->
+    <canvas id="cube-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">QuantumCore</a>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#products" class="nav-link">Products</a></li>
+                <li><a href="#blog" class="nav-link">Blog</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Color Scheme Controls -->
+    <div class="color-controls">
+        <div class="controls-title">🎨 Themes</div>
+        <div class="scheme-grid">
+            <div class="scheme-btn active" data-scheme="dark-bright">Dark + Bright</div>
+            <div class="scheme-btn" data-scheme="light-dark">Light + Dark</div>
+            <div class="scheme-btn" data-scheme="purple-gold">Purple + Gold</div>
+            <div class="scheme-btn" data-scheme="ice-fire">Ice + Fire</div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 SaaS Innovation Lab</div>
+            <h1 class="hero-title">Build. Launch. Scale.</h1>
+            <p class="hero-subtitle">
+                Cutting-edge SaaS solutions powered by AI and machine vision. 
+                From productivity tools to enterprise analytics, we're building the future of business software.
+            </p>
+            <div class="cta-buttons">
+                <a href="#products" class="cta-btn primary">Explore Products</a>
+                <a href="#blog" class="cta-btn secondary">Read Our Blog</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">Discover our solutions</div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">⚡ Our SaaS Portfolio</div>
+                <h2 class="section-title">Revolutionary Tools</h2>
+                <p class="section-description">
+                    Each product is crafted with cutting-edge technology to solve real business challenges. 
+                    From individual productivity to enterprise-scale analytics.
+                </p>
+            </div>
+            
+            <div class="products-grid">
+                <!-- PhynxTimer - Live Product -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-status status-live">Live</div>
+                        <span class="product-icon">⏱️</span>
+                        <h3 class="product-title">PhynxTimer</h3>
+                        <div class="product-tagline">Productivity Mastery</div>
+                        <p class="product-description">
+                            Advanced pomodoro timer and productivity tracking system. 
+                            Boost your focus with intelligent break suggestions, detailed analytics, 
+                            and seamless integration across all your devices.
+                        </p>
+                    </div>
+                    
+                    <div class="product-features">
+                        <ul class="features-list">
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Smart focus sessions with AI-powered break timing
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Detailed productivity analytics and insights
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Cross-platform sync (Web, Desktop, Mobile)
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Goal setting and achievement tracking
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="product-footer">
+                        <a href="https://phynxtimer.com" target="_blank" class="product-cta cta-live">
+                            Visit PhynxTimer →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ATS Resume Helper - Beta -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-status status-beta">Beta</div>
+                        <span class="product-icon">📄</span>
+                        <h3 class="product-title">ATS Resume Helper</h3>
+                        <div class="product-tagline">Career Accelerator</div>
+                        <p class="product-description">
+                            AI-powered resume optimization that beats Applicant Tracking Systems. 
+                            Analyze job descriptions, optimize keywords, and increase your interview chances by 300%.
+                        </p>
+                    </div>
+                    
+                    <div class="product-features">
+                        <ul class="features-list">
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                ATS compatibility scoring and optimization
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Job description keyword matching
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Industry-specific resume templates
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Real-time feedback and suggestions
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="product-footer">
+                        <a href="#beta-signup" class="product-cta cta-beta">
+                            Join Beta Waitlist
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Line Vision Analytics - Coming Soon -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-status status-coming">Coming Soon</div>
+                        <span class="product-icon">👁️</span>
+                        <h3 class="product-title">Line Vision Analytics</h3>
+                        <div class="product-tagline">Retail Intelligence</div>
+                        <p class="product-description">
+                            Revolutionary computer vision platform for real-time queue management. 
+                            Monitor line efficiency, customer wait times, and optimize operations 
+                            with machine learning insights.
+                        </p>
+                    </div>
+                    
+                    <div class="product-features">
+                        <ul class="features-list">
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Real-time line counting and wait time prediction
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Customer flow analytics and heatmaps
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Staff optimization recommendations
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-check">✓</span>
+                                Integration with POS and scheduling systems
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="product-footer">
+                        <a href="#early-access" class="product-cta cta-coming">
+                            Get Early Access
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Preview Section -->
+    <section class="blog-preview" id="blog">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">📰 Latest from Our Blog</div>
+                <h2 class="section-title">Tech Insights & Analysis</h2>
+                <p class="section-description">
+                    Stay ahead with AI-generated insights on technology trends, product reviews, 
+                    and industry analysis. Updated 3-5 times daily.
+                </p>
+            </div>
+            
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image">🤖</div>
+                    <div class="blog-content">
+                        <div class="blog-category">AI News</div>
+                        <h3 class="blog-title">OpenAI's Latest GPT Model Shows Breakthrough in Reasoning</h3>
+                        <p class="blog-excerpt">
+                            Analysis of the new capabilities and potential impact on SaaS development and business automation...
+                        </p>
+                        <div class="blog-meta">
+                            <span>AI Reporter</span>
+                            <span>2 hours ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">🚀</div>
+                    <div class="blog-content">
+                        <div class="blog-category">Tech Products</div>
+                        <h3 class="blog-title">Top 10 Productivity SaaS Tools Revolutionizing Remote Work</h3>
+                        <p class="blog-excerpt">
+                            Comprehensive review of the latest productivity platforms, including our own PhynxTimer analysis...
+                        </p>
+                        <div class="blog-meta">
+                            <span>Product Review</span>
+                            <span>6 hours ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">🎮</div>
+                    <div class="blog-content">
+                        <div class="blog-category">Gaming</div>
+                        <h3 class="blog-title">How AI is Transforming Game Development and Player Experience</h3>
+                        <p class="blog-excerpt">
+                            From procedural content generation to intelligent NPCs, exploring the intersection of gaming and AI...
+                        </p>
+                        <div class="blog-meta">
+                            <span>Gaming Analyst</span>
+                            <span>12 hours ago</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#blog-full" class="cta-btn primary">View All Articles</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">QuantumCore</div>
+            
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>Products</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://phynxtimer.com" class="footer-link">PhynxTimer</a></li>
+                        <li><a href="#beta-signup" class="footer-link">ATS Resume Helper</a></li>
+                        <li><a href="#early-access" class="footer-link">Line Vision Analytics</a></li>
+                        <li><a href="#roadmap" class="footer-link">Product Roadmap</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#blog" class="footer-link">Tech Blog</a></li>
+                        <li><a href="#documentation" class="footer-link">Documentation</a></li>
+                        <li><a href="#api" class="footer-link">API Access</a></li>
+                        <li><a href="#support" class="footer-link">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about" class="footer-link">About Us</a></li>
+                        <li><a href="#careers" class="footer-link">Careers</a></li>
+                        <li><a href="#contact" class="footer-link">Contact</a></li>
+                        <li><a href="#press" class="footer-link">Press Kit</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="#newsletter" class="footer-link">Newsletter</a></li>
+                        <li><a href="#twitter" class="footer-link">Twitter</a></li>
+                        <li><a href="#linkedin" class="footer-link">LinkedIn</a></li>
+                        <li><a href="#github" class="footer-link">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-copyright">
+                © 2024 QuantumCore Technologies. All rights reserved. | SaaS Innovation Lab | AI-Powered Solutions
+            </div>
+        </div>
+    </footer>
+
+    <!-- Same 3D Cube Script as before (simplified for background use) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Same cube implementation as before, optimized for background use
+        class ColorSchemes {
+            static schemes = {
+                'dark-bright': {
+                    background: { top: '#000000', bottom: '#1a1a2e' },
+                    cube: {
+                        face1: { color: 0xffffff, metalness: 0.9, roughness: 0.1, emissive: 0x001122 },
+                        face2: { color: 0x00ffff, metalness: 0.8, roughness: 0.2, emissive: 0x002244 },
+                        face3: { color: 0x66ff66, metalness: 0.7, roughness: 0.3, emissive: 0x002200 },
+                        face4: { color: 0xffff66, metalness: 0.8, roughness: 0.2, emissive: 0x222200 },
+                        face5: { color: 0xff6666, metalness: 0.7, roughness: 0.3, emissive: 0x220000 },
+                        face6: { color: 0xff66ff, metalness: 0.8, roughness: 0.2, emissive: 0x220022 }
+                    },
+                    wireframe: 0x00ffff,
+                    particles: [0x00ffff, 0xff6b6b, 0x4ecdc4, 0xffe66d, 0xff6b9d, 0x66ff66],
+                    lights: {
+                        ambient: 0x404040, directional: 0xffffff,
+                        point1: { color: 0x00ffff, intensity: 1.2 },
+                        point2: { color: 0xff6b6b, intensity: 1.0 }
+                    }
+                },
+                'light-dark': {
+                    background: { top: '#f0f4f8', bottom: '#e2e8f0' },
+                    cube: {
+                        face1: { color: 0x2d3748, metalness: 0.8, roughness: 0.2, emissive: 0x000000 },
+                        face2: { color: 0x4a5568, metalness: 0.7, roughness: 0.3, emissive: 0x000000 },
+                        face3: { color: 0x663399, metalness: 0.9, roughness: 0.1, emissive: 0x110022 },
+                        face4: { color: 0x1a202c, metalness: 0.8, roughness: 0.2, emissive: 0x000000 },
+                        face5: { color: 0x2b2d42, metalness: 0.7, roughness: 0.3, emissive: 0x000000 },
+                        face6: { color: 0x8d1b3d, metalness: 0.9, roughness: 0.1, emissive: 0x220011 }
+                    },
+                    wireframe: 0x663399,
+                    particles: [0x663399, 0x8d1b3d, 0x4a5568, 0x2d3748],
+                    lights: {
+                        ambient: 0x808080, directional: 0xffffff,
+                        point1: { color: 0x663399, intensity: 0.8 },
+                        point2: { color: 0x8d1b3d, intensity: 0.6 }
+                    }
+                },
+                'purple-gold': {
+                    background: { top: '#1a0933', bottom: '#2d1b69' },
+                    cube: {
+                        face1: { color: 0xffd700, metalness: 0.9, roughness: 0.1, emissive: 0x332200 },
+                        face2: { color: 0xffb347, metalness: 0.8, roughness: 0.2, emissive: 0x331100 },
+                        face3: { color: 0xff8c42, metalness: 0.7, roughness: 0.3, emissive: 0x330800 },
+                        face4: { color: 0xffa500, metalness: 0.9, roughness: 0.1, emissive: 0x331a00 },
+                        face5: { color: 0xdaa520, metalness: 0.8, roughness: 0.2, emissive: 0x221800 },
+                        face6: { color: 0xb8860b, metalness: 0.7, roughness: 0.3, emissive: 0x221100 }
+                    },
+                    wireframe: 0xffd700,
+                    particles: [0xffd700, 0xffb347, 0xff8c42, 0xffa500],
+                    lights: {
+                        ambient: 0x302060, directional: 0xffffff,
+                        point1: { color: 0xffd700, intensity: 1.5 },
+                        point2: { color: 0xff8c42, intensity: 1.2 }
+                    }
+                },
+                'ice-fire': {
+                    background: { top: '#0a1628', bottom: '#1e3a8a' },
+                    cube: {
+                        face1: { color: 0xff4500, metalness: 0.8, roughness: 0.2, emissive: 0x441100 },
+                        face2: { color: 0xff6347, metalness: 0.7, roughness: 0.3, emissive: 0x441122 },
+                        face3: { color: 0xffa500, metalness: 0.9, roughness: 0.1, emissive: 0x332200 },
+                        face4: { color: 0xff0000, metalness: 0.8, roughness: 0.2, emissive: 0x440000 },
+                        face5: { color: 0xdc143c, metalness: 0.7, roughness: 0.3, emissive: 0x330011 },
+                        face6: { color: 0xff69b4, metalness: 0.9, roughness: 0.1, emissive: 0x330022 }
+                    },
+                    wireframe: 0xff4500,
+                    particles: [0xff4500, 0xff6347, 0xffa500, 0xff0000],
+                    lights: {
+                        ambient: 0x203060, directional: 0xffffff,
+                        point1: { color: 0xff4500, intensity: 1.3 },
+                        point2: { color: 0xff0000, intensity: 1.1 }
+                    }
+                }
+            };
+        }
+
+        class SaaSPortfolioCube {
+            constructor() {
+                this.currentScheme = 'dark-bright';
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createCube();
+                this.createParticles();
+                this.setupControls();
+                this.animate();
+            }
+
+            init() {
+                this.canvas = document.getElementById('cube-canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 0, 18);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                
+                this.mouse = new THREE.Vector2();
+                this.time = 0;
+            }
+
+            createScene() {
+                this.updateBackground();
+            }
+
+            updateBackground() {
+                const scheme = ColorSchemes.schemes[this.currentScheme];
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = 2;
+                canvas.height = 256;
+                const context = canvas.getContext('2d');
+                
+                const gradient = context.createLinearGradient(0, 0, 0, 256);
+                gradient.addColorStop(0, scheme.background.top);
+                gradient.addColorStop(1, scheme.background.bottom);
+                
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 2, 256);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const geometry = new THREE.SphereGeometry(100, 32, 16);
+                const material = new THREE.MeshBasicMaterial({ 
+                    map: texture, 
+                    side: THREE.BackSide 
+                });
+                
+                if (this.backgroundSphere) {
+                    this.scene.remove(this.backgroundSphere);
+                }
+                this.backgroundSphere = new THREE.Mesh(geometry, material);
+                this.scene.add(this.backgroundSphere);
+            }
+
+            createLights() {
+                this.lights = {};
+                this.updateLights();
+            }
+
+            updateLights() {
+                Object.values(this.lights).forEach(light => {
+                    if (light.parent) this.scene.remove(light);
+                });
+                
+                const scheme = ColorSchemes.schemes[this.currentScheme].lights;
+                
+                this.lights.ambient = new THREE.AmbientLight(scheme.ambient, 0.5);
+                this.scene.add(this.lights.ambient);
+                
+                this.lights.directional = new THREE.DirectionalLight(scheme.directional, 0.8);
+                this.lights.directional.position.set(15, 15, 10);
+                this.scene.add(this.lights.directional);
+                
+                this.lights.point1 = new THREE.PointLight(scheme.point1.color, scheme.point1.intensity * 0.6, 35);
+                this.lights.point1.position.set(-15, 10, 8);
+                this.scene.add(this.lights.point1);
+                
+                this.lights.point2 = new THREE.PointLight(scheme.point2.color, scheme.point2.intensity * 0.6, 35);
+                this.lights.point2.position.set(15, -10, -8);
+                this.scene.add(this.lights.point2);
+            }
+
+            createCube() {
+                this.cubeGroup = new THREE.Group();
+                this.scene.add(this.cubeGroup);
+                
+                const cubeGeometry = new THREE.BoxGeometry(5, 5, 5);
+                this.updateCubeMaterials();
+                
+                this.mainCube = new THREE.Mesh(cubeGeometry, this.cubeMaterials);
+                this.cubeGroup.add(this.mainCube);
+                
+                // Inner core
+                const coreGeometry = new THREE.IcosahedronGeometry(2, 1);
+                const coreMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 0.9,
+                    roughness: 0.1,
+                    transparent: true,
+                    opacity: 0.4,
+                    emissive: 0x002244,
+                });
+                this.innerCore = new THREE.Mesh(coreGeometry, coreMaterial);
+                this.cubeGroup.add(this.innerCore);
+                
+                this.updateWireframe();
+            }
+
+            updateCubeMaterials() {
+                const scheme = ColorSchemes.schemes[this.currentScheme].cube;
+                
+                this.cubeMaterials = [
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face1, transparent: true, opacity: 0.7 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face2, transparent: true, opacity: 0.7 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face3, transparent: true, opacity: 0.7 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face4, transparent: true, opacity: 0.7 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face5, transparent: true, opacity: 0.7 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face6, transparent: true, opacity: 0.7 })
+                ];
+                
+                if (this.mainCube) {
+                    this.mainCube.material = this.cubeMaterials;
+                }
+            }
+
+            updateWireframe() {
+                if (this.wireframe) {
+                    this.cubeGroup.remove(this.wireframe);
+                }
+                
+                const wireframeGeometry = new THREE.EdgesGeometry(this.mainCube.geometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: ColorSchemes.schemes[this.currentScheme].wireframe,
+                    transparent: true, 
+                    opacity: 0.3
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cubeGroup.add(this.wireframe);
+            }
+
+            createParticles() {
+                this.particles = [];
+                this.maxParticles = 60; // Reduced for better performance
+                
+                this.particleGeometries = [
+                    new THREE.BoxGeometry(0.15, 0.15, 0.15),
+                    new THREE.BoxGeometry(0.2, 0.08, 0.08),
+                ];
+                
+                this.updateParticleMaterials();
+            }
+
+            updateParticleMaterials() {
+                const colors = ColorSchemes.schemes[this.currentScheme].particles;
+                this.particleMaterials = colors.map(color => 
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: color,
+                        transparent: true,
+                        opacity: 0.6,
+                        emissive: color,
+                        emissiveIntensity: 0.2
+                    })
+                );
+            }
+
+            createParticle() {
+                if (this.particles.length >= this.maxParticles) return;
+                
+                const geometry = this.particleGeometries[Math.floor(Math.random() * this.particleGeometries.length)];
+                const material = this.particleMaterials[Math.floor(Math.random() * this.particleMaterials.length)].clone();
+                
+                const particle = new THREE.Mesh(geometry, material);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const elevation = (Math.random() - 0.5) * Math.PI;
+                const distance = 25 + Math.random() * 15;
+                
+                particle.position.set(
+                    Math.cos(angle) * Math.cos(elevation) * distance,
+                    Math.sin(elevation) * distance,
+                    Math.sin(angle) * Math.cos(elevation) * distance
+                );
+                
+                particle.userData = {
+                    speed: 0.015 + Math.random() * 0.025,
+                    life: 1.0,
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.08,
+                        y: (Math.random() - 0.5) * 0.08,
+                        z: (Math.random() - 0.5) * 0.08
+                    }
+                };
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+
+            updateParticles() {
+                if (Math.random() < 0.08) {
+                    this.createParticle();
+                }
+                
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    particle.rotation.x += userData.rotationSpeed.x;
+                    particle.rotation.y += userData.rotationSpeed.y;
+                    particle.rotation.z += userData.rotationSpeed.z;
+                    
+                    const direction = new THREE.Vector3().subVectors(this.cubeGroup.position, particle.position).normalize();
+                    particle.position.add(direction.multiplyScalar(userData.speed));
+                    
+                    const distance = particle.position.distanceTo(this.cubeGroup.position);
+                    
+                    if (distance < 4.0) {
+                        userData.life -= 0.04;
+                        particle.material.opacity = userData.life * 0.6;
+                        particle.scale.setScalar(userData.life);
+                    }
+                    
+                    if (userData.life <= 0 || distance < 1.5) {
+                        this.scene.remove(particle);
+                        particle.geometry.dispose();
+                        particle.material.dispose();
+                        this.particles.splice(i, 1);
+                    }
+                }
+            }
+
+            setupControls() {
+                document.addEventListener('mousemove', (e) => {
+                    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            switchColorScheme(schemeName) {
+                this.currentScheme = schemeName;
+                this.updateBackground();
+                this.updateLights();
+                this.updateCubeMaterials();
+                this.updateWireframe();
+                this.updateParticleMaterials();
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.003;
+                
+                this.cubeGroup.rotation.x += 0.0015;
+                this.cubeGroup.rotation.y += 0.003;
+                this.cubeGroup.rotation.z += 0.0008;
+                
+                this.cubeGroup.position.y = Math.sin(this.time * 0.4) * 0.6;
+                this.cubeGroup.position.x = Math.cos(this.time * 0.25) * 0.4;
+                
+                const scale = 1 + Math.sin(this.time * 1.5) * 0.04;
+                this.cubeGroup.scale.setScalar(scale);
+                
+                this.cubeGroup.rotation.x += this.mouse.y * 0.001;
+                this.cubeGroup.rotation.y += this.mouse.x * 0.001;
+                
+                if (this.innerCore) {
+                    this.innerCore.rotation.x -= 0.008;
+                    this.innerCore.rotation.y += 0.012;
+                }
+                
+                if (this.wireframe) {
+                    this.wireframe.material.opacity = 0.3 + Math.sin(this.time * 2.5) * 0.15;
+                }
+                
+                this.updateParticles();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // SaaS Landing Page functionality
+        class SaaSLanding {
+            constructor() {
+                this.cube = new SaaSPortfolioCube();
+                this.setupNavigation();
+                this.setupColorControls();
+                this.setupScrollEffects();
+                this.setupProductInteractions();
+                this.removeLoading();
+            }
+
+            setupNavigation() {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = document.querySelector(anchor.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+
+                window.addEventListener('scroll', () => {
+                    const navbar = document.getElementById('navbar');
+                    if (window.scrollY > 100) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            setupColorControls() {
+                const schemeButtons = document.querySelectorAll('.scheme-btn');
+                schemeButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const scheme = btn.dataset.scheme;
+                        this.cube.switchColorScheme(scheme);
+                        
+                        schemeButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                    });
+                });
+            }
+
+            setupScrollEffects() {
+                const observerOptions = {
+                    threshold: 0.15,
+                    rootMargin: '0px 0px -80px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.product-card, .blog-card').forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(40px)';
+                    el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    observer.observe(el);
+                });
+            }
+
+            setupProductInteractions() {
+                // Beta signup modal (placeholder)
+                document.querySelectorAll('[href="#beta-signup"]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        alert('Beta signup coming soon! We\'ll notify you when ATS Resume Helper is ready.');
+                    });
+                });
+
+                // Early access modal (placeholder)
+                document.querySelectorAll('[href="#early-access"]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        alert('Early access signup coming soon! Line Vision Analytics is in development.');
+                    });
+                });
+
+                // Product card hover effects
+                document.querySelectorAll('.product-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        card.style.transform = 'translateY(-12px) scale(1.02)';
+                    });
+                    
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = 'translateY(0) scale(1)';
+                    });
+                });
+            }
+
+            removeLoading() {
+                setTimeout(() => {
+                    const loading = document.getElementById('loading');
+                    loading.style.opacity = '0';
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                    }, 1000);
+                }, 3000);
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new SaaSLanding();
+        });
+    </script>
+</body>
+</html>

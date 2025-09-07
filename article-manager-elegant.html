@@ -1,0 +1,3236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Manager - Moonlight Analytica</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-glow: #00bfff;
+            --secondary-glow: #87ceeb;
+            --accent-purple: #6366f1;
+            --dark-bg: #0a0d14;
+            --darker-bg: #050810;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a9c0;
+            --text-muted: #6b7280;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, #0f1419 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 191, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.01) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Header with glassmorphism effect */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-glow), var(--secondary-glow), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--accent-purple));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            animation: gradient-shift 4s ease-in-out infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 1px solid;
+            transition: all 0.3s ease;
+        }
+
+        .status-connected {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+        }
+
+        .status-disconnected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            height: calc(100vh - 240px);
+            min-height: 600px;
+        }
+
+        /* Elegant sidebar */
+        .articles-sidebar {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .articles-sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-glow) 30%, var(--secondary-glow) 70%, transparent);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 25px 20px 25px;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .sidebar-header h3 {
+            color: var(--primary-glow);
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header h3::before {
+            content: '📚';
+            font-size: 1.1rem;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, var(--primary-glow), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .refresh-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .refresh-btn:hover::before {
+            left: 100%;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.4);
+        }
+
+        .articles-list-container {
+            padding: 20px;
+            height: calc(100% - 80px);
+            overflow-y: auto;
+        }
+
+        .articles-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .articles-list-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .articles-list-container::-webkit-scrollbar-thumb {
+            background: var(--primary-glow);
+            border-radius: 3px;
+            opacity: 0.7;
+        }
+
+        .article-list {
+            list-style: none;
+        }
+
+        .article-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        .article-item:hover {
+            border-color: var(--primary-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 191, 255, 0.15);
+        }
+
+        .article-item:hover::before {
+            opacity: 0.05;
+        }
+
+        .article-item.active {
+            border-color: var(--primary-glow);
+            background: rgba(0, 191, 255, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 191, 255, 0.2);
+        }
+
+        .article-preview {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .article-preview-image {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 12px;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .article-item:hover .article-preview-image {
+            border-color: var(--primary-glow);
+            box-shadow: 0 6px 20px rgba(0, 191, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .article-preview-placeholder {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--primary-glow));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .article-preview-placeholder .placeholder-icon {
+            font-size: 1.4rem;
+            opacity: 0.8;
+        }
+
+        .article-preview-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .article-preview-content h4 {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: color 0.3s ease;
+        }
+
+        .article-item:hover .article-preview-content h4 {
+            color: var(--secondary-glow);
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            gap: 8px;
+        }
+
+        .publish-destination {
+            font-size: 0.7rem;
+            color: var(--primary-glow);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Publishing Controls */
+        .publishing-controls {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .publishing-controls:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-glow);
+        }
+
+        .publishing-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .publish-category, .publish-subcategory {
+            flex: 1;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .publish-category:focus, .publish-subcategory:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.1);
+        }
+
+        .publishing-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-publish {
+            background: linear-gradient(45deg, var(--success), #059669);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            min-width: 80px;
+        }
+
+        .btn-publish:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-republish {
+            background: linear-gradient(45deg, var(--primary-glow), var(--accent-purple));
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.2);
+        }
+
+        .btn-republish:hover {
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.4);
+        }
+
+        .publish-status {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .article-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        .article-item:hover {
+            border-color: var(--primary-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 191, 255, 0.15);
+        }
+
+        .article-item:hover::before {
+            opacity: 0.05;
+        }
+
+        .article-item.active {
+            border-color: var(--primary-glow);
+            background: rgba(0, 191, 255, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 191, 255, 0.2);
+        }
+
+        .article-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-draft {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent-purple);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .status-published {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Elegant editor panel */
+        .editor-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .editor-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-glow) 30%, var(--secondary-glow) 70%, transparent);
+        }
+
+        .editor-content {
+            padding: 30px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .editor-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .editor-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .editor-content::-webkit-scrollbar-thumb {
+            background: var(--primary-glow);
+            border-radius: 4px;
+            opacity: 0.7;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .editor-header h2 {
+            color: var(--secondary-glow);
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .editor-header h2::before {
+            content: '✏️';
+            font-size: 1.4rem;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-glow), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-glow) 50%, transparent);
+            opacity: 0.5;
+        }
+
+        .form-section h3 {
+            color: var(--secondary-glow);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 200px;
+            line-height: 1.7;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .content-editor {
+            min-height: 400px;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+        }
+
+        /* Image section with elegant cards */
+        .image-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .image-upload {
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.1);
+        }
+
+        .image-upload:hover::before {
+            opacity: 0.03;
+        }
+
+        .image-upload.has-image {
+            border-color: var(--success);
+            border-style: solid;
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-button {
+            background: rgba(0, 191, 255, 0.1);
+            color: var(--primary-glow);
+            border: 1px solid var(--primary-glow);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .file-button:hover {
+            background: rgba(0, 191, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+        }
+
+        .no-article {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 80px 40px;
+        }
+
+        .no-article h3 {
+            margin-bottom: 15px;
+            color: var(--secondary-glow);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .no-article p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .error, .success {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        /* Floating action indicators */
+        .floating-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px 30px;
+            color: var(--text-primary);
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-indicator.show {
+            opacity: 1;
+        }
+
+        /* Tab System */
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+        .tab-button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            flex: 1;
+            text-align: center;
+        }
+        .tab-button:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .tab-button.active {
+            color: var(--primary-glow);
+            background: rgba(0, 191, 255, 0.05);
+        }
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-glow);
+            box-shadow: 0 0 8px var(--primary-glow);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Create Article Form */
+        .create-article-form {
+            padding: 20px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.1);
+        }
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .ai-assist-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .ai-assist-btn {
+            background: linear-gradient(45deg, var(--primary-glow), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-assist-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.3);
+        }
+        .url-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .url-input-group .form-input {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .scrape-btn {
+            background: linear-gradient(45deg, var(--success), #059669);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .scrape-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .create-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .btn-create {
+            background: linear-gradient(45deg, var(--success), #059669);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-create:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .btn-draft {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+        .btn-draft:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Logo Suggestions Styles */
+        .logo-suggestions-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .logo-suggestions-container h4 {
+            color: var(--primary-glow);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .logo-suggestion {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .logo-suggestion:hover {
+            border-color: var(--primary-glow);
+            background: rgba(0, 191, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .suggestion-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4px;
+        }
+
+        .suggestion-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .suggestion-info strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .suggestion-info span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .suggestion-score {
+            color: var(--primary-glow) !important;
+            font-size: 0.7rem !important;
+            font-weight: 500;
+        }
+
+        /* AI Generation Progress Styles */
+        .generation-progress {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            border-color: var(--primary-glow);
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        .progress-step.completed {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .step-icon {
+            font-size: 1.2rem;
+            width: 32px;
+            text-align: center;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .step-status {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .step-progress {
+            width: 100px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-glow), var(--accent-purple));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 2px;
+        }
+
+        /* Quality Assessment Styles */
+        .quality-assessment {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .quality-assessment h4 {
+            color: var(--success);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .overall-score {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .score-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-glow);
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-left: 5px;
+        }
+
+        .score-status {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .score-status.ready {
+            color: var(--success);
+        }
+
+        .score-status.needs-work {
+            color: var(--warning);
+        }
+
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-item span {
+            min-width: 120px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .score-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .score-bar .score-fill {
+            height: 100%;
+            background: linear-gradient(45deg, var(--success), #059669);
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1400px) {
+            .main-content {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 320px 1fr;
+            }
+            
+            .image-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .articles-sidebar {
+                max-height: 350px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .editor-actions {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header fade-in">
+            <h1>📝 Article Manager</h1>
+            <p>Craft exceptional content with elegant editorial control</p>
+            <div id="connectionStatus" class="connection-status status-disconnected pulse">
+                <span>🔌</span> Connecting to database...
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Articles Sidebar -->
+            <div class="articles-sidebar fade-in">
+                <!-- Tab Navigation -->
+                <div class="sidebar-tabs">
+                    <button class="tab-button active" onclick="switchTab('articles')">📚 Articles</button>
+                    <button class="tab-button" onclick="switchTab('create')">➕ Create New</button>
+                </div>
+
+                <!-- Articles Tab -->
+                <div id="articlesTab" class="tab-content active">
+                    <div class="sidebar-header">
+                        <h3>Articles</h3>
+                        <button class="refresh-btn" onclick="loadArticles()">🔄 Refresh</button>
+                    </div>
+                    <div class="articles-list-container">
+                        <ul id="articlesList" class="article-list">
+                            <li class="loading">Loading articles...</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Create Article Tab -->
+                <div id="createTab" class="tab-content">
+                    <div class="create-article-form">
+                        <h3 style="margin-bottom: 20px; color: var(--primary-glow);">✨ Create New Article</h3>
+                        
+                        <!-- Enhanced Topic Input -->
+                        <div class="form-group">
+                            <label for="topicPrompt">Article Topic/Question</label>
+                            <textarea id="topicPrompt" class="form-input" style="min-height: 80px; resize: vertical;" 
+                                      placeholder="Enter your topic or question... 
+Examples:
+• Is Google Bard good enough to replace Photoshop for designers?
+• Why are developers switching from React to Vue.js in 2024?
+• Tesla's new AI chip vs NVIDIA - which will dominate autonomous driving?"></textarea>
+                            <div class="ai-assist-controls">
+                                <button class="ai-assist-btn" onclick="generateArticleFromTopic()" 
+                                        style="background: linear-gradient(45deg, #10b981, #059669); font-weight: 600;">
+                                    🚀 Generate Complete Article
+                                </button>
+                                <button class="ai-assist-btn" onclick="generateTitle()">🎯 Generate Title Only</button>
+                            </div>
+                            <small style="color: var(--text-muted); margin-top: 8px; display: block; line-height: 1.4;">
+                                💡 <strong>AI-Powered Generation:</strong> Uses Claude Writer → OpenAI Editor → Claude Overseer pipeline to create magazine-quality articles with automatic research, writing, and quality assessment.
+                            </small>
+                        </div>
+
+                        <!-- Article Title (Auto-filled by AI) -->
+                        <div class="form-group">
+                            <label for="newTitle">Article Title (Generated)</label>
+                            <input type="text" id="newTitle" class="form-input" placeholder="Will be generated automatically...">
+                            <div class="ai-assist-controls">
+                                <button class="ai-assist-btn" onclick="improveTitleSEO()">📈 SEO Optimize</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCategory">Category</label>
+                            <select id="newCategory" class="form-select">
+                                <option value="AI & Development">AI & Development</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Cloud Technology">Cloud Technology</option>
+                                <option value="Data Analytics">Data Analytics</option>
+                                <option value="Technology News">Technology News</option>
+                                <option value="Security">Security</option>
+                                <option value="DevOps">DevOps</option>
+                                <option value="Mobile Development">Mobile Development</option>
+                            </select>
+                        </div>
+
+                        <!-- Web Scraping Assistant -->
+                        <div class="form-group">
+                            <label for="sourceUrl">Source URL (Optional)</label>
+                            <div class="url-input-group">
+                                <input type="url" id="sourceUrl" class="form-input" placeholder="https://example.com/article...">
+                                <button class="scrape-btn" onclick="scrapeArticle()">🌐 Scrape</button>
+                            </div>
+                            <small style="color: var(--text-muted); margin-top: 8px; display: block;">
+                                Automatically extract content from web articles for AI enhancement
+                            </small>
+                        </div>
+
+                        <!-- AI Generation Progress -->
+                        <div id="generationProgress" class="generation-progress" style="display: none;">
+                            <h4 style="color: var(--primary-glow); margin-bottom: 15px;">🤖 AI Article Generation Pipeline</h4>
+                            <div class="progress-steps">
+                                <div class="progress-step" id="step-analyzing">
+                                    <div class="step-icon">🔍</div>
+                                    <div class="step-content">
+                                        <div class="step-name">Topic Analysis</div>
+                                        <div class="step-status">Pending</div>
+                                    </div>
+                                    <div class="step-progress"><div class="progress-fill"></div></div>
+                                </div>
+                                <div class="progress-step" id="step-researching">
+                                    <div class="step-icon">📰</div>
+                                    <div class="step-content">
+                                        <div class="step-name">Content Research</div>
+                                        <div class="step-status">Pending</div>
+                                    </div>
+                                    <div class="step-progress"><div class="progress-fill"></div></div>
+                                </div>
+                                <div class="progress-step" id="step-writing">
+                                    <div class="step-icon">✍️</div>
+                                    <div class="step-content">
+                                        <div class="step-name">Claude Writer</div>
+                                        <div class="step-status">Pending</div>
+                                    </div>
+                                    <div class="step-progress"><div class="progress-fill"></div></div>
+                                </div>
+                                <div class="progress-step" id="step-editing">
+                                    <div class="step-icon">✨</div>
+                                    <div class="step-content">
+                                        <div class="step-name">OpenAI Editor</div>
+                                        <div class="step-status">Pending</div>
+                                    </div>
+                                    <div class="step-progress"><div class="progress-fill"></div></div>
+                                </div>
+                                <div class="progress-step" id="step-reviewing">
+                                    <div class="step-icon">🎯</div>
+                                    <div class="step-content">
+                                        <div class="step-name">Claude Overseer</div>
+                                        <div class="step-status">Pending</div>
+                                    </div>
+                                    <div class="step-progress"><div class="progress-fill"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quality Assessment -->
+                        <div id="qualityAssessment" class="quality-assessment" style="display: none;">
+                            <h4>📊 Article Quality Assessment</h4>
+                            <div class="overall-score">
+                                <span class="score-number">0.0</span>
+                                <span class="score-label">/ 10</span>
+                                <span class="score-status">⏳ Assessing...</span>
+                            </div>
+                            <div class="score-breakdown">
+                                <div class="score-item">
+                                    <span>Originality</span>
+                                    <div class="score-bar"><div class="score-fill" style="width: 0%">0.0</div></div>
+                                </div>
+                                <div class="score-item">
+                                    <span>Technical Accuracy</span>
+                                    <div class="score-bar"><div class="score-fill" style="width: 0%">0.0</div></div>
+                                </div>
+                                <div class="score-item">
+                                    <span>Writing Quality</span>
+                                    <div class="score-bar"><div class="score-fill" style="width: 0%">0.0</div></div>
+                                </div>
+                                <div class="score-item">
+                                    <span>SEO Optimization</span>
+                                    <div class="score-bar"><div class="score-fill" style="width: 0%">0.0</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="form-group">
+                            <label for="newContent">Article Content</label>
+                            <textarea id="newContent" class="form-textarea" placeholder="Will be generated automatically, or write manually..."></textarea>
+                            <div class="ai-assist-controls">
+                                <button class="ai-assist-btn" onclick="generateContent()">🤖 Generate Content</button>
+                                <button class="ai-assist-btn" onclick="improveContent()">✨ Enhance Writing</button>
+                                <button class="ai-assist-btn" onclick="addSEOKeywords()">🔍 Add Keywords</button>
+                                <button class="ai-assist-btn" onclick="expandContent()">📝 Expand Article</button>
+                            </div>
+                        </div>
+
+                        <!-- Image Management -->
+                        <div class="form-group">
+                            <label>Article Images</label>
+                            <div class="image-section" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+                                <!-- New Image 1 -->
+                                <div class="image-upload" id="newImage1Upload">
+                                    <div id="newImage1Preview">
+                                        <div class="image-info">📸 Image 1 - Preview</div>
+                                        <p style="color: var(--text-muted); font-size: 0.8rem;">Article card preview</p>
+                                    </div>
+                                    <input type="file" id="newImage1File" class="file-input" accept="image/*" onchange="handleNewImageUpload(1, event)">
+                                    <button type="button" class="file-button" onclick="document.getElementById('newImage1File').click()">
+                                        Choose Image 1
+                                    </button>
+                                </div>
+
+                                <!-- New Image 2 -->
+                                <div class="image-upload" id="newImage2Upload">
+                                    <div id="newImage2Preview">
+                                        <div class="image-info">📸 Image 2 - Content</div>
+                                        <p style="color: var(--text-muted); font-size: 0.8rem;">Additional content image</p>
+                                    </div>
+                                    <input type="file" id="newImage2File" class="file-input" accept="image/*" onchange="handleNewImageUpload(2, event)">
+                                    <button type="button" class="file-button" onclick="document.getElementById('newImage2File').click()">
+                                        Choose Image 2
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="ai-assist-controls" style="margin-top: 15px;">
+                                <button class="ai-assist-btn" onclick="suggestImages()">🖼️ Suggest Images</button>
+                                <button class="ai-assist-btn" onclick="generateImagePrompts()">🎨 Generate Prompts</button>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="create-actions">
+                            <button class="btn-create" onclick="createArticle('draft')">💾 Save as Draft</button>
+                            <button class="btn-create" onclick="createArticle('published')">🚀 Create & Publish</button>
+                            <button class="btn-create btn-draft" onclick="clearCreateForm()">🗑️ Clear Form</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editor Panel -->
+            <div class="editor-panel fade-in">
+                <div class="editor-content">
+                    <div id="editorContent">
+                        <div class="no-article">
+                            <h3>🌟 Welcome to Article Manager</h3>
+                            <p>Select an article from the sidebar to begin your editorial journey</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="floatingIndicator" class="floating-indicator">
+        <span id="indicatorText"></span>
+    </div>
+
+    <!-- Supabase CDN -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- AI Article Generation Service -->
+    <script src="ai-article-generation-service.js"></script>
+    
+    <script>
+        // Supabase configuration - Replace with your actual credentials
+        const SUPABASE_URL = 'https://alima.supabase.co';  // Replace with your actual Supabase URL
+        const SUPABASE_ANON_KEY = 'your-actual-anon-key-here';  // Replace with your actual anon key
+
+        let supabase;
+        let articles = [];
+        let currentArticle = null;
+        let aiService = null;
+        let originalImages = [];
+
+        // Initialize Supabase client
+        function initSupabase() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                updateConnectionStatus(true);
+                loadArticles();
+            } catch (error) {
+                console.error('Failed to connect to Supabase:', error);
+                updateConnectionStatus(false);
+                showMessage('Failed to connect to database. Please check configuration.', 'error');
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connectionStatus');
+            if (connected) {
+                statusElement.className = 'connection-status status-connected';
+                statusElement.innerHTML = '<span>✅</span> Connected to database';
+            } else {
+                statusElement.className = 'connection-status status-disconnected';
+                statusElement.innerHTML = '<span>❌</span> Connection failed';
+            }
+        }
+
+        function showFloatingIndicator(message) {
+            const indicator = document.getElementById('floatingIndicator');
+            const text = document.getElementById('indicatorText');
+            text.textContent = message;
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        function showMessage(message, type = 'success') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type + ' fade-in';
+            messageDiv.innerHTML = message;
+            
+            const editorContent = document.getElementById('editorContent');
+            editorContent.insertBefore(messageDiv, editorContent.firstChild);
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.style.opacity = '0';
+                    messageDiv.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        messageDiv.parentNode.removeChild(messageDiv);
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        // Load articles from database
+        async function loadArticles() {
+            try {
+                showFloatingIndicator('Loading articles...');
+                
+                // Mock data for demonstration
+                articles = createMockArticles();
+                renderArticlesList();
+                
+                showFloatingIndicator('Articles loaded successfully');
+
+            } catch (error) {
+                console.error('Load articles error:', error);
+                articles = createMockArticles();
+                renderArticlesList();
+            }
+        }
+
+        function createMockArticles() {
+            return [
+                {
+                    id: 1,
+                    title: "The Rise of AI in Software Development",
+                    content: "Artificial Intelligence is revolutionizing how we build software. From code generation to automated testing, AI tools are becoming indispensable for modern developers. This comprehensive analysis explores the current landscape and future possibilities...",
+                    status: "draft",
+                    created_at: "2024-01-15T10:00:00Z",
+                    image_1_url: "https://framerusercontent.com/images/OfAoINgRFCOvtbhQAjUYPPiWDGg.png",
+                    images: ["https://framerusercontent.com/images/OfAoINgRFCOvtbhQAjUYPPiWDGg.png"],
+                    category: "AI & Development",
+                    publish_category: "news",
+                    publish_subcategory: "ai-ml",
+                    published_at: null
+                },
+                {
+                    id: 2,
+                    title: "Understanding React Server Components",
+                    content: "React Server Components represent a paradigm shift in how we think about client-server boundaries in React applications. This deep dive examines the architecture, benefits, and implementation strategies...",
+                    status: "pending",
+                    created_at: "2024-01-14T14:30:00Z",
+                    image_1_url: "https://framerusercontent.com/images/XBHB3gZM6h0LDqUuZLRQCF5pF0.svg",
+                    images: ["https://framerusercontent.com/images/XBHB3gZM6h0LDqUuZLRQCF5pF0.svg"],
+                    category: "Web Development",
+                    publish_category: "news",
+                    publish_subcategory: "web-dev",
+                    published_at: null
+                },
+                {
+                    id: 3,
+                    title: "The Future of Cloud Computing in 2024",
+                    content: "Cloud computing continues to evolve at breakneck speed. This year brings new innovations in serverless architecture, edge computing, and AI-powered cloud services that are reshaping the digital landscape...",
+                    status: "published",
+                    created_at: "2024-01-13T09:15:00Z",
+                    image_1_url: "https://framerusercontent.com/images/tKWWgSQhKp8OjWI2TxY6ZJjqUw.svg",
+                    images: ["https://framerusercontent.com/images/tKWWgSQhKp8OjWI2TxY6ZJjqUw.svg"],
+                    category: "Cloud Technology",
+                    publish_category: "news",
+                    publish_subcategory: "cloud",
+                    published_at: "2024-01-13T12:00:00Z"
+                }
+            ];
+        }
+
+        function renderArticlesList() {
+            const list = document.getElementById('articlesList');
+            
+            if (articles.length === 0) {
+                list.innerHTML = '<li class="loading">No articles found</li>';
+                return;
+            }
+
+            list.innerHTML = articles.map(article => {
+                const previewImage = article.image_1_url || article.images?.[0] || '';
+                const imageHtml = previewImage ? 
+                    `<img src="${previewImage}" alt="${article.title}" class="article-preview-image">` :
+                    `<div class="article-preview-placeholder">
+                        <span class="placeholder-icon">📄</span>
+                    </div>`;
+                
+                // Determine publishing status
+                const publishStatus = article.published_at ? '✅ Published' : (article.status === 'pending' ? '⏳ Ready' : '📝 Draft');
+                const publishDestination = article.publish_category && article.publish_subcategory ? 
+                    `${article.publish_category} → ${article.publish_subcategory}` : '';
+                
+                return `
+                    <li class="article-item fade-in" style="animation-delay: ${articles.indexOf(article) * 0.1}s">
+                        <div class="article-preview" onclick="selectArticle(${article.id})">
+                            ${imageHtml}
+                            <div class="article-preview-content">
+                                <h4>${article.title}</h4>
+                                <div class="article-meta">
+                                    <span>${new Date(article.created_at).toLocaleDateString()}</span>
+                                    <span class="article-status status-${article.status}">${article.status}</span>
+                                </div>
+                                ${publishDestination ? `<div class="publish-destination">${publishDestination}</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <!-- Publishing Controls -->
+                        <div class="publishing-controls" onclick="event.stopPropagation();">
+                            <div class="publishing-selector">
+                                <select class="publish-category" onchange="updateSubcategory(${article.id}, this.value)">
+                                    <option value="news" ${(article.publish_category === 'news' || !article.publish_category) ? 'selected' : ''}>News</option>
+                                    <option value="insights" ${article.publish_category === 'insights' ? 'selected' : ''}>Insights</option>
+                                    <option value="tutorials" ${article.publish_category === 'tutorials' ? 'selected' : ''}>Tutorials</option>
+                                </select>
+                                <select class="publish-subcategory" id="subcategory-${article.id}">
+                                    <option value="ai-ml" ${article.publish_subcategory === 'ai-ml' ? 'selected' : ''}>AI & ML</option>
+                                    <option value="cloud" ${article.publish_subcategory === 'cloud' ? 'selected' : ''}>Cloud & Infrastructure</option>
+                                    <option value="security" ${article.publish_subcategory === 'security' ? 'selected' : ''}>Security</option>
+                                    <option value="web-dev" ${article.publish_subcategory === 'web-dev' ? 'selected' : ''}>Web Development</option>
+                                    <option value="data-analytics" ${article.publish_subcategory === 'data-analytics' ? 'selected' : ''}>Data Analytics</option>
+                                    <option value="devops" ${article.publish_subcategory === 'devops' ? 'selected' : ''}>DevOps</option>
+                                    <option value="mobile" ${article.publish_subcategory === 'mobile' ? 'selected' : ''}>Mobile Development</option>
+                                    <option value="emerging-tech" ${article.publish_subcategory === 'emerging-tech' ? 'selected' : ''}>Emerging Tech</option>
+                                </select>
+                            </div>
+                            
+                            <div class="publishing-actions">
+                                <button class="btn-publish ${article.published_at ? 'btn-republish' : ''}" 
+                                        onclick="publishArticle(${article.id}, '${article.published_at ? 'republish' : 'publish'}')">
+                                    ${article.published_at ? '🔄 Re-publish' : '🚀 Publish'}
+                                </button>
+                                <div class="publish-status" title="${publishStatus}">
+                                    ${publishStatus}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function selectArticle(id) {
+            document.querySelectorAll('.article-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            event.currentTarget.classList.add('active');
+            currentArticle = articles.find(a => a.id === id);
+            
+            if (currentArticle) {
+                showFloatingIndicator('Loading article editor...');
+                setTimeout(() => renderEditor(), 300);
+            }
+        }
+
+        function renderEditor() {
+            if (!currentArticle) return;
+
+            const editorContent = document.getElementById('editorContent');
+            editorContent.innerHTML = `
+                <div class="editor-header">
+                    <h2>Edit Article</h2>
+                    <div class="editor-actions">
+                        <button class="btn btn-secondary" onclick="previewArticle()">👁️ Preview</button>
+                        <button class="btn btn-primary" onclick="saveArticle()">💾 Save Draft</button>
+                        <button class="btn btn-success" onclick="publishArticle()">🚀 Publish</button>
+                        <button class="btn btn-danger" onclick="deleteArticle()">🗑️ Delete</button>
+                    </div>
+                </div>
+
+                <!-- Article Information -->
+                <div class="form-section fade-in">
+                    <h3>📄 Article Information</h3>
+                    <div class="form-group">
+                        <label for="articleTitle">Title</label>
+                        <input type="text" id="articleTitle" value="${currentArticle.title}">
+                    </div>
+                    <div class="form-group">
+                        <label for="articleCategory">Category</label>
+                        <select id="articleCategory">
+                            <option value="AI & Development" ${currentArticle.category === 'AI & Development' ? 'selected' : ''}>AI & Development</option>
+                            <option value="Web Development" ${currentArticle.category === 'Web Development' ? 'selected' : ''}>Web Development</option>
+                            <option value="Cloud Technology" ${currentArticle.category === 'Cloud Technology' ? 'selected' : ''}>Cloud Technology</option>
+                            <option value="Data Analytics" ${currentArticle.category === 'Data Analytics' ? 'selected' : ''}>Data Analytics</option>
+                            <option value="Technology News" ${currentArticle.category === 'Technology News' ? 'selected' : ''}>Technology News</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Content Editor -->
+                <div class="form-section fade-in" style="animation-delay: 0.1s">
+                    <h3>✏️ Content</h3>
+                    <div class="form-group">
+                        <label for="articleContent">Article Content</label>
+                        <textarea id="articleContent" class="content-editor" placeholder="Write your article content here...">${currentArticle.content}</textarea>
+                    </div>
+                </div>
+
+                <!-- Image Management -->
+                <div class="form-section fade-in" style="animation-delay: 0.2s">
+                    <h3>🖼️ Images</h3>
+                    <div class="image-section">
+                        <!-- Image 1 -->
+                        <div class="image-upload ${currentArticle.images && currentArticle.images[0] ? 'has-image' : ''}" id="image1Upload">
+                            <div id="image1Preview">
+                                ${currentArticle.images && currentArticle.images[0] ? 
+                                    `<img src="${currentArticle.images[0]}" class="image-preview" alt="Image 1">
+                                     <div class="image-info">✨ Preview Image (Image 1)</div>` :
+                                    `<div class="image-info">📸 Image 1 - Preview Image</div>
+                                     <p style="color: var(--text-muted); font-size: 0.9rem;">This becomes the article card preview</p>`
+                                }
+                            </div>
+                            <input type="file" id="image1File" class="file-input" accept="image/*" onchange="handleImageUpload(1, event)">
+                            <button type="button" class="file-button" onclick="document.getElementById('image1File').click()">
+                                Choose Image 1
+                            </button>
+                            ${currentArticle.images && currentArticle.images[0] ? 
+                                '<button type="button" class="file-button" onclick="removeImage(1)" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger);">Remove</button>' : 
+                                ''
+                            }
+                        </div>
+
+                        <!-- Image 2 -->
+                        <div class="image-upload ${currentArticle.images && currentArticle.images[1] ? 'has-image' : ''}" id="image2Upload">
+                            <div id="image2Preview">
+                                ${currentArticle.images && currentArticle.images[1] ? 
+                                    `<img src="${currentArticle.images[1]}" class="image-preview" alt="Image 2">
+                                     <div class="image-info">🎨 Content Image (Image 2)</div>` :
+                                    `<div class="image-info">📸 Image 2 - Content Image</div>
+                                     <p style="color: var(--text-muted); font-size: 0.9rem;">Additional image for article content</p>`
+                                }
+                            </div>
+                            <input type="file" id="image2File" class="file-input" accept="image/*" onchange="handleImageUpload(2, event)">
+                            <button type="button" class="file-button" onclick="document.getElementById('image2File').click()">
+                                Choose Image 2
+                            </button>
+                            ${currentArticle.images && currentArticle.images[1] ? 
+                                '<button type="button" class="file-button" onclick="removeImage(2)" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger);">Remove</button>' : 
+                                ''
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div id="previewContainer" style="display: none;">
+                    <div class="form-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3>📖 Article Preview</h3>
+                            <button class="btn btn-secondary" onclick="hidePreview()">✕ Close Preview</button>
+                        </div>
+                        <div id="previewContent" style="color: var(--text-secondary); line-height: 1.7;"></div>
+                    </div>
+                </div>
+            `;
+
+            originalImages = currentArticle.images ? [...currentArticle.images] : [];
+            showFloatingIndicator('Article loaded successfully');
+        }
+
+        // Enhanced image upload with better UX
+        function handleImageUpload(imageNumber, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 10 * 1024 * 1024) {
+                showMessage('File size too large. Please choose an image under 10MB.', 'error');
+                return;
+            }
+
+            showFloatingIndicator('Processing image...');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewDiv = document.getElementById(`image${imageNumber}Preview`);
+                const uploadDiv = document.getElementById(`image${imageNumber}Upload`);
+                
+                previewDiv.innerHTML = `
+                    <img src="${e.target.result}" class="image-preview" alt="Image ${imageNumber}" style="animation: fadeInUp 0.5s ease-out;">
+                    <div class="image-info">${imageNumber === 1 ? '✨ Preview Image' : '🎨 Content Image'} (${file.name})</div>
+                `;
+                
+                uploadDiv.classList.add('has-image');
+                
+                const buttons = uploadDiv.querySelector('.file-button').parentNode;
+                if (!buttons.querySelector('.file-button[onclick*="removeImage"]')) {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'file-button';
+                    removeBtn.style.cssText = 'background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger);';
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.onclick = () => removeImage(imageNumber);
+                    buttons.appendChild(removeBtn);
+                }
+
+                showFloatingIndicator('Image uploaded successfully');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage(imageNumber) {
+            const previewDiv = document.getElementById(`image${imageNumber}Preview`);
+            const uploadDiv = document.getElementById(`image${imageNumber}Upload`);
+            const fileInput = document.getElementById(`image${imageNumber}File`);
+            
+            previewDiv.innerHTML = `
+                <div class="image-info">📸 Image ${imageNumber} - ${imageNumber === 1 ? 'Preview Image' : 'Content Image'}</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">${imageNumber === 1 ? 'This becomes the article card preview' : 'Additional image for article content'}</p>
+            `;
+            
+            uploadDiv.classList.remove('has-image');
+            fileInput.value = '';
+            
+            const removeBtn = uploadDiv.querySelector('.file-button[onclick*="removeImage"]');
+            if (removeBtn) {
+                removeBtn.remove();
+            }
+
+            showFloatingIndicator('Image removed');
+        }
+
+        function previewArticle() {
+            const title = document.getElementById('articleTitle').value;
+            const content = document.getElementById('articleContent').value;
+            const previewContainer = document.getElementById('previewContainer');
+            const previewContent = document.getElementById('previewContent');
+            
+            let previewHTML = `<h1 style="color: var(--secondary-glow); margin-bottom: 20px;">${title}</h1>`;
+            
+            const image1 = document.getElementById('image1Preview').querySelector('img');
+            const image2 = document.getElementById('image2Preview').querySelector('img');
+            
+            if (image1 || image2) {
+                previewHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">';
+                if (image1) previewHTML += `<img src="${image1.src}" alt="Image 1" style="width: 100%; border-radius: 12px;">`;
+                if (image2) previewHTML += `<img src="${image2.src}" alt="Image 2" style="width: 100%; border-radius: 12px;">`;
+                previewHTML += '</div>';
+            }
+            
+            const contentParagraphs = content.split('\n\n').map(p => `<p style="margin-bottom: 16px;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+            previewHTML += contentParagraphs;
+            
+            previewContent.innerHTML = previewHTML;
+            previewContainer.style.display = 'block';
+            previewContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            showFloatingIndicator('Preview generated');
+        }
+
+        function hidePreview() {
+            document.getElementById('previewContainer').style.display = 'none';
+        }
+
+        async function saveArticle() {
+            if (!currentArticle) return;
+
+            try {
+                showFloatingIndicator('Saving article...');
+
+                const updatedArticle = {
+                    ...currentArticle,
+                    title: document.getElementById('articleTitle').value,
+                    content: document.getElementById('articleContent').value,
+                    category: document.getElementById('articleCategory').value,
+                    status: 'draft',
+                    updated_at: new Date().toISOString(),
+                    images: getCurrentImages()
+                };
+
+                const index = articles.findIndex(a => a.id === currentArticle.id);
+                if (index !== -1) {
+                    articles[index] = updatedArticle;
+                    currentArticle = updatedArticle;
+                }
+
+                renderArticlesList();
+                showMessage('✅ Article saved as draft successfully!', 'success');
+                showFloatingIndicator('Article saved');
+
+            } catch (error) {
+                console.error('Save error:', error);
+                showMessage(`❌ Failed to save article: ${error.message}`, 'error');
+            }
+        }
+
+        async function publishArticle() {
+            if (!currentArticle) return;
+
+            if (!confirm('🚀 Ready to publish this article? It will be visible to all visitors on your production site.')) {
+                return;
+            }
+
+            try {
+                showFloatingIndicator('Publishing article...');
+
+                const publishedArticle = {
+                    ...currentArticle,
+                    title: document.getElementById('articleTitle').value,
+                    content: document.getElementById('articleContent').value,
+                    category: document.getElementById('articleCategory').value,
+                    status: 'published',
+                    published_at: new Date().toISOString(),
+                    images: getCurrentImages()
+                };
+
+                const index = articles.findIndex(a => a.id === currentArticle.id);
+                if (index !== -1) {
+                    articles[index] = publishedArticle;
+                    currentArticle = publishedArticle;
+                }
+
+                renderArticlesList();
+                showMessage('🎉 Article published successfully! Your content is now live.', 'success');
+                showFloatingIndicator('Article published');
+
+            } catch (error) {
+                console.error('Publish error:', error);
+                showMessage(`❌ Failed to publish article: ${error.message}`, 'error');
+            }
+        }
+
+        async function deleteArticle() {
+            if (!currentArticle) return;
+
+            if (!confirm('⚠️ Are you sure you want to delete this article? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                showFloatingIndicator('Deleting article...');
+
+                articles = articles.filter(a => a.id !== currentArticle.id);
+                
+                renderArticlesList();
+                
+                document.getElementById('editorContent').innerHTML = `
+                    <div class="no-article fade-in">
+                        <h3>🌟 Welcome to Article Manager</h3>
+                        <p>Select an article from the sidebar to begin your editorial journey</p>
+                    </div>
+                `;
+
+                showMessage('🗑️ Article deleted successfully.', 'success');
+                showFloatingIndicator('Article deleted');
+                currentArticle = null;
+
+            } catch (error) {
+                console.error('Delete error:', error);
+                showMessage(`❌ Failed to delete article: ${error.message}`, 'error');
+            }
+        }
+
+        function getCurrentImages() {
+            const images = [];
+            
+            const image1 = document.getElementById('image1Preview').querySelector('img');
+            if (image1) images.push(image1.src);
+            
+            const image2 = document.getElementById('image2Preview').querySelector('img');
+            if (image2) images.push(image2.src);
+            
+            return images;
+        }
+
+        // Tab System Functions
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            
+            // Clear editor when switching to create tab
+            if (tabName === 'create') {
+                document.getElementById('editorContent').innerHTML = `
+                    <div class="no-article fade-in">
+                        <h3>✨ Create New Article</h3>
+                        <p>Use the form on the left to create a new article with AI assistance</p>
+                    </div>
+                `;
+                currentArticle = null;
+            }
+        }
+
+        // AI Content Generation Functions
+        async function generateTitle() {
+            const category = document.getElementById('newCategory').value;
+            const content = document.getElementById('newContent').value;
+            
+            showFloatingIndicator('Generating title with AI...');
+            
+            try {
+                // Simulate AI title generation
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const titles = {
+                    'AI & Development': [
+                        'The Future of AI-Powered Development Tools in 2024',
+                        'How Machine Learning is Revolutionizing Software Engineering',
+                        'Building Smarter Applications: A Developer\'s Guide to AI Integration'
+                    ],
+                    'Web Development': [
+                        'Modern Web Development: Best Practices for 2024',
+                        'The Evolution of JavaScript Frameworks: What\'s Next?',
+                        'Building Responsive Web Applications with Modern CSS'
+                    ],
+                    'Cloud Technology': [
+                        'Cloud-Native Architecture: A Complete Guide for Developers',
+                        'Scaling Applications in the Cloud: Strategies and Best Practices',
+                        'The Rise of Serverless: When and How to Go Server-Free'
+                    ],
+                    'Data Analytics': [
+                        'Big Data Analytics: Turning Information into Insights',
+                        'The Power of Real-Time Analytics in Modern Business',
+                        'Data Visualization Techniques That Drive Decision Making'
+                    ]
+                };
+                
+                const categoryTitles = titles[category] || titles['AI & Development'];
+                const randomTitle = categoryTitles[Math.floor(Math.random() * categoryTitles.length)];
+                
+                document.getElementById('newTitle').value = randomTitle;
+                showMessage('🎯 AI-generated title successfully created!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to generate title. Please try again.', 'error');
+            }
+        }
+
+        async function improveTitleSEO() {
+            const currentTitle = document.getElementById('newTitle').value;
+            if (!currentTitle.trim()) {
+                showMessage('⚠️ Please enter a title first.', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Optimizing title for SEO...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1200));
+                
+                // Simple SEO optimization
+                let seoTitle = currentTitle;
+                if (!seoTitle.includes('2024')) seoTitle += ' - 2024 Guide';
+                if (!seoTitle.includes(':')) {
+                    const parts = seoTitle.split(' ');
+                    if (parts.length > 6) {
+                        const midPoint = Math.floor(parts.length / 2);
+                        parts.splice(midPoint, 0, ':');
+                        seoTitle = parts.join(' ');
+                    }
+                }
+                
+                document.getElementById('newTitle').value = seoTitle;
+                showMessage('📈 Title optimized for SEO!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to optimize title.', 'error');
+            }
+        }
+
+        async function generateContent() {
+            const title = document.getElementById('newTitle').value;
+            const category = document.getElementById('newCategory').value;
+            
+            if (!title.trim()) {
+                showMessage('⚠️ Please enter a title first.', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Generating article content with AI...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                
+                const sampleContent = `# Introduction
+
+In today's rapidly evolving technology landscape, ${title.toLowerCase()} has become increasingly important for businesses and developers alike. This comprehensive guide explores the key concepts, best practices, and future implications of this trending topic.
+
+## Key Benefits
+
+The implementation of modern ${category.toLowerCase()} solutions offers several compelling advantages:
+
+- **Enhanced Performance**: Improved efficiency and faster processing times
+- **Scalability**: Ability to handle growing demands and user bases  
+- **Cost Effectiveness**: Reduced operational costs and better ROI
+- **Future-Proofing**: Staying ahead of technological trends
+
+## Implementation Strategies
+
+When considering implementation, organizations should focus on:
+
+1. **Assessment Phase**: Evaluate current infrastructure and requirements
+2. **Planning**: Develop a comprehensive roadmap with clear milestones
+3. **Execution**: Implement changes in manageable phases
+4. **Monitoring**: Continuously track performance and optimize
+
+## Best Practices
+
+Industry experts recommend following these proven approaches:
+
+- Start with a pilot project to validate concepts
+- Invest in team training and skill development
+- Establish clear metrics for success measurement
+- Maintain regular communication with stakeholders
+
+## Future Outlook
+
+Looking ahead, we can expect continued innovation in this space, with emerging trends pointing toward even more sophisticated solutions that will further transform how we approach ${category.toLowerCase()}.
+
+## Conclusion
+
+${title} represents a significant opportunity for organizations willing to embrace change and invest in the future. By understanding the key principles and following proven implementation strategies, businesses can successfully navigate this technological evolution.`;
+
+                document.getElementById('newContent').value = sampleContent;
+                showMessage('🤖 AI-generated article content created successfully!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to generate content.', 'error');
+            }
+        }
+
+        async function improveContent() {
+            const currentContent = document.getElementById('newContent').value;
+            if (!currentContent.trim()) {
+                showMessage('⚠️ Please enter some content first.', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Enhancing content with AI...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Simple content enhancement - add more professional language
+                let improvedContent = currentContent
+                    .replace(/\b(good|nice|great)\b/gi, 'excellent')
+                    .replace(/\b(big)\b/gi, 'significant')
+                    .replace(/\b(use)\b/gi, 'utilize')
+                    .replace(/\b(help)\b/gi, 'facilitate')
+                    .replace(/\b(make)\b/gi, 'create');
+                
+                document.getElementById('newContent').value = improvedContent;
+                showMessage('✨ Content enhanced with professional language!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to enhance content.', 'error');
+            }
+        }
+
+        async function addSEOKeywords() {
+            const content = document.getElementById('newContent').value;
+            const category = document.getElementById('newCategory').value;
+            
+            if (!content.trim()) {
+                showMessage('⚠️ Please enter some content first.', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Adding SEO keywords...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const keywords = {
+                    'AI & Development': ['artificial intelligence', 'machine learning', 'automation', 'innovation'],
+                    'Web Development': ['responsive design', 'user experience', 'performance optimization', 'modern frameworks'],
+                    'Cloud Technology': ['scalability', 'cloud-native', 'infrastructure', 'digital transformation'],
+                    'Data Analytics': ['insights', 'data-driven decisions', 'business intelligence', 'predictive analytics']
+                };
+                
+                const categoryKeywords = keywords[category] || keywords['AI & Development'];
+                const seoFooter = `\n\n## Key Takeaways\n\nThis article covers essential aspects of ${categoryKeywords.join(', ')}, providing valuable insights for modern technology implementation.`;
+                
+                document.getElementById('newContent').value = content + seoFooter;
+                showMessage('🔍 SEO keywords added successfully!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to add SEO keywords.', 'error');
+            }
+        }
+
+        async function expandContent() {
+            const currentContent = document.getElementById('newContent').value;
+            if (!currentContent.trim()) {
+                showMessage('⚠️ Please enter some content first.', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Expanding article content...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const additionalSection = `\n\n## Additional Considerations\n\nWhen implementing these concepts, it's important to consider the broader organizational context. Change management plays a crucial role in successful adoption, and teams should be prepared for a learning curve as they adapt to new methodologies.\n\n### Success Metrics\n\nTo measure the effectiveness of implementation, consider tracking:\n\n- Performance improvements over baseline measurements\n- User satisfaction and engagement scores\n- Cost savings and efficiency gains\n- Time-to-market improvements for new features\n\nRegular assessment of these metrics will help ensure that the implementation is delivering the expected benefits and identify areas for continuous improvement.`;
+                
+                document.getElementById('newContent').value = currentContent + additionalSection;
+                showMessage('📝 Article expanded with additional content!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to expand content.', 'error');
+            }
+        }
+
+        async function scrapeArticle() {
+            const url = document.getElementById('sourceUrl').value;
+            if (!url.trim()) {
+                showMessage('⚠️ Please enter a URL to scrape.', 'error');
+                return;
+            }
+            
+            if (!url.match(/^https?:\/\/.+/)) {
+                showMessage('⚠️ Please enter a valid URL (starting with http:// or https://).', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Scraping article content...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                // Simulate scraped content
+                const scrapedTitle = "Innovative Technology Trends Shaping the Future";
+                const scrapedContent = `# ${scrapedTitle}
+
+The technology landscape continues to evolve at an unprecedented pace, with new innovations emerging regularly that promise to reshape how we work, live, and interact with digital systems.
+
+## Current Trends
+
+Recent developments in the field have highlighted several key areas of growth:
+
+**Artificial Intelligence Integration**
+AI technologies are becoming increasingly sophisticated, moving beyond simple automation to provide intelligent insights and decision-making capabilities.
+
+**Cloud-First Architecture** 
+Organizations are adopting cloud-native approaches that prioritize scalability, flexibility, and cost-effectiveness.
+
+**Enhanced Security Measures**
+With growing cyber threats, security has become a fundamental consideration in all technology implementations.
+
+## Market Impact
+
+These trends are creating significant opportunities for businesses that can adapt quickly to changing technological requirements. Early adopters are seeing competitive advantages through improved efficiency and innovation capabilities.
+
+## Looking Forward
+
+As we continue to navigate this dynamic environment, staying informed about emerging technologies and their practical applications will be crucial for success.
+
+*Source: ${url}*`;
+
+                document.getElementById('newTitle').value = scrapedTitle;
+                document.getElementById('newContent').value = scrapedContent;
+                
+                showMessage('🌐 Article content scraped and imported successfully!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to scrape article. Please try again or enter content manually.', 'error');
+            }
+        }
+
+        function handleNewImageUpload(imageNumber, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 10 * 1024 * 1024) {
+                showMessage('❌ Image size must be less than 10MB.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewDiv = document.getElementById(`newImage${imageNumber}Preview`);
+                const uploadDiv = document.getElementById(`newImage${imageNumber}Upload`);
+                
+                previewDiv.innerHTML = `
+                    <img src="${e.target.result}" class="image-preview" alt="Image ${imageNumber}">
+                    <div class="image-info">Image ${imageNumber} Selected</div>
+                `;
+                
+                uploadDiv.classList.add('has-image');
+                
+                // Add remove button
+                const buttons = uploadDiv.querySelector('.file-button').parentNode;
+                if (!buttons.querySelector('.file-button[onclick*="removeNewImage"]')) {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'file-button';
+                    removeBtn.style.cssText = 'margin-left: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444;';
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.onclick = () => removeNewImage(imageNumber);
+                    buttons.appendChild(removeBtn);
+                }
+                
+                showMessage(`✅ Image ${imageNumber} uploaded successfully!`, 'success');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function removeNewImage(imageNumber) {
+            const previewDiv = document.getElementById(`newImage${imageNumber}Preview`);
+            const uploadDiv = document.getElementById(`newImage${imageNumber}Upload`);
+            const fileInput = document.getElementById(`newImage${imageNumber}File`);
+            
+            previewDiv.innerHTML = `
+                <div class="image-info">📸 Image ${imageNumber} ${imageNumber === 1 ? '- Preview' : '- Content'}</div>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">${imageNumber === 1 ? 'Article card preview' : 'Additional content image'}</p>
+            `;
+            
+            uploadDiv.classList.remove('has-image');
+            fileInput.value = '';
+            
+            // Remove the remove button
+            const removeBtn = uploadDiv.querySelector('.file-button[onclick*="removeNewImage"]');
+            if (removeBtn) removeBtn.remove();
+            
+            showMessage(`🗑️ Image ${imageNumber} removed.`, 'success');
+        }
+
+        async function suggestImages() {
+            const title = document.getElementById('newTitle').value;
+            const content = document.getElementById('newContent').value;
+            
+            if (!title.trim() && !content.trim()) {
+                showMessage('⚠️ Please enter a title or content first.', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Analyzing content and suggesting relevant logos...');
+            
+            try {
+                const category = document.getElementById('newCategory').value;
+                const suggestions = await suggestLogosForArticle(title, content, category);
+                
+                if (suggestions.length > 0) {
+                    displayLogoSuggestions(suggestions);
+                    showMessage(`🖼️ Found ${suggestions.length} relevant logo suggestions! Click any logo to use it.`, 'success');
+                } else {
+                    // Create container with no suggestions message
+                    let suggestionsContainer = document.getElementById('logoSuggestions');
+                    if (!suggestionsContainer) {
+                        suggestionsContainer = createSuggestionsContainer();
+                    }
+                    suggestionsContainer.innerHTML = `
+                        <h4>💡 Logo Suggestions</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 20px;">
+                            No specific logo suggestions found for this topic. Try:
+                            <br>• Using more specific company/product names
+                            <br>• Checking your Supabase connection
+                            <br>• Uploading custom images instead
+                        </p>
+                    `;
+                    showMessage('💡 No specific logo suggestions found. Consider uploading custom images.', 'info');
+                }
+                
+            } catch (error) {
+                console.error('Suggest images error:', error);
+                showMessage('❌ Failed to suggest images. Check console for details.', 'error');
+            }
+        }
+
+        async function generateImagePrompts() {
+            const title = document.getElementById('newTitle').value;
+            const category = document.getElementById('newCategory').value;
+            
+            if (!title.trim()) {
+                showMessage('⚠️ Please enter a title first.', 'error');
+                return;
+            }
+            
+            showFloatingIndicator('Generating image prompts...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const prompts = {
+                    'AI & Development': [
+                        'Modern AI interface with neural network visualization',
+                        'Developer working with AI code on futuristic screens',
+                        'Abstract representation of machine learning algorithms'
+                    ],
+                    'Web Development': [
+                        'Clean, modern web interface mockup',
+                        'Code editor with colorful syntax highlighting',
+                        'Responsive web design across multiple devices'
+                    ],
+                    'Cloud Technology': [
+                        'Cloud infrastructure network diagram',
+                        'Server farm with glowing connections',
+                        'Abstract cloud computing visualization'
+                    ]
+                };
+                
+                const categoryPrompts = prompts[category] || prompts['AI & Development'];
+                const randomPrompt = categoryPrompts[Math.floor(Math.random() * categoryPrompts.length)];
+                
+                // Create a simple alert with the prompt
+                alert(`🎨 AI Image Generation Prompt:\n\n"${randomPrompt}"\n\nUse this prompt with DALL-E, Midjourney, or other AI image generators to create relevant visuals for your article.`);
+                
+                showMessage('🎨 Image generation prompt created!', 'success');
+                
+            } catch (error) {
+                showMessage('❌ Failed to generate image prompts.', 'error');
+            }
+        }
+
+        async function createArticle(status) {
+            const title = document.getElementById('newTitle').value;
+            const category = document.getElementById('newCategory').value;
+            const content = document.getElementById('newContent').value;
+            
+            if (!title.trim()) {
+                showMessage('⚠️ Please enter a title.', 'error');
+                return;
+            }
+            
+            if (!content.trim()) {
+                showMessage('⚠️ Please enter article content.', 'error');
+                return;
+            }
+            
+            const actionText = status === 'published' ? 'Creating and publishing' : 'Saving as draft';
+            showFloatingIndicator(`${actionText} article...`);
+            
+            try {
+                // Collect images
+                const images = [];
+                const image1 = document.getElementById('newImage1Preview').querySelector('img');
+                if (image1) images.push(image1.src);
+                
+                const image2 = document.getElementById('newImage2Preview').querySelector('img');
+                if (image2) images.push(image2.src);
+                
+                // Create new article object
+                const newArticle = {
+                    id: Date.now(),
+                    title: title.trim(),
+                    content: content.trim(),
+                    category: category,
+                    status: status,
+                    images: images,
+                    created_at: new Date().toISOString(),
+                    published_at: status === 'published' ? new Date().toISOString() : null,
+                    publish_category: 'news',
+                    publish_subcategory: 'ai-ml'
+                };
+                
+                // Add to articles array
+                articles.unshift(newArticle);
+                
+                // Re-render articles list
+                renderArticlesList();
+                
+                // Switch to articles tab and select the new article
+                switchTab('articles');
+                setTimeout(() => {
+                    selectArticle(newArticle.id);
+                }, 300);
+                
+                // Clear the create form
+                clearCreateForm();
+                
+                const successMessage = status === 'published' ? 
+                    '🎉 Article created and published successfully!' : 
+                    '💾 Article saved as draft successfully!';
+                    
+                showMessage(successMessage, 'success');
+                showFloatingIndicator('Article created');
+                
+            } catch (error) {
+                console.error('Create article error:', error);
+                showMessage(`❌ Failed to create article: ${error.message}`, 'error');
+            }
+        }
+
+        function clearCreateForm() {
+            document.getElementById('topicPrompt').value = '';
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newContent').value = '';
+            document.getElementById('sourceUrl').value = '';
+            document.getElementById('newCategory').selectedIndex = 0;
+            
+            // Clear images
+            removeNewImage(1);
+            removeNewImage(2);
+            
+            // Hide progress and quality panels
+            document.getElementById('generationProgress').style.display = 'none';
+            document.getElementById('qualityAssessment').style.display = 'none';
+            
+            // Reset progress steps
+            document.querySelectorAll('.progress-step').forEach(step => {
+                step.classList.remove('active', 'completed');
+                step.querySelector('.step-status').textContent = 'Pending';
+                step.querySelector('.progress-fill').style.width = '0%';
+            });
+            
+            showFloatingIndicator('Form cleared');
+        }
+
+        // MAIN AI ARTICLE GENERATION FUNCTION
+        async function generateArticleFromTopic() {
+            const topicPrompt = document.getElementById('topicPrompt').value.trim();
+            
+            if (!topicPrompt) {
+                showMessage('⚠️ Please enter a topic or question first.', 'error');
+                return;
+            }
+
+            if (!aiService) {
+                showMessage('❌ AI service not available. Check if ai-article-generation-service.js is loaded.', 'error');
+                return;
+            }
+
+            // Disable the generate button during generation
+            const generateBtn = event.target;
+            const originalText = generateBtn.textContent;
+            generateBtn.disabled = true;
+            generateBtn.textContent = '🔄 Generating...';
+
+            // Show progress panel
+            document.getElementById('generationProgress').style.display = 'block';
+            document.getElementById('qualityAssessment').style.display = 'none';
+
+            try {
+                // Start the AI generation pipeline
+                const result = await aiService.generateArticleFromPrompt(topicPrompt, updateGenerationProgress);
+
+                if (result.success) {
+                    // Populate form with generated content
+                    document.getElementById('newTitle').value = result.article.title;
+                    document.getElementById('newContent').value = result.article.content;
+                    
+                    // Set appropriate category based on topic analysis
+                    setAutoCategory(result.topicAnalysis);
+                    
+                    // Show quality assessment
+                    displayQualityAssessment(result.article);
+                    
+                    // Auto-suggest logos based on generated content
+                    setTimeout(async () => {
+                        await suggestImages();
+                    }, 500);
+
+                    showMessage(`🎉 Article generated successfully! Quality Score: ${result.article.qualityScore}/10`, 'success');
+                    
+                } else {
+                    // Handle generation failure
+                    if (result.fallback) {
+                        document.getElementById('newTitle').value = result.fallback.title;
+                        document.getElementById('newContent').value = result.fallback.content;
+                        showMessage('⚠️ AI generation failed, showing fallback content. You can edit and improve it.', 'warning');
+                    } else {
+                        showMessage(`❌ Article generation failed: ${result.error}`, 'error');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Generation error:', error);
+                showMessage(`❌ Unexpected error during generation: ${error.message}`, 'error');
+            } finally {
+                // Re-enable the generate button
+                generateBtn.disabled = false;
+                generateBtn.textContent = originalText;
+            }
+        }
+
+        // Progress update function for the AI pipeline
+        function updateGenerationProgress(progress) {
+            const { step, progress: percentage, status } = progress;
+            
+            // Update the current step
+            const stepElement = document.getElementById(`step-${step}`);
+            if (stepElement) {
+                // Mark previous steps as completed
+                const allSteps = document.querySelectorAll('.progress-step');
+                const currentIndex = Array.from(allSteps).indexOf(stepElement);
+                
+                allSteps.forEach((s, index) => {
+                    if (index < currentIndex) {
+                        s.classList.add('completed');
+                        s.classList.remove('active');
+                        s.querySelector('.step-status').textContent = 'Completed';
+                        s.querySelector('.progress-fill').style.width = '100%';
+                    } else if (index === currentIndex) {
+                        s.classList.add('active');
+                        s.classList.remove('completed');
+                        s.querySelector('.step-status').textContent = status;
+                        s.querySelector('.progress-fill').style.width = `${percentage}%`;
+                    } else {
+                        s.classList.remove('active', 'completed');
+                        s.querySelector('.step-status').textContent = 'Pending';
+                        s.querySelector('.progress-fill').style.width = '0%';
+                    }
+                });
+            }
+
+            // Update floating indicator
+            showFloatingIndicator(status);
+        }
+
+        // Set appropriate category based on topic analysis
+        function setAutoCategory(topicAnalysis) {
+            const categorySelect = document.getElementById('newCategory');
+            const categoryMapping = {
+                'ai_news': 'AI & Development',
+                'web_dev': 'Web Development', 
+                'tech_news': 'Technology News',
+                'cloud': 'Cloud Technology',
+                'data': 'Data Analytics'
+            };
+            
+            const suggestedCategory = categoryMapping[topicAnalysis.category] || 'Technology News';
+            
+            // Set the category if it exists in the select options
+            for (let option of categorySelect.options) {
+                if (option.value === suggestedCategory) {
+                    categorySelect.value = suggestedCategory;
+                    break;
+                }
+            }
+        }
+
+        // Display quality assessment results
+        function displayQualityAssessment(article) {
+            if (!article.qualityScore) return;
+            
+            const panel = document.getElementById('qualityAssessment');
+            panel.style.display = 'block';
+            
+            // Update overall score
+            const scoreNumber = panel.querySelector('.score-number');
+            const scoreStatus = panel.querySelector('.score-status');
+            
+            scoreNumber.textContent = article.qualityScore.toFixed(1);
+            
+            if (article.readyToPublish) {
+                scoreStatus.textContent = '✅ Ready to Publish';
+                scoreStatus.className = 'score-status ready';
+            } else if (article.qualityScore >= 6) {
+                scoreStatus.textContent = '⚠️ Needs Minor Improvements';
+                scoreStatus.className = 'score-status needs-work';
+            } else {
+                scoreStatus.textContent = '🔄 Needs Major Rework';
+                scoreStatus.className = 'score-status needs-work';
+            }
+
+            // Update individual scores if available
+            if (article.scores) {
+                updateScoreBar('Originality', article.scores.originality);
+                updateScoreBar('Technical Accuracy', article.scores.technicalAccuracy);
+                updateScoreBar('Writing Quality', article.scores.writingQuality);  
+                updateScoreBar('SEO Optimization', article.scores.seoOptimization);
+            }
+        }
+
+        // Update individual score bars
+        function updateScoreBar(criteriaName, score) {
+            const scoreItems = document.querySelectorAll('.score-item');
+            scoreItems.forEach(item => {
+                const label = item.querySelector('span').textContent;
+                if (label === criteriaName) {
+                    const scoreBar = item.querySelector('.score-fill');
+                    const percentage = (score / 10) * 100;
+                    scoreBar.style.width = `${percentage}%`;
+                    scoreBar.textContent = score.toFixed(1);
+                }
+            });
+        }
+
+        // Logo Suggestions System (Integrated from auto-logo-suggestions.js)
+        async function suggestLogosForArticle(title, content, category) {
+            try {
+                // Extract keywords from title and content
+                const keywords = extractKeywords(title, content, category);
+                
+                if (!supabase) {
+                    console.warn('Supabase not initialized - using mock logo suggestions');
+                    return getMockLogoSuggestions(keywords, category);
+                }
+                
+                // Search for matching logos in database
+                const { data: logos, error } = await supabase
+                    .from('tech_logos')
+                    .select('*')
+                    .or(
+                        keywords.map(keyword => 
+                            `tags.cs.{${keyword}},company_name.ilike.%${keyword}%,image_name.ilike.%${keyword}%`
+                        ).join(',')
+                    )
+                    .limit(10);
+
+                if (error) {
+                    console.error('Supabase error:', error);
+                    return getMockLogoSuggestions(keywords, category);
+                }
+
+                // Score and rank logos by relevance
+                const rankedLogos = rankLogosByRelevance(logos || [], keywords, title, category);
+                
+                return rankedLogos.slice(0, 4); // Return top 4 suggestions
+                
+            } catch (error) {
+                console.error('Error suggesting logos:', error);
+                return getMockLogoSuggestions(keywords, category);
+            }
+        }
+
+        function extractKeywords(title, content, category) {
+            const keywords = new Set();
+            
+            // Add category-based keywords
+            const categoryKeywords = {
+                'AI & Development': ['ai', 'artificial intelligence', 'machine learning', 'neural', 'deep learning', 'openai', 'anthropic', 'chatgpt', 'claude'],
+                'Web Development': ['react', 'vue', 'angular', 'next.js', 'tailwind', 'javascript', 'typescript', 'node.js', 'webpack'],
+                'Cloud Technology': ['cloud', 'aws', 'azure', 'google cloud', 'vercel', 'supabase', 'docker', 'kubernetes'],
+                'Data Analytics': ['tableau', 'power bi', 'looker', 'grafana', 'mongodb', 'postgresql', 'data', 'analytics'],
+                'Security': ['security', 'cybersecurity', 'encryption', 'authentication', 'firewall', 'vulnerability'],
+                'DevOps': ['devops', 'ci/cd', 'jenkins', 'gitlab', 'github actions', 'automation'],
+                'Mobile Development': ['ios', 'android', 'react native', 'flutter', 'swift', 'kotlin'],
+                'Design & Creative': ['figma', 'sketch', 'adobe', 'canva', 'photoshop', 'illustrator', 'design']
+            };
+            
+            if (categoryKeywords[category]) {
+                categoryKeywords[category].forEach(keyword => keywords.add(keyword));
+            }
+            
+            // Extract company/product names from title and content
+            const text = (title + ' ' + content).toLowerCase();
+            
+            // Common tech companies and products
+            const techTerms = [
+                'openai', 'chatgpt', 'anthropic', 'claude', 'midjourney', 'stability',
+                'github', 'gitlab', 'microsoft', 'google', 'apple', 'amazon', 'meta',
+                'react', 'vue', 'angular', 'svelte', 'next.js', 'nuxt', 'tailwind',
+                'typescript', 'javascript', 'python', 'rust', 'go', 'java',
+                'aws', 'azure', 'vercel', 'netlify', 'supabase', 'firebase',
+                'docker', 'kubernetes', 'terraform', 'ansible',
+                'figma', 'sketch', 'adobe', 'canva', 'framer',
+                'notion', 'linear', 'jira', 'trello', 'slack', 'discord',
+                'mongodb', 'postgresql', 'mysql', 'redis', 'elasticsearch'
+            ];
+            
+            techTerms.forEach(term => {
+                if (text.includes(term)) {
+                    keywords.add(term);
+                }
+            });
+            
+            return Array.from(keywords);
+        }
+
+        function rankLogosByRelevance(logos, keywords, title, category) {
+            return logos.map(logo => {
+                let score = 0;
+                const titleLower = title.toLowerCase();
+                const companyLower = logo.company_name.toLowerCase();
+                const imageLower = logo.image_name.toLowerCase();
+                
+                // Direct company name match in title (highest priority)
+                if (titleLower.includes(companyLower)) {
+                    score += 100;
+                }
+                
+                // Product/image name match in title
+                if (titleLower.includes(imageLower.replace(' logo', ''))) {
+                    score += 80;
+                }
+                
+                // Category match
+                if (logo.category === category) {
+                    score += 30;
+                }
+                
+                // Tag matches
+                const logoTags = logo.tags || [];
+                keywords.forEach(keyword => {
+                    if (logoTags.some(tag => tag.includes(keyword) || keyword.includes(tag))) {
+                        score += 20;
+                    }
+                });
+                
+                // Company logo preference
+                if (logo.is_company_logo) {
+                    score += 10;
+                }
+                
+                // Bonus for well-known companies
+                const popularCompanies = ['openai', 'google', 'microsoft', 'apple', 'amazon', 'meta', 'github'];
+                if (popularCompanies.some(company => companyLower.includes(company))) {
+                    score += 15;
+                }
+                
+                return { ...logo, relevanceScore: score };
+            })
+            .filter(logo => logo.relevanceScore > 0)
+            .sort((a, b) => b.relevanceScore - a.relevanceScore);
+        }
+
+        function getMockLogoSuggestions(keywords, category) {
+            // Mock suggestions when Supabase is not available
+            const mockLogos = [
+                {
+                    company_name: 'OpenAI',
+                    image_name: 'OpenAI Logo',
+                    image_url: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="40" fill="%2300a67e"/%3E%3Ctext x="50" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold"%3EOpenAI%3C/text%3E%3C/svg%3E',
+                    relevanceScore: 85,
+                    category: 'AI & Development'
+                },
+                {
+                    company_name: 'Google',
+                    image_name: 'Google Logo',
+                    image_url: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="40" fill="%234285f4"/%3E%3Ctext x="50" y="55" text-anchor="middle" fill="white" font-size="14" font-weight="bold"%3EGoogle%3C/text%3E%3C/svg%3E',
+                    relevanceScore: 78,
+                    category: 'Cloud Technology'
+                },
+                {
+                    company_name: 'Microsoft',
+                    image_name: 'Microsoft Logo',
+                    image_url: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect x="10" y="10" width="80" height="80" rx="8" fill="%23005A9E"/%3E%3Ctext x="50" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold"%3EMS%3C/text%3E%3C/svg%3E',
+                    relevanceScore: 72,
+                    category: 'Cloud Technology'
+                },
+                {
+                    company_name: 'GitHub',
+                    image_name: 'GitHub Logo',
+                    image_url: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="40" fill="%23333"/%3E%3Ctext x="50" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold"%3EGitHub%3C/text%3E%3C/svg%3E',
+                    relevanceScore: 65,
+                    category: 'Development Tools'
+                }
+            ];
+
+            // Filter by relevance to keywords
+            return mockLogos.filter(logo => {
+                const logoText = (logo.company_name + ' ' + logo.image_name).toLowerCase();
+                return keywords.some(keyword => logoText.includes(keyword));
+            }).slice(0, 4);
+        }
+
+        function displayLogoSuggestions(suggestions) {
+            // Create suggestions container if it doesn't exist
+            let suggestionsContainer = document.getElementById('logoSuggestions');
+            if (!suggestionsContainer) {
+                suggestionsContainer = createSuggestionsContainer();
+            }
+
+            if (suggestions.length === 0) {
+                suggestionsContainer.innerHTML = `
+                    <h4>💡 Logo Suggestions</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 20px;">
+                        No specific logo suggestions found. Try uploading custom images or check your Supabase connection.
+                    </p>
+                `;
+                return;
+            }
+
+            const suggestionsHtml = suggestions.map((logo, index) => `
+                <div class="logo-suggestion" onclick="selectSuggestedLogo(${index + 1}, '${logo.image_url}', '${logo.company_name} - ${logo.image_name}')">
+                    <img src="${logo.image_url}" alt="${logo.company_name}" class="suggestion-image">
+                    <div class="suggestion-info">
+                        <strong>${logo.company_name}</strong>
+                        <span>${logo.image_name}</span>
+                        <span class="suggestion-score">Relevance: ${logo.relevanceScore}%</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            suggestionsContainer.innerHTML = `
+                <h4>💡 Suggested Logos</h4>
+                <div class="suggestions-grid">
+                    ${suggestionsHtml}
+                </div>
+            `;
+        }
+
+        function createSuggestionsContainer() {
+            const container = document.createElement('div');
+            container.id = 'logoSuggestions';
+            container.className = 'logo-suggestions-container';
+            
+            // Insert after the image section in create tab
+            const imageSection = document.querySelector('#createTab .form-group:has(.image-section)');
+            if (imageSection) {
+                imageSection.parentNode.insertBefore(container, imageSection.nextSibling);
+            } else {
+                // Fallback: add to end of create form
+                document.querySelector('.create-article-form').appendChild(container);
+            }
+            
+            return container;
+        }
+
+        function selectSuggestedLogo(imageNumber, imageUrl, altText) {
+            const previewDiv = document.getElementById(`newImage${imageNumber}Preview`);
+            const uploadDiv = document.getElementById(`newImage${imageNumber}Upload`);
+            
+            if (previewDiv && uploadDiv) {
+                previewDiv.innerHTML = `
+                    <img src="${imageUrl}" class="image-preview" alt="${altText}">
+                    <div class="image-info">Selected: ${altText}</div>
+                `;
+                
+                uploadDiv.classList.add('has-image');
+                
+                // Add remove button if not exists
+                const buttons = uploadDiv.querySelector('.file-button').parentNode;
+                if (!buttons.querySelector('.file-button[onclick*="removeNewImage"]')) {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'file-button';
+                    removeBtn.style.cssText = 'margin-left: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444;';
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.onclick = () => removeNewImage(imageNumber);
+                    buttons.appendChild(removeBtn);
+                }
+                
+                showMessage(`Selected ${altText} for Image ${imageNumber}`, 'success');
+            }
+        }
+
+        // Publishing Controls Functions
+        function updateSubcategory(articleId, category) {
+            // Update subcategory options based on selected category
+            const subcategorySelect = document.getElementById(`subcategory-${articleId}`);
+            if (!subcategorySelect) return;
+
+            const subcategoryOptions = {
+                'news': [
+                    { value: 'ai-ml', text: 'AI & ML' },
+                    { value: 'cloud', text: 'Cloud & Infrastructure' },
+                    { value: 'security', text: 'Security' },
+                    { value: 'web-dev', text: 'Web Development' },
+                    { value: 'data-analytics', text: 'Data Analytics' },
+                    { value: 'devops', text: 'DevOps' },
+                    { value: 'mobile', text: 'Mobile Development' },
+                    { value: 'emerging-tech', text: 'Emerging Tech' }
+                ],
+                'insights': [
+                    { value: 'industry-analysis', text: 'Industry Analysis' },
+                    { value: 'thought-leadership', text: 'Thought Leadership' },
+                    { value: 'market-trends', text: 'Market Trends' },
+                    { value: 'future-predictions', text: 'Future Predictions' }
+                ],
+                'tutorials': [
+                    { value: 'beginner', text: 'Beginner Guides' },
+                    { value: 'intermediate', text: 'Intermediate' },
+                    { value: 'advanced', text: 'Advanced' },
+                    { value: 'hands-on', text: 'Hands-on Projects' }
+                ]
+            };
+
+            const currentValue = subcategorySelect.value;
+            const options = subcategoryOptions[category] || subcategoryOptions['news'];
+            
+            subcategorySelect.innerHTML = options.map(option => 
+                `<option value="${option.value}" ${option.value === currentValue ? 'selected' : ''}>${option.text}</option>`
+            ).join('');
+
+            // Update the article data
+            const article = articles.find(a => a.id === articleId);
+            if (article) {
+                article.publish_category = category;
+                article.publish_subcategory = subcategorySelect.value;
+                showFloatingIndicator(`Category updated to ${category}`);
+            }
+        }
+
+        function publishArticle(articleId, action) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            const categorySelect = document.querySelector(`#subcategory-${articleId}`).closest('.publishing-controls').querySelector('.publish-category');
+            const subcategorySelect = document.getElementById(`subcategory-${articleId}`);
+            
+            const publishCategory = categorySelect.value;
+            const publishSubcategory = subcategorySelect.value;
+
+            if (!publishCategory || !publishSubcategory) {
+                showMessage('❌ Please select both category and subcategory before publishing.', 'error');
+                return;
+            }
+
+            const actionText = action === 'republish' ? 're-publish' : 'publish';
+            const confirmMessage = `🚀 Ready to ${actionText} "${article.title}" to ${publishCategory.toUpperCase()} → ${publishSubcategory.replace('-', ' ').toUpperCase()}?`;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
+            try {
+                showFloatingIndicator(`${actionText === 'republish' ? 'Re-publishing' : 'Publishing'} article...`);
+
+                // Update article with publishing metadata
+                const updatedArticle = {
+                    ...article,
+                    status: 'published',
+                    published_at: new Date().toISOString(),
+                    publish_category: publishCategory,
+                    publish_subcategory: publishSubcategory
+                };
+
+                // Update in articles array
+                const index = articles.findIndex(a => a.id === articleId);
+                if (index !== -1) {
+                    articles[index] = updatedArticle;
+                }
+
+                // Re-render the article list to show updated status
+                renderArticlesList();
+                
+                // Success message with destination info
+                const destinationName = publishSubcategory.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                const categoryName = publishCategory.charAt(0).toUpperCase() + publishCategory.slice(1);
+                
+                showMessage(`🎉 Article ${actionText}ed successfully to ${categoryName} → ${destinationName}! Your content is now live.`, 'success');
+                showFloatingIndicator(`Article ${actionText}ed to ${categoryName}`);
+
+                // If the currently edited article is the same, update the editor status
+                if (currentArticle && currentArticle.id === articleId) {
+                    currentArticle = updatedArticle;
+                }
+
+            } catch (error) {
+                console.error('Publish error:', error);
+                showMessage(`❌ Failed to ${actionText} article: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize app with elegant entrance
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AI service
+            if (typeof AIArticleGenerationService !== 'undefined') {
+                aiService = new AIArticleGenerationService();
+                console.log('✅ AI Article Generation Service initialized');
+            } else {
+                console.warn('⚠️ AI Article Generation Service not loaded');
+            }
+
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+                updateConnectionStatus(false);
+                document.getElementById('connectionStatus').innerHTML = '⚠️ Please configure Supabase credentials';
+                
+                // Still load mock articles for demonstration
+                articles = createMockArticles();
+                renderArticlesList();
+                return;
+            }
+            
+            initSupabase();
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample 2: Digital Data Stream - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Digital Stream Background */
+        .stream-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stream-column {
+            position: absolute;
+            top: -100px;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgba(0, 191, 255, 0.6);
+            white-space: pre;
+            animation: fall linear infinite;
+        }
+
+        .stream-column:nth-child(1) {
+            left: 5%;
+            animation-duration: 15s;
+            animation-delay: 0s;
+        }
+
+        .stream-column:nth-child(2) {
+            left: 15%;
+            animation-duration: 12s;
+            animation-delay: -3s;
+        }
+
+        .stream-column:nth-child(3) {
+            left: 25%;
+            animation-duration: 18s;
+            animation-delay: -6s;
+        }
+
+        .stream-column:nth-child(4) {
+            left: 40%;
+            animation-duration: 14s;
+            animation-delay: -2s;
+        }
+
+        .stream-column:nth-child(5) {
+            left: 55%;
+            animation-duration: 16s;
+            animation-delay: -8s;
+        }
+
+        .stream-column:nth-child(6) {
+            left: 70%;
+            animation-duration: 13s;
+            animation-delay: -5s;
+        }
+
+        .stream-column:nth-child(7) {
+            left: 85%;
+            animation-duration: 17s;
+            animation-delay: -1s;
+        }
+
+        .stream-column:nth-child(8) {
+            left: 95%;
+            animation-duration: 11s;
+            animation-delay: -7s;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px));
+                opacity: 0;
+            }
+        }
+
+        /* Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00bfff, #87ceeb, #4682b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #6b7280;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card h3 {
+            color: #00bfff;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Digital Stream Background -->
+    <div class="stream-bg">
+        <div class="stream-column">SELECT * FROM analytics
+WHERE insights = 'valuable'
+AND trends = 'emerging'
+ORDER BY impact DESC;
+
+{
+  "data": [1,0,1,1,0],
+  "trend": "upward",
+  "confidence": 0.87
+}
+
+API_KEY: 7f8a9b2c...
+STATUS: ACTIVE
+RATE: 1000/hr
+
+console.log('analyzing...');
+const result = analyze(data);
+return result.insights;</div>
+
+        <div class="stream-column">MOONLIGHT_ANALYTICS_v2.1
+STREAMING_DATA: TRUE
+ENCRYPTION: AES-256
+
+{"timestamp": 1693123456,
+ "metric": "engagement",
+ "value": 89.2,
+ "status": "optimal"}
+
+for (let i = 0; i < data.length; i++) {
+  if (data[i].anomaly) {
+    alert('Pattern detected');
+  }
+}
+
+Binary: 1010011010
+Hex: A5C3F8B2
+Auth: Bearer eyJ0...</div>
+
+        <div class="stream-column">#!/bin/bash
+# Analytics Pipeline
+curl -H "Authorization: Bearer $TOKEN" \
+  https://api.moonlight.com/v2/data
+
+const insights = await fetch('/api/trends')
+  .then(res => res.json())
+  .then(data => processInsights(data));
+
+MACHINE_LEARNING: {
+  model: 'neural_network',
+  accuracy: 94.7,
+  training_time: '2.3hrs'
+}
+
+[INFO] Processing batch 1247
+[WARN] Rate limit approaching
+[SUCCESS] Analysis complete</div>
+
+        <div class="stream-column">import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+
+df = pd.read_csv('analytics_data.csv')
+model = RandomForestClassifier(n_estimators=100)
+
+X_train, X_test = train_test_split(X, y, test_size=0.2)
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+accuracy = accuracy_score(y_test, predictions)
+
+print(f'Accuracy: {accuracy:.3f}')
+return model</div>
+
+        <div class="stream-column">ANALYTICS_ENGINE_v3.2
+STATUS: OPERATIONAL
+UPTIME: 99.97%
+
+SELECT 
+  DATE(created_at) as date,
+  COUNT(*) as events,
+  AVG(engagement_score) as avg_score
+FROM user_interactions
+WHERE created_at >= NOW() - INTERVAL 30 DAY
+GROUP BY DATE(created_at)
+ORDER BY date DESC;
+
+REDIS_CACHE: HIT_RATE 98.3%
+ELASTICSEARCH: 15.2TB indexed
+KAFKA: 50k msgs/sec processing</div>
+
+        <div class="stream-column">const WebSocket = require('ws');
+const ws = new WebSocket('wss://stream.moonlight.com');
+
+ws.on('message', function(data) {
+  const insight = JSON.parse(data);
+  processRealTimeInsight(insight);
+});
+
+NEURAL_NETWORK: {
+  layers: [128, 64, 32, 16, 1],
+  activation: 'relu',
+  optimizer: 'adam',
+  loss: 'mse',
+  metrics: ['accuracy', 'precision']
+}
+
+Training epoch 247/500...
+Loss: 0.0023  Accuracy: 97.8%</div>
+
+        <div class="stream-column">GET /api/v2/analytics HTTP/1.1
+Host: moonlight-api.com
+Authorization: Bearer abc123...
+Content-Type: application/json
+
+{
+  "query": "trending_topics",
+  "timeframe": "24h",
+  "filters": ["technology", "ai", "ml"],
+  "aggregation": "hourly"
+}
+
+Response: 200 OK
+Content-Length: 15847
+Cache-Control: max-age=300
+
+[{"topic": "GPT-5", "mentions": 15847, "sentiment": 0.83}]</div>
+
+        <div class="stream-column">docker run -d \
+  --name moonlight-analytics \
+  -p 8080:8080 \
+  -e POSTGRES_URL=$DB_URL \
+  -e REDIS_URL=$CACHE_URL \
+  moonlight/analytics:latest
+
+KUBERNETES_DEPLOYMENT:
+  replicas: 3
+  cpu_limit: "500m"
+  memory_limit: "1Gi"
+  
+kubectl scale deployment analytics --replicas=5
+kubectl get pods -w
+
+[2023-09-03 12:34:56] INFO: Container started
+[2023-09-03 12:34:57] INFO: Database connection established</div>
+    </div>
+
+    <div class="content">
+        <h1 class="title">Digital Data Stream</h1>
+        <p class="description">
+            Matrix-style but refined and elegant. Streams of code, data, and analytics terms flow gently down the screen. 
+            Creates a high-tech atmosphere perfect for a data analytics company.
+        </p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>💻 Tech Focused</h3>
+                <p>Real code snippets, SQL queries, API calls, and analytics terms</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Elegant Matrix</h3>
+                <p>Refined version of classic digital rain - professional and modern</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Performance</h3>
+                <p>Pure CSS animation - lightweight and smooth on all devices</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

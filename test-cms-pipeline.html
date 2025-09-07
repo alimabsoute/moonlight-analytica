@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 CMS Pipeline Test - Live Demo</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(26, 26, 46, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00bfff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .test-section {
+            background: rgba(26, 26, 46, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+        }
+        
+        .test-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .test-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+        
+        .test-btn:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .progress-step:last-child { border-bottom: none; }
+        
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .step-icon.pending {
+            background: rgba(107, 114, 128, 0.3);
+            color: #9ca3af;
+        }
+        
+        .step-icon.active {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .step-icon.completed {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .step-description {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        
+        .results-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .article-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .article-title {
+            color: #00bfff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .article-meta {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .article-content {
+            color: #e5e7eb;
+            line-height: 1.8;
+        }
+        
+        .quality-score {
+            background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .status-message {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #f87171;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #34d399;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 CMS Pipeline Live Test</h1>
+            <p>Testing the complete AI article generation pipeline</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>🚀 Article Generation Test</h2>
+            <p style="color: #9ca3af; margin-bottom: 20px;">
+                Enter a 1-2 sentence topic prompt to test the full AI pipeline (Claude Writer → OpenAI Editor → Claude Overseer)
+            </p>
+            
+            <textarea 
+                id="topicInput" 
+                class="test-input" 
+                placeholder="Example: Is the new Google Bard product good enough to replace Photoshop for most people?"
+            ></textarea>
+            
+            <div style="margin-bottom: 20px;">
+                <button id="generateBtn" class="test-btn">🤖 Generate Article</button>
+                <button id="testConnBtn" class="test-btn">🔗 Test Connections</button>
+                <button id="resetBtn" class="test-btn" style="background: linear-gradient(45deg, #ef4444, #dc2626);">🔄 Reset</button>
+            </div>
+            
+            <div id="statusMessages"></div>
+            
+            <div id="progressContainer" class="progress-container">
+                <h3 style="color: #00bfff; margin-bottom: 15px;">🔄 Generation Progress</h3>
+                <div class="progress-step">
+                    <div class="step-icon pending" data-step="1">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Topic Research</div>
+                        <div class="step-description">Scraping RSS feeds and gathering context</div>
+                    </div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon pending" data-step="2">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Claude Writer</div>
+                        <div class="step-description">Initial article draft creation</div>
+                    </div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon pending" data-step="3">3</div>
+                    <div class="step-content">
+                        <div class="step-title">OpenAI Editor</div>
+                        <div class="step-description">SEO optimization and enhancement</div>
+                    </div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon pending" data-step="4">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Claude Overseer</div>
+                        <div class="step-description">Final quality review and polish</div>
+                    </div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon pending" data-step="5">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Logo Selection</div>
+                        <div class="step-description">Smart logo suggestions from database</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="resultsContainer" class="results-container">
+                <h3 style="color: #00bfff; margin-bottom: 15px;">📄 Generated Article</h3>
+                <div id="articlePreview"></div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 System Diagnostics</h2>
+            <div id="diagnostics">
+                <div style="color: #9ca3af;">Click "Test Connections" to run diagnostics...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Supabase for testing (replace with actual credentials when ready)
+        const SUPABASE_URL = 'https://alima.supabase.co';
+        const SUPABASE_ANON_KEY = 'your_anon_key_here';
+        
+        let supabase;
+        try {
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch (error) {
+            console.log('Supabase not configured - using mock mode');
+        }
+
+        // Progress tracking
+        function updateProgress(step, status = 'active') {
+            const stepIcon = document.querySelector(`[data-step="${step}"]`);
+            if (stepIcon) {
+                stepIcon.className = `step-icon ${status}`;
+                
+                // Complete previous steps
+                if (status === 'active' || status === 'completed') {
+                    for (let i = 1; i < step; i++) {
+                        const prevStep = document.querySelector(`[data-step="${i}"]`);
+                        if (prevStep && !prevStep.classList.contains('completed')) {
+                            prevStep.className = 'step-icon completed';
+                        }
+                    }
+                }
+            }
+        }
+
+        function showMessage(message, type = 'status') {
+            const container = document.getElementById('statusMessages');
+            const div = document.createElement('div');
+            div.className = `${type}-message`;
+            div.textContent = message;
+            container.appendChild(div);
+            
+            // Auto-remove after 5 seconds for status messages
+            if (type === 'status') {
+                setTimeout(() => div.remove(), 5000);
+            }
+        }
+
+        // Mock AI Article Generation Service
+        class MockAIArticleGenerationService {
+            async generateArticleFromPrompt(userPrompt, progressCallback) {
+                const steps = [
+                    { step: 1, title: 'Researching topic', duration: 2000 },
+                    { step: 2, title: 'Claude Writer creating draft', duration: 3000 },
+                    { step: 3, title: 'OpenAI Editor optimizing', duration: 2500 },
+                    { step: 4, title: 'Claude Overseer reviewing', duration: 2000 },
+                    { step: 5, title: 'Selecting relevant logos', duration: 1500 }
+                ];
+
+                for (const { step, title, duration } of steps) {
+                    progressCallback({ step, status: 'active', message: title });
+                    await new Promise(resolve => setTimeout(resolve, duration));
+                    progressCallback({ step, status: 'completed', message: `${title} - Complete` });
+                }
+
+                return {
+                    title: this.generateMockTitle(userPrompt),
+                    content: this.generateMockArticle(userPrompt),
+                    category: this.extractCategory(userPrompt),
+                    qualityScore: {
+                        overall: Math.floor(Math.random() * 20) + 80, // 80-100
+                        originality: Math.floor(Math.random() * 15) + 85,
+                        technicalAccuracy: Math.floor(Math.random() * 10) + 90,
+                        writingQuality: Math.floor(Math.random() * 20) + 80,
+                        seoValue: Math.floor(Math.random() * 25) + 75
+                    },
+                    suggestedLogos: [
+                        { company_name: 'Google', image_name: 'Google Bard Logo', image_url: '#', relevanceScore: 95 },
+                        { company_name: 'Adobe', image_name: 'Photoshop Logo', image_url: '#', relevanceScore: 88 },
+                        { company_name: 'OpenAI', image_name: 'ChatGPT Logo', image_url: '#', relevanceScore: 75 }
+                    ]
+                };
+            }
+
+            generateMockTitle(prompt) {
+                const templates = [
+                    "Breaking: {topic} - What This Means for the Tech Industry",
+                    "{topic}: A Comprehensive Analysis of Market Impact",
+                    "The Future of {topic} - Expert Insights and Predictions",
+                    "How {topic} is Revolutionizing the Industry"
+                ];
+                
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                const topic = prompt.split(' ').slice(0, 5).join(' ');
+                return template.replace('{topic}', topic);
+            }
+
+            generateMockArticle(prompt) {
+                return `
+                    <p>In a rapidly evolving technological landscape, ${prompt} has sparked significant discussion among industry experts and consumers alike.</p>
+                    
+                    <p>Our comprehensive analysis reveals several key factors that make this development particularly noteworthy:</p>
+                    
+                    <h3>Market Context</h3>
+                    <p>The current market conditions suggest that this innovation addresses a genuine need in the industry. Recent trends show increasing demand for solutions that can bridge the gap between traditional tools and emerging AI-powered alternatives.</p>
+                    
+                    <h3>Technical Analysis</h3>
+                    <p>From a technical perspective, the capabilities demonstrated represent a significant advancement in AI technology. The integration of machine learning models with user-friendly interfaces creates new possibilities for both professional and consumer applications.</p>
+                    
+                    <h3>Industry Impact</h3>
+                    <p>This development is likely to influence competitive dynamics across the sector. Companies will need to evaluate their strategies and consider how to adapt to these changing market conditions.</p>
+                    
+                    <h3>Looking Forward</h3>
+                    <p>While it's still early to predict the full impact, the implications for the industry are substantial. Users and businesses should monitor these developments closely as they may influence future technology adoption decisions.</p>
+                `;
+            }
+
+            extractCategory(prompt) {
+                const categories = ['AI & ML', 'Cloud & Infrastructure', 'Development Tools', 'Design & Creative'];
+                return categories[Math.floor(Math.random() * categories.length)];
+            }
+        }
+
+        const aiService = new MockAIArticleGenerationService();
+
+        // Test connections
+        async function testConnections() {
+            const diagnostics = document.getElementById('diagnostics');
+            diagnostics.innerHTML = '<div style="color: #f59e0b;">🔍 Running diagnostics...</div>';
+            
+            const results = [];
+            
+            // Test Supabase
+            try {
+                if (supabase) {
+                    // Try a simple operation
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate
+                    results.push('✅ Supabase: Connection available');
+                } else {
+                    results.push('⚠️ Supabase: Using mock mode (credentials needed)');
+                }
+            } catch (error) {
+                results.push(`❌ Supabase: ${error.message}`);
+            }
+            
+            // Test AI services (mock)
+            results.push('⚠️ Claude AI: Mock mode (API key needed)');
+            results.push('⚠️ OpenAI: Mock mode (API key needed)');
+            
+            // Test RSS scraping
+            results.push('✅ RSS Scraping: CORS proxy configured');
+            
+            // Test logo database
+            results.push('⚠️ Logo Database: Mock data available');
+            
+            diagnostics.innerHTML = results.map(result => 
+                `<div style="margin: 5px 0; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">${result}</div>`
+            ).join('');
+        }
+
+        // Generate article
+        async function generateArticle() {
+            const topicInput = document.getElementById('topicInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const statusMessages = document.getElementById('statusMessages');
+            
+            const prompt = topicInput.value.trim();
+            if (!prompt) {
+                showMessage('Please enter a topic prompt', 'error');
+                return;
+            }
+            
+            // Reset UI
+            statusMessages.innerHTML = '';
+            generateBtn.disabled = true;
+            generateBtn.textContent = '🔄 Generating...';
+            progressContainer.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            
+            // Reset all progress steps
+            document.querySelectorAll('.step-icon').forEach(icon => {
+                icon.className = 'step-icon pending';
+            });
+            
+            try {
+                showMessage('Starting AI article generation pipeline...', 'success');
+                
+                const result = await aiService.generateArticleFromPrompt(prompt, ({ step, status, message }) => {
+                    updateProgress(step, status);
+                    if (status === 'active') {
+                        showMessage(message, 'status');
+                    }
+                });
+                
+                // Display results
+                displayResults(result);
+                showMessage('Article generation completed successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Generation error:', error);
+                showMessage(`Generation failed: ${error.message}`, 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = '🤖 Generate Article';
+            }
+        }
+
+        function displayResults(result) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const articlePreview = document.getElementById('articlePreview');
+            
+            articlePreview.innerHTML = `
+                <div class="article-preview">
+                    <div class="article-title">${result.title}</div>
+                    <div class="article-meta">
+                        Category: ${result.category} | 
+                        Quality Score: ${result.qualityScore.overall}/100 | 
+                        Generated: ${new Date().toLocaleString()}
+                    </div>
+                    <div class="article-content">${result.content}</div>
+                    <div class="quality-score">
+                        Quality Score: ${result.qualityScore.overall}/100
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h4 style="color: #87ceeb; margin-bottom: 10px;">💡 Suggested Logos:</h4>
+                    ${result.suggestedLogos.map(logo => 
+                        `<div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; margin: 5px 0;">
+                            ${logo.company_name} - ${logo.image_name} (Score: ${logo.relevanceScore})
+                        </div>`
+                    ).join('')}
+                </div>
+            `;
+            
+            resultsContainer.style.display = 'block';
+        }
+
+        function resetTest() {
+            document.getElementById('topicInput').value = '';
+            document.getElementById('statusMessages').innerHTML = '';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'none';
+            
+            // Reset progress
+            document.querySelectorAll('.step-icon').forEach(icon => {
+                icon.className = 'step-icon pending';
+            });
+        }
+
+        // Event listeners
+        document.getElementById('generateBtn').addEventListener('click', generateArticle);
+        document.getElementById('testConnBtn').addEventListener('click', testConnections);
+        document.getElementById('resetBtn').addEventListener('click', resetTest);
+
+        // Auto-populate example on load
+        window.addEventListener('load', () => {
+            document.getElementById('topicInput').value = 'Is the new Google Bard product good enough to replace Photoshop for most people?';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight Analytica - Orbital Phase Logo Concepts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        
+        .concept-section {
+            margin-bottom: 80px;
+        }
+        
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .logo-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .logo-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .logo-name {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        /* Animations */
+        @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.5); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes dash {
+            to { stroke-dashoffset: -50; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Orbital Phase Logo Concepts</h1>
+        <p class="subtitle">35 variations exploring orbital and phase-based designs for Moonlight Analytica</p>
+        
+        <!-- Concept 1: Classic Orbital Arrangements -->
+        <div class="concept-section">
+            <h2>1. Classic Orbital Arrangements</h2>
+            <div class="logo-grid">
+                
+                <!-- Logo 1.1: Simple Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="1" opacity="0.2"/>
+                            <g transform="rotate(0)">
+                                <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="white"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Simple Orbit</div>
+                </div>
+                
+                <!-- Logo 1.2: Dual Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="25" fill="none" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <g transform="rotate(45)">
+                                <circle cx="25" cy="0" r="5" fill="white"/>
+                            </g>
+                            <g transform="rotate(225)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 35,-4 A 4,4 0 0,1 35,4" fill="white"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Dual Orbit</div>
+                </div>
+                
+                <!-- Logo 1.3: Triple Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="20" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <circle cx="0" cy="0" r="40" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <circle cx="20" cy="0" r="3" fill="white"/>
+                            <circle cx="0" cy="30" r="4" fill="none" stroke="white" stroke-width="1"/>
+                            <path d="M 0,26 A 4,4 0 0,1 0,34" fill="white"/>
+                            <circle cx="-28" cy="-28" r="3" fill="white" opacity="0.6"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Triple Orbit</div>
+                </div>
+                
+                <!-- Logo 1.4: Elliptical Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <ellipse cx="0" cy="0" rx="35" ry="20" fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <g transform="rotate(30)">
+                                <circle cx="35" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 35,-6 A 6,6 0 0,1 35,6" fill="white"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Elliptical</div>
+                </div>
+                
+                <!-- Logo 1.5: Intersecting Orbits -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <ellipse cx="0" cy="0" rx="30" ry="25" fill="none" stroke="white" stroke-width="0.5" opacity="0.3" transform="rotate(45)"/>
+                            <ellipse cx="0" cy="0" rx="30" ry="25" fill="none" stroke="white" stroke-width="0.5" opacity="0.3" transform="rotate(-45)"/>
+                            <circle cx="21" cy="21" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 21,16 A 5,5 0 0,1 21,26" fill="white"/>
+                            <circle cx="-21" cy="-21" r="3" fill="white" opacity="0.7"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Intersecting</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Concept 2: Animated Orbital Systems -->
+        <div class="concept-section">
+            <h2>2. Animated Orbital Systems</h2>
+            <div class="logo-grid">
+                
+                <!-- Logo 2.1: Rotating Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <g style="animation: orbit 4s linear infinite;">
+                                <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="white"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Rotating Moon</div>
+                </div>
+                
+                <!-- Logo 2.2: Counter Rotation -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="25" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <g style="animation: orbit 3s linear infinite;">
+                                <circle cx="25" cy="0" r="4" fill="white"/>
+                            </g>
+                            <g style="animation: orbit 5s linear infinite reverse;">
+                                <circle cx="35" cy="0" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 35,-5 A 5,5 0 0,1 35,5" fill="white"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Counter Orbit</div>
+                </div>
+                
+                <!-- Logo 2.3: Phasing Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <g style="animation: orbit 4s ease-in-out infinite;">
+                                <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5">
+                                    <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+                                </circle>
+                                <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="white">
+                                    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+                                </path>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Phasing</div>
+                </div>
+                
+                <!-- Logo 2.4: Pulsing Core -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="3" fill="white" style="animation: pulse 2s infinite;"/>
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <g style="animation: orbit 3s linear infinite;">
+                                <circle cx="30" cy="0" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 30,-5 A 5,5 0 0,1 30,5" fill="white"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Pulsing Core</div>
+                </div>
+                
+                <!-- Logo 2.5: Multi-Speed -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="20" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <circle cx="0" cy="0" r="40" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <g style="animation: orbit 2s linear infinite;">
+                                <circle cx="20" cy="0" r="3" fill="white"/>
+                            </g>
+                            <g style="animation: orbit 3s linear infinite;">
+                                <circle cx="30" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 30,-4 A 4,4 0 0,1 30,4" fill="white" opacity="0.8"/>
+                            </g>
+                            <g style="animation: orbit 5s linear infinite;">
+                                <circle cx="40" cy="0" r="3" fill="white" opacity="0.6"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Multi-Speed</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Concept 3: Phase Transition Orbits -->
+        <div class="concept-section">
+            <h2>3. Phase Transition Orbits</h2>
+            <div class="logo-grid">
+                
+                <!-- Logo 3.1: Quarter Phases -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="-30" r="5" fill="none" stroke="white" stroke-width="1"/>
+                            
+                            <circle cx="30" cy="0" r="5" fill="none" stroke="white" stroke-width="1"/>
+                            <path d="M 30,-5 A 5,5 0 0,1 30,5" fill="white"/>
+                            
+                            <circle cx="0" cy="30" r="5" fill="white"/>
+                            
+                            <circle cx="-30" cy="0" r="5" fill="none" stroke="white" stroke-width="1"/>
+                            <path d="M -30,-5 A 5,5 0 0,0 -30,5" fill="white"/>
+                            
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.2" stroke-dasharray="2,4"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Quarter Phases</div>
+                </div>
+                
+                <!-- Logo 3.2: Eight Phase -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.3" opacity="0.2"/>
+                            <!-- 8 phases around the orbit -->
+                            <g transform="rotate(0)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                            </g>
+                            <g transform="rotate(45)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 35,-4 A 4,4 0 0,1 35,4" fill="white" opacity="0.2"/>
+                            </g>
+                            <g transform="rotate(90)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 35,-4 A 4,4 0 0,1 35,4" fill="white" opacity="0.4"/>
+                            </g>
+                            <g transform="rotate(135)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 35,-4 A 4,4 0 0,1 35,4" fill="white" opacity="0.6"/>
+                            </g>
+                            <g transform="rotate(180)">
+                                <circle cx="35" cy="0" r="4" fill="white"/>
+                            </g>
+                            <g transform="rotate(225)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 35,-4 A 4,4 0 0,0 35,4" fill="white" opacity="0.6"/>
+                            </g>
+                            <g transform="rotate(270)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 35,-4 A 4,4 0 0,0 35,4" fill="white" opacity="0.4"/>
+                            </g>
+                            <g transform="rotate(315)">
+                                <circle cx="35" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 35,-4 A 4,4 0 0,0 35,4" fill="white" opacity="0.2"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Eight Phases</div>
+                </div>
+                
+                <!-- Logo 3.3: Gradient Phase -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="phaseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:white;stop-opacity:0.1" />
+                                <stop offset="50%" style="stop-color:white;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:white;stop-opacity:0.1" />
+                            </linearGradient>
+                        </defs>
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="url(#phaseGrad)" stroke-width="1"/>
+                            <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="url(#phaseGrad)"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Gradient Phase</div>
+                </div>
+                
+                <!-- Logo 3.4: Nested Phases -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <circle cx="0" cy="-35" r="8" fill="none" stroke="white" stroke-width="1.5"/>
+                            <circle cx="0" cy="-35" r="4" fill="white"/>
+                            
+                            <circle cx="35" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 35,-6 A 6,6 0 0,1 35,6" fill="white"/>
+                            
+                            <circle cx="0" cy="35" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <circle cx="0" cy="35" r="2" fill="white" opacity="0.5"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Nested Phases</div>
+                </div>
+                
+                <!-- Logo 3.5: Connected Phases -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.3" opacity="0.2"/>
+                            <line x1="0" y1="-30" x2="21" y2="-21" stroke="white" stroke-width="0.5" opacity="0.5"/>
+                            <line x1="21" y1="-21" x2="30" y2="0" stroke="white" stroke-width="0.5" opacity="0.5"/>
+                            <line x1="30" y1="0" x2="21" y2="21" stroke="white" stroke-width="0.5" opacity="0.5"/>
+                            <line x1="21" y1="21" x2="0" y2="30" stroke="white" stroke-width="0.5" opacity="0.5"/>
+                            
+                            <circle cx="0" cy="-30" r="4" fill="none" stroke="white" stroke-width="1"/>
+                            <circle cx="21" cy="-21" r="4" fill="none" stroke="white" stroke-width="1"/>
+                            <path d="M 21,-25 A 4,4 0 0,1 21,-17" fill="white" opacity="0.5"/>
+                            <circle cx="30" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                            <path d="M 30,-4 A 4,4 0 0,1 30,4" fill="white"/>
+                            <circle cx="21" cy="21" r="4" fill="white"/>
+                            <circle cx="0" cy="30" r="4" fill="white" opacity="0.5"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Connected</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Concept 4: Geometric Orbital Patterns -->
+        <div class="concept-section">
+            <h2>4. Geometric Orbital Patterns</h2>
+            <div class="logo-grid">
+                
+                <!-- Logo 4.1: Hexagonal Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" 
+                                     fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <circle cx="0" cy="-30" r="4" fill="white"/>
+                            <circle cx="26" cy="15" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 26,10 A 5,5 0 0,1 26,20" fill="white"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Hexagonal</div>
+                </div>
+                
+                <!-- Logo 4.2: Square Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <rect x="-30" y="-30" width="60" height="60" 
+                                  fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <circle cx="-30" cy="-30" r="4" fill="white"/>
+                            <circle cx="30" cy="-30" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,-35 A 5,5 0 0,1 30,-25" fill="white" opacity="0.5"/>
+                            <circle cx="30" cy="30" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,25 A 5,5 0 0,1 30,35" fill="white"/>
+                            <circle cx="-30" cy="30" r="4" fill="white" opacity="0.7"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Square Orbit</div>
+                </div>
+                
+                <!-- Logo 4.3: Triangular -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <polygon points="0,-35 30,17 -30,17" 
+                                     fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <circle cx="0" cy="-35" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 0,-40 A 5,5 0 0,1 0,-30" fill="white"/>
+                            <circle cx="30" cy="17" r="4" fill="white"/>
+                            <circle cx="-30" cy="17" r="4" fill="white" opacity="0.5"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Triangular</div>
+                </div>
+                
+                <!-- Logo 4.4: Star Pattern -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <path d="M 0,-35 L 10,-10 L 35,-5 L 15,10 L 10,35 L 0,15 L -10,35 L -15,10 L -35,-5 L -10,-10 Z" 
+                                  fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <circle cx="0" cy="-35" r="4" fill="white"/>
+                            <circle cx="35" cy="-5" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 35,-10 A 5,5 0 0,1 35,0" fill="white"/>
+                            <circle cx="10" cy="35" r="3" fill="white" opacity="0.6"/>
+                            <circle cx="-35" cy="-5" r="3" fill="white" opacity="0.4"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Star Pattern</div>
+                </div>
+                
+                <!-- Logo 4.5: Pentagon -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <polygon points="0,-35 33,-11 20,28 -20,28 -33,-11" 
+                                     fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <circle cx="0" cy="-35" r="4" fill="none" stroke="white" stroke-width="1"/>
+                            <circle cx="33" cy="-11" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 33,-16 A 5,5 0 0,1 33,-6" fill="white" opacity="0.7"/>
+                            <circle cx="20" cy="28" r="5" fill="white"/>
+                            <circle cx="-20" cy="28" r="4" fill="white" opacity="0.5"/>
+                            <circle cx="-33" cy="-11" r="3" fill="white" opacity="0.3"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Pentagon</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Concept 5: Data-Driven Orbits -->
+        <div class="concept-section">
+            <h2>5. Data-Driven Orbits</h2>
+            <div class="logo-grid">
+                
+                <!-- Logo 5.1: Node Network -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.3" opacity="0.2"/>
+                            <circle cx="0" cy="0" r="2" fill="white"/>
+                            <line x1="0" y1="0" x2="0" y2="-30" stroke="white" stroke-width="0.5" opacity="0.5"/>
+                            <line x1="0" y1="0" x2="30" y2="0" stroke="white" stroke-width="0.5" opacity="0.5"/>
+                            <line x1="0" y1="0" x2="-21" y2="21" stroke="white" stroke-width="0.5" opacity="0.5"/>
+                            
+                            <circle cx="0" cy="-30" r="3" fill="white"/>
+                            <circle cx="30" cy="0" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,-5 A 5,5 0 0,1 30,5" fill="white"/>
+                            <circle cx="-21" cy="21" r="4" fill="white" opacity="0.7"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Node Network</div>
+                </div>
+                
+                <!-- Logo 5.2: Data Points -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.5" opacity="0.2" stroke-dasharray="1,3"/>
+                            <circle cx="0" cy="-35" r="2" fill="white" opacity="0.4"/>
+                            <circle cx="25" cy="-25" r="3" fill="white" opacity="0.6"/>
+                            <circle cx="35" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 35,-6 A 6,6 0 0,1 35,6" fill="white"/>
+                            <circle cx="25" cy="25" r="4" fill="white" opacity="0.8"/>
+                            <circle cx="0" cy="35" r="5" fill="white"/>
+                            <circle cx="-25" cy="25" r="3" fill="white" opacity="0.7"/>
+                            <circle cx="-35" cy="0" r="2" fill="white" opacity="0.5"/>
+                            <circle cx="-25" cy="-25" r="2" fill="white" opacity="0.3"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Data Points</div>
+                </div>
+                
+                <!-- Logo 5.3: Analytics Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <!-- Bar chart in orbit -->
+                            <rect x="-32" y="-3" width="2" height="6" fill="white" opacity="0.4"/>
+                            <rect x="-28" y="-5" width="2" height="10" fill="white" opacity="0.5"/>
+                            <rect x="-24" y="-7" width="2" height="14" fill="white" opacity="0.6"/>
+                            <rect x="-20" y="-4" width="2" height="8" fill="white" opacity="0.7"/>
+                            
+                            <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="white"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Analytics Orbit</div>
+                </div>
+                
+                <!-- Logo 5.4: Signal Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="25" fill="none" stroke="white" stroke-width="0.3" opacity="0.5"/>
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.3" opacity="0.3"/>
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.3" opacity="0.2"/>
+                            
+                            <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="white"/>
+                            
+                            <circle cx="30" cy="0" r="10" fill="none" stroke="white" stroke-width="0.5" opacity="0.4"/>
+                            <circle cx="30" cy="0" r="15" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Signal Waves</div>
+                </div>
+                
+                <!-- Logo 5.5: Metric Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <polyline points="0,-30 5,-25 0,-20 5,-15 0,-10 5,-5 0,0" 
+                                      fill="none" stroke="white" stroke-width="1" opacity="0.6"/>
+                            
+                            <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="white"/>
+                            
+                            <text x="0" y="0" text-anchor="middle" fill="white" font-size="8" opacity="0.7">DATA</text>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Metric Flow</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Concept 6: Minimal Orbital -->
+        <div class="concept-section">
+            <h2>6. Minimal Orbital</h2>
+            <div class="logo-grid">
+                
+                <!-- Logo 6.1: Single Line -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="1.5"/>
+                            <circle cx="30" cy="0" r="6" fill="none" stroke="white" stroke-width="2"/>
+                            <path d="M 30,-6 A 6,6 0 0,1 30,6" fill="white"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Single Line</div>
+                </div>
+                
+                <!-- Logo 6.2: Dot Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="30" fill="none" stroke="white" stroke-width="0.5" stroke-dasharray="2,4"/>
+                            <circle cx="30" cy="0" r="5" fill="white"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Dot Orbit</div>
+                </div>
+                
+                <!-- Logo 6.3: Clean Phase -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <path d="M -30,0 A 30,30 0 0,1 30,0" fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <path d="M -30,0 A 30,30 0 0,0 30,0" fill="none" stroke="white" stroke-width="1"/>
+                            <circle cx="30" cy="0" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 30,-5 A 5,5 0 0,1 30,5" fill="white"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Clean Phase</div>
+                </div>
+                
+                <!-- Logo 6.4: Two Element -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="25" fill="none" stroke="white" stroke-width="1"/>
+                            <circle cx="25" cy="0" r="4" fill="white"/>
+                            <circle cx="-25" cy="0" r="4" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M -25,-4 A 4,4 0 0,0 -25,4" fill="white"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Two Element</div>
+                </div>
+                
+                <!-- Logo 6.5: Essential -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="28" fill="none" stroke="white" stroke-width="2"/>
+                            <circle cx="20" cy="20" r="6" fill="none" stroke="white" stroke-width="2"/>
+                            <path d="M 20,14 A 6,6 0 0,1 20,26" fill="white"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Essential</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Concept 7: Complex Orbital Systems -->
+        <div class="concept-section">
+            <h2>7. Complex Orbital Systems</h2>
+            <div class="logo-grid">
+                
+                <!-- Logo 7.1: Solar System -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="3" fill="white"/>
+                            <circle cx="0" cy="0" r="15" fill="none" stroke="white" stroke-width="0.3" opacity="0.3"/>
+                            <circle cx="0" cy="0" r="25" fill="none" stroke="white" stroke-width="0.3" opacity="0.3"/>
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.3" opacity="0.3"/>
+                            
+                            <circle cx="15" cy="0" r="2" fill="white" opacity="0.7"/>
+                            
+                            <g transform="rotate(120)">
+                                <circle cx="25" cy="0" r="4" fill="none" stroke="white" stroke-width="1"/>
+                                <path d="M 25,-4 A 4,4 0 0,1 25,4" fill="white"/>
+                            </g>
+                            
+                            <g transform="rotate(240)">
+                                <circle cx="35" cy="0" r="5" fill="white" opacity="0.5"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Solar System</div>
+                </div>
+                
+                <!-- Logo 7.2: Binary Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)" style="animation: orbit 6s linear infinite;">
+                            <ellipse cx="0" cy="0" rx="30" ry="20" fill="none" stroke="white" stroke-width="0.5" opacity="0.3" transform="rotate(45)"/>
+                            <g transform="rotate(0)">
+                                <circle cx="20" cy="0" r="5" fill="white"/>
+                            </g>
+                            <g transform="rotate(180)">
+                                <circle cx="20" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 20,-6 A 6,6 0 0,1 20,6" fill="white"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Binary System</div>
+                </div>
+                
+                <!-- Logo 7.3: Cluster Orbit -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.3" opacity="0.2"/>
+                            
+                            <g transform="rotate(0)">
+                                <circle cx="35" cy="0" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 35,-6 A 6,6 0 0,1 35,6" fill="white"/>
+                                <circle cx="30" cy="-3" r="1.5" fill="white" opacity="0.7"/>
+                                <circle cx="30" cy="3" r="1.5" fill="white" opacity="0.7"/>
+                            </g>
+                            
+                            <g transform="rotate(120)">
+                                <circle cx="35" cy="0" r="4" fill="white"/>
+                                <circle cx="32" cy="-2" r="1" fill="white" opacity="0.5"/>
+                            </g>
+                            
+                            <g transform="rotate(240)">
+                                <circle cx="35" cy="0" r="3" fill="white" opacity="0.6"/>
+                                <circle cx="33" cy="2" r="1" fill="white" opacity="0.4"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Cluster</div>
+                </div>
+                
+                <!-- Logo 7.4: Nested System -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <circle cx="0" cy="0" r="35" fill="none" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            
+                            <g transform="rotate(45)">
+                                <circle cx="35" cy="0" r="8" fill="none" stroke="white" stroke-width="1"/>
+                                <circle cx="35" cy="0" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                                <path d="M 35,-5 A 5,5 0 0,1 35,5" fill="white"/>
+                                <g transform="translate(35, 0)">
+                                    <circle cx="8" cy="0" r="2" fill="white" opacity="0.7"/>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Nested</div>
+                </div>
+                
+                <!-- Logo 7.5: Resonance -->
+                <div class="logo-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <g transform="translate(50, 50)">
+                            <ellipse cx="0" cy="0" rx="35" ry="25" fill="none" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <ellipse cx="0" cy="0" rx="25" ry="35" fill="none" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            
+                            <circle cx="35" cy="0" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+                            <path d="M 35,-5 A 5,5 0 0,1 35,5" fill="white"/>
+                            
+                            <circle cx="0" cy="35" r="4" fill="white" opacity="0.8"/>
+                            <circle cx="-35" cy="0" r="3" fill="white" opacity="0.6"/>
+                            <circle cx="0" cy="-35" r="3" fill="white" opacity="0.4"/>
+                        </g>
+                    </svg>
+                    <div class="logo-name">Resonance</div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>

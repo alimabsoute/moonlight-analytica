@@ -267,6 +267,7 @@
             font-weight: 300;
             color: var(--text-light);
             margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
         }
         
         .page-subtitle {
@@ -290,12 +291,30 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00bfff, #87ceeb, #4682b4);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
         
         .product-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px rgba(0, 191, 255, 0.2);
+            border-color: rgba(135, 206, 235, 0.4);
+        }
+        
+        .product-card:hover::before {
+            opacity: 1;
         }
         
         .product-header {
@@ -518,7 +537,13 @@
                 <!-- PhynxTimer -->
                 <article class="product-card">
                     <div class="product-header">
-                        <div class="product-icon">⏱️</div>
+                        <div class="product-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="24" cy="24" r="20" stroke="#fff" stroke-width="2"/>
+                                <path d="M24 8v16l8 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="24" cy="24" r="2" fill="#fff"/>
+                            </svg>
+                        </div>
                         <h2 class="product-title">PhynxTimer</h2>
                         <span class="product-status status-live">Live</span>
                     </div>
@@ -544,7 +569,13 @@
                 <!-- ATS Resume Helper -->
                 <article class="product-card">
                     <div class="product-header">
-                        <div class="product-icon">📄</div>
+                        <div class="product-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="8" y="6" width="28" height="36" rx="2" stroke="#fff" stroke-width="2" fill="none"/>
+                                <path d="M14 14h16M14 20h16M14 26h12M14 32h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M28 6v8h8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
                         <h2 class="product-title">ATS Resume Helper</h2>
                         <span class="product-status status-beta">Beta</span>
                     </div>
@@ -567,28 +598,38 @@
                     </div>
                 </article>
 
-                <!-- Line Vision Analytics -->
+                <!-- Janus Beta -->
                 <article class="product-card">
                     <div class="product-header">
-                        <div class="product-icon">📊</div>
-                        <h2 class="product-title">Line Vision Analytics</h2>
-                        <span class="product-status status-coming">Coming Soon</span>
+                        <div class="product-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="16" cy="16" r="8" stroke="#fff" stroke-width="2" fill="none"/>
+                                <circle cx="32" cy="16" r="8" stroke="#fff" stroke-width="2" fill="none"/>
+                                <path d="M16 24v12M32 24v12" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M8 16h8M32 16h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                                <circle cx="16" cy="16" r="3" fill="#fff"/>
+                                <circle cx="32" cy="16" r="3" fill="#fff"/>
+                                <path d="M12 36h8M28 36h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h2 class="product-title">Janus Beta</h2>
+                        <span class="product-status status-beta">Beta Access</span>
                     </div>
                     <div class="product-content">
                         <p class="product-description">
-                            Next-generation data visualization platform for complex analytics and business intelligence. Transform your data into actionable insights with advanced machine learning and predictive analytics.
+                            Revolutionary visual line counter and code analysis platform using advanced machine vision technology. Track code metrics, analyze complexity, and optimize your codebase with enterprise-grade precision and real-time insights.
                         </p>
                         <ul class="product-features">
-                            <li>Advanced data visualization engine</li>
-                            <li>Machine learning-powered insights</li>
-                            <li>Predictive analytics and forecasting</li>
-                            <li>Real-time data streaming and processing</li>
-                            <li>Custom dashboard builder</li>
-                            <li>Enterprise-grade security and compliance</li>
+                            <li>Machine vision-powered line counting</li>
+                            <li>Code complexity analysis and metrics</li>
+                            <li>Multi-language support and detection</li>
+                            <li>Real-time codebase visualization</li>
+                            <li>Team collaboration and insights sharing</li>
+                            <li>Git integration and history tracking</li>
                         </ul>
                         <div class="product-actions">
-                            <a href="#" class="btn btn-primary">Join Waitlist</a>
-                            <a href="#" class="btn btn-secondary">Get Notified</a>
+                            <a href="#" class="btn btn-primary">Request Beta Access</a>
+                            <a href="#" class="btn btn-secondary">View Demo</a>
                         </div>
                     </div>
                 </article>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Featured Card Test - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf8f3;
+            padding: 50px 20px;
+            min-height: 100vh;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-header h1 {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .test-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* MINIMAL CHANGES - Only animated border and opacity adjustments */
+        .featured-article-wrapper {
+            position: relative;
+            margin: 0 auto;
+            max-width: 900px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* Animated Border Container */
+        .featured-article-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 24px;
+            background: conic-gradient(
+                from 0deg at 50% 50%,
+                #9945ff 0deg,
+                #00bfff 72deg,
+                #87ceeb 144deg,
+                #4682b4 216deg,
+                #9945ff 288deg,
+                #00bfff 360deg
+            );
+            z-index: -1;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(-360deg);
+            }
+        }
+
+        /* Existing production styles with minimal opacity adjustments */
+        .featured-article {
+            position: relative;
+            background: rgba(255, 255, 255, 0.08); /* Slightly less transparent */
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        .featured-article:hover {
+            background: rgba(255, 255, 255, 0.20); /* 30% less transparent on hover */
+        }
+
+        .featured-content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            padding: 40px;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .featured-category {
+            background: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .featured-description {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .featured-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        .featured-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .featured-image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            min-height: 200px;
+        }
+
+        .featured-image {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 120px;
+            object-fit: contain;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .featured-content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 30px 20px;
+            }
+
+            .featured-title {
+                font-size: 2rem;
+            }
+
+            .featured-image-container {
+                order: -1;
+            }
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #34495e;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Minimal Featured Card Test</h1>
+            <p>Only animated border + opacity changes - everything else stays exactly the same</p>
+        </div>
+
+        <div class="info-box">
+            <h4>MINIMAL Changes Only:</h4>
+            <p>
+                ✅ Animated purple-blue border rotating counter-clockwise<br>
+                ✅ Background opacity: Default (8%) → Hover (20%)<br>
+                ❌ No other hover effects, animations, or layout changes<br>
+                ❌ Keeps production styling exactly as-is
+            </p>
+        </div>
+
+        <!-- Featured Article Card - Minimal Changes -->
+        <div class="featured-article-wrapper" onclick="handleCardClick('google-nano-banana-photoshop-killer.html')">
+            <article class="featured-article">
+                <div class="featured-content-wrapper">
+                    <div class="featured-text-content">
+                        <div class="featured-category">AI & ML</div>
+                        <h2 class="featured-title">The 'Photoshop Killer' That Went Viral Before Google Even Announced It</h2>
+                        <p class="featured-description">
+                            How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing. A mysterious AI model nicknamed "Nano Banana" has been quietly dominating image editing benchmarks for weeks, leaving the creative industry buzzing with speculation.
+                        </p>
+                        <div class="featured-meta">
+                            <span>📅 September 3, 2025</span>
+                            <span>⏱ 12 min read</span>
+                            <span>👤 Tech Analysis Team</span>
+                        </div>
+                        <a href="#" class="featured-cta" onclick="event.stopPropagation();">
+                            Read Full Article →
+                        </a>
+                    </div>
+                    <div class="featured-image-container">
+                        <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjcyIiBoZWlnaHQ9IjkyIiB2aWV3Qm94PSIwIDAgMjcyIDkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDwhLS0gTm8gYmFja2dyb3VuZCByZWN0ID0gdHJhbnNwYXJlbnQgYmFja2dyb3VuZCAtLT4KICA8ZyBpZD0iZ29vZ2xlLWxvZ28iPgogICAgPCEtLSBHIChibHVlKSAtLT4KICAgIDxwYXRoIGQ9Ik0zNS4yOSA0MS40MVYzMkg2Ny44Yy4zMSAxLjY0LjQ3IDMuNTguNDcgNS42OCAwIDcuMDYtMS45MyAxNS43OS04LjE1IDIyLjAxLTYuMDUgNi4zLTEzLjc4IDkuNjYtMjQuMDIgOS42NkMxNi4zMiA2OS4zNS4zNiA1My44OS4zNiAzNC45MS4zNiAxNS45MyAxNi4zMi40NyAzNS4zLjQ3YzEwLjUgMCAxNy45OCA0LjEyIDIzLjYgOS40OWwtNi42NCA2LjY0Yy00LjAzLTMuNzgtOS40OS02LjcyLTE2Ljk3LTYuNzItMTMuODYgMC0yNC43IDExLjE3LTI0LjcgMjUuMDMgMCAxMy44NiAxMC44NCAyNS4wMyAyNC43IDI1LjAzIDguOTkgMCAxNC4xMS0zLjYxIDE3LjM5LTYuODkgMi42Ni0yLjY2IDQuNDEtNi40NiA1LjEtMTEuNjVsLTIyLjQ5LjAxeiIgZmlsbD0iIzQyODVGNCIvPgogICAgPCEtLSBPIChyZWQpIC0tPgogICAgPHBhdGggZD0iTTExNS43NSA0Ny4xOGMwIDEyLjc3LTkuOTkgMjIuMTgtMjIuMjUgMjIuMThzLTIyLjI1LTkuNDEtMjIuMjUtMjIuMThDNzEuMjUgMzQuMzIgODEuMjQgMjUgOTMuNSAyNXMyMi4yNSA5LjMyIDIyLjI1IDIyLjE4em0tOS43NCAwYzAtNy45OC01Ljc5LTEzLjQ0LTEyLjUxLTEzLjQ0UzgwLjk5IDM5LjIgODAuOTkgNDcuMThjMCA3LjkgNS43OSAxMy40NCAxMi41MSAxMy40NHMxMi41MS01LjU1IDEyLjUxLTEzLjQ0eiIgZmlsbD0iI0VBNDMzNSIvPgogICAgPCEtLSBPICh5ZWxsb3cpIC0tPgogICAgPHBhdGggZD0iTTE2My43NSA0Ny4xOGMwIDEyLjc3LTkuOTkgMjIuMTgtMjIuMjUgMjIuMThzLTIyLjI1LTkuNDEtMjIuMjUtMjIuMThjMC0xMi44NSA5Ljk5LTIyLjE4IDIyLjI1LTIyLjE4czIyLjI1IDkuMzIgMjIuMjUgMjIuMTh6bS05Ljc0IDBjMC03Ljk4LTUuNzktMTMuNDQtMTIuNTEtMTMuNDRzLTEyLjUxIDUuNDYtMTIuNTEgMTMuNDRjMCA3LjkgNS43OSAxMy40NCAxMi41MSAxMy40NHMxMi41MS01LjU1IDEyLjUxLTEzLjQ0eiIgZmlsbD0iI0ZCQkMwNCIvPgogICAgPCEtLSBHIChibHVlKSAtLT4KICAgIDxwYXRoIGQ9Ik0yMDkuNzUgMjYuMzR2MzkuODJjMCAxNi4zOC05LjY2IDIzLjA3LTIxLjA4IDIzLjA3LTEwLjc1IDAtMTcuMjItNy4xOS0xOS42Ni0xMy4wN2w4LjQ4LTMuNTNjMS41MSAzLjYxIDUuMjEgNy44NyAxMS4xNyA3Ljg3IDcuMzEgMCAxMS44NC00LjUxIDExLjg0LTEzdi0zLjE5aC0uMzRjLTIuMTggMi42OS02LjM4IDUuMDQtMTEuNjggNS4wNC0xMS4wOSAwLTIxLjI1LTkuNjYtMjEuMjUtMjIuMDkgMC0xMi41MiAxMC4xNi0yMi4yNiAyMS4yNS0yMi4yNiA1LjI5IDAgOS40OSAyLjM1IDExLjY4IDQuOTZoLjM0di0zLjYxaDkuMjV6bS04LjU2IDIwLjkyYzAtNy44MS01LjIxLTEzLjUyLTExLjg0LTEzLjUyLTYuNzIgMC0xMi4zNSA1LjcxLTEyLjM1IDEzLjUyIDAgNy43MyA1LjYzIDEzLjM2IDEyLjM1IDEzLjM2IDYuNjMgMCAxMS44NC01LjYzIDExLjg0LTEzLjM2eiIgZmlsbD0iIzQyODVGNCIvPgogICAgPCEtLSBMIChncmVlbikgLS0+CiAgICA8cGF0aCBkPSJNMjI1IDN2NjVoLTkuNVYzaDkuNXoiIGZpbGw9IiMzNEE4NTMiLz4KICAgIDwhLS0gRSAocmVkKSAtLT4KICAgIDxwYXRoIGQ9Ik0yNjIuMDIgNTQuNDhsNy41NiA1LjA0Yy0yLjQ0IDMuNjEtOC4zMiA5LjgzLTE4LjQ4IDkuODMtMTIuNiAwLTIyLjAxLTkuNzQtMjIuMDEtMjIuMTggMC0xMy4xOSA5LjQ5LTIyLjE4IDIwLjkyLTIyLjE4IDExLjUxIDAgMTcuMTQgOS4xNiAxOC45OCAxNC4xMWwxLjAxIDIuNTItMjkuNjUgMTIuMjhjMi4yNyA0LjQ1IDUuOCA2LjcyIDEwLjc1IDYuNzIgNC45NiAwIDguNC0yLjQ0IDEwLjkyLTYuMTR6bS0yMy4yNy03Ljk4bDE5LjgyLTguMjNjLTEuMDktMi43Ny00LjM3LTQuNy04LjIzLTQuNy00Ljk1IDAtMTEuODQgNC4zNy0xMS41OSAxMi45M3oiIGZpbGw9IiNFQTQzMzUiLz4KICA8L2c+Cjwvc3ZnPg==" alt="Google Logo" class="featured-image">
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <script>
+        // Card click functionality
+        function handleCardClick(articleUrl) {
+            console.log(`Navigating to: ${articleUrl}`);
+            alert(`Click anywhere functionality working! Would navigate to: ${articleUrl}`);
+        }
+
+        // Prevent link clicks from triggering card click
+        document.querySelector('.featured-cta').addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('CTA link clicked');
+            alert('Read Full Article link clicked (would navigate to article)');
+        });
+    </script>
+</body>
+</html>

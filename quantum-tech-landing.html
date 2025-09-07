@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumCore Technologies - Next-Gen Data Processing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff6b6b;
+            --accent-color: #4ecdc4;
+            --text-light: #ffffff;
+            --text-dark: #2d3748;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-light: rgba(0, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: #000;
+        }
+        
+        /* 3D Cube Background */
+        #cube-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Color Scheme Controls */
+        .color-controls {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 180px;
+        }
+        
+        .controls-title {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .scheme-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .scheme-btn {
+            padding: 6px 8px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-light);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .scheme-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .scheme-btn.active {
+            background: var(--primary-color);
+            color: #000;
+            border-color: var(--primary-color);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            z-index: 10;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 25px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+        
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-light), var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.5;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+        
+        .cta-btn {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        .cta-btn.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: #000;
+        }
+        
+        .cta-btn.secondary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            color: var(--text-light);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow-light);
+        }
+        
+        .cta-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-light);
+            font-size: 0.9rem;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+        
+        .scroll-indicator::after {
+            content: '↓';
+            display: block;
+            font-size: 1.5rem;
+            margin-top: 5px;
+            color: var(--primary-color);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(26, 26, 46, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .section-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .section-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 60px;
+        }
+        
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px var(--shadow-dark);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+        
+        /* About Section */
+        .about {
+            padding: 120px 0;
+            background: rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .about-text {
+            color: var(--text-light);
+        }
+        
+        .about-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--text-light), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .about-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .about-visual {
+            position: relative;
+            height: 400px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .visual-content {
+            text-align: center;
+            color: var(--text-light);
+        }
+        
+        .visual-icon {
+            font-size: 5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .visual-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        /* Contact Section */
+        .contact {
+            padding: 120px 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(26, 26, 46, 0.9) 100%);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+        
+        .contact-info {
+            color: var(--text-light);
+        }
+        
+        .contact-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+        
+        .contact-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-method:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(10px);
+        }
+        
+        .method-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .contact-form {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--shadow-light);
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-copyright {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .color-controls {
+                position: static;
+                margin: 20px auto;
+                width: fit-content;
+            }
+            
+            .hero {
+                padding: 0 15px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease;
+        }
+        
+        .loading-text {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--accent-color), var(--primary-color));
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-text">Initializing Quantum Systems...</div>
+    </div>
+
+    <!-- 3D Cube Background -->
+    <canvas id="cube-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">QuantumCore</a>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Color Scheme Controls -->
+    <div class="color-controls">
+        <div class="controls-title">🎨 Themes</div>
+        <div class="scheme-grid">
+            <div class="scheme-btn active" data-scheme="dark-bright">Dark + Bright</div>
+            <div class="scheme-btn" data-scheme="light-dark">Light + Dark</div>
+            <div class="scheme-btn" data-scheme="purple-gold">Purple + Gold</div>
+            <div class="scheme-btn" data-scheme="ice-fire">Ice + Fire</div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 Next-Generation Technology</div>
+            <h1 class="hero-title">Quantum Data Processing</h1>
+            <p class="hero-subtitle">
+                Transform your business with our revolutionary quantum-powered data processing platform. 
+                Experience real-time analytics, AI-driven insights, and unprecedented computational power.
+            </p>
+            <div class="cta-buttons">
+                <a href="#features" class="cta-btn primary">Explore Platform</a>
+                <a href="#contact" class="cta-btn secondary">Get Started</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">Scroll to explore</div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">⚡ Core Features</div>
+                <h2 class="section-title">Powering the Future</h2>
+                <p class="section-description">
+                    Our quantum-enhanced platform delivers unprecedented performance, scalability, and intelligence 
+                    to transform how you process and analyze data.
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">Quantum Speed</h3>
+                    <p class="feature-description">
+                        Process millions of data points in microseconds with our quantum-accelerated algorithms. 
+                        Experience 1000x faster computation than traditional systems.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🧠</span>
+                    <h3 class="feature-title">AI Intelligence</h3>
+                    <p class="feature-description">
+                        Advanced machine learning models that adapt and evolve. Get predictive insights 
+                        that help you stay ahead of market trends and customer needs.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3 class="feature-title">Quantum Security</h3>
+                    <p class="feature-description">
+                        Unbreakable encryption powered by quantum mechanics. Your data is protected by 
+                        the fundamental laws of physics, ensuring absolute security.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🌐</span>
+                    <h3 class="feature-title">Global Scale</h3>
+                    <p class="feature-description">
+                        Deploy across multiple quantum data centers worldwide. Automatic load balancing 
+                        and 99.99% uptime guarantee for mission-critical applications.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Real-time Analytics</h3>
+                    <p class="feature-description">
+                        Visualize your data streams with stunning 3D interfaces and interactive dashboards. 
+                        Monitor performance metrics and KPIs in real-time.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔮</span>
+                    <h3 class="feature-title">Predictive Modeling</h3>
+                    <p class="feature-description">
+                        Forecast future trends with quantum-enhanced predictive models. Make data-driven 
+                        decisions with confidence using our advanced analytics suite.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="section-badge">🏢 About QuantumCore</div>
+                    <h2 class="about-title">Leading the Quantum Revolution</h2>
+                    <p class="about-description">
+                        Founded in 2020 by a team of quantum physicists and software engineers, QuantumCore Technologies 
+                        is at the forefront of the quantum computing revolution. We're building the infrastructure that 
+                        will power the next generation of computational applications.
+                    </p>
+                    <p class="about-description">
+                        Our mission is to make quantum computing accessible to businesses of all sizes, enabling 
+                        breakthrough innovations in AI, cryptography, optimization, and scientific simulation.
+                    </p>
+                </div>
+                
+                <div class="about-visual">
+                    <div class="visual-content">
+                        <div class="visual-icon">🔬</div>
+                        <div class="visual-text">Quantum Innovation Lab</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Enterprise Clients</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1M+</span>
+                    <span class="stat-label">Quantum Operations/sec</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">99.99%</span>
+                    <span class="stat-label">System Uptime</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">🤝 Get In Touch</div>
+                <h2 class="section-title">Start Your Quantum Journey</h2>
+                <p class="section-description">
+                    Ready to revolutionize your data processing capabilities? Our quantum experts are here to help 
+                    you unlock the potential of next-generation computing.
+                </p>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3 class="contact-title">Let's Connect</h3>
+                    <p class="contact-description">
+                        Whether you're looking to integrate quantum computing into your existing infrastructure 
+                        or exploring new possibilities, our team is ready to guide you through every step.
+                    </p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <span class="method-icon">📧</span>
+                            <div>
+                                <strong>Email</strong><br>
+                                hello@quantumcore.tech
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <span class="method-icon">📞</span>
+                            <div>
+                                <strong>Phone</strong><br>
+                                +1 (555) 123-QUANTUM
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <span class="method-icon">🏢</span>
+                            <div>
+                                <strong>Headquarters</strong><br>
+                                Silicon Valley, California
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Company</label>
+                        <input type="text" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-textarea" placeholder="Tell us about your project and quantum computing needs..." required></textarea>
+                    </div>
+                    <button type="submit" class="form-submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">QuantumCore</div>
+            <nav class="footer-links">
+                <a href="#home" class="footer-link">Home</a>
+                <a href="#features" class="footer-link">Features</a>
+                <a href="#about" class="footer-link">About</a>
+                <a href="#contact" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+            </nav>
+            <div class="footer-copyright">
+                © 2024 QuantumCore Technologies. All rights reserved. | Powered by Quantum Computing
+            </div>
+        </div>
+    </footer>
+
+    <!-- 3D Cube Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Color Schemes (same as before)
+        class ColorSchemes {
+            static schemes = {
+                'dark-bright': {
+                    name: 'Dark Void + Bright Cube',
+                    background: { top: '#000000', bottom: '#1a1a2e' },
+                    cube: {
+                        face1: { color: 0xffffff, metalness: 0.9, roughness: 0.1, emissive: 0x001122 },
+                        face2: { color: 0x00ffff, metalness: 0.8, roughness: 0.2, emissive: 0x002244 },
+                        face3: { color: 0x66ff66, metalness: 0.7, roughness: 0.3, emissive: 0x002200 },
+                        face4: { color: 0xffff66, metalness: 0.8, roughness: 0.2, emissive: 0x222200 },
+                        face5: { color: 0xff6666, metalness: 0.7, roughness: 0.3, emissive: 0x220000 },
+                        face6: { color: 0xff66ff, metalness: 0.8, roughness: 0.2, emissive: 0x220022 }
+                    },
+                    wireframe: 0x00ffff,
+                    particles: [0x00ffff, 0xff6b6b, 0x4ecdc4, 0xffe66d, 0xff6b9d, 0x66ff66],
+                    lights: {
+                        ambient: 0x404040, directional: 0xffffff,
+                        point1: { color: 0x00ffff, intensity: 1.2 },
+                        point2: { color: 0xff6b6b, intensity: 1.0 },
+                        point3: { color: 0x4ecdc4, intensity: 0.8 }
+                    }
+                },
+                'light-dark': {
+                    name: 'Light Ethereal + Dark Cube',
+                    background: { top: '#f0f4f8', bottom: '#e2e8f0' },
+                    cube: {
+                        face1: { color: 0x2d3748, metalness: 0.8, roughness: 0.2, emissive: 0x000000 },
+                        face2: { color: 0x4a5568, metalness: 0.7, roughness: 0.3, emissive: 0x000000 },
+                        face3: { color: 0x663399, metalness: 0.9, roughness: 0.1, emissive: 0x110022 },
+                        face4: { color: 0x1a202c, metalness: 0.8, roughness: 0.2, emissive: 0x000000 },
+                        face5: { color: 0x2b2d42, metalness: 0.7, roughness: 0.3, emissive: 0x000000 },
+                        face6: { color: 0x8d1b3d, metalness: 0.9, roughness: 0.1, emissive: 0x220011 }
+                    },
+                    wireframe: 0x663399,
+                    particles: [0x663399, 0x8d1b3d, 0x4a5568, 0x2d3748, 0x6b46c1, 0x9333ea],
+                    lights: {
+                        ambient: 0x808080, directional: 0xffffff,
+                        point1: { color: 0x663399, intensity: 0.8 },
+                        point2: { color: 0x8d1b3d, intensity: 0.6 },
+                        point3: { color: 0x6b46c1, intensity: 0.7 }
+                    }
+                },
+                'purple-gold': {
+                    name: 'Cosmic Purple + Gold Cube',
+                    background: { top: '#1a0933', bottom: '#2d1b69' },
+                    cube: {
+                        face1: { color: 0xffd700, metalness: 0.9, roughness: 0.1, emissive: 0x332200 },
+                        face2: { color: 0xffb347, metalness: 0.8, roughness: 0.2, emissive: 0x331100 },
+                        face3: { color: 0xff8c42, metalness: 0.7, roughness: 0.3, emissive: 0x330800 },
+                        face4: { color: 0xffa500, metalness: 0.9, roughness: 0.1, emissive: 0x331a00 },
+                        face5: { color: 0xdaa520, metalness: 0.8, roughness: 0.2, emissive: 0x221800 },
+                        face6: { color: 0xb8860b, metalness: 0.7, roughness: 0.3, emissive: 0x221100 }
+                    },
+                    wireframe: 0xffd700,
+                    particles: [0xffd700, 0xffb347, 0xff8c42, 0xffa500, 0xdaa520, 0xb8860b],
+                    lights: {
+                        ambient: 0x302060, directional: 0xffffff,
+                        point1: { color: 0xffd700, intensity: 1.5 },
+                        point2: { color: 0xff8c42, intensity: 1.2 },
+                        point3: { color: 0xb8860b, intensity: 1.0 }
+                    }
+                },
+                'ice-fire': {
+                    name: 'Ice Blue + Fire Cube',
+                    background: { top: '#0a1628', bottom: '#1e3a8a' },
+                    cube: {
+                        face1: { color: 0xff4500, metalness: 0.8, roughness: 0.2, emissive: 0x441100 },
+                        face2: { color: 0xff6347, metalness: 0.7, roughness: 0.3, emissive: 0x441122 },
+                        face3: { color: 0xffa500, metalness: 0.9, roughness: 0.1, emissive: 0x332200 },
+                        face4: { color: 0xff0000, metalness: 0.8, roughness: 0.2, emissive: 0x440000 },
+                        face5: { color: 0xdc143c, metalness: 0.7, roughness: 0.3, emissive: 0x330011 },
+                        face6: { color: 0xff69b4, metalness: 0.9, roughness: 0.1, emissive: 0x330022 }
+                    },
+                    wireframe: 0xff4500,
+                    particles: [0xff4500, 0xff6347, 0xffa500, 0xff0000, 0xdc143c, 0xff69b4],
+                    lights: {
+                        ambient: 0x203060, directional: 0xffffff,
+                        point1: { color: 0xff4500, intensity: 1.3 },
+                        point2: { color: 0xff0000, intensity: 1.1 },
+                        point3: { color: 0xffa500, intensity: 0.9 }
+                    }
+                }
+            };
+        }
+
+        // Simplified cube class for landing page background
+        class LandingPageCube {
+            constructor() {
+                this.currentScheme = 'dark-bright';
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createCube();
+                this.createParticles();
+                this.setupControls();
+                this.animate();
+            }
+
+            init() {
+                this.canvas = document.getElementById('cube-canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 0, 15);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                this.mouse = new THREE.Vector2();
+                this.time = 0;
+            }
+
+            createScene() {
+                this.updateBackground();
+                this.scene.fog = new THREE.Fog(0x000000, 20, 80);
+            }
+
+            updateBackground() {
+                const scheme = ColorSchemes.schemes[this.currentScheme];
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = 2;
+                canvas.height = 256;
+                const context = canvas.getContext('2d');
+                
+                const gradient = context.createLinearGradient(0, 0, 0, 256);
+                gradient.addColorStop(0, scheme.background.top);
+                gradient.addColorStop(1, scheme.background.bottom);
+                
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 2, 256);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const geometry = new THREE.SphereGeometry(100, 32, 16);
+                const material = new THREE.MeshBasicMaterial({ 
+                    map: texture, 
+                    side: THREE.BackSide 
+                });
+                
+                if (this.backgroundSphere) {
+                    this.scene.remove(this.backgroundSphere);
+                }
+                this.backgroundSphere = new THREE.Mesh(geometry, material);
+                this.scene.add(this.backgroundSphere);
+            }
+
+            createLights() {
+                this.lights = {};
+                this.updateLights();
+            }
+
+            updateLights() {
+                Object.values(this.lights).forEach(light => {
+                    if (light.parent) this.scene.remove(light);
+                });
+                
+                const scheme = ColorSchemes.schemes[this.currentScheme].lights;
+                
+                this.lights.ambient = new THREE.AmbientLight(scheme.ambient, 0.4);
+                this.scene.add(this.lights.ambient);
+                
+                this.lights.directional = new THREE.DirectionalLight(scheme.directional, 1.0);
+                this.lights.directional.position.set(15, 15, 10);
+                this.scene.add(this.lights.directional);
+                
+                this.lights.point1 = new THREE.PointLight(scheme.point1.color, scheme.point1.intensity * 0.8, 30);
+                this.lights.point1.position.set(-12, 8, 6);
+                this.scene.add(this.lights.point1);
+                
+                this.lights.point2 = new THREE.PointLight(scheme.point2.color, scheme.point2.intensity * 0.8, 30);
+                this.lights.point2.position.set(12, -8, -6);
+                this.scene.add(this.lights.point2);
+            }
+
+            createCube() {
+                this.cubeGroup = new THREE.Group();
+                this.scene.add(this.cubeGroup);
+                
+                const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+                this.updateCubeMaterials();
+                
+                this.mainCube = new THREE.Mesh(cubeGeometry, this.cubeMaterials);
+                this.cubeGroup.add(this.mainCube);
+                
+                // Inner core
+                const coreGeometry = new THREE.IcosahedronGeometry(1.5, 1);
+                const coreMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 0.9,
+                    roughness: 0.1,
+                    transparent: true,
+                    opacity: 0.6,
+                    emissive: 0x002244,
+                });
+                this.innerCore = new THREE.Mesh(coreGeometry, coreMaterial);
+                this.cubeGroup.add(this.innerCore);
+                
+                this.updateWireframe();
+            }
+
+            updateCubeMaterials() {
+                const scheme = ColorSchemes.schemes[this.currentScheme].cube;
+                
+                this.cubeMaterials = [
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face1, transparent: true, opacity: 0.8 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face2, transparent: true, opacity: 0.8 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face3, transparent: true, opacity: 0.8 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face4, transparent: true, opacity: 0.8 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face5, transparent: true, opacity: 0.8 }),
+                    new THREE.MeshPhysicalMaterial({ ...scheme.face6, transparent: true, opacity: 0.8 })
+                ];
+                
+                if (this.mainCube) {
+                    this.mainCube.material = this.cubeMaterials;
+                }
+            }
+
+            updateWireframe() {
+                if (this.wireframe) {
+                    this.cubeGroup.remove(this.wireframe);
+                }
+                
+                const wireframeGeometry = new THREE.EdgesGeometry(this.mainCube.geometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: ColorSchemes.schemes[this.currentScheme].wireframe,
+                    transparent: true, 
+                    opacity: 0.4
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cubeGroup.add(this.wireframe);
+            }
+
+            createParticles() {
+                this.particles = [];
+                this.maxParticles = 100; // Reduced for performance
+                
+                this.particleGeometries = [
+                    new THREE.BoxGeometry(0.1, 0.1, 0.1),
+                    new THREE.BoxGeometry(0.15, 0.05, 0.05),
+                ];
+                
+                this.updateParticleMaterials();
+            }
+
+            updateParticleMaterials() {
+                const colors = ColorSchemes.schemes[this.currentScheme].particles;
+                this.particleMaterials = colors.map(color => 
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: color,
+                        transparent: true,
+                        opacity: 0.8,
+                        emissive: color,
+                        emissiveIntensity: 0.3
+                    })
+                );
+            }
+
+            createParticle() {
+                if (this.particles.length >= this.maxParticles) return;
+                
+                const geometry = this.particleGeometries[Math.floor(Math.random() * this.particleGeometries.length)];
+                const material = this.particleMaterials[Math.floor(Math.random() * this.particleMaterials.length)].clone();
+                
+                const particle = new THREE.Mesh(geometry, material);
+                
+                // Random position around sphere
+                const angle = Math.random() * Math.PI * 2;
+                const elevation = (Math.random() - 0.5) * Math.PI;
+                const distance = 20 + Math.random() * 10;
+                
+                particle.position.set(
+                    Math.cos(angle) * Math.cos(elevation) * distance,
+                    Math.sin(elevation) * distance,
+                    Math.sin(angle) * Math.cos(elevation) * distance
+                );
+                
+                particle.userData = {
+                    speed: 0.02 + Math.random() * 0.03,
+                    life: 1.0,
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.1,
+                        y: (Math.random() - 0.5) * 0.1,
+                        z: (Math.random() - 0.5) * 0.1
+                    }
+                };
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+
+            updateParticles() {
+                // Add new particles
+                if (Math.random() < 0.1) {
+                    this.createParticle();
+                }
+                
+                // Update existing particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    // Rotate
+                    particle.rotation.x += userData.rotationSpeed.x;
+                    particle.rotation.y += userData.rotationSpeed.y;
+                    particle.rotation.z += userData.rotationSpeed.z;
+                    
+                    // Move towards cube
+                    const direction = new THREE.Vector3().subVectors(this.cubeGroup.position, particle.position).normalize();
+                    particle.position.add(direction.multiplyScalar(userData.speed));
+                    
+                    const distance = particle.position.distanceTo(this.cubeGroup.position);
+                    
+                    if (distance < 3.0) {
+                        userData.life -= 0.05;
+                        particle.material.opacity = userData.life * 0.8;
+                        particle.scale.setScalar(userData.life);
+                    }
+                    
+                    if (userData.life <= 0 || distance < 1.0) {
+                        this.scene.remove(particle);
+                        particle.geometry.dispose();
+                        particle.material.dispose();
+                        this.particles.splice(i, 1);
+                    }
+                }
+            }
+
+            setupControls() {
+                // Mouse interaction (subtle for background)
+                document.addEventListener('mousemove', (e) => {
+                    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            switchColorScheme(schemeName) {
+                this.currentScheme = schemeName;
+                this.updateBackground();
+                this.updateLights();
+                this.updateCubeMaterials();
+                this.updateWireframe();
+                this.updateParticleMaterials();
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.005;
+                
+                // Cube animations (slower for background)
+                this.cubeGroup.rotation.x += 0.002;
+                this.cubeGroup.rotation.y += 0.004;
+                this.cubeGroup.rotation.z += 0.001;
+                
+                // Floating motion
+                this.cubeGroup.position.y = Math.sin(this.time * 0.5) * 0.5;
+                this.cubeGroup.position.x = Math.cos(this.time * 0.3) * 0.3;
+                
+                // Scale pulsing
+                const scale = 1 + Math.sin(this.time * 2) * 0.05;
+                this.cubeGroup.scale.setScalar(scale);
+                
+                // Mouse interaction (very subtle)
+                this.cubeGroup.rotation.x += this.mouse.y * 0.002;
+                this.cubeGroup.rotation.y += this.mouse.x * 0.002;
+                
+                // Inner core counter-rotation
+                if (this.innerCore) {
+                    this.innerCore.rotation.x -= 0.01;
+                    this.innerCore.rotation.y += 0.015;
+                }
+                
+                // Wireframe effects
+                if (this.wireframe) {
+                    this.wireframe.material.opacity = 0.4 + Math.sin(this.time * 3) * 0.2;
+                }
+                
+                this.updateParticles();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Landing page functionality
+        class LandingPage {
+            constructor() {
+                this.cube = new LandingPageCube();
+                this.setupNavigation();
+                this.setupColorControls();
+                this.setupScrollEffects();
+                this.setupFormHandling();
+                this.removeLoading();
+            }
+
+            setupNavigation() {
+                // Smooth scroll for navigation links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = document.querySelector(anchor.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+
+                // Navbar scroll effect
+                window.addEventListener('scroll', () => {
+                    const navbar = document.getElementById('navbar');
+                    if (window.scrollY > 100) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            setupColorControls() {
+                const schemeButtons = document.querySelectorAll('.scheme-btn');
+                schemeButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const scheme = btn.dataset.scheme;
+                        this.cube.switchColorScheme(scheme);
+                        
+                        // Update active button
+                        schemeButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                    });
+                });
+            }
+
+            setupScrollEffects() {
+                // Intersection Observer for animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, observerOptions);
+
+                // Observe feature cards and other elements
+                document.querySelectorAll('.feature-card, .stat-item, .contact-method').forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(30px)';
+                    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(el);
+                });
+            }
+
+            setupFormHandling() {
+                const form = document.getElementById('contactForm');
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    // Simple form submission simulation
+                    const submitBtn = form.querySelector('.form-submit');
+                    const originalText = submitBtn.textContent;
+                    
+                    submitBtn.textContent = 'Sending...';
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = 'Message Sent! ✨';
+                        setTimeout(() => {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                            form.reset();
+                        }, 2000);
+                    }, 1000);
+                });
+            }
+
+            removeLoading() {
+                setTimeout(() => {
+                    const loading = document.getElementById('loading');
+                    loading.style.opacity = '0';
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                    }, 1000);
+                }, 2500);
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new LandingPage();
+        });
+    </script>
+</body>
+</html>

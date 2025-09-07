@@ -30,49 +30,76 @@
             --bg-secondary: #111111;
             --bg-card: rgba(255, 255, 255, 0.03);
             --backdrop-blur: blur(24px);
+            --neon-blue: #00bfff;
+            --neon-purple: #9945ff;
+            --neon-cyan: #87ceeb;
+            --neon-green: #00ff88;
         }
         
         body {
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
-            background: var(--bg-primary);
-            color: var(--text-light);
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
         }
         
-        /* Simplified particle background */
-        .particle-bg {
+
+        /* Code Rain Background */
+        .code-rain {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.4;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow: hidden;
         }
-        
-        .particle {
+
+        .code-column {
             position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #87ceeb;
-            border-radius: 50%;
-            animation: float 8s infinite ease-in-out;
+            top: -200px;
+            white-space: pre;
+            opacity: 0.4;
+            animation: fall linear infinite;
+            line-height: 18px;
         }
-        
-        .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { top: 20%; left: 80%; animation-delay: 1.5s; }
-        .particle:nth-child(3) { top: 70%; left: 20%; animation-delay: 3s; }
-        .particle:nth-child(4) { top: 80%; left: 90%; animation-delay: 4.5s; }
-        .particle:nth-child(5) { top: 40%; left: 60%; animation-delay: 6s; }
-        .particle:nth-child(6) { top: 60%; left: 40%; animation-delay: 7.5s; }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.5; }
-            50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
+
+        .code-column:nth-child(1) { left: 15%; color: #2d3748; animation-duration: 22s; animation-delay: -2s; }
+        .code-column:nth-child(2) { left: 45%; color: #4c51bf; animation-duration: 18s; animation-delay: -8s; }
+        .code-column:nth-child(3) { left: 75%; color: #553c9a; animation-duration: 25s; animation-delay: -5s; }
+
+        @keyframes fall {
+            0% { transform: translateY(-200px); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(calc(100vh + 200px)); opacity: 0; }
         }
+
+        .keyword { color: #4c51bf; font-weight: 600; }
+        .string { color: #553c9a; }
+        .comment { color: #718096; font-style: italic; }
+        .number { color: #2d3748; font-weight: 500; }
+
+        @keyframes randomGlow {
+            0%, 70%, 100% { text-shadow: none; color: inherit; }
+            15%, 55% { text-shadow: 0 0 10px rgba(0, 191, 255, 0.8), 0 0 20px rgba(0, 191, 255, 0.6); color: #00bfff; }
+        }
+
+        .glow-1 { animation: randomGlow 4s infinite; animation-delay: 0.5s; }
+        .glow-2 { animation: randomGlow 3.5s infinite; animation-delay: 1.2s; }
+        .glow-3 { animation: randomGlow 5s infinite; animation-delay: 2.1s; }
+        .glow-4 { animation: randomGlow 4.2s infinite; animation-delay: 0.8s; }
+        .glow-5 { animation: randomGlow 3.8s infinite; animation-delay: 1.7s; }
+        .glow-6 { animation: randomGlow 4.5s infinite; animation-delay: 2.3s; }
+        .glow-7 { animation: randomGlow 3.2s infinite; animation-delay: 1.1s; }
+        .glow-8 { animation: randomGlow 4.8s infinite; animation-delay: 0.3s; }
         
-        /* Navigation */
+        /* Navigation (Same as news.html) */
         .navbar {
             position: fixed;
             top: 0;
@@ -80,9 +107,9 @@
             right: 0;
             z-index: 1000;
             padding: 20px 0;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: var(--backdrop-blur);
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
         }
         
         .nav-container {
@@ -91,25 +118,56 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            gap: 3rem;
             padding: 0 10px;
+            gap: 3rem;
         }
         
         .logo {
             font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 600;
+            font-size: 1.6rem;
+            font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
             letter-spacing: -0.3px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
+            animation-duration: 1.5s;
         }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            animation: iconPulse 3s ease-in-out infinite 1.5s;
+        }
+        
+        @keyframes logoPulse {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+                color: var(--primary-color);
+            }
+            50% {
+                text-shadow: 0 0 50px rgba(135, 206, 235, 1.0), 0 0 80px rgba(70, 130, 180, 0.8);
+                color: #00bfff;
+            }
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 50px rgba(135, 206, 235, 1.0)) drop-shadow(0 0 80px rgba(70, 130, 180, 0.8));
+            }
         }
         
         .nav-menu {
@@ -120,7 +178,7 @@
         }
         
         .nav-link {
-            color: var(--text-light);
+            color: #1f2937;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
@@ -129,7 +187,8 @@
         }
         
         .nav-link:hover, .nav-link.active {
-            color: var(--primary-color);
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
             transform: translateY(-2px);
         }
         
@@ -139,7 +198,7 @@
         }
         
         .nav-dropdown-toggle {
-            color: var(--text-light);
+            color: #1f2937;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
@@ -154,8 +213,8 @@
         }
         
         .nav-dropdown-toggle.active {
-            color: var(--primary-color);
-            transform: translateY(-2px);
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
         }
         
         .nav-dropdown-toggle::after {
@@ -170,7 +229,7 @@
         }
         
         .nav-dropdown-toggle:hover {
-            color: var(--primary-color);
+            color: var(--neon-blue);
             transform: translateY(-2px);
         }
         
@@ -205,7 +264,7 @@
         .dropdown-item {
             display: block;
             padding: 10px 25px;
-            color: var(--text-light);
+            color: #1f2937;
             text-decoration: none;
             font-size: 0.85rem;
             transition: all 0.3s ease;
@@ -214,7 +273,7 @@
         }
         
         .dropdown-item.active {
-            color: var(--primary-color);
+            color: var(--neon-blue);
             background: rgba(135, 206, 235, 0.1);
         }
         
@@ -248,7 +307,7 @@
         
         .dropdown-label {
             padding: 5px 25px;
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -264,433 +323,202 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 10px;
         }
         
+        /* Page Header */
         .page-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
+            position: relative;
         }
         
         .page-title {
             font-family: 'Poppins', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 300;
-            color: var(--text-light);
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00bfff, #87ceeb, #4682b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 1rem;
+            animation: gradientShift 5s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
         
         .page-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-muted);
+            color: #6b7280;
+            font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
         }
-        
-        /* Featured Article */
-        .featured-article {
-            background: var(--glass-bg);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 4rem;
-            transition: all 0.3s ease;
-        }
-        
-        .featured-article:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
-        }
-        
-        .featured-image {
-            height: 300px;
-            background: linear-gradient(135deg, #1a3352, #87ceeb);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .featured-icon {
-            font-size: 4rem;
-            opacity: 0.8;
-        }
-        
-        .featured-content {
-            padding: 2.5rem;
-        }
-        
-        .featured-badge {
-            display: inline-block;
-            background: var(--success-color);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .featured-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
-        
-        .featured-excerpt {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        
-        .featured-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-        
-        /* Blog Grid */
-        .blog-grid {
+
+        /* Insights Grid */
+        .insights-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-bottom: 4rem;
         }
-        
-        .blog-card {
-            background: var(--glass-bg);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--glass-border);
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 191, 255, 0.2);
             border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
         }
-        
-        .blog-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.15);
         }
-        
-        .blog-image {
-            height: 200px;
-            background: linear-gradient(45deg, #1a3352, #87ceeb);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .blog-icon {
-            font-size: 2rem;
-            opacity: 0.7;
-        }
-        
-        .blog-content {
-            padding: 1.5rem;
-        }
-        
-        .blog-category {
-            display: inline-block;
-            background: var(--primary-color);
-            color: var(--text-dark);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
+
+        .insight-card h3 {
+            color: #00bfff;
             margin-bottom: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .insight-card p {
+            color: #4b5563;
+            line-height: 1.6;
         }
         
-        .blog-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.8rem;
-            line-height: 1.3;
-        }
-        
-        .blog-excerpt {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-        
-        .blog-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-        
-        .read-time {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-        
-        /* Categories Filter */
-        .categories-filter {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
-        
-        .category-btn {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-        
-        .category-btn:hover, .category-btn.active {
-            background: var(--primary-color);
-            color: var(--text-dark);
-            transform: translateY(-2px);
-        }
-        
-        /* Load More */
-        .load-more {
-            text-align: center;
-            margin-top: 3rem;
-        }
-        
-        .load-more-btn {
-            padding: 16px 32px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 6px;
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            backdrop-filter: var(--backdrop-blur);
-        }
-        
-        .load-more-btn:hover {
-            background: var(--primary-color);
-            color: var(--text-dark);
-            transform: translateY(-2px);
-        }
-        
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .blog-grid {
-                grid-template-columns: 1fr;
+            .page-title {
+                font-size: 2rem;
             }
             
             .nav-menu {
-                gap: 1rem;
-                font-size: 0.8rem;
-            }
-            
-            .featured-content {
-                padding: 1.5rem;
-            }
-            
-            .featured-title {
-                font-size: 1.5rem;
-            }
-            
-            .categories-filter {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 1rem;
+                gap: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Simple particle background -->
-    <div class="particle-bg">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
+    <!-- Code Rain Background -->
+    <div class="code-rain">
+        <div class="code-column">
+<span class="keyword glow-1">const</span> insights = {
+  <span class="string">'depth'</span>: <span class="string glow-2">'advanced'</span>,
+  <span class="string">'analysis'</span>: <span class="string">'comprehensive'</span>,
+  <span class="string">'predictions'</span>: <span class="string glow-3">'accurate'</span>
+};
 
+<span class="keyword">function</span> <span class="glow-4">deepAnalysis</span>(data) {
+  <span class="keyword">return</span> data.<span class="glow-5">analyze</span>(patterns => 
+    patterns.confidence > <span class="number">0.85</span>
+  );
+}
+
+<span class="comment">// Advanced insights engine</span>
+<span class="keyword">const</span> predictions = <span class="glow-6">generatePredictions</span>(
+  historicalData, modelConfig
+);
+
+<span class="keyword">if</span> (predictions.<span class="glow-7">accuracy</span> > <span class="number">0.9</span>) {
+  console.<span class="glow-8">log</span>(<span class="string">'High confidence insights'</span>);
+}</div>
+
+        <div class="code-column">
+<span class="keyword">WITH</span> <span class="glow-1">deep_insights</span> <span class="keyword">AS</span> (
+  <span class="keyword">SELECT</span> 
+    user_segment,
+    <span class="glow-2">AVG</span>(engagement_depth) <span class="keyword">as</span> depth,
+    <span class="glow-3">PERCENTILE</span>(satisfaction, 0.95) <span class="keyword">as</span> top_sat
+  <span class="keyword">FROM</span> user_behavior_analysis
+  <span class="keyword">WHERE</span> analysis_date >= <span class="string glow-4">'2023-08-01'</span>
+  <span class="keyword">GROUP BY</span> <span class="glow-5">user_segment</span>
+)
+
+<span class="comment">-- Advanced correlation analysis</span>
+<span class="keyword">SELECT</span> 
+  segment,
+  <span class="glow-6">CORR</span>(depth, satisfaction) <span class="keyword">as</span> correlation,
+  <span class="glow-7">STDDEV</span>(engagement) <span class="keyword">as</span> variance
+<span class="keyword">FROM</span> deep_insights
+<span class="keyword">WHERE</span> correlation > <span class="number glow-8">0.7</span>;</div>
+
+        <div class="code-column">
+<span class="keyword">import</span> tensorflow <span class="keyword">as</span> <span class="glow-1">tf</span>
+<span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> <span class="glow-2">DBSCAN</span>
+<span class="keyword">import</span> plotly.express <span class="keyword">as</span> <span class="glow-3">px</span>
+
+<span class="comment"># Advanced pattern recognition</span>
+<span class="glow-4">model</span> = tf.keras.Sequential([
+  tf.keras.layers.<span class="glow-5">LSTM</span>(128, return_sequences=True),
+  tf.keras.layers.<span class="glow-6">Dropout</span>(0.2),
+  tf.keras.layers.Dense(64, activation=<span class="string">'relu'</span>),
+  tf.keras.layers.Dense(1, activation=<span class="string">'sigmoid'</span>)
+])
+
+<span class="comment"># Behavioral clustering</span>
+<span class="glow-7">clustering</span> = DBSCAN(eps=0.3, min_samples=10)
+user_clusters = clustering.<span class="glow-8">fit_predict</span>(features)
+
+<span class="comment"># Advanced visualization</span>
+fig = px.scatter_3d(df, x=<span class="string">'engagement'</span>, 
+                   y=<span class="string">'retention'</span>, z=<span class="string">'value'</span>)</div>
+    </div>
+    
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" width="40" height="40" viewBox="0 0 120 120">
+                <svg class="logo-icon" width="50" height="50" viewBox="0 0 80 80">
                     <defs>
-                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#87ceeb">
-                                <animate attributeName="stop-color" values="#87ceeb;#00bfff;#4682b4;#87ceeb" dur="4s" repeatCount="indefinite"/>
+                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff">
+                                <animate attributeName="stop-color" values="#ffffff;#00bfff;#ffffff" dur="3s" begin="1.5s" repeatCount="indefinite"/>
                             </stop>
-                            <stop offset="50%" style="stop-color:#00bfff">
-                                <animate attributeName="stop-color" values="#00bfff;#4682b4;#87ceeb;#00bfff" dur="4s" repeatCount="indefinite"/>
+                            <stop offset="50%" style="stop-color:#e5e7eb">
+                                <animate attributeName="stop-color" values="#e5e7eb;#87ceeb;#e5e7eb" dur="3s" begin="1.5s" repeatCount="indefinite"/>
                             </stop>
-                            <stop offset="100%" style="stop-color:#4682b4">
-                                <animate attributeName="stop-color" values="#4682b4;#87ceeb;#00bfff;#4682b4" dur="4s" repeatCount="indefinite"/>
+                            <stop offset="100%" style="stop-color:#9ca3af">
+                                <animate attributeName="stop-color" values="#9ca3af;#4682b4;#9ca3af" dur="3s" begin="1.5s" repeatCount="indefinite"/>
                             </stop>
                         </linearGradient>
-                        
-                        <filter id="glow">
+                        <filter id="glowFilter">
                             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                            <feMerge>
+                            <feMerge> 
                                 <feMergeNode in="coloredBlur"/>
                                 <feMergeNode in="SourceGraphic"/>
                             </feMerge>
+                            <animate attributeName="stdDeviation" values="3;8;3" dur="3s" begin="1.5s" repeatCount="indefinite"/>
                         </filter>
-                        
-                        <radialGradient id="pulseGradient" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" style="stop-color:#00bfff;stop-opacity:0.8">
-                                <animate attributeName="stop-opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
-                            </stop>
-                            <stop offset="100%" style="stop-color:#4682b4;stop-opacity:0">
-                                <animate attributeName="stop-opacity" values="0;0.2;0" dur="2s" repeatCount="indefinite"/>
-                            </stop>
-                        </radialGradient>
                     </defs>
-                    
-                    <!-- Outer pulsing ring -->
-                    <circle cx="60" cy="60" r="55" fill="url(#pulseGradient)" opacity="0.3"/>
-                    
-                    <!-- 3D Cube Structure -->
-                    <g transform="translate(60, 60)">
-                        <!-- Cube faces with circuit patterns -->
-                        <!-- Front face -->
-                        <g transform="rotateX(-15deg) rotateY(15deg)" style="transform-style: preserve-3d;">
-                            <path d="M -20,-20 L 20,-20 L 20,20 L -20,20 Z" 
-                                  fill="url(#logoGradient)" 
-                                  stroke="#00bfff" 
-                                  stroke-width="1" 
-                                  opacity="0.9"
-                                  filter="url(#glow)">
-                                <animateTransform attributeName="transform" 
-                                                type="rotate" 
-                                                values="0;5;0;-5;0" 
-                                                dur="6s" 
-                                                repeatCount="indefinite"/>
-                            </path>
-                            
-                            <!-- Circuit patterns -->
-                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.8">
-                                <path d="M -15,-15 L -5,-15 L -5,-5 L 5,-5 L 5,5 L 15,5 L 15,15">
-                                    <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
-                                </path>
-                                <path d="M -15,15 L -5,15 L -5,5 L 5,5 L 5,-5 L 15,-5 L 15,-15">
-                                    <animate attributeName="stroke-opacity" values="1;0.4;1" dur="3s" repeatCount="indefinite"/>
-                                </path>
-                                <circle cx="0" cy="0" r="3" fill="none" stroke="#ffffff" stroke-width="1">
-                                    <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
-                                </circle>
-                            </g>
-                        </g>
-                        
-                        <!-- Right face -->
-                        <g transform="rotateX(-15deg) rotateY(15deg) translate(20, 0) rotateY(90deg)" style="transform-style: preserve-3d;">
-                            <path d="M 0,-20 L 20,-20 L 20,20 L 0,20 Z" 
-                                  fill="url(#logoGradient)" 
-                                  stroke="#00bfff" 
-                                  stroke-width="1" 
-                                  opacity="0.7"
-                                  filter="url(#glow)">
-                                <animateTransform attributeName="transform" 
-                                                type="rotate" 
-                                                values="0;-5;0;5;0" 
-                                                dur="6s" 
-                                                repeatCount="indefinite"/>
-                            </path>
-                            
-                            <!-- Circuit patterns -->
-                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.6">
-                                <path d="M 2,-15 L 8,-15 L 8,-8 L 15,-8 L 15,8 L 8,8 L 8,15">
-                                    <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
-                                </path>
-                                <circle cx="8" cy="0" r="2" fill="none" stroke="#ffffff" stroke-width="0.8">
-                                    <animate attributeName="stroke-opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite"/>
-                                </circle>
-                            </g>
-                        </g>
-                        
-                        <!-- Top face -->
-                        <g transform="rotateX(-15deg) rotateY(15deg) translate(0, -20) rotateX(90deg)" style="transform-style: preserve-3d;">
-                            <path d="M -20,0 L 20,0 L 20,20 L -20,20 Z" 
-                                  fill="url(#logoGradient)" 
-                                  stroke="#00bfff" 
-                                  stroke-width="1" 
-                                  opacity="0.8"
-                                  filter="url(#glow)">
-                                <animateTransform attributeName="transform" 
-                                                type="rotate" 
-                                                values="0;3;0;-3;0" 
-                                                dur="8s" 
-                                                repeatCount="indefinite"/>
-                            </path>
-                            
-                            <!-- Circuit patterns -->
-                            <g stroke="#ffffff" stroke-width="0.5" opacity="0.7">
-                                <path d="M -15,5 L -8,5 L -8,12 L 0,12 L 0,18 L 8,18 L 15,18">
-                                    <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite"/>
-                                </path>
-                                <path d="M -15,18 L -8,18 L -8,12 L 8,12 L 8,5 L 15,5">
-                                    <animate attributeName="stroke-opacity" values="1;0.5;1" dur="3.5s" repeatCount="indefinite"/>
-                                </path>
-                            </g>
-                        </g>
-                        
-                        <!-- Floating data points -->
-                        <g>
-                            <circle cx="-25" cy="-25" r="1.5" fill="#00bfff" opacity="0.8">
-                                <animateTransform attributeName="transform" 
-                                                type="translate" 
-                                                values="0,0; 3,-2; 0,0; -3,2; 0,0" 
-                                                dur="5s" 
-                                                repeatCount="indefinite"/>
-                                <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="25" cy="-25" r="1" fill="#87ceeb" opacity="0.6">
-                                <animateTransform attributeName="transform" 
-                                                type="translate" 
-                                                values="0,0; -2,3; 0,0; 2,-3; 0,0" 
-                                                dur="7s" 
-                                                repeatCount="indefinite"/>
-                                <animate attributeName="opacity" values="0.3;0.9;0.3" dur="3s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="-25" cy="25" r="1.2" fill="#4682b4" opacity="0.7">
-                                <animateTransform attributeName="transform" 
-                                                type="translate" 
-                                                values="0,0; 4,1; 0,0; -4,-1; 0,0" 
-                                                dur="6s" 
-                                                repeatCount="indefinite"/>
-                                <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="25" cy="25" r="0.8" fill="#00bfff" opacity="0.5">
-                                <animateTransform attributeName="transform" 
-                                                type="translate" 
-                                                values="0,0; -1,4; 0,0; 1,-4; 0,0" 
-                                                dur="8s" 
-                                                repeatCount="indefinite"/>
-                                <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite"/>
-                            </circle>
-                        </g>
-                        
-                        <!-- Central rotating ring -->
-                        <circle cx="0" cy="0" r="28" fill="none" stroke="url(#logoGradient)" stroke-width="1" opacity="0.4">
-                            <animateTransform attributeName="transform" 
-                                            type="rotate" 
-                                            values="0;360" 
-                                            dur="20s" 
-                                            repeatCount="indefinite"/>
-                            <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur="4s" repeatCount="indefinite"/>
+                    <g transform="translate(40, 40)" filter="url(#glowFilter)">
+                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" begin="1.5s" repeatCount="indefinite"/>
                         </circle>
+                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;1.0;0.8" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.9;1.0;0.9" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;1.0;0.6" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.7;1.0;0.7" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
+                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+                        </path>
                     </g>
                 </svg>
                 Moonlight Analytica
@@ -723,154 +551,47 @@
             </ul>
         </div>
     </nav>
-
+    
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
             <!-- Page Header -->
-            <header class="page-header">
-                <h1 class="page-title">Insights & Analysis</h1>
-                <p class="page-subtitle">
-                    Deep dives into AI trends, SaaS innovations, and data analytics insights that shape the future of technology.
-                </p>
-            </header>
-
-            <!-- Featured Article -->
-            <article class="featured-article">
-                <div class="featured-image">
-                    <span class="featured-icon">🤖</span>
-                </div>
-                <div class="featured-content">
-                    <span class="featured-badge">Featured</span>
-                    <h2 class="featured-title">The AI Revolution in SaaS: Transforming Business Operations</h2>
-                    <p class="featured-excerpt">
-                        Artificial Intelligence is reshaping how SaaS applications operate, from automated customer service to predictive analytics. We explore the key trends, implementation strategies, and the future landscape of AI-powered software solutions that are driving unprecedented efficiency gains across industries.
-                    </p>
-                    <div class="featured-meta">
-                        <span>Published today</span>
-                        <span class="read-time">8 min read</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Categories Filter -->
-            <div class="categories-filter">
-                <a href="#" class="category-btn active">All</a>
-                <a href="#" class="category-btn">AI & Machine Learning</a>
-                <a href="#" class="category-btn">SaaS Trends</a>
-                <a href="#" class="category-btn">Data Analytics</a>
-                <a href="#" class="category-btn">Productivity</a>
-                <a href="#" class="category-btn">Tech Industry</a>
+            <div class="page-header">
+                <h1 class="page-title">Deep Insights</h1>
+                <p class="page-subtitle">Advanced analytics and comprehensive data intelligence</p>
             </div>
+            
+            <!-- Insights Grid -->
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h3>🧠 AI-Powered Analysis</h3>
+                    <p>Machine learning algorithms analyze patterns and predict trends with 94% accuracy, providing actionable insights for strategic decision making.</p>
+                </div>
 
-            <!-- Blog Grid -->
-            <div class="blog-grid">
-                <article class="blog-card">
-                    <div class="blog-image">
-                        <span class="blog-icon">📊</span>
-                    </div>
-                    <div class="blog-content">
-                        <span class="blog-category">Data Analytics</span>
-                        <h3 class="blog-title">Real-Time Analytics: The New Competitive Edge</h3>
-                        <p class="blog-excerpt">
-                            How businesses are leveraging real-time data processing to make instant decisions and stay ahead of market changes.
-                        </p>
-                        <div class="blog-meta">
-                            <span>Yesterday</span>
-                            <span class="read-time">5 min read</span>
-                        </div>
-                    </div>
-                </article>
+                <div class="insight-card">
+                    <h3>📊 Behavioral Clustering</h3>
+                    <p>Advanced user segmentation reveals distinct behavioral patterns, enabling personalized experiences and targeted optimization strategies.</p>
+                </div>
 
-                <article class="blog-card">
-                    <div class="blog-image">
-                        <span class="blog-icon">🚀</span>
-                    </div>
-                    <div class="blog-content">
-                        <span class="blog-category">SaaS Trends</span>
-                        <h3 class="blog-title">Micro-SaaS: The Rise of Niche Solutions</h3>
-                        <p class="blog-excerpt">
-                            Small, focused software solutions are capturing significant market share by solving specific problems exceptionally well.
-                        </p>
-                        <div class="blog-meta">
-                            <span>2 days ago</span>
-                            <span class="read-time">6 min read</span>
-                        </div>
-                    </div>
-                </article>
+                <div class="insight-card">
+                    <h3>🔮 Predictive Models</h3>
+                    <p>Neural networks process historical data to forecast future trends, helping you stay ahead of market changes and user preferences.</p>
+                </div>
 
-                <article class="blog-card">
-                    <div class="blog-image">
-                        <span class="blog-icon">⚡</span>
-                    </div>
-                    <div class="blog-content">
-                        <span class="blog-category">Productivity</span>
-                        <h3 class="blog-title">Automation vs. Human Creativity: Finding the Balance</h3>
-                        <p class="blog-excerpt">
-                            Exploring where automation enhances productivity and where human creativity remains irreplaceable.
-                        </p>
-                        <div class="blog-meta">
-                            <span>3 days ago</span>
-                            <span class="read-time">7 min read</span>
-                        </div>
-                    </div>
-                </article>
+                <div class="insight-card">
+                    <h3>⚡ Real-time Processing</h3>
+                    <p>Stream processing engines analyze data as it flows, providing instant insights and enabling immediate responses to emerging patterns.</p>
+                </div>
 
-                <article class="blog-card">
-                    <div class="blog-image">
-                        <span class="blog-icon">🔮</span>
-                    </div>
-                    <div class="blog-content">
-                        <span class="blog-category">AI & Machine Learning</span>
-                        <h3 class="blog-title">Predictive Analytics: Seeing the Future of Your Business</h3>
-                        <p class="blog-excerpt">
-                            Machine learning models that can forecast trends, customer behavior, and market opportunities with remarkable accuracy.
-                        </p>
-                        <div class="blog-meta">
-                            <span>4 days ago</span>
-                            <span class="read-time">9 min read</span>
-                        </div>
-                    </div>
-                </article>
+                <div class="insight-card">
+                    <h3>🎯 Precision Targeting</h3>
+                    <p>Correlation analysis identifies key drivers of success, enabling precise targeting and resource allocation for maximum impact.</p>
+                </div>
 
-                <article class="blog-card">
-                    <div class="blog-image">
-                        <span class="blog-icon">🛡️</span>
-                    </div>
-                    <div class="blog-content">
-                        <span class="blog-category">Tech Industry</span>
-                        <h3 class="blog-title">Privacy-First Analytics: Building Trust Through Transparency</h3>
-                        <p class="blog-excerpt">
-                            How modern analytics platforms are prioritizing user privacy while still delivering powerful insights.
-                        </p>
-                        <div class="blog-meta">
-                            <span>5 days ago</span>
-                            <span class="read-time">6 min read</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="blog-card">
-                    <div class="blog-image">
-                        <span class="blog-icon">🎯</span>
-                    </div>
-                    <div class="blog-content">
-                        <span class="blog-category">SaaS Trends</span>
-                        <h3 class="blog-title">Customer Success: The Heart of SaaS Growth</h3>
-                        <p class="blog-excerpt">
-                            Why customer success teams are becoming the most critical component of sustainable SaaS business models.
-                        </p>
-                        <div class="blog-meta">
-                            <span>1 week ago</span>
-                            <span class="read-time">8 min read</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Load More -->
-            <div class="load-more">
-                <a href="#" class="load-more-btn">Load More Articles</a>
+                <div class="insight-card">
+                    <h3>📈 Growth Analytics</h3>
+                    <p>Comprehensive growth models track performance across all metrics, identifying optimization opportunities and success indicators.</p>
+                </div>
             </div>
         </div>
     </main>

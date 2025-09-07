@@ -1120,6 +1120,87 @@
             }
         }
 
+        /* Quantum Field Animation - Top Section */
+        .quantum-field-animation {
+            width: 80px;
+            height: 30px;
+            position: relative;
+        }
+
+        .quantum-field-animation .field-line {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #8a2be2, transparent);
+            animation: fieldWave 2s infinite;
+        }
+
+        .quantum-field-animation .field-line:nth-child(1) {
+            top: 5px;
+        }
+
+        .quantum-field-animation .field-line:nth-child(2) {
+            top: 15px;
+        }
+
+        .quantum-field-animation .field-line:nth-child(3) {
+            top: 25px;
+        }
+
+        @keyframes fieldWave {
+            0%, 100% { 
+                transform: translateY(0) scaleY(1); 
+                background: linear-gradient(90deg, transparent, #8a2be2, transparent);
+                filter: drop-shadow(0 0 5px #8a2be2);
+            }
+            50% { 
+                transform: translateY(-5px) scaleY(3); 
+                background: linear-gradient(90deg, transparent, #00bfff, transparent);
+                filter: drop-shadow(0 0 10px #00bfff);
+            }
+        }
+
+        /* Data Flow Animation - Bottom Section */
+        .data-flow-animation {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+
+        .data-flow-animation span {
+            background: #8a2be2;
+            border-radius: 2px;
+            animation: dataFlow 1.5s infinite;
+            filter: drop-shadow(0 0 3px #8a2be2);
+        }
+
+        .data-flow-animation span:nth-child(1) { animation-delay: 0s; }
+        .data-flow-animation span:nth-child(2) { animation-delay: 0.1s; }
+        .data-flow-animation span:nth-child(3) { animation-delay: 0.2s; }
+        .data-flow-animation span:nth-child(4) { animation-delay: 0.3s; }
+        .data-flow-animation span:nth-child(5) { animation-delay: 0.4s; }
+        .data-flow-animation span:nth-child(6) { animation-delay: 0.5s; }
+        .data-flow-animation span:nth-child(7) { animation-delay: 0.6s; }
+        .data-flow-animation span:nth-child(8) { animation-delay: 0.7s; }
+        .data-flow-animation span:nth-child(9) { animation-delay: 0.8s; }
+
+        @keyframes dataFlow {
+            0%, 100% { 
+                opacity: 0.2; 
+                transform: scale(0.8); 
+                background: #8a2be2;
+                filter: drop-shadow(0 0 3px #8a2be2);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.2); 
+                background: #00bfff;
+                filter: drop-shadow(0 0 8px #00bfff);
+            }
+        }
+
         .quote-label {
             font-size: 0.85rem;
             font-weight: 600;
@@ -1786,9 +1867,11 @@
         <div class="section-content">
             <div class="benefits-header">
                 <div class="capabilities-icon">
-                    <svg width="24" height="16" viewBox="0 0 24 16" class="pulse-line">
-                        <polyline class="pulse-path" points="0,8 4,8 6,2 8,14 10,8 24,8" stroke="white" stroke-width="1.5" fill="none"/>
-                    </svg>
+                    <div class="data-flow-animation">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </div>
                 </div>
                 <span class="benefits-label">Capabilities</span>
             </div>
@@ -1846,14 +1929,18 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Analytics Quote Section -->
+    </section>
+    
+    <!-- Analytics Quote Section -->
+    <section class="section analytics-quote-wrapper">
         <div class="analytics-quote-section">
             <div class="quote-header">
                 <div class="wave-icon">
-                    <svg width="30" height="20" viewBox="0 0 30 20" class="sine-wave">
-                        <path class="wave-path" d="M0,10 Q7.5,0 15,10 T30,10" stroke="white" stroke-width="2" fill="none"/>
-                    </svg>
+                    <div class="quantum-field-animation">
+                        <div class="field-line"></div>
+                        <div class="field-line" style="animation-delay: 0.3s;"></div>
+                        <div class="field-line" style="animation-delay: 0.6s;"></div>
+                    </div>
                 </div>
                 <span class="quote-label">We Analyze Your Data and Build Custom Solutions to Drive Value to Your Bottom Line</span>
             </div>
@@ -1866,7 +1953,7 @@
             
             <div class="quote-attribution">
                 <div class="quote-avatar">
-                    <img src="profile.png" alt="Ali" class="avatar-image" />
+                    <img src="ali_portraitv2.png" alt="Ali" class="avatar-image" />
                 </div>
                 <span class="quote-author">Co-Founder and New Product Lead</span>
             </div>

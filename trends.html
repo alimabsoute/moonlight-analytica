@@ -41,12 +41,12 @@
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
-            background: var(--bg-primary);
-            color: var(--text-light);
+            background: #faf8f3;
+            color: #1f2937;
             min-height: 100vh;
         }
         
-        /* Animated Background */
+        /* Background Elements */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -55,16 +55,70 @@
             height: 100%;
             z-index: -1;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(153, 69, 255, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(0, 191, 255, 0.03) 0%, transparent 50%);
-            animation: bgPulse 30s ease-in-out infinite;
+                radial-gradient(circle at 20% 50%, rgba(0, 191, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(70, 130, 180, 0.02) 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite;
         }
         
-        @keyframes bgPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
+        @keyframes bgShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-20px, -20px) rotate(120deg); }
+            66% { transform: translate(20px, -10px) rotate(240deg); }
         }
+
+        /* Code Rain Background */
+        .code-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        .code-column {
+            position: absolute;
+            top: -200px;
+            white-space: pre;
+            opacity: 0.4;
+            animation: fall linear infinite;
+            line-height: 18px;
+        }
+
+        .code-column:nth-child(1) { left: 15%; color: #2d3748; animation-duration: 22s; animation-delay: -2s; }
+        .code-column:nth-child(2) { left: 45%; color: #4c51bf; animation-duration: 18s; animation-delay: -8s; }
+        .code-column:nth-child(3) { left: 75%; color: #553c9a; animation-duration: 25s; animation-delay: -5s; }
+
+        @keyframes fall {
+            0% { transform: translateY(-200px); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(calc(100vh + 200px)); opacity: 0; }
+        }
+
+        .keyword { color: #4c51bf; font-weight: 600; }
+        .string { color: #553c9a; }
+        .comment { color: #718096; font-style: italic; }
+        .number { color: #2d3748; font-weight: 500; }
+
+        @keyframes randomGlow {
+            0%, 70%, 100% { text-shadow: none; color: inherit; }
+            15%, 55% { text-shadow: 0 0 10px rgba(0, 191, 255, 0.8), 0 0 20px rgba(0, 191, 255, 0.6); color: #00bfff; }
+        }
+
+        .glow-1 { animation: randomGlow 4s infinite; animation-delay: 0.5s; }
+        .glow-2 { animation: randomGlow 3.5s infinite; animation-delay: 1.2s; }
+        .glow-3 { animation: randomGlow 5s infinite; animation-delay: 2.1s; }
+        .glow-4 { animation: randomGlow 4.2s infinite; animation-delay: 0.8s; }
+        .glow-5 { animation: randomGlow 3.8s infinite; animation-delay: 1.7s; }
+        .glow-6 { animation: randomGlow 4.5s infinite; animation-delay: 2.3s; }
+        .glow-7 { animation: randomGlow 3.2s infinite; animation-delay: 1.1s; }
+        .glow-8 { animation: randomGlow 4.8s infinite; animation-delay: 0.3s; }
         
         /* Navigation (Same as news.html) */
         .navbar {
@@ -145,7 +199,7 @@
         }
         
         .nav-link {
-            color: var(--text-light);
+            color: #1f2937;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
@@ -165,7 +219,7 @@
         }
         
         .nav-dropdown-toggle {
-            color: var(--text-light);
+            color: #1f2937;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
@@ -231,7 +285,7 @@
         .dropdown-item {
             display: block;
             padding: 10px 25px;
-            color: var(--text-light);
+            color: #1f2937;
             text-decoration: none;
             font-size: 0.85rem;
             transition: all 0.3s ease;
@@ -274,7 +328,7 @@
         
         .dropdown-label {
             padding: 5px 25px;
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -318,7 +372,7 @@
         }
         
         .page-subtitle {
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
@@ -367,7 +421,7 @@
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-light);
+            color: #1f2937;
         }
         
         .time-filter {
@@ -380,7 +434,7 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(135, 206, 235, 0.2);
             border-radius: 20px;
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -438,14 +492,14 @@
         .trend-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: var(--text-light);
+            color: #1f2937;
             margin-bottom: 0.25rem;
         }
         
         .trend-meta {
             display: flex;
             gap: 1rem;
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 0.85rem;
         }
         
@@ -509,7 +563,7 @@
         .analysis-title {
             font-size: 1.2rem;
             font-weight: 600;
-            color: var(--text-light);
+            color: #1f2937;
             margin-bottom: 0.5rem;
         }
         
@@ -521,7 +575,7 @@
         }
         
         .analysis-description {
-            color: var(--text-muted);
+            color: #6b7280;
             font-size: 0.9rem;
             line-height: 1.4;
         }
@@ -543,7 +597,7 @@
         
         .chart-placeholder {
             text-align: center;
-            color: var(--text-muted);
+            color: #6b7280;
         }
         
         .chart-icon {
@@ -590,6 +644,76 @@
 </head>
 <body>
     <div class="bg-animation"></div>
+    
+    <!-- Code Rain Background -->
+    <div class="code-rain">
+        <div class="code-column">
+<span class="keyword glow-1">const</span> trends = {
+  <span class="string">'growth'</span>: <span class="string glow-2">'exponential'</span>,
+  <span class="string">'analysis'</span>: <span class="string">'real-time'</span>,
+  <span class="string">'predictions'</span>: <span class="string glow-3">'accurate'</span>
+};
+
+<span class="keyword">function</span> <span class="glow-4">analyzeTrends</span>(data) {
+  <span class="keyword">return</span> data.<span class="glow-5">filter</span>(trend => 
+    trend.growth > <span class="number">0.25</span>
+  );
+}
+
+<span class="comment">// Market trend detection</span>
+<span class="keyword">const</span> emerging = <span class="glow-6">detectEmergingTrends</span>(
+  marketData, trendConfig
+);
+
+<span class="keyword">if</span> (emerging.<span class="glow-7">confidence</span> > <span class="number">0.8</span>) {
+  console.<span class="glow-8">log</span>(<span class="string">'High growth potential'</span>);
+}</div>
+
+        <div class="code-column">
+<span class="keyword">WITH</span> <span class="glow-1">trend_analysis</span> <span class="keyword">AS</span> (
+  <span class="keyword">SELECT</span> 
+    technology,
+    <span class="glow-2">COUNT</span>(*) <span class="keyword">as</span> mentions,
+    <span class="glow-3">AVG</span>(sentiment_score) <span class="keyword">as</span> sentiment,
+    <span class="glow-4">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER BY</span> mentions <span class="keyword">DESC</span>) <span class="keyword">as</span> ranking
+  <span class="keyword">FROM</span> market_discussions
+  <span class="keyword">WHERE</span> discussion_date >= <span class="string glow-5">'2023-09-01'</span>
+  <span class="keyword">GROUP BY</span> <span class="glow-6">technology</span>
+)
+
+<span class="comment">-- Growth trend calculation</span>
+<span class="keyword">SELECT</span> 
+  technology,
+  mentions,
+  <span class="glow-7">LAG</span>(mentions) <span class="keyword">OVER</span> (partition by technology) <span class="keyword">as</span> prev_mentions,
+  <span class="glow-8">ROUND</span>(((mentions - prev_mentions) / prev_mentions) * <span class="number">100</span>, <span class="number">2</span>) <span class="keyword">as</span> growth_rate
+<span class="keyword">FROM</span> trend_analysis
+<span class="keyword">WHERE</span> ranking <= <span class="number">10</span>;</div>
+
+        <div class="code-column">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> <span class="glow-1">np</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> <span class="glow-2">pd</span>
+<span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> <span class="glow-3">KMeans</span>
+<span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras
+
+<span class="comment"># Trend prediction model</span>
+<span class="glow-4">model</span> = keras.Sequential([
+  keras.layers.<span class="glow-5">Dense</span>(128, activation='relu'),
+  keras.layers.<span class="glow-6">Dropout</span>(0.3),
+  keras.layers.Dense(64, activation='relu'),
+  keras.layers.Dense(1, activation='sigmoid')
+])
+
+<span class="comment"># Market clustering analysis</span>
+<span class="glow-7">kmeans</span> = KMeans(n_clusters=5, random_state=42)
+trend_clusters = kmeans.<span class="glow-8">fit_predict</span>(trend_features)
+
+<span class="comment"># Growth rate calculation</span>
+growth_rates = np.diff(trend_data) / trend_data[:-1]
+volatility = np.<span class="glow-1">std</span>(growth_rates)
+
+<span class="keyword">print</span>(<span class="string">f'Market volatility: {volatility:.3f}'</span>)</div>
+    </div>
     
     <!-- Navigation -->
     <nav class="navbar">
@@ -778,47 +902,88 @@
             <!-- Market Analysis Grid -->
             <div class="analysis-grid">
                 <div class="analysis-card">
-                    <div class="analysis-icon">🚀</div>
-                    <h3 class="analysis-title">Startup Funding</h3>
-                    <div class="analysis-value">$42.3B</div>
+                    <div class="analysis-icon">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                            <rect x="4" y="12" width="24" height="16" rx="2" stroke="#00bfff" stroke-width="2" fill="rgba(0, 191, 255, 0.1)"/>
+                            <path d="M8 20l4 4 4-4 4 2 4-6" stroke="#87ceeb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="12" cy="24" r="2" fill="#00bfff"/>
+                            <circle cx="16" cy="20" r="2" fill="#87ceeb"/>
+                            <circle cx="20" cy="22" r="2" fill="#4682b4"/>
+                        </svg>
+                    </div>
+                    <h3 class="analysis-title">Analytics Market</h3>
+                    <div class="analysis-value">$274B</div>
                     <p class="analysis-description">
-                        Q4 2024 venture capital investments in tech startups, up 34% from last quarter
+                        Global business analytics market size, projected to grow 25% annually through 2028
                     </p>
                 </div>
                 
                 <div class="analysis-card">
-                    <div class="analysis-icon">🤖</div>
-                    <h3 class="analysis-title">AI Adoption Rate</h3>
-                    <div class="analysis-value">78%</div>
+                    <div class="analysis-icon">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                            <circle cx="16" cy="10" r="6" stroke="#87ceeb" stroke-width="2" fill="rgba(135, 206, 235, 0.1)"/>
+                            <path d="M13 10h6M10 14h12" stroke="#00bfff" stroke-width="1.5" stroke-linecap="round"/>
+                            <rect x="6" y="18" width="20" height="10" rx="2" stroke="#87ceeb" stroke-width="2" fill="rgba(0, 191, 255, 0.05)"/>
+                            <path d="M10 22h4M10 25h6" stroke="#00bfff" stroke-width="1" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="analysis-title">Machine Vision</h3>
+                    <div class="analysis-value">89%</div>
                     <p class="analysis-description">
-                        Enterprise companies implementing AI solutions, growing at 15% quarterly
+                        Enterprise adoption of computer vision solutions for quality control and automation
                     </p>
                 </div>
                 
                 <div class="analysis-card">
-                    <div class="analysis-icon">☁️</div>
-                    <h3 class="analysis-title">Cloud Migration</h3>
-                    <div class="analysis-value">92%</div>
+                    <div class="analysis-icon">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                            <circle cx="16" cy="16" r="12" stroke="#00bfff" stroke-width="2" fill="none"/>
+                            <path d="M16 6v20M6 16h20" stroke="#87ceeb" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="16" cy="8" r="2" fill="#00bfff"/>
+                            <circle cx="24" cy="16" r="2" fill="#87ceeb"/>
+                            <circle cx="16" cy="24" r="2" fill="#4682b4"/>
+                            <circle cx="8" cy="16" r="2" fill="#10b981"/>
+                        </svg>
+                    </div>
+                    <h3 class="analysis-title">Real-Time Processing</h3>
+                    <div class="analysis-value">156%</div>
                     <p class="analysis-description">
-                        Organizations with active cloud transformation initiatives in 2024
+                        Growth in demand for real-time data analytics and instant insights platforms
                     </p>
                 </div>
                 
                 <div class="analysis-card">
-                    <div class="analysis-icon">🔒</div>
-                    <h3 class="analysis-title">Security Investment</h3>
-                    <div class="analysis-value">+126%</div>
+                    <div class="analysis-icon">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                            <rect x="4" y="8" width="24" height="16" rx="2" stroke="#00bfff" stroke-width="2" fill="rgba(0, 191, 255, 0.05)"/>
+                            <path d="M8 14h6M8 18h8M18 14h6M18 18h6" stroke="#87ceeb" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="24" cy="6" r="4" stroke="#4682b4" stroke-width="2" fill="rgba(70, 130, 180, 0.1)"/>
+                            <path d="M22 6h4M24 4v4" stroke="#87ceeb" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="analysis-title">Productivity Tools</h3>
+                    <div class="analysis-value">+203%</div>
                     <p class="analysis-description">
-                        Year-over-year increase in cybersecurity spending across industries
+                        Increase in adoption of AI-powered productivity and time tracking solutions
                     </p>
                 </div>
                 
                 <div class="analysis-card">
-                    <div class="analysis-icon">⚡</div>
-                    <h3 class="analysis-title">5G Deployment</h3>
-                    <div class="analysis-value">64%</div>
+                    <div class="analysis-icon">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                            <path d="M8 24l6-6 6 4 8-10" stroke="#00bfff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8" cy="24" r="2" fill="#00bfff"/>
+                            <circle cx="14" cy="18" r="2" fill="#87ceeb"/>
+                            <circle cx="20" cy="22" r="2" fill="#4682b4"/>
+                            <circle cx="28" cy="12" r="2" fill="#10b981"/>
+                            <path d="M4 28h24" stroke="#87ceeb" stroke-width="1" stroke-linecap="round"/>
+                            <path d="M4 4v24M28 4v24" stroke="#87ceeb" stroke-width="1" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="analysis-title">Resume Tech</h3>
+                    <div class="analysis-value">47%</div>
                     <p class="analysis-description">
-                        Global coverage of 5G networks, expected to reach 85% by Q2 2025
+                        Job seekers using AI-powered resume optimization tools to improve ATS compatibility
                     </p>
                 </div>
                 
@@ -867,6 +1032,8 @@
                 this.style.borderLeft = 'none';
             });
         });
+    </script>
+
     </script>
 </body>
 </html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Centering Test - Moonlight Analytica</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.05), rgba(135, 206, 235, 0.02));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            overflow: hidden;
+            padding: 20px;
+            position: relative;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        
+        .card-image img {
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            object-position: center center;
+            opacity: 1;
+            border-radius: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Specific fixes for images with built-in whitespace */
+        .card-image img[src="4a.png"] {
+            transform: translate(-50%, -40%); /* Move Amazon up slightly */
+        }
+        
+        .card-image img[src="5a.png"] {
+            transform: translate(-50%, -35%); /* Move NVIDIA up slightly */
+        }
+        
+        .card-title {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00bfff;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .old-style {
+            flex: 1;
+        }
+        
+        .old-style .card-image {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+        
+        .old-style .card-image img {
+            position: static;
+            transform: none;
+            top: auto;
+            left: auto;
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Logo Centering Test</h1>
+    <p>Testing the new absolute positioning approach for centering logos in news cards</p>
+    
+    <div class="comparison">
+        <div class="old-style">
+            <h2>OLD Method (Current Live):</h2>
+            <div class="test-grid">
+                <div>
+                    <div class="card-title">Amazon (Problem)</div>
+                    <div class="card-image">
+                        <img src="4a.png" alt="Amazon">
+                    </div>
+                </div>
+                <div>
+                    <div class="card-title">NVIDIA (Problem)</div>
+                    <div class="card-image">
+                        <img src="5a.png" alt="NVIDIA">
+                    </div>
+                </div>
+                <div>
+                    <div class="card-title">OpenAI (Good)</div>
+                    <div class="card-image">
+                        <img src="1a.png" alt="OpenAI">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="new-style">
+            <h2>NEW Method (Absolute Positioning):</h2>
+            <div class="test-grid">
+                <div>
+                    <div class="card-title">Amazon (Fixed?)</div>
+                    <div class="card-image">
+                        <img src="4a.png" alt="Amazon">
+                    </div>
+                </div>
+                <div>
+                    <div class="card-title">NVIDIA (Fixed?)</div>
+                    <div class="card-image">
+                        <img src="5a.png" alt="NVIDIA">
+                    </div>
+                </div>
+                <div>
+                    <div class="card-title">OpenAI (Should stay good)</div>
+                    <div class="card-image">
+                        <img src="1a.png" alt="OpenAI">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h2>All Cards with New Method:</h2>
+    <div class="test-grid">
+        <div>
+            <div class="card-title">OpenAI o1</div>
+            <div class="card-image">
+                <img src="1a.png" alt="OpenAI">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">iPhone 17</div>
+            <div class="card-image">
+                <img src="2a.png" alt="Apple">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">California AI Bill</div>
+            <div class="card-image">
+                <img src="3a.png" alt="California">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">Amazon Shadow</div>
+            <div class="card-image">
+                <img src="4a.png" alt="Amazon">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">NVIDIA Blackwell</div>
+            <div class="card-image">
+                <img src="5a.png" alt="NVIDIA">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">Intel Split</div>
+            <div class="card-image">
+                <img src="7a.png" alt="Intel">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">Token Arms Race</div>
+            <div class="card-image">
+                <img src="8a.png" alt="Token Race">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">AI Eating Tail</div>
+            <div class="card-image">
+                <img src="6a.png" alt="AI Research">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">Twitter Killers</div>
+            <div class="card-image">
+                <img src="7a.png" alt="Meta Google Apple">
+            </div>
+        </div>
+        <div>
+            <div class="card-title">Vision Pro 2</div>
+            <div class="card-image">
+                <img src="10a.png" alt="Vision Pro">
+            </div>
+        </div>
+    </div>
+    
+    <p style="margin-top: 40px; color: #888;">
+        Check if Amazon and NVIDIA logos are now properly centered in the NEW method section.
+        If they look good, we can apply this to the live news page.
+    </p>
+</body>
+</html>

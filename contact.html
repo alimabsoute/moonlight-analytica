@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Moonlight Analytica</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Analytics and Tracking -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID', {
+            page_title: 'Moonlight Analytica - Contact',
+            page_location: window.location.href
+        });
+        
+        // Custom analytics wrapper
+        window.MoonlightAnalytics = window.MoonlightAnalytics || {
+            track: function(event, properties = {}) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', event, {
+                        event_category: properties.category || 'engagement',
+                        event_label: properties.label || '',
+                        value: properties.value || 0,
+                        ...properties
+                    });
+                }
+                console.log('Analytics Event:', event, properties);
+            }
+        };
+    </script>
     <style>
         * {
             margin: 0;
@@ -330,10 +357,15 @@
             border: 1px solid var(--glass-border);
             border-radius: 8px;
             color: var(--text-light);
-            font-size: 0.9rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
             backdrop-filter: var(--backdrop-blur);
             transition: all 0.3s ease;
             font-family: inherit;
+            /* Mobile optimization */
+            min-height: 44px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
         
         .form-textarea {
@@ -359,9 +391,13 @@
             border: none;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: clamp(1rem, 3vw, 1.1rem);
             cursor: pointer;
             transition: all 0.3s ease;
+            /* Mobile optimization */
+            min-height: 48px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .submit-btn:hover {
@@ -488,7 +524,145 @@
             font-size: 0.9rem;
         }
         
-        /* Responsive */
+        /* Form Status Messages */
+        .form-status {
+            margin-top: 1rem;
+            padding: 16px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .form-status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .form-status.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .form-status.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+        }
+        
+        .form-status.loading {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .submit-btn.loading {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .submit-btn.loading:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile-First Responsive Design */
+        @media (max-width: 480px) {
+            .nav-container {
+                gap: 1.5rem;
+                padding: 0 15px;
+            }
+            
+            .nav-menu {
+                gap: 0.8rem;
+                font-size: 0.75rem;
+            }
+            
+            .main-content {
+                padding-top: 100px;
+            }
+            
+            .page-title {
+                font-size: clamp(2rem, 6vw, 3rem);
+                line-height: 1.2;
+            }
+            
+            .page-subtitle {
+                font-size: clamp(1rem, 3.5vw, 1.2rem);
+                padding: 0 10px;
+            }
+            
+            .contact-form, .contact-info {
+                padding: 1.25rem;
+                margin: 0 10px;
+            }
+            
+            .form-group {
+                margin-bottom: 1.25rem;
+            }
+            
+            .form-input, .form-textarea, .form-select {
+                padding: 14px 16px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+            
+            .form-textarea {
+                min-height: 100px;
+            }
+            
+            .submit-btn {
+                padding: 18px 16px;
+                font-size: 16px;
+                min-height: 52px;
+            }
+            
+            .info-item {
+                padding: 0.75rem;
+                gap: 0.75rem;
+            }
+            
+            .info-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            
+            .faq-item {
+                padding: 1.25rem;
+            }
+            
+            /* Touch-friendly dropdown menus */
+            .dropdown-menu {
+                min-width: 180px;
+                margin-top: 15px;
+            }
+            
+            .dropdown-item {
+                padding: 14px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
         @media (max-width: 768px) {
             .contact-grid {
                 grid-template-columns: 1fr;
@@ -506,6 +680,21 @@
             
             .faq-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Large mobile/small tablet */
+        @media (max-width: 640px) {
+            .form-input, .form-textarea, .form-select {
+                padding: 15px 18px;
+            }
+            
+            .submit-btn {
+                padding: 17px;
+            }
+            
+            .page-header {
+                margin-bottom: 3rem;
             }
         }
     </style>
@@ -600,25 +789,25 @@
                 <!-- Contact Form -->
                 <div class="contact-form">
                     <h2 class="form-title">Send us a Message</h2>
-                    <form id="contactForm">
+                    <form id="contactForm" action="https://formspree.io/f/xgveokpd" method="POST">
                         <div class="form-group">
                             <label for="name" class="form-label">Full Name *</label>
-                            <input type="text" id="name" class="form-input" placeholder="Your full name" required>
+                            <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required autocomplete="name">
                         </div>
                         
                         <div class="form-group">
                             <label for="email" class="form-label">Email Address *</label>
-                            <input type="email" id="email" class="form-input" placeholder="your.email@company.com" required>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="your.email@company.com" required autocomplete="email">
                         </div>
                         
                         <div class="form-group">
                             <label for="company" class="form-label">Company</label>
-                            <input type="text" id="company" class="form-input" placeholder="Your company name">
+                            <input type="text" id="company" name="company" class="form-input" placeholder="Your company name" autocomplete="organization">
                         </div>
                         
                         <div class="form-group">
                             <label for="subject" class="form-label">Subject *</label>
-                            <select id="subject" class="form-select" required>
+                            <select id="subject" name="subject" class="form-select" required>
                                 <option value="">Select a topic</option>
                                 <option value="product-inquiry">Product Inquiry</option>
                                 <option value="support">Technical Support</option>
@@ -630,11 +819,15 @@
                         
                         <div class="form-group">
                             <label for="message" class="form-label">Message *</label>
-                            <textarea id="message" class="form-textarea" placeholder="Tell us how we can help you..." required></textarea>
+                            <textarea id="message" name="message" class="form-textarea" placeholder="Tell us how we can help you..." required></textarea>
                         </div>
                         
-                        <button type="submit" class="submit-btn">Send Message</button>
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <span class="btn-text">Send Message</span>
+                        </button>
                     </form>
+                    
+                    <div id="formStatus" class="form-status"></div>
                     
                     <div class="response-indicator">
                         ⚡ We typically respond within 24 hours
@@ -690,7 +883,7 @@
                     <div class="faq-item">
                         <h3 class="faq-question">How can I get started with your products?</h3>
                         <p class="faq-answer">
-                            Visit our Products page to explore PhynxTimer (live), request beta access for ATS Resume Helper, or join the waitlist for Line Vision Analytics. Each product has its own onboarding process.
+                            Visit our Solutions page to explore PhynxTimer (live), request beta access for ATS Resume Helper, or join the waitlist for Janus Beta. Each product has its own onboarding process.
                         </p>
                     </div>
                     
@@ -734,24 +927,133 @@
     </main>
 
     <script>
-        // Contact Form Handler
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        // Contact Form Handler with Formspree Integration
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                company: document.getElementById('company').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value
-            };
+            const submitBtn = document.getElementById('submitBtn');
+            const formStatus = document.getElementById('formStatus');
+            const btnText = submitBtn.querySelector('.btn-text');
             
-            // Here you would integrate with your form service
-            alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+            // Show loading state
+            showFormStatus('loading', '<span class="loading-spinner"></span>Sending message...');
+            submitBtn.classList.add('loading');
+            btnText.innerHTML = '<span class="loading-spinner"></span>Sending...';
+            submitBtn.disabled = true;
             
-            // Reset form
-            this.reset();
+            try {
+                const formData = new FormData(this);
+                
+                // Add additional form data
+                formData.append('_subject', `New contact form submission from ${document.getElementById('name').value}`);
+                formData.append('_cc', 'hello@moonlightanalytica.com');
+                formData.append('_next', window.location.href + '?success=true');
+                
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    showFormStatus('success', '✅ Message sent successfully! We\'ll get back to you within 24 hours.');
+                    this.reset();
+                    
+                    // Enhanced form submission tracking
+                    MoonlightAnalytics.track('contact_form_submit', {
+                        category: 'conversion',
+                        label: 'contact_form_success',
+                        value: 1,
+                        form_subject: document.getElementById('subject').value,
+                        user_segment: 'qualified_lead',
+                        form_source: 'contact_page'
+                    });
+                    
+                    // Track conversion for ads platforms
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'conversion', {
+                            send_to: 'AW-CONVERSION_ID/CONTACT_CONVERSION_LABEL',
+                            value: 25.0,
+                            currency: 'USD'
+                        });
+                    }
+                } else {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Failed to send message');
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showFormStatus('error', '❌ Failed to send message. Please try again or email us directly at hello@moonlightanalytica.com');
+            } finally {
+                // Reset button state
+                submitBtn.classList.remove('loading');
+                btnText.innerHTML = 'Send Message';
+                submitBtn.disabled = false;
+            }
         });
+        
+        function showFormStatus(type, message) {
+            const formStatus = document.getElementById('formStatus');
+            formStatus.className = `form-status ${type}`;
+            formStatus.innerHTML = message;
+            formStatus.classList.add('show');
+            
+            // Auto-hide success/error messages after 10 seconds
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    formStatus.classList.remove('show');
+                }, 10000);
+            }
+        }
+        
+        // Form validation enhancement
+        const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+        inputs.forEach(input => {
+            input.addEventListener('blur', validateField);
+            input.addEventListener('input', clearFieldError);
+        });
+        
+        function validateField(e) {
+            const field = e.target;
+            const value = field.value.trim();
+            
+            // Remove any existing error styling
+            field.style.borderColor = '';
+            
+            if (field.hasAttribute('required') && !value) {
+                field.style.borderColor = '#ef4444';
+                return false;
+            }
+            
+            if (field.type === 'email' && value && !isValidEmail(value)) {
+                field.style.borderColor = '#ef4444';
+                return false;
+            }
+            
+            field.style.borderColor = '#10b981';
+            return true;
+        }
+        
+        function clearFieldError(e) {
+            const field = e.target;
+            if (field.style.borderColor === 'rgb(239, 68, 68)') {
+                field.style.borderColor = '';
+            }
+        }
+        
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        // Check for success parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            showFormStatus('success', '✅ Message sent successfully! We\'ll get back to you within 24 hours.');
+            // Remove success parameter from URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     </script>
 </body>
 </html>

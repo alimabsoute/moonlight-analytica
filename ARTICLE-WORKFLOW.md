@@ -1,290 +1,174 @@
-# Moonlight Analytica Article Creation Workflow
+# Article Workflow & Header Guidelines
 
-## 📝 Article Template System
+## Article Structure Format (Google Style)
 
-### 1. **HTML Template Structure**
-Every article follows this consistent structure:
+All Moonlight Analytica articles must follow this exact header structure:
+
+### 1. Clean Header Section
+```
+1. Article Title (H1)
+2. Meta Information (author, date, read time)
+3. Red Separator Line
+4. Company Logo (centered)
+5. Introduction Paragraph
+```
+
+### 2. Main Content Section
+After the clean header, include all rich content:
+- Infographics and visualizations
+- Comparison tables and matrices
+- Statistical charts and graphs
+- Highlight boxes and callouts
+- Analysis sections
+- Everything creative and engaging
+
+## Header Template Usage
+
+### Required Variables:
+- `{{ARTICLE_TITLE}}` - Main article headline
+- `{{AUTHOR_NAME}}` - Default: "Moonlight Analytica Team"
+- `{{PUBLISH_DATE}}` - Format: "January 15, 2025"
+- `{{READ_TIME}}` - Format: "7 min read"
+- `{{PREVIEW_IMAGE}}` - Company logo file (e.g., "7a.png")
+- `{{PREVIEW_ALT}}` - Alt text for logo
+- `{{INTRO_PARAGRAPH}}` - Opening paragraph introducing the topic
+
+### Header Structure:
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>[ARTICLE TITLE] - Moonlight Analytica</title>
-    <!-- Consistent styling across all articles -->
-</head>
-<body>
-    <!-- Navigation (same across all pages) -->
-    <!-- Article Header -->
-    <!-- Article Content -->
-    <!-- Related Articles -->
-    <!-- Footer -->
-</body>
-</html>
+<header class="article-header">
+    <h1 class="article-title">{{ARTICLE_TITLE}}</h1>
+    
+    <div class="article-meta">
+        <div class="author-info">
+            <div class="author-avatar">🌙</div>
+            <span>{{AUTHOR_NAME}}</span>
+        </div>
+        <span>•</span>
+        <span>{{PUBLISH_DATE}}</span>
+        <span>•</span>
+        <span>{{READ_TIME}}</span>
+    </div>
+
+    <!-- Red Separator Line -->
+    <div class="separator-line"></div>
+
+    <!-- Company Logo Section -->
+    <div class="company-logo-section">
+        <img src="{{PREVIEW_IMAGE}}" alt="{{PREVIEW_ALT}}" class="company-logo-image">
+    </div>
+
+    <!-- Introduction Paragraph -->
+    <div class="article-intro">
+        <p>{{INTRO_PARAGRAPH}}</p>
+    </div>
+</header>
 ```
 
-### 2. **Content Structure Formula**
+## Image Assets Available
 
-Each article follows this proven structure:
+### Preview Card Images (for news.html):
+- `1a.png` - OpenAI Analysis
+- `2a.png` - iPhone 17 Demo
+- `3a.png` - AI Lobbying
+- `4a.png` - Amazon Workforce (UPDATED)
+- `5a.png` - NVIDIA Blackwell (UPDATED)
+- `6a.png` - AI Quality
+- `7a.png` - Intel Strategic (UPDATED)
+- `8a.png` - Token Arms Race
+- `9a.png` - Token Context
+- `10a.png` - Vision Pro
 
-#### **Opening Hook (First 2 paragraphs)**
-- Start with a shocking stat or controversial statement
-- Immediately establish the stakes/importance
-- Preview what the reader will learn
+### Company Logo Mapping:
+- Intel articles → `7a.png` (Intel logo)
+- Amazon articles → `4a.png` (Amazon logo)
+- NVIDIA articles → `5a.png` (NVIDIA logo)
+- OpenAI articles → `1a.png`
+- Apple articles → `2a.png` or `10a.png`
+- General Tech → `6a.png` or `8a.png`
 
-#### **Context Section (3-4 paragraphs)**
-- Background information
-- Why this matters now
-- Key players involved
+## Content Guidelines
 
-#### **Main Analysis (5-7 paragraphs)**
-- Deep dive into the topic
-- Data and evidence
-- Expert perspectives
-- Implications and consequences
+### Header Rules (STRICT):
+1. **NEVER** place infographics directly after title
+2. **ALWAYS** include red separator line
+3. **ALWAYS** center the company logo
+4. **ALWAYS** include introduction paragraph
+5. **Keep header clean and professional**
 
-#### **Future Outlook (2-3 paragraphs)**
-- What happens next
-- Timeline predictions
-- Action items for readers
+### Content Rules (CREATIVE):
+1. **DO** include rich infographics below intro
+2. **DO** use comparison tables and charts
+3. **DO** create engaging visualizations  
+4. **DO** add statistical breakdowns
+5. **DO** include analysis highlights
+6. **DO** make content visually compelling
 
-#### **Conclusion (1-2 paragraphs)**
-- Summarize key takeaways
-- Call to action or thought-provoking question
+### Style Consistency:
+- Use Inter font for body text
+- Use Poppins for headings
+- Red separator: `#dc2626`
+- Logo max-width: 200px, max-height: 80px
+- Introduction paragraph: 1.1rem font-size, 1.8 line-height
 
-## 🎯 Article Types & Templates
+## File Organization
 
-### **1. Breaking News Analysis**
-**Example**: "OpenAI o1's Hidden Refusal Pattern"
-- Lead with discovery/leak
-- Explain technical details simply
-- Industry implications
-- What it means for users
+### Template Files:
+- `article-header-template.html` - Complete header template with CSS
+- `sample-upgraded-article.html` - Example implementation
 
-### **2. Industry Prediction**
-**Example**: "10-Million Token Arms Race"
-- Start with bold prediction
-- Supporting evidence and trends
-- Timeline with milestones
-- Impact on current solutions
+### Image Files:
+- `Xa.png` - Preview card images (where X = 1-10)
+- Company logos embedded in preview images
 
-### **3. Corporate Analysis**
-**Example**: "Amazon's Shadow Workforce Purge"
-- Reveal hidden strategy
-- Financial/business implications
-- Employee/user impact
-- Competitive landscape shifts
+### News Integration:
+- `news.html` - Uses preview images in card format
+- Links to individual articles with full header implementation
 
-### **4. Technology Deep Dive**
-**Example**: "NVIDIA's Blackwell Chips Sold Out"
-- Technical specifications
-- Market dynamics
-- Supply chain analysis
-- Investment implications
+## Implementation Checklist
 
-## 📊 Metadata Standards
+For each new article:
 
-Every article includes:
-```html
-<!-- In header -->
-<div class="article-category">AI & ML</div>
-<h1 class="article-title">[TITLE]</h1>
-<div class="article-meta">
-    [DATE] • [READ TIME] min read • Moonlight Analytica Research
-</div>
+- [ ] Copy header template from `article-header-template.html`
+- [ ] Replace all `{{VARIABLE}}` placeholders
+- [ ] Select appropriate company logo image
+- [ ] Write compelling introduction paragraph
+- [ ] Add red separator line styling
+- [ ] Implement rich content below header
+- [ ] Test mobile responsiveness
+- [ ] Verify clean header format matches Google style
+- [ ] Ensure infographics appear after intro paragraph
 
-<!-- Categories Used -->
-- AI & ML
-- Hardware
-- Corporate Strategy
-- Policy & Regulation
-- Mobile Technology
-- Semiconductors
-- Social Media
-- VR/AR Technology
-```
-
-## 🚀 Writing Workflow
-
-### **Step 1: Topic Selection**
-- Check trending topics on:
-  - Hacker News
-  - TechCrunch
-  - Reddit r/technology
-  - Twitter tech discussions
-- Look for controversial angles
-- Focus on future implications
-
-### **Step 2: Research Phase**
-- Gather 3-5 primary sources
-- Find supporting data/statistics
-- Identify expert quotes
-- Note contrarian viewpoints
-
-### **Step 3: Headline Creation**
-Formula: **[Shocking Fact] + [Unexpected Comparison/Outcome]**
-- "The 10-Million Token Arms Race That Will Make ChatGPT Look Like a Calculator"
-- "Apple's Ditching the $500 Feature Nobody Wanted"
-- "Why ChatGPT Gets Dumber by 2026"
-
-### **Step 4: Writing Process**
-1. Write hook first (most important)
-2. Outline main points
-3. Fill in analysis sections
-4. Add data/evidence
-5. Write conclusion
-6. Review and tighten
-
-### **Step 5: SEO Optimization**
-- Primary keyword in title
-- Keywords in first 100 words
-- Use semantic variations
-- Include numbers/dates
-- Question-based subheadings
-
-### **Step 6: Visual Elements**
-- Hero image or brand logo
-- Data visualizations
-- Pull quotes
-- Section breaks
-
-## 📁 File Management
-
-### Naming Convention:
-```
-[topic]-[key-angle]-[optional-descriptor].html
-
-Examples:
-- openai-o1-refusal-pattern-analysis.html
-- nvidia-blackwell-chips-sold-out-2027.html
-- big-tech-50m-lobbying-california-ai-bill.html
-```
-
-### Storage Structure:
-```
-moonlight-analytica/
-├── index.html (homepage)
-├── news.html (news listing)
-├── [individual-article].html (each article)
-└── assets/
-    └── images/
-        ├── 1a.png (preview images)
-        └── logos/
-```
-
-## ✨ Style Guidelines
-
-### **Tone & Voice**
-- Authoritative but accessible
-- Data-driven arguments
-- Slight contrarian angle
-- Forward-looking perspective
-- No fluff or filler
-
-### **Language Rules**
-- Active voice preferred
-- Short paragraphs (2-3 sentences)
-- Varied sentence structure
-- Technical terms explained
-- Compelling transitions
-
-### **Formatting Standards**
-- Headers every 2-3 paragraphs
-- Pull quotes for key insights
-- Bold for emphasis sparingly
-- Lists for multiple points
-- Code blocks for technical content
-
-## 🔄 Publishing Checklist
-
-Before publishing any article:
-
-- [ ] Fact-check all statistics
-- [ ] Verify company/product names
-- [ ] Check dates and timelines
-- [ ] Ensure consistent attribution (Moonlight Analytica Research)
-- [ ] Test all links
-- [ ] Verify image loading
-- [ ] Mobile responsive check
-- [ ] SEO meta tags present
-- [ ] Read time accurate
-- [ ] Category correctly assigned
-
-## 🎨 HTML/CSS Standards
-
-### Color Scheme:
-```css
---neon-blue: #00bfff;
---neon-purple: #9945ff;
---neon-cyan: #87ceeb;
---bg-primary: #0f1419;
---text-light: #ffffff;
---text-muted: #9ca3af;
-```
-
-### Typography:
-- Headlines: Poppins, 700 weight
-- Body: Inter, 400 weight
-- Code: 'Courier New', monospace
+## Mobile Optimization
 
 ### Responsive Breakpoints:
-- Mobile: < 768px
-- Tablet: 768px - 1024px
-- Desktop: > 1024px
+- **Desktop**: Full layout with large logos
+- **Tablet (768px)**: Adjusted font sizes and spacing
+- **Mobile (480px)**: Stacked layout, smaller logos
 
-## 📈 Performance Metrics
+### Mobile Considerations:
+- Logo max-width: 150px on mobile
+- Font sizes scale appropriately
+- Introduction paragraph remains readable
+- Red line maintains visibility
+- Touch-friendly spacing
 
-Track for each article:
-- Page views
-- Time on page (target: 3+ minutes)
-- Scroll depth (target: 75%+)
-- Social shares
-- Click-through to related articles
+## Quality Standards
 
-## 🔮 Future Automation Plans
+### Header Quality:
+- Professional, clean appearance
+- Consistent brand identity
+- Proper typography hierarchy
+- Clear visual separation
 
-### Phase 1: Semi-Automated (Current)
-- Manual topic selection
-- AI-assisted writing
-- Manual publishing
-
-### Phase 2: Automated Pipeline
-- AI topic discovery
-- Automated research aggregation
-- AI writing with human review
-- Scheduled publishing
-
-### Phase 3: Full Automation
-- Real-time news monitoring
-- Instant article generation
-- Auto-publishing with quality gates
-- Performance-based optimization
+### Content Quality:
+- Engaging visual elements
+- Data-driven insights
+- Interactive components
+- Comprehensive analysis
+- Professional presentation
 
 ---
 
-## Quick Reference Commands
-
-```bash
-# Create new article from template
-cp article-template.html new-article-name.html
-
-# Test article locally
-python -m http.server 8000
-
-# Deploy article
-git add [article].html
-git commit -m "Add article: [title]"
-git push
-
-# Update all articles with changes
-for file in *.html; do
-    # Apply bulk changes
-done
-```
-
-## Need Help?
-
-- Template issues: Check article-template.html
-- Style problems: Review existing articles for patterns
-- SEO questions: Follow the checklist above
-- Publishing errors: Verify file naming and git workflow
-
-Remember: Every article should provide value, insight, and a unique perspective that readers can't find elsewhere.
+**Last Updated**: January 2025  
+**Template Version**: 2.0  
+**Status**: Production Ready

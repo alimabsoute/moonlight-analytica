@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra Detailed 3D Cube - Multiple Color Schemes</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            transition: background 1s ease;
+        }
+        
+        #canvas {
+            display: block;
+            cursor: grab;
+        }
+        
+        #canvas:active {
+            cursor: grabbing;
+        }
+        
+        .ui-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            font-size: 14px;
+            z-index: 100;
+            min-width: 250px;
+        }
+        
+        .ui-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #00ffff;
+        }
+        
+        .color-schemes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .scheme-btn {
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .scheme-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .scheme-btn.active {
+            background: #00ffff;
+            color: #000;
+            border-color: #00ffff;
+        }
+        
+        .controls {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 15px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .controls div {
+            margin-bottom: 5px;
+        }
+        
+        .stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            color: white;
+            font-size: 12px;
+            z-index: 100;
+        }
+        
+        .fps {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        
+        .particle-count {
+            color: #ffff00;
+        }
+        
+        /* Loading screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
+        }
+        
+        .loading-text {
+            color: #00ffff;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-text">Initializing Quantum Core...</div>
+    </div>
+    
+    <canvas id="canvas"></canvas>
+    
+    <div class="ui-panel">
+        <div class="ui-title">🎨 Color Schemes</div>
+        <div class="color-schemes">
+            <div class="scheme-btn active" data-scheme="dark-bright">Dark + Bright</div>
+            <div class="scheme-btn" data-scheme="light-dark">Light + Dark</div>
+            <div class="scheme-btn" data-scheme="purple-gold">Purple + Gold</div>
+            <div class="scheme-btn" data-scheme="ice-fire">Ice + Fire</div>
+        </div>
+        
+        <div class="controls">
+            <div><strong>Controls:</strong></div>
+            <div>🖱️ Mouse: Rotate cube</div>
+            <div>🖱️ Scroll: Zoom in/out</div>
+            <div>⌨️ Space: Toggle particles</div>
+            <div>⌨️ R: Reset position</div>
+        </div>
+    </div>
+    
+    <div class="stats">
+        <div>FPS: <span class="fps" id="fps">60</span></div>
+        <div>Particles: <span class="particle-count" id="particle-count">0</span></div>
+        <div>Triangles: <span id="triangles">0</span></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        class ColorSchemes {
+            static schemes = {
+                'dark-bright': {
+                    name: 'Dark Void + Bright Cube',
+                    background: {
+                        top: '#000000',
+                        bottom: '#1a1a2e'
+                    },
+                    cube: {
+                        face1: { color: 0xffffff, metalness: 0.9, roughness: 0.1, emissive: 0x001122 },
+                        face2: { color: 0x00ffff, metalness: 0.8, roughness: 0.2, emissive: 0x002244 },
+                        face3: { color: 0x66ff66, metalness: 0.7, roughness: 0.3, emissive: 0x002200 },
+                        face4: { color: 0xffff66, metalness: 0.8, roughness: 0.2, emissive: 0x222200 },
+                        face5: { color: 0xff6666, metalness: 0.7, roughness: 0.3, emissive: 0x220000 },
+                        face6: { color: 0xff66ff, metalness: 0.8, roughness: 0.2, emissive: 0x220022 }
+                    },
+                    wireframe: 0x00ffff,
+                    particles: [0x00ffff, 0xff6b6b, 0x4ecdc4, 0xffe66d, 0xff6b9d, 0x66ff66],
+                    lights: {
+                        ambient: 0x404040,
+                        directional: 0xffffff,
+                        point1: { color: 0x00ffff, intensity: 1.2 },
+                        point2: { color: 0xff6b6b, intensity: 1.0 },
+                        point3: { color: 0x4ecdc4, intensity: 0.8 }
+                    }
+                },
+                
+                'light-dark': {
+                    name: 'Light Ethereal + Dark Cube',
+                    background: {
+                        top: '#f0f4f8',
+                        bottom: '#e2e8f0'
+                    },
+                    cube: {
+                        face1: { color: 0x2d3748, metalness: 0.8, roughness: 0.2, emissive: 0x000000 },
+                        face2: { color: 0x4a5568, metalness: 0.7, roughness: 0.3, emissive: 0x000000 },
+                        face3: { color: 0x663399, metalness: 0.9, roughness: 0.1, emissive: 0x110022 },
+                        face4: { color: 0x1a202c, metalness: 0.8, roughness: 0.2, emissive: 0x000000 },
+                        face5: { color: 0x2b2d42, metalness: 0.7, roughness: 0.3, emissive: 0x000000 },
+                        face6: { color: 0x8d1b3d, metalness: 0.9, roughness: 0.1, emissive: 0x220011 }
+                    },
+                    wireframe: 0x663399,
+                    particles: [0x663399, 0x8d1b3d, 0x4a5568, 0x2d3748, 0x6b46c1, 0x9333ea],
+                    lights: {
+                        ambient: 0x808080,
+                        directional: 0xffffff,
+                        point1: { color: 0x663399, intensity: 0.8 },
+                        point2: { color: 0x8d1b3d, intensity: 0.6 },
+                        point3: { color: 0x6b46c1, intensity: 0.7 }
+                    }
+                },
+                
+                'purple-gold': {
+                    name: 'Cosmic Purple + Gold Cube',
+                    background: {
+                        top: '#1a0933',
+                        bottom: '#2d1b69'
+                    },
+                    cube: {
+                        face1: { color: 0xffd700, metalness: 0.9, roughness: 0.1, emissive: 0x332200 },
+                        face2: { color: 0xffb347, metalness: 0.8, roughness: 0.2, emissive: 0x331100 },
+                        face3: { color: 0xff8c42, metalness: 0.7, roughness: 0.3, emissive: 0x330800 },
+                        face4: { color: 0xffa500, metalness: 0.9, roughness: 0.1, emissive: 0x331a00 },
+                        face5: { color: 0xdaa520, metalness: 0.8, roughness: 0.2, emissive: 0x221800 },
+                        face6: { color: 0xb8860b, metalness: 0.7, roughness: 0.3, emissive: 0x221100 }
+                    },
+                    wireframe: 0xffd700,
+                    particles: [0xffd700, 0xffb347, 0xff8c42, 0xffa500, 0xdaa520, 0xb8860b],
+                    lights: {
+                        ambient: 0x302060,
+                        directional: 0xffffff,
+                        point1: { color: 0xffd700, intensity: 1.5 },
+                        point2: { color: 0xff8c42, intensity: 1.2 },
+                        point3: { color: 0xb8860b, intensity: 1.0 }
+                    }
+                },
+                
+                'ice-fire': {
+                    name: 'Ice Blue + Fire Cube',
+                    background: {
+                        top: '#0a1628',
+                        bottom: '#1e3a8a'
+                    },
+                    cube: {
+                        face1: { color: 0xff4500, metalness: 0.8, roughness: 0.2, emissive: 0x441100 },
+                        face2: { color: 0xff6347, metalness: 0.7, roughness: 0.3, emissive: 0x441122 },
+                        face3: { color: 0xffa500, metalness: 0.9, roughness: 0.1, emissive: 0x332200 },
+                        face4: { color: 0xff0000, metalness: 0.8, roughness: 0.2, emissive: 0x440000 },
+                        face5: { color: 0xdc143c, metalness: 0.7, roughness: 0.3, emissive: 0x330011 },
+                        face6: { color: 0xff69b4, metalness: 0.9, roughness: 0.1, emissive: 0x330022 }
+                    },
+                    wireframe: 0xff4500,
+                    particles: [0xff4500, 0xff6347, 0xffa500, 0xff0000, 0xdc143c, 0xff69b4],
+                    lights: {
+                        ambient: 0x203060,
+                        directional: 0xffffff,
+                        point1: { color: 0xff4500, intensity: 1.3 },
+                        point2: { color: 0xff0000, intensity: 1.1 },
+                        point3: { color: 0xffa500, intensity: 0.9 }
+                    }
+                }
+            };
+        }
+        
+        class UltraDetailedCube {
+            constructor() {
+                this.currentScheme = 'dark-bright';
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createDetailedCube();
+                this.createEnhancedParticleSystem();
+                this.setupControls();
+                this.setupUI();
+                this.setupStats();
+                
+                // Remove loading screen
+                setTimeout(() => {
+                    document.getElementById('loading').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('loading').style.display = 'none';
+                    }, 1000);
+                }, 2000);
+                
+                this.animate();
+            }
+            
+            init() {
+                this.canvas = document.getElementById('canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                this.camera.position.set(0, 0, 12);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: "high-performance"
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 1);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                this.renderer.toneMappingExposure = 1.2;
+                
+                this.mouse = new THREE.Vector2();
+                this.mouseTarget = new THREE.Vector2();
+                this.time = 0;
+                this.frameCount = 0;
+                this.lastFPSTime = 0;
+            }
+            
+            createScene() {
+                this.updateBackground();
+                this.scene.fog = new THREE.Fog(0x000000, 20, 80);
+            }
+            
+            updateBackground() {
+                const scheme = ColorSchemes.schemes[this.currentScheme];
+                
+                // Create gradient background
+                const canvas = document.createElement('canvas');
+                canvas.width = 2;
+                canvas.height = 256;
+                const context = canvas.getContext('2d');
+                
+                const gradient = context.createLinearGradient(0, 0, 0, 256);
+                gradient.addColorStop(0, scheme.background.top);
+                gradient.addColorStop(1, scheme.background.bottom);
+                
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 2, 256);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.magFilter = THREE.LinearFilter;
+                texture.minFilter = THREE.LinearFilter;
+                
+                const geometry = new THREE.SphereGeometry(100, 32, 16);
+                const material = new THREE.MeshBasicMaterial({ 
+                    map: texture, 
+                    side: THREE.BackSide 
+                });
+                
+                if (this.backgroundSphere) {
+                    this.scene.remove(this.backgroundSphere);
+                    this.backgroundSphere.geometry.dispose();
+                    this.backgroundSphere.material.dispose();
+                }
+                
+                this.backgroundSphere = new THREE.Mesh(geometry, material);
+                this.scene.add(this.backgroundSphere);
+                
+                // Update body background
+                document.body.style.background = `linear-gradient(180deg, ${scheme.background.top} 0%, ${scheme.background.bottom} 100%)`;
+            }
+            
+            createLights() {
+                this.lights = {};
+                this.updateLights();
+            }
+            
+            updateLights() {
+                // Remove existing lights
+                Object.values(this.lights).forEach(light => {
+                    if (light.parent) this.scene.remove(light);
+                });
+                
+                const scheme = ColorSchemes.schemes[this.currentScheme].lights;
+                
+                // Ambient light
+                this.lights.ambient = new THREE.AmbientLight(scheme.ambient, 0.4);
+                this.scene.add(this.lights.ambient);
+                
+                // Directional light
+                this.lights.directional = new THREE.DirectionalLight(scheme.directional, 1.2);
+                this.lights.directional.position.set(15, 15, 10);
+                this.lights.directional.castShadow = true;
+                this.lights.directional.shadow.mapSize.width = 4096;
+                this.lights.directional.shadow.mapSize.height = 4096;
+                this.lights.directional.shadow.camera.near = 0.1;
+                this.lights.directional.shadow.camera.far = 100;
+                this.lights.directional.shadow.camera.left = -20;
+                this.lights.directional.shadow.camera.right = 20;
+                this.lights.directional.shadow.camera.top = 20;
+                this.lights.directional.shadow.camera.bottom = -20;
+                this.scene.add(this.lights.directional);
+                
+                // Point lights
+                this.lights.point1 = new THREE.PointLight(scheme.point1.color, scheme.point1.intensity, 30);
+                this.lights.point1.position.set(-12, 8, 6);
+                this.lights.point1.castShadow = true;
+                this.scene.add(this.lights.point1);
+                
+                this.lights.point2 = new THREE.PointLight(scheme.point2.color, scheme.point2.intensity, 30);
+                this.lights.point2.position.set(12, -8, -6);
+                this.lights.point2.castShadow = true;
+                this.scene.add(this.lights.point2);
+                
+                this.lights.point3 = new THREE.PointLight(scheme.point3.color, scheme.point3.intensity, 25);
+                this.lights.point3.position.set(0, 12, 10);
+                this.lights.point3.castShadow = true;
+                this.scene.add(this.lights.point3);
+            }
+            
+            createDetailedCube() {
+                this.cubeGroup = new THREE.Group();
+                this.scene.add(this.cubeGroup);
+                
+                // Main cube with enhanced geometry
+                const cubeGeometry = new THREE.BoxGeometry(4, 4, 4, 8, 8, 8);
+                
+                // Add displacement for surface detail
+                const vertices = cubeGeometry.attributes.position.array;
+                for (let i = 0; i < vertices.length; i += 3) {
+                    const noise = (Math.random() - 0.5) * 0.1;
+                    vertices[i] += noise * 0.1;
+                    vertices[i + 1] += noise * 0.1;
+                    vertices[i + 2] += noise * 0.1;
+                }
+                cubeGeometry.attributes.position.needsUpdate = true;
+                cubeGeometry.computeVertexNormals();
+                
+                this.updateCubeMaterials();
+                
+                this.mainCube = new THREE.Mesh(cubeGeometry, this.cubeMaterials);
+                this.mainCube.castShadow = true;
+                this.mainCube.receiveShadow = true;
+                this.cubeGroup.add(this.mainCube);
+                
+                // Inner rotating core
+                const coreGeometry = new THREE.IcosahedronGeometry(1.5, 2);
+                const coreMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 0.9,
+                    roughness: 0.1,
+                    transparent: true,
+                    opacity: 0.8,
+                    emissive: 0x002244,
+                    emissiveIntensity: 0.3
+                });
+                this.innerCore = new THREE.Mesh(coreGeometry, coreMaterial);
+                this.cubeGroup.add(this.innerCore);
+                
+                // Wireframe overlay with enhanced detail
+                const wireframeGeometry = new THREE.EdgesGeometry(cubeGeometry);
+                this.updateWireframe();
+                
+                // Add detail elements
+                this.createDetailElements();
+            }
+            
+            updateCubeMaterials() {
+                const scheme = ColorSchemes.schemes[this.currentScheme].cube;
+                
+                this.cubeMaterials = [
+                    new THREE.MeshPhysicalMaterial({
+                        ...scheme.face1,
+                        transparent: true,
+                        opacity: 0.9,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.1
+                    }),
+                    new THREE.MeshPhysicalMaterial({
+                        ...scheme.face2,
+                        transparent: true,
+                        opacity: 0.9,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.1
+                    }),
+                    new THREE.MeshPhysicalMaterial({
+                        ...scheme.face3,
+                        transparent: true,
+                        opacity: 0.9,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.1
+                    }),
+                    new THREE.MeshPhysicalMaterial({
+                        ...scheme.face4,
+                        transparent: true,
+                        opacity: 0.9,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.1
+                    }),
+                    new THREE.MeshPhysicalMaterial({
+                        ...scheme.face5,
+                        transparent: true,
+                        opacity: 0.9,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.1
+                    }),
+                    new THREE.MeshPhysicalMaterial({
+                        ...scheme.face6,
+                        transparent: true,
+                        opacity: 0.9,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.1
+                    })
+                ];
+                
+                if (this.mainCube) {
+                    this.mainCube.material = this.cubeMaterials;
+                }
+            }
+            
+            updateWireframe() {
+                if (this.wireframe) {
+                    this.cubeGroup.remove(this.wireframe);
+                    this.wireframe.geometry.dispose();
+                    this.wireframe.material.dispose();
+                }
+                
+                const wireframeGeometry = new THREE.EdgesGeometry(this.mainCube.geometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: ColorSchemes.schemes[this.currentScheme].wireframe,
+                    transparent: true, 
+                    opacity: 0.6,
+                    linewidth: 2
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cubeGroup.add(this.wireframe);
+            }
+            
+            createDetailElements() {
+                // Corner accent pieces
+                this.cornerAccents = [];
+                const cornerPositions = [
+                    [-2, -2, -2], [2, -2, -2], [-2, 2, -2], [2, 2, -2],
+                    [-2, -2, 2], [2, -2, 2], [-2, 2, 2], [2, 2, 2]
+                ];
+                
+                cornerPositions.forEach(pos => {
+                    const accentGeometry = new THREE.OctahedronGeometry(0.3, 1);
+                    const accentMaterial = new THREE.MeshPhysicalMaterial({
+                        color: ColorSchemes.schemes[this.currentScheme].wireframe,
+                        metalness: 1.0,
+                        roughness: 0.0,
+                        emissive: ColorSchemes.schemes[this.currentScheme].wireframe,
+                        emissiveIntensity: 0.2
+                    });
+                    const accent = new THREE.Mesh(accentGeometry, accentMaterial);
+                    accent.position.set(pos[0], pos[1], pos[2]);
+                    this.cornerAccents.push(accent);
+                    this.cubeGroup.add(accent);
+                });
+            }
+            
+            createEnhancedParticleSystem() {
+                this.particles = [];
+                this.maxParticles = 300;
+                this.particlesEnabled = true;
+                
+                // Enhanced particle geometries
+                this.particleGeometries = [
+                    new THREE.BoxGeometry(0.12, 0.12, 0.12),
+                    new THREE.BoxGeometry(0.18, 0.06, 0.06),
+                    new THREE.BoxGeometry(0.06, 0.18, 0.06),
+                    new THREE.BoxGeometry(0.06, 0.06, 0.18),
+                    new THREE.OctahedronGeometry(0.08, 0),
+                    new THREE.TetrahedronGeometry(0.1, 0)
+                ];
+                
+                this.updateParticleMaterials();
+            }
+            
+            updateParticleMaterials() {
+                const colors = ColorSchemes.schemes[this.currentScheme].particles;
+                
+                this.particleMaterials = colors.map(color => 
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: color,
+                        transparent: true,
+                        metalness: 0.8,
+                        roughness: 0.2,
+                        emissive: color,
+                        emissiveIntensity: 0.3
+                    })
+                );
+            }
+            
+            createParticle(type = 'incoming') {
+                const geometry = this.particleGeometries[Math.floor(Math.random() * this.particleGeometries.length)];
+                const material = this.particleMaterials[Math.floor(Math.random() * this.particleMaterials.length)].clone();
+                
+                const particle = new THREE.Mesh(geometry, material);
+                
+                if (type === 'incoming') {
+                    // Particles from outer sphere
+                    const angle = Math.random() * Math.PI * 2;
+                    const elevation = (Math.random() - 0.5) * Math.PI;
+                    const distance = 25 + Math.random() * 20;
+                    
+                    particle.position.set(
+                        Math.cos(angle) * Math.cos(elevation) * distance,
+                        Math.sin(elevation) * distance,
+                        Math.sin(angle) * Math.cos(elevation) * distance
+                    );
+                    
+                    particle.userData = {
+                        type: 'incoming',
+                        speed: 0.03 + Math.random() * 0.04,
+                        life: 1.0,
+                        maxLife: 1.0,
+                        rotationSpeed: {
+                            x: (Math.random() - 0.5) * 0.2,
+                            y: (Math.random() - 0.5) * 0.2,
+                            z: (Math.random() - 0.5) * 0.2
+                        },
+                        trail: []
+                    };
+                } else {
+                    // Particles emitted from cube
+                    const face = Math.floor(Math.random() * 6);
+                    const offset = 2.2;
+                    
+                    switch(face) {
+                        case 0: particle.position.set(offset, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4); break;
+                        case 1: particle.position.set(-offset, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4); break;
+                        case 2: particle.position.set((Math.random() - 0.5) * 4, offset, (Math.random() - 0.5) * 4); break;
+                        case 3: particle.position.set((Math.random() - 0.5) * 4, -offset, (Math.random() - 0.5) * 4); break;
+                        case 4: particle.position.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, offset); break;
+                        case 5: particle.position.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, -offset); break;
+                    }
+                    
+                    const direction = new THREE.Vector3(
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2
+                    ).normalize();
+                    
+                    particle.userData = {
+                        type: 'outgoing',
+                        direction: direction,
+                        speed: 0.05 + Math.random() * 0.08,
+                        life: 1.0,
+                        maxLife: 1.0,
+                        rotationSpeed: {
+                            x: (Math.random() - 0.5) * 0.25,
+                            y: (Math.random() - 0.5) * 0.25,
+                            z: (Math.random() - 0.5) * 0.25
+                        }
+                    };
+                }
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+            
+            updateParticles() {
+                if (!this.particlesEnabled) return;
+                
+                // Add new particles
+                if (Math.random() < 0.4 && this.particles.length < this.maxParticles) {
+                    this.createParticle(Math.random() < 0.7 ? 'incoming' : 'outgoing');
+                }
+                
+                // Update existing particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    // Rotate particle
+                    particle.rotation.x += userData.rotationSpeed.x;
+                    particle.rotation.y += userData.rotationSpeed.y;
+                    particle.rotation.z += userData.rotationSpeed.z;
+                    
+                    if (userData.type === 'incoming') {
+                        // Move towards cube center
+                        const direction = new THREE.Vector3().subVectors(this.cubeGroup.position, particle.position).normalize();
+                        particle.position.add(direction.multiplyScalar(userData.speed));
+                        
+                        const distance = particle.position.distanceTo(this.cubeGroup.position);
+                        
+                        // Absorption effect
+                        if (distance < 3.0) {
+                            userData.life -= 0.08;
+                            particle.material.opacity = userData.life;
+                            particle.scale.setScalar(userData.life);
+                            
+                            // Color shift as it gets absorbed
+                            const absorptionProgress = 1 - userData.life;
+                            particle.material.emissiveIntensity = 0.3 + absorptionProgress * 0.7;
+                        }
+                        
+                        if (userData.life <= 0 || distance < 1.0) {
+                            this.removeParticle(i);
+                        }
+                    } else {
+                        // Move away from cube
+                        particle.position.add(userData.direction.clone().multiplyScalar(userData.speed));
+                        userData.life -= 0.012;
+                        
+                        // Fade out
+                        particle.material.opacity = userData.life * 0.9;
+                        particle.material.emissiveIntensity = userData.life * 0.5;
+                        
+                        if (userData.life <= 0) {
+                            this.removeParticle(i);
+                        }
+                    }
+                }
+            }
+            
+            removeParticle(index) {
+                this.scene.remove(this.particles[index]);
+                this.particles[index].geometry.dispose();
+                this.particles[index].material.dispose();
+                this.particles.splice(index, 1);
+            }
+            
+            setupControls() {
+                // Mouse controls
+                this.canvas.addEventListener('mousemove', (e) => {
+                    this.mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouseTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                // Smooth mouse following
+                setInterval(() => {
+                    this.mouse.lerp(this.mouseTarget, 0.05);
+                }, 16);
+                
+                // Keyboard controls
+                document.addEventListener('keydown', (e) => {
+                    switch(e.code) {
+                        case 'Space':
+                            e.preventDefault();
+                            this.particlesEnabled = !this.particlesEnabled;
+                            break;
+                        case 'KeyR':
+                            this.camera.position.set(0, 0, 12);
+                            this.mouse.set(0, 0);
+                            this.mouseTarget.set(0, 0);
+                            break;
+                    }
+                });
+                
+                // Scroll controls
+                this.canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    this.camera.position.z += e.deltaY * 0.01;
+                    this.camera.position.z = Math.max(6, Math.min(30, this.camera.position.z));
+                });
+                
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+            
+            setupUI() {
+                const schemeButtons = document.querySelectorAll('.scheme-btn');
+                schemeButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const scheme = btn.dataset.scheme;
+                        this.switchColorScheme(scheme);
+                        
+                        // Update active button
+                        schemeButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                    });
+                });
+            }
+            
+            switchColorScheme(schemeName) {
+                this.currentScheme = schemeName;
+                
+                // Update all components
+                this.updateBackground();
+                this.updateLights();
+                this.updateCubeMaterials();
+                this.updateWireframe();
+                this.updateParticleMaterials();
+                
+                // Update corner accents
+                if (this.cornerAccents) {
+                    this.cornerAccents.forEach(accent => {
+                        accent.material.color.setHex(ColorSchemes.schemes[this.currentScheme].wireframe);
+                        accent.material.emissive.setHex(ColorSchemes.schemes[this.currentScheme].wireframe);
+                    });
+                }
+                
+                // Update inner core
+                if (this.innerCore) {
+                    const coreColor = ColorSchemes.schemes[this.currentScheme].cube.face1.color;
+                    this.innerCore.material.color.setHex(coreColor);
+                    this.innerCore.material.emissive.setHex(coreColor);
+                    this.innerCore.material.emissiveIntensity = 0.2;
+                }
+            }
+            
+            setupStats() {
+                this.fpsElement = document.getElementById('fps');
+                this.particleCountElement = document.getElementById('particle-count');
+                this.trianglesElement = document.getElementById('triangles');
+                
+                setInterval(() => {
+                    const fps = Math.round(this.frameCount / ((performance.now() - this.lastFPSTime) / 1000));
+                    this.fpsElement.textContent = fps || 60;
+                    this.frameCount = 0;
+                    this.lastFPSTime = performance.now();
+                    
+                    this.particleCountElement.textContent = this.particles.length;
+                    this.trianglesElement.textContent = this.renderer.info.render.triangles;
+                }, 1000);
+            }
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.01;
+                this.frameCount++;
+                
+                // Complex cube animations
+                this.cubeGroup.rotation.x += 0.005;
+                this.cubeGroup.rotation.y += 0.008;
+                this.cubeGroup.rotation.z += 0.003;
+                
+                // Floating motion with multiple harmonics
+                this.cubeGroup.position.y = Math.sin(this.time * 0.7) * 0.6 + Math.sin(this.time * 1.3) * 0.2;
+                this.cubeGroup.position.x = Math.cos(this.time * 0.5) * 0.4 + Math.cos(this.time * 1.1) * 0.15;
+                this.cubeGroup.position.z = Math.sin(this.time * 0.3) * 0.3;
+                
+                // Breathing/pulsing effect
+                const scale = 1 + Math.sin(this.time * 2) * 0.06 + Math.sin(this.time * 5) * 0.02;
+                this.cubeGroup.scale.setScalar(scale);
+                
+                // Mouse interaction
+                this.cubeGroup.rotation.x += this.mouse.y * 0.008;
+                this.cubeGroup.rotation.y += this.mouse.x * 0.008;
+                
+                // Inner core counter-rotation
+                if (this.innerCore) {
+                    this.innerCore.rotation.x -= 0.02;
+                    this.innerCore.rotation.y += 0.025;
+                    this.innerCore.rotation.z -= 0.018;
+                }
+                
+                // Corner accents animation
+                if (this.cornerAccents) {
+                    this.cornerAccents.forEach((accent, i) => {
+                        accent.rotation.y += 0.03 + i * 0.002;
+                        accent.material.emissiveIntensity = 0.2 + Math.sin(this.time * 3 + i) * 0.15;
+                    });
+                }
+                
+                // Wireframe effects
+                if (this.wireframe) {
+                    this.wireframe.material.opacity = 0.6 + Math.sin(this.time * 2.5) * 0.3;
+                }
+                
+                // Dynamic lighting
+                if (this.lights.point1) {
+                    this.lights.point1.position.x = -12 + Math.sin(this.time * 0.8) * 3;
+                    this.lights.point1.position.y = 8 + Math.cos(this.time * 1.2) * 2;
+                }
+                
+                if (this.lights.point2) {
+                    this.lights.point2.position.x = 12 + Math.cos(this.time * 0.6) * 3;
+                    this.lights.point2.position.y = -8 + Math.sin(this.time * 0.9) * 2;
+                }
+                
+                if (this.lights.point3) {
+                    this.lights.point3.position.z = 10 + Math.sin(this.time * 1.1) * 4;
+                }
+                
+                this.updateParticles();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new UltraDetailedCube();
+        });
+    </script>
+</body>
+</html>
