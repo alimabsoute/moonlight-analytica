@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intel's Secret Plan - Military/Defense Style Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a0f0d;
+            --secondary: #1a2f1a;
+            --accent: #00ff00;
+            --warning: #ffaa00;
+            --danger: #ff0000;
+            --surface: #0d1b0d;
+            --text: #00cc00;
+            --text-dim: #008800;
+            --border: #004400;
+            --grid: #002200;
+        }
+
+        body {
+            font-family: 'Rajdhani', monospace;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--primary);
+            background-image: 
+                radial-gradient(circle at 25% 25%, #001100 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #001100 0%, transparent 50%),
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 200px 200px, 200px 200px, 20px 20px, 20px 20px;
+            background-position: 0 0, 0 0, 0 0, 0 0;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            animation: subtleFlicker 10s ease-in-out infinite;
+        }
+
+        @keyframes subtleFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.98; }
+        }
+
+        .terminal {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 2px solid var(--accent);
+            box-shadow: 
+                0 0 20px var(--accent),
+                inset 0 0 20px rgba(0, 255, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 49%,
+                rgba(0, 255, 0, 0.03) 50%,
+                transparent 51%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .header {
+            background: var(--secondary);
+            border-bottom: 2px solid var(--accent);
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hexagon" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><polygon points="10,1 19,6 19,14 10,19 1,14 1,6" fill="none" stroke="%23004400" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23hexagon)"/></svg>') repeat;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 3;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .led {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        .led.green {
+            background: var(--accent);
+            color: var(--accent);
+        }
+
+        .led.orange {
+            background: var(--warning);
+            color: var(--warning);
+        }
+
+        .led.red {
+            background: var(--danger);
+            color: var(--danger);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .back-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+            position: relative;
+            z-index: 3;
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .back-link:hover {
+            color: var(--warning);
+            text-shadow: 0 0 10px var(--warning);
+        }
+
+        .classification-banner {
+            background: var(--danger);
+            color: black;
+            padding: 1rem;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.25rem;
+            letter-spacing: 3px;
+            margin-bottom: 2rem;
+            animation: flash 3s infinite;
+            position: relative;
+            z-index: 3;
+        }
+
+        @keyframes flash {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.7; }
+        }
+
+        .mission-header {
+            border: 2px solid var(--accent);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            background: rgba(0, 255, 0, 0.05);
+            position: relative;
+            z-index: 3;
+        }
+
+        .mission-id {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.875rem;
+            color: var(--warning);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 5px var(--warning);
+        }
+
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px var(--accent);
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .intel-brief {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .brief-item {
+            padding: 1rem;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+        }
+
+        .brief-label {
+            color: var(--warning);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .content {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .target-analysis {
+            background: var(--secondary);
+            border: 2px solid var(--accent);
+            padding: 3rem;
+            margin: 3rem -2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .target-analysis::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+        }
+
+        .target-analysis::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--text-dim);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.2;
+        }
+
+        .target-image {
+            width: 400px;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1) hue-rotate(90deg) saturate(2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            margin: 3rem 0;
+        }
+
+        .section-header {
+            background: var(--secondary);
+            border: 2px solid var(--accent);
+            border-left: 10px solid var(--accent);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-code {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            padding: 0 1rem;
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-left: 3rem;
+            color: var(--text);
+        }
+
+        .threat-assessment {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--danger);
+            border-left: 10px solid var(--danger);
+            padding: 2rem;
+            margin: 2rem 0;
+            font-weight: 600;
+        }
+
+        .threat-level {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            text-shadow: 0 0 10px var(--danger);
+        }
+
+        .body-text {
+            margin: 1.5rem 0;
+            line-height: 1.7;
+        }
+
+        .tactical-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .tactical-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .tactical-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent);
+        }
+
+        .tactical-card::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-bottom: none;
+            border-right: none;
+            opacity: 0.5;
+        }
+
+        .tactical-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .card-code {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .card-label {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .operation-timeline {
+            background: var(--secondary);
+            padding: 3rem;
+            margin: 3rem -2rem;
+            border-top: 4px solid var(--accent);
+            border-bottom: 4px solid var(--accent);
+            position: relative;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 4rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .timeline-phase {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-phase::before {
+            content: '';
+            position: absolute;
+            left: -3.75rem;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border: 4px solid var(--secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .phase-code {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.875rem;
+            color: var(--warning);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--warning);
+        }
+
+        .phase-content {
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .data-matrix {
+            display: grid;
+            gap: 2px;
+            background: var(--accent);
+            margin: 3rem 0;
+        }
+
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 2fr;
+            gap: 2px;
+        }
+
+        .matrix-cell {
+            background: var(--surface);
+            padding: 1rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .matrix-cell.header {
+            background: var(--secondary);
+            color: var(--accent);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        .matrix-cell.critical {
+            background: var(--danger);
+            color: black;
+            font-weight: 900;
+        }
+
+        .scenario-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .scenario-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent), var(--warning), var(--accent));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .scenario-card:hover::before {
+            opacity: 1;
+        }
+
+        .scenario-code {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.125rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        .scenario-content {
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .probability-display {
+            background: var(--primary);
+            border: 1px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .probability-bar {
+            height: 6px;
+            background: var(--primary);
+            border: 1px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .probability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--warning));
+            transition: width 2s ease;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .probability-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        .clearance-footer {
+            background: var(--danger);
+            color: black;
+            padding: 2rem;
+            margin: 3rem -2rem 0;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .target-analysis,
+            .operation-timeline {
+                margin-left: -1rem;
+                margin-right: -1rem;
+                padding: 2rem 1rem;
+            }
+
+            .section-header {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .section-code {
+                left: 0;
+                font-size: 1.25rem;
+            }
+
+            .section-title {
+                margin-left: 2rem;
+            }
+
+            .matrix-row {
+                grid-template-columns: 1fr;
+            }
+
+            .target-image {
+                width: 280px;
+            }
+
+            .intel-brief {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <header class="header">
+            <div class="system-status">
+                <div class="status-left">
+                    <div class="status-indicator">
+                        <div class="led green"></div>
+                        <span>SECURE</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="led orange"></div>
+                        <span>MONITORING</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="led green"></div>
+                        <span>ENCRYPTED</span>
+                    </div>
+                </div>
+                <div>TIMESTAMP: 07-SEP-2025 14:35:42Z</div>
+            </div>
+
+            <a href="/news" class="back-link">&lt;&lt; RETURN TO COMMAND CENTER</a>
+
+            <div class="classification-banner">
+                ⚠ TOP SECRET ⚠ COMPARTMENTALIZED INTELLIGENCE ⚠
+            </div>
+
+            <div class="mission-header">
+                <div class="mission-id">OPERATION CODENAME: SEMICONDUCTOR SHATTER</div>
+                <div class="mission-id">INTELLIGENCE ASSESSMENT ID: MOONLIGHT-ALPHA-7749</div>
+
+                <h1 class="title">Strategic Asset Separation Protocol</h1>
+                <h2 class="title" style="font-size: 1.75rem; margin-bottom: 2rem;">Intel Corporation Foundry Division</h2>
+
+                <p class="subtitle">Classified strategic intelligence assessment of high-value corporate target undergoing forced organizational restructuring. Activist elements have penetrated board infrastructure. $7 billion annual operational hemorrhage confirmed. Immediate containment protocols required.</p>
+
+                <div class="intel-brief">
+                    <div class="brief-item">
+                        <div class="brief-label">Primary Analyst</div>
+                        <div>Moonlight Analytica Intelligence Division</div>
+                    </div>
+                    <div class="brief-item">
+                        <div class="brief-label">Classification Level</div>
+                        <div>TOP SECRET // COMPARTMENTALIZED</div>
+                    </div>
+                    <div class="brief-item">
+                        <div class="brief-label">Target Status</div>
+                        <div>ACTIVE SURVEILLANCE</div>
+                    </div>
+                    <div class="brief-item">
+                        <div class="brief-label">Estimated Reading Time</div>
+                        <div>12.3 MINUTES</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="target-analysis">
+                <img src="7a.png" alt="TARGET: Intel Corporation" class="target-image">
+            </div>
+
+            <div class="threat-assessment">
+                <div class="threat-level">⚠ THREAT LEVEL: CRITICAL ⚠</div>
+                <p><strong>INTELLIGENCE SUMMARY:</strong> Hostile activist forces led by Third Point Capital have achieved 8.7% equity penetration of target corporation. Internal bleeding of $7 billion annually through foundry operations creates strategic vulnerability. Board-level infiltration confirmed. Separation protocols now inevitable within 18-month operational window.</p>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-code">01</div>
+                    <div class="section-title">Threat Assessment Matrix</div>
+                </div>
+
+                <p class="body-text">Primary target Intel Corporation exhibits critical structural vulnerabilities in its foundry operations sector. Competitive analysis reveals TSMC maintains 53% operational superiority margins while target bleeds $7 billion annually through inefficient manufacturing subsidization protocols.</p>
+
+                <p class="body-text">Enemy intelligence indicates design division personnel unknowingly subsidizing foundry operations through internal resource allocation. External customer base maintains hostile posture due to intellectual property security concerns, limiting market penetration capabilities for foundry services.</p>
+
+                <div class="tactical-grid">
+                    <div class="tactical-card">
+                        <div class="card-code">$7B</div>
+                        <div class="card-label">Annual Operational Losses</div>
+                    </div>
+                    <div class="tactical-card">
+                        <div class="card-code">53%</div>
+                        <div class="card-label">Enemy (TSMC) Superiority Margin</div>
+                    </div>
+                    <div class="tactical-card">
+                        <div class="card-code">66%</div>
+                        <div class="card-label">Design Division Revenue Dependency</div>
+                    </div>
+                    <div class="tactical-card">
+                        <div class="card-code">24</div>
+                        <div class="card-label">Months Technology Gap</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-code">02</div>
+                    <div class="section-title">Operation Timeline Intelligence</div>
+                </div>
+
+                <div class="operation-timeline">
+                    <div class="timeline">
+                        <div class="timeline-phase">
+                            <div class="phase-code">PHASE ALPHA - Q4 2024</div>
+                            <div class="phase-content">
+                                <strong>Enemy Infiltration Confirmed:</strong> Third Point Capital completes strategic positioning, achieving 8.7% control threshold. Board-level pressure campaign initiated with formal ultimatum delivery. Internal resistance protocols activated by target leadership.
+                            </div>
+                        </div>
+                        <div class="timeline-phase">
+                            <div class="phase-code">PHASE BRAVO - Q1 2025</div>
+                            <div class="phase-content">
+                                <strong>Critical Mass Achieved:</strong> Board pressure escalation reaches critical operational threshold. Internal war-gaming reveals three viable separation architectures under active assessment. Advanced negotiations with AMD forces detected.
+                            </div>
+                        </div>
+                        <div class="timeline-phase">
+                            <div class="phase-code">PHASE CHARLIE - Q3 2025</div>
+                            <div class="phase-content">
+                                <strong>Final Engagement Phase:</strong> Projected voluntary capitulation deadline. Alternative scenario: Full-scale proxy warfare initiation if target maintains resistance posture. CHIPS Act regulatory complications create additional pressure vectors.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-code">03</div>
+                    <div class="section-title">Battlefield Intelligence Assessment</div>
+                </div>
+
+                <div class="data-matrix">
+                    <div class="matrix-row">
+                        <div class="matrix-cell header">Operational Metric</div>
+                        <div class="matrix-cell header">Current Status</div>
+                        <div class="matrix-cell header">Enemy Standard</div>
+                        <div class="matrix-cell header">Tactical Disadvantage</div>
+                    </div>
+                    <div class="matrix-row">
+                        <div class="matrix-cell">Foundry Operating Margin</div>
+                        <div class="matrix-cell critical">-18.2%</div>
+                        <div class="matrix-cell">+53.1%</div>
+                        <div class="matrix-cell">71.3 percentage points</div>
+                    </div>
+                    <div class="matrix-row">
+                        <div class="matrix-cell">Annual Cash Hemorrhage</div>
+                        <div class="matrix-cell critical">-$7.0B</div>
+                        <div class="matrix-cell">+$23.4B</div>
+                        <div class="matrix-cell">$30.4B differential</div>
+                    </div>
+                    <div class="matrix-row">
+                        <div class="matrix-cell">Technology Positioning</div>
+                        <div class="matrix-cell critical">Lagging</div>
+                        <div class="matrix-cell">Superior</div>
+                        <div class="matrix-cell">2 generation deficit</div>
+                    </div>
+                </div>
+
+                <div class="threat-assessment">
+                    <div class="threat-level">⚠ CRITICAL INTELLIGENCE: AMD ALLIANCE DETECTED ⚠</div>
+                    <p><strong>HIGH-PRIORITY INTERCEPT:</strong> Advanced negotiations between AMD forces and Intel foundry division revealed. Proposed $30 billion minimum engagement framework would secure 40% of advanced manufacturing capacity through 2030. This alliance would reduce TSMC dependency from 87% to 47% for AMD operations.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-code">04</div>
+                    <div class="section-title">Strategic Separation Scenarios</div>
+                </div>
+
+                <div class="scenario-analysis">
+                    <div class="scenario-card">
+                        <div class="scenario-code">Operation Clean Break</div>
+                        <div class="scenario-content">
+                            Complete organizational severance through independent public entity creation. Maximum tactical flexibility for both resultant forces. Eliminates internal subsidization vulnerabilities and optimizes resource allocation protocols.
+                        </div>
+                        <div class="probability-display">
+                            <div class="probability-bar">
+                                <div class="probability-fill" style="width: 78%"></div>
+                            </div>
+                            <div class="probability-text">SUCCESS PROBABILITY: 78% - RECOMMENDED</div>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-code">Operation Controlled Separation</div>
+                        <div class="scenario-content">
+                            Holding company architecture with semi-autonomous operational units. Maintains strategic coordination benefits while enabling independent tactical decisions. Preserves some resource sharing capabilities.
+                        </div>
+                        <div class="probability-display">
+                            <div class="probability-bar">
+                                <div class="probability-fill" style="width: 65%"></div>
+                            </div>
+                            <div class="probability-text">SUCCESS PROBABILITY: 65% - VIABLE</div>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-code">Operation Strategic Partnership</div>
+                        <div class="scenario-content">
+                            Foundry spinout with design team maintaining minority control. Preferred customer status arrangements preserve collaboration protocols. Technology sharing agreements maintained but limited effectiveness.
+                        </div>
+                        <div class="probability-display">
+                            <div class="probability-bar">
+                                <div class="probability-fill" style="width: 45%"></div>
+                            </div>
+                            <div class="probability-text">SUCCESS PROBABILITY: 45% - SUBOPTIMAL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-code">05</div>
+                    <div class="section-title">Collateral Damage Assessment</div>
+                </div>
+
+                <p class="body-text"><strong>WINNERS IN POST-OPERATION ENVIRONMENT:</strong> AMD forces achieve significant strategic advantage through diversified foundry access. Samsung positioned for advanced node market share acquisition. GlobalFoundries gains tier-1 manufacturing status and substantial capacity utilization increases.</p>
+
+                <p class="body-text"><strong>CASUALTIES AND LOSSES:</strong> NVIDIA faces potential capacity displacement risks at TSMC facilities. Intel design division loses manufacturing priority access. Customer base experiences supply chain disruption and potential pricing increases.</p>
+
+                <div class="threat-assessment">
+                    <div class="threat-level">⚠ REGULATORY COMPLICATION DETECTED ⚠</div>
+                    <p><strong>CHIPS ACT VIOLATION RISK:</strong> Target's $8.5 billion government funding specifically requires vertically integrated operations. Separation protocols may trigger regulatory enforcement action and funding withdrawal. Coordination with government forces may be required.</p>
+                </div>
+            </div>
+
+            <div class="clearance-footer">
+                ⚠ TOP SECRET ⚠ COMPARTMENTALIZED INTELLIGENCE ASSESSMENT ⚠<br>
+                MOONLIGHT ANALYTICA INTELLIGENCE DIVISION - SEMICONDUCTOR WARFARE UNIT<br>
+                THIS DOCUMENT CONTAINS CLASSIFIED STRATEGIC ANALYSIS - AUTHORIZED PERSONNEL ONLY<br>
+                DISSEMINATION AND REPRODUCTION STRICTLY PROHIBITED<br>
+                CLEARANCE LEVEL: TOP SECRET // COMPARTMENTALIZED // NOFORN
+            </div>
+        </div>
+    </div>
+</body>
+</html>

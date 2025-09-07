@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intel's Secret Plan - Financial/Bloomberg Style Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            color: #f0f0f0;
+            background: #0d1117;
+            font-size: 14px;
+        }
+
+        .terminal-bg {
+            background: 
+                radial-gradient(circle at 25% 25%, #1e3a8a11 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #059669aa 0%, transparent 50%),
+                linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header-bar {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.8rem;
+        }
+
+        .ticker {
+            color: #7c3aed;
+            font-weight: 600;
+            margin-right: 2rem;
+        }
+
+        .price {
+            color: #10b981;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .change-positive {
+            color: #10b981;
+        }
+
+        .change-negative {
+            color: #ef4444;
+        }
+
+        .timestamp {
+            color: #6b7280;
+            margin-left: auto;
+            font-size: 0.75rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1rem;
+        }
+
+        .article-panel {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: #21262d;
+            border-bottom: 1px solid #30363d;
+            padding: 1rem;
+            font-weight: 600;
+            color: #f0f6fc;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .panel-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            background: #30363d;
+            border: 1px solid #484f58;
+            color: #f0f6fc;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'Source Code Pro', monospace;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            background: #484f58;
+        }
+
+        .control-btn.active {
+            background: #238636;
+            border-color: #2ea043;
+        }
+
+        .panel-content {
+            padding: 1.5rem;
+            height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .back-link {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .category-tag {
+            background: #1e3a8a;
+            color: #93c5fd;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .headline {
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: #f0f6fc;
+        }
+
+        .subhead {
+            font-size: 1rem;
+            color: #8b949e;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .meta-line {
+            display: flex;
+            gap: 1rem;
+            color: #6b7280;
+            font-size: 0.75rem;
+            margin-bottom: 2rem;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .logo-terminal {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .logo-terminal::before {
+            content: 'INTC:NASDAQ';
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.7rem;
+            color: #58a6ff;
+            font-weight: 600;
+        }
+
+        .logo-image {
+            width: 400px;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: brightness(0.9) contrast(1.1);
+        }
+
+        .intro-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+            color: #e6edf3;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .data-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .data-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Source Code Pro', monospace;
+            margin-bottom: 0.25rem;
+        }
+
+        .data-value.positive {
+            color: #10b981;
+        }
+
+        .data-value.negative {
+            color: #ef4444;
+        }
+
+        .data-value.neutral {
+            color: #58a6ff;
+        }
+
+        .data-label {
+            font-size: 0.7rem;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-header {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #30363d;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .terminal-table {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #21262d;
+            padding: 0.75rem;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #f0f6fc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-row {
+            padding: 0.75rem;
+            border-bottom: 1px solid #30363d;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 1rem;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .table-row:hover {
+            background: #161b22;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .scenario-name {
+            font-weight: 600;
+            color: #f0f6fc;
+            font-size: 0.85rem;
+        }
+
+        .scenario-desc {
+            color: #8b949e;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .probability {
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .sidebar-panel {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .sidebar-content {
+            padding: 1rem;
+        }
+
+        .market-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #30363d;
+            font-size: 0.8rem;
+        }
+
+        .market-item:last-child {
+            border-bottom: none;
+        }
+
+        .market-symbol {
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+
+        .market-price {
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 600;
+        }
+
+        .timeline-item {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-left: 4px solid #58a6ff;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .timeline-date {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.75rem;
+            color: #58a6ff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-event {
+            color: #e6edf3;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .alert-box {
+            background: #1e2a3a;
+            border: 1px solid #58a6ff;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #58a6ff;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #58a6ff;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .alert-content {
+            color: #e6edf3;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .headline {
+                font-size: 1.5rem;
+            }
+
+            .logo-image {
+                width: 280px;
+            }
+
+            .data-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="terminal-bg">
+    <div class="container">
+        <div class="header-bar">
+            <span class="ticker">INTC</span>
+            <span class="price">$34.12</span>
+            <span class="change-negative">▼ -2.45 (-6.7%)</span>
+            <span class="ticker">NVDA</span>
+            <span class="price">$456.78</span>
+            <span class="change-positive">▲ +12.34 (+2.8%)</span>
+            <span class="ticker">AMD</span>
+            <span class="price">$142.90</span>
+            <span class="change-positive">▲ +5.67 (+4.1%)</span>
+            <span class="timestamp">15:42:33 EST</span>
+        </div>
+
+        <div class="main-content">
+            <div class="article-panel">
+                <div class="panel-header">
+                    INTEL ANALYSIS - FOUNDRY SEPARATION
+                    <div class="panel-controls">
+                        <button class="control-btn active">LIVE</button>
+                        <button class="control-btn">HIST</button>
+                        <button class="control-btn">NEWS</button>
+                    </div>
+                </div>
+
+                <div class="panel-content">
+                    <a href="/news" class="back-link">&lt; BACK_TO_NEWS</a>
+
+                    <div class="category-tag">SEMICONDUCTORS</div>
+
+                    <h1 class="headline">INTEL'S SECRET PLAN TO SPLIT $500B SEMICONDUCTOR WAR</h1>
+
+                    <p class="subhead">Exclusive intelligence reveals mounting activist pressure and $7B annual foundry losses forcing inevitable separation Q3 2025</p>
+
+                    <div class="meta-line">
+                        <span>MOONLIGHT_ANALYTICA</span>
+                        <span>•</span>
+                        <span>2025-09-07_15:42</span>
+                        <span>•</span>
+                        <span>EST_READ_12MIN</span>
+                    </div>
+
+                    <div class="logo-terminal">
+                        <img src="7a.png" alt="Intel Corporation" class="logo-image">
+                    </div>
+
+                    <p class="intro-text">
+                        BREAKING: Sources close to Intel's board describe scenario where mounting pressure from activist investors and continued foundry losses of $7B annually force CEO Pat Gelsinger's hand. The foundry division can't compete with TSMC while subsidizing Intel's design teams, creating untenable strategic position.
+                    </p>
+
+                    <div class="alert-box">
+                        <div class="alert-title">MARKET IMPACT ALERT</div>
+                        <div class="alert-content">
+                            Third Point Capital has assembled 8.7% stake specifically targeting foundry separation. Board ultimatum set for Q3 2025.
+                        </div>
+                    </div>
+
+                    <div class="section-header">&gt; FINANCIAL_METRICS</div>
+
+                    <div class="data-grid">
+                        <div class="data-card">
+                            <div class="data-value negative">$7.0B</div>
+                            <div class="data-label">ANNUAL LOSSES</div>
+                        </div>
+                        <div class="data-card">
+                            <div class="data-value positive">53%</div>
+                            <div class="data-label">TSMC MARGINS</div>
+                        </div>
+                        <div class="data-card">
+                            <div class="data-value neutral">66%</div>
+                            <div class="data-label">DESIGN REVENUE</div>
+                        </div>
+                        <div class="data-card">
+                            <div class="data-value neutral">8.7%</div>
+                            <div class="data-label">ACTIVIST STAKE</div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">&gt; SEPARATION_SCENARIOS</div>
+
+                    <div class="terminal-table">
+                        <div class="table-header">PROBABILITY ANALYSIS - INTERNAL MODELING</div>
+                        
+                        <div class="table-row">
+                            <div class="scenario-name">CLEAN_BREAK</div>
+                            <div class="scenario-desc">Two independent public companies with separate boards and capital structures</div>
+                            <div class="probability positive">78%</div>
+                        </div>
+                        
+                        <div class="table-row">
+                            <div class="scenario-name">CONTROLLED_SPLIT</div>
+                            <div class="scenario-desc">Intel Corporation as holding company with independent subsidiaries</div>
+                            <div class="probability neutral">65%</div>
+                        </div>
+                        
+                        <div class="table-row">
+                            <div class="scenario-name">PARTNERSHIP</div>
+                            <div class="scenario-desc">Foundry spinout with design team minority ownership</div>
+                            <div class="probability negative">45%</div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">&gt; CRITICAL_TIMELINE</div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q4_2024</div>
+                        <div class="timeline-event">Third Point Capital assembles 8.7% stake. Board pressure intensifies with ultimatum presentation.</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q1_2025</div>
+                        <div class="timeline-event">Internal financial modeling reveals separation scenarios. AMD $30B anchor deal negotiations advance.</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q3_2025</div>
+                        <div class="timeline-event">PROJECTED: Voluntary separation deadline or forced proxy battle. CHIPS Act compliance crisis.</div>
+                    </div>
+
+                    <div class="section-header">&gt; AMD_WILDCARD</div>
+
+                    <p class="intro-text">
+                        EXCLUSIVE: Advanced negotiations between AMD and Intel Foundry for $30B five-year minimum commitment. AMD seeks capacity diversification from TSMC 87% dependence. Deal structure: 40% advanced node allocation through 2030, 15% TSMC undercut pricing.
+                    </p>
+
+                    <div class="alert-box">
+                        <div class="alert-title">CHIPS ACT VIOLATION RISK</div>
+                        <div class="alert-content">
+                            Corporate split potentially violates 12 specific clauses in $8.5B federal funding agreement. Clawback provisions could trigger full repayment requirement.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-panel">
+                    <div class="panel-header">MARKET MOVERS</div>
+                    <div class="sidebar-content">
+                        <div class="market-item">
+                            <span class="market-symbol">INTC</span>
+                            <span class="market-price negative">-6.7%</span>
+                        </div>
+                        <div class="market-item">
+                            <span class="market-symbol">AMD</span>
+                            <span class="market-price positive">+4.1%</span>
+                        </div>
+                        <div class="market-item">
+                            <span class="market-symbol">NVDA</span>
+                            <span class="market-price positive">+2.8%</span>
+                        </div>
+                        <div class="market-item">
+                            <span class="market-symbol">TSM</span>
+                            <span class="market-price positive">+1.9%</span>
+                        </div>
+                        <div class="market-item">
+                            <span class="market-symbol">GFS</span>
+                            <span class="market-price positive">+8.3%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="panel-header">WINNERS/LOSERS</div>
+                    <div class="sidebar-content">
+                        <div class="section-header">WINNERS</div>
+                        <div style="font-size: 0.8rem; line-height: 1.4; margin-bottom: 1rem;">
+                            <strong style="color: #10b981;">AMD:</strong> $30B anchor opportunity<br>
+                            <strong style="color: #10b981;">Samsung:</strong> Foundry competition<br>
+                            <strong style="color: #10b981;">GlobalFoundries:</strong> Capacity boost
+                        </div>
+                        
+                        <div class="section-header">LOSERS</div>
+                        <div style="font-size: 0.8rem; line-height: 1.4;">
+                            <strong style="color: #ef4444;">NVIDIA:</strong> TSMC displacement<br>
+                            <strong style="color: #ef4444;">Intel Design:</strong> Process disadvantage<br>
+                            <strong style="color: #ef4444;">Supply Chain:</strong> Disruption chaos
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="panel-header">RELATED ANALYSIS</div>
+                    <div class="sidebar-content">
+                        <div style="font-size: 0.75rem; line-height: 1.4; color: #8b949e;">
+                            • TSMC Capacity Crisis<br>
+                            • Semiconductor Cold War<br>
+                            • Foundry Market Dynamics<br>
+                            • CHIPS Act Implications
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

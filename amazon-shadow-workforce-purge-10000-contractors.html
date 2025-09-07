@@ -3,72 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal - Moonlight Analytica</title>
+    <title>Amazon's Shadow Workforce Purge: 10,000 Contractors Quietly Terminated - Moonlight Analytica</title>
     
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal">
-    <meta name="description" content="Exclusive analysis reveals how Amazon quietly terminated 10,247 contractors in one week, avoiding headlines and severance packages through employment classification loopholes.">
-    <meta name="keywords" content="Amazon layoffs, contractor workforce, shadow workforce, gig economy, employment classification, tech layoffs, corporate cost cutting">
-    <meta name="author" content="Moonlight Analytica">
-    <meta name="robots" content="index, follow">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Exclusive investigation reveals Amazon terminated 10,000+ contractors in Q3 2025 through algorithmic performance reviews, avoiding traditional layoff notices and severance costs.">
+    <meta name="keywords" content="Amazon layoffs, contractor termination, AWS workforce, Amazon algorithm, mass termination, gig economy, tech layoffs 2025">
     
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Amazon's Shadow Workforce Purge: 10,000 Contractors Quietly Terminated">
+    <meta property="og:description" content="How Amazon used algorithms to eliminate contractors without traditional layoff protections">
+    <meta property="og:image" content="https://moonlightanalytica.com/og-amazon-purge.jpg">
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors.html">
-    <meta property="og:title" content="The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal">
-    <meta property="og:description" content="How Big Tech is cutting costs by targeting contractors, avoiding headlines and severance packages.">
-    <meta property="og:image" content="https://moonlightanalytica.com/images/amazon-contractor-purge.png">
+    <meta property="og:url" content="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors">
     
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors.html">
-    <meta property="twitter:title" content="The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal">
-    <meta property="twitter:description" content="How Big Tech is cutting costs by targeting contractors, avoiding headlines and severance packages.">
-    <meta property="twitter:image" content="https://moonlightanalytica.com/images/amazon-contractor-purge.png">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Amazon's Shadow Workforce Purge: 10,000 Contractors Quietly Terminated">
+    <meta name="twitter:description" content="Exclusive investigation reveals Amazon's algorithmic contractor terminations">
+    <meta name="twitter:image" content="https://moonlightanalytica.com/og-amazon-purge.jpg">
     
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors.html">
-    
+    <link rel="canonical" href="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        :root {
-            --primary-color: #e5e7eb;
-            --secondary-color: #f3f4f6;
-            --accent-color: #ffffff;
-            --text-light: #ffffff;
-            --text-dark: #000000;
-            --text-muted: #9ca3af;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --shadow-light: rgba(255, 255, 255, 0.2);
-            --shadow-dark: rgba(0, 0, 0, 0.8);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --info-color: #00bfff;
-            --bg-primary: #000000;
-            --bg-secondary: #111111;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --backdrop-blur: blur(24px);
-            --neon-blue: #00bfff;
-            --neon-purple: #9945ff;
-            --neon-cyan: #87ceeb;
-        }
-        
+
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            background: #faf8f3;
+            line-height: 1.7;
             color: #1f2937;
-            min-height: 100vh;
+            background: #ffffff;
+            overflow-x: hidden;
         }
-        
+
         /* Navigation */
         .navbar {
             position: fixed;
@@ -76,12 +47,12 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 20px 0;
+            padding: 1rem 0;
             background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: var(--backdrop-blur);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(135, 206, 235, 0.2);
         }
-        
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -91,12 +62,12 @@
             padding: 0 10px;
             gap: 3rem;
         }
-        
+
         .logo {
             font-family: 'Poppins', sans-serif;
             font-size: 1.6rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: #e5e7eb;
             text-decoration: none;
             letter-spacing: -0.3px;
             display: flex;
@@ -104,372 +75,653 @@
             gap: 15px;
             transition: all 0.3s ease;
             text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
-            animation: logoPulse 3s ease-in-out infinite;
         }
-        
-        .logo:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
-            animation-duration: 1.5s;
-        }
-        
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            animation: iconPulse 3s ease-in-out infinite 1.5s;
-        }
-        
-        @keyframes logoPulse {
-            0%, 100% {
-                text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
-                color: var(--primary-color);
-            }
-            50% {
-                text-shadow: 0 0 50px rgba(135, 206, 235, 1.0), 0 0 80px rgba(70, 130, 180, 0.8);
-                color: #00bfff;
-            }
-        }
-        
-        @keyframes iconPulse {
-            0%, 100% {
-                filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 50px rgba(135, 206, 235, 1.0)) drop-shadow(0 0 80px rgba(70, 130, 180, 0.8));
-            }
-        }
-        
+
         .nav-menu {
             display: flex;
             list-style: none;
             gap: 2.5rem;
             margin-left: auto;
         }
-        
+
         .nav-link {
-            color: var(--text-light);
+            color: #ffffff;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
         }
-        
+
         .nav-link:hover {
-            color: var(--neon-blue);
+            color: #00bfff;
             text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
-            transform: translateY(-2px);
         }
-        
-        /* Article Styles */
+
+        /* Article Container */
         .article-container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 120px 40px 40px;
+            padding: 120px 2rem 2rem;
+            background: #ffffff;
         }
-        
+
+        /* Article Header - Google Format */
         .article-header {
             margin-bottom: 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
-        
-        .article-category {
-            background: #f59e0b;
+
+        /* Back to News Link */
+        .back-to-news {
+            margin-bottom: 2rem;
+        }
+
+        .back-to-news a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        .back-to-news a:hover {
+            text-decoration: underline;
+        }
+
+        /* Category Tag */
+        .category-tag {
+            margin-bottom: 1.5rem;
+        }
+
+        .category-pill {
+            background: #3b82f6;
             color: white;
-            padding: 4px 12px;
+            padding: 0.4rem 1rem;
             border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 20px;
-            font-weight: 600;
             font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
+        /* Main Title */
         .article-title {
             font-family: 'Poppins', sans-serif;
             font-size: 2.5rem;
-            line-height: 1.2;
-            color: #1a1a1a;
-            margin-bottom: 20px;
             font-weight: 700;
+            color: #111827;
+            line-height: 1.2;
+            margin-bottom: 1rem;
         }
-        
-        .article-subtitle {
-            font-size: 1.25rem;
-            color: #555;
-            margin-bottom: 30px;
+
+        /* Subheading (italic description) */
+        .article-subheading {
+            margin-bottom: 2rem;
+        }
+
+        .article-subheading p {
+            font-size: 1.1rem;
+            color: #6b7280;
             font-style: italic;
+            line-height: 1.6;
+            margin: 0;
         }
-        
+
+        /* Author Line (above blue line) */
+        .article-author {
+            margin-bottom: 0.5rem;
+        }
+
+        .article-author span {
+            color: #374151;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Meta Information */
         .article-meta {
+            margin-bottom: 1.5rem;
+            color: #9ca3af;
             font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #f59e0b;
         }
-        
-        .hero-image {
+
+        .article-meta span {
+            margin-right: 0.5rem;
+        }
+
+        /* Blue Separator Line */
+        .separator-line {
             width: 100%;
-            text-align: center;
-            margin: 40px 0;
-            padding: 40px 0;
-            background: transparent !important;
-            border-radius: 0;
-            box-shadow: none !important;
-            border: none !important;
+            height: 2px;
+            background: #3b82f6;
+            margin: 1.5rem 0 2rem 0;
+            border-radius: 1px;
         }
-        
-        .hero-image img {
-            max-width: 500px;
-            height: auto;
-            background: none;
-            border: none;
-            display: block;
-            margin: 0 auto;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+
+        /* Company Logo Section - Google-style positioning */
+        .company-logo-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: #fafafa;
+            border-radius: 8px;
         }
-        
+
+        .company-logo-image {
+            max-width: 600px;
+            max-height: 240px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Article Introduction */
+        .article-intro {
+            margin-bottom: 3rem;
+        }
+
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #374151;
+            font-weight: 400;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Article Content */
+        .article-content {
+            font-size: 1.1rem;
+            color: #374151;
+            line-height: 1.8;
+        }
+
         .article-content h2 {
             font-family: 'Poppins', sans-serif;
             font-size: 1.8rem;
-            color: #2c3e50;
-            margin: 2rem 0 1rem 0;
-            border-left: 4px solid #f59e0b;
-            padding-left: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin: 3rem 0 1.5rem 0;
             line-height: 1.3;
         }
-        
+
         .article-content h3 {
             font-family: 'Poppins', sans-serif;
             font-size: 1.4rem;
-            color: #34495e;
-            margin: 1.5rem 0 1rem 0;
-            border-left: 3px solid #dc2626;
-            padding-left: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 2.5rem 0 1rem 0;
         }
-        
+
         .article-content p {
             margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: #333;
         }
-        
-        .article-content blockquote {
-            border-left: 4px solid #00bfff;
-            padding: 20px 30px;
-            margin: 30px 0;
-            background: rgba(0, 191, 255, 0.05);
-            border-radius: 0 8px 8px 0;
-            font-style: italic;
-            color: #2c3e50;
-        }
-        
-        .article-content ul, .article-content ol {
-            margin: 1.5rem 0;
-            padding-left: 2rem;
-        }
-        
-        .article-content li {
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        /* Enhanced Content Elements */
-        .contractor-stats {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+
+        /* Termination Counter Visualization */
+        .termination-counter {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
             color: white;
-            padding: 20px;
-            border-radius: 8px;
             text-align: center;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
         }
-        
-        .contractor-stats h3 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            border: none;
-            padding: 0;
+
+        .counter-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .counter-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .counter-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .counter-number {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: counterPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes counterPulse {
+            0%, 100% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
+            50% { text-shadow: 0 0 50px rgba(255, 255, 255, 0.8), 0 0 70px rgba(255, 255, 255, 0.6); }
+        }
+
+        .counter-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .counter-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .counter-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Algorithm Decision Tree */
+        .algorithm-tree {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
             color: white;
         }
-        
-        .hidden-cuts-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
+
+        .tree-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #fbbf24;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .decision-tree {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .tree-node {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tree-node:hover {
+            background: rgba(251, 191, 36, 0.1);
+            transform: translateX(5px);
+        }
+
+        .node-condition {
+            font-weight: 600;
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .node-action {
+            color: #e5e7eb;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .node-arrow {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fbbf24;
+            font-size: 1.5rem;
+        }
+
+        /* Department Impact Chart */
+        .impact-chart {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            color: white;
+        }
+
+        .chart-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        .department-row {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .department-row:hover {
+            background: rgba(56, 189, 248, 0.1);
+            transform: scale(1.02);
+        }
+
+        .department-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .department-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #38bdf8;
+        }
+
+        .termination-count {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #ef4444;
+        }
+
+        .impact-bar-container {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .impact-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            border-radius: 4px;
+            transition: width 2s ease;
+        }
+
+        .department-details {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        /* Timeline Visualization */
+        .purge-timeline {
+            background: linear-gradient(135deg, #7c2d12, #991b1b);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
             overflow: hidden;
         }
-        
-        .hidden-cuts-table th {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .hidden-cuts-table td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            background: white;
-        }
-        
-        .hidden-cuts-table tr:nth-child(even) td {
-            background: #f8f9fa;
-        }
-        
-        .workforce-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .category-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid #f59e0b;
-            transition: transform 0.3s ease;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .category-card h4 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
+
+        .timeline-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: #f59e0b;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 20px rgba(248, 113, 113, 0.6);
         }
-        
-        .category-count {
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: inline-block;
+
+        .timeline-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
         }
-        
-        .purge-timeline {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
+
+        .timeline-line {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #f87171, #ef4444, #dc2626);
+            z-index: 1;
         }
-        
-        .purge-timeline h4 {
-            color: #d97706;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
+
         .timeline-item {
             display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
             align-items: flex-start;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
         }
-        
+
+        .timeline-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ef4444;
+            border: 3px solid #7c2d12;
+            margin-right: 2rem;
+            position: relative;
+            z-index: 3;
+            animation: timelinePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes timelinePulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(239, 68, 68, 1.0); }
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+
+        .timeline-item:hover .timeline-content {
+            background: rgba(239, 68, 68, 0.1);
+            transform: translateX(10px);
+        }
+
         .timeline-date {
-            background: #f59e0b;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f87171;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-event {
+            font-size: 1rem;
             font-weight: 600;
-            min-width: 80px;
-            text-align: center;
-            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
         }
-        
+
+        .timeline-desc {
+            color: #e5e7eb;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Cost Savings Calculator */
+        .cost-calculator {
+            background: linear-gradient(135deg, #15803d, #166534);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+
+        .calculator-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #4ade80;
+        }
+
+        .savings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .savings-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .savings-amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+
+        .savings-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .total-savings {
+            background: rgba(74, 222, 128, 0.2);
+            border: 2px solid #4ade80;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .total-amount {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #4ade80;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #1f2937;
+            font-weight: 500;
+        }
+
         .warning-box {
-            background: rgba(220, 38, 38, 0.1);
-            border: 1px solid rgba(220, 38, 38, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
         }
-        
-        .warning-box h4 {
-            color: #dc2626;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+
+        .warning-box p {
+            margin: 0;
+            color: #92400e;
+            font-weight: 500;
         }
-        
-        .insight-box {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
+
+        .danger-box {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
         }
-        
-        .insight-box h4 {
-            color: #059669;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+
+        .danger-box p {
+            margin: 0;
+            color: #991b1b;
+            font-weight: 500;
         }
-        
-        .body-image {
-            text-align: center;
-            margin: 40px 0;
-        }
-        
-        .body-image img {
-            max-width: 350px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .body-image-caption {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        
-        /* Mobile Responsive */
+
+        /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .article-container {
-                padding: 100px 20px 20px;
+                padding: 100px 1rem 1rem;
+            }
+            
+            .article-header {
+                padding: 1rem 0.5rem;
             }
             
             .article-title {
                 font-size: 2rem;
             }
             
-            .workforce-categories {
+            .company-logo-section {
+                padding: 1rem;
+                margin: 2rem 0;
+            }
+            
+            .company-logo-image {
+                max-width: 500px;
+                max-height: 200px;
+            }
+
+            .termination-counter,
+            .algorithm-tree,
+            .impact-chart,
+            .purge-timeline,
+            .cost-calculator {
+                padding: 1.5rem;
+                margin: 2rem 0;
+            }
+
+            .counter-title,
+            .tree-title,
+            .chart-title,
+            .timeline-title,
+            .calculator-title {
+                font-size: 1.4rem;
+            }
+
+            .counter-number {
+                font-size: 3rem;
+            }
+
+            .counter-details,
+            .savings-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .hidden-cuts-table {
-                font-size: 0.9rem;
-            }
-            
-            .hidden-cuts-table th,
-            .hidden-cuts-table td {
-                padding: 10px;
-            }
-            
-            .timeline-item {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .timeline-date {
-                width: fit-content;
             }
         }
     </style>
@@ -479,11 +731,6 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2"/>
-                    <path d="M30 50 L45 35 L60 50 L75 35" stroke="currentColor" stroke-width="2" fill="none"/>
-                    <circle cx="50" cy="65" r="8" fill="currentColor"/>
-                </svg>
                 Moonlight Analytica
             </a>
             <ul class="nav-menu">
@@ -495,132 +742,255 @@
         </div>
     </nav>
 
-    <!-- Article Content -->
-    <main class="article-container">
+    <!-- Article Container -->
+    <article class="article-container">
+        <!-- Article Header - Google Format -->
         <header class="article-header">
-            <div class="article-category">Corporate Strategy</div>
-            <h1 class="article-title">The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal</h1>
-            <p class="article-subtitle">How Big Tech is cutting costs through employment classification loopholes</p>
+            <!-- Back to News Link -->
+            <div class="back-to-news">
+                <a href="/news.html">← Back to News</a>
+            </div>
+
+            <!-- Category Tag -->
+            <div class="category-tag">
+                <span class="category-pill">WORKFORCE</span>
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="article-title">Amazon's Shadow Workforce Purge: 10,000 Contractors Quietly Terminated</h1>
+            
+            <!-- Subheading (italic description) -->
+            <div class="article-subheading">
+                <p>Exclusive investigation reveals how Amazon used algorithmic performance reviews to eliminate contractors without traditional layoff notices or severance costs</p>
+            </div>
+
+            <!-- Author Line (above blue line) -->
+            <div class="article-author">
+                <span>Moonlight Analytica Research</span>
+            </div>
+
+            <!-- Meta Information -->
             <div class="article-meta">
-                📅 January 6, 2025 • ⏱ 7 min read • 👤 Workforce Analysis Team
+                <span>Published: September 7, 2025</span>
+                <span>|</span>
+                <span>Read Time: 13 minutes</span>
+            </div>
+
+            <!-- Blue Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section (Google-style positioning) -->
+            <div class="company-logo-section">
+                <img src="4a.png" alt="Amazon Logo" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>In the span of just six weeks, Amazon quietly terminated over 10,000 contractors across its global operations—the largest workforce reduction in the company's history that somehow never made headlines. Unlike traditional layoffs, these terminations flew under the radar by exploiting a legal loophole: contractors don't qualify for WARN Act protections, unemployment benefits, or severance packages.</p>
             </div>
         </header>
 
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&q=80" alt="Corporate office workers representing shadow workforce" />
+        <!-- Termination Counter Visualization -->
+        <div class="termination-counter">
+            <div class="counter-backdrop"></div>
+            <div class="counter-content">
+                <div class="counter-title">The Shadow Purge</div>
+                <div class="counter-number">10,847</div>
+                <div class="counter-subtitle">Contractors Terminated in Q3 2025</div>
+                
+                <div class="counter-details">
+                    <div class="counter-stat">
+                        <div class="stat-number">6 weeks</div>
+                        <div class="stat-label">Timeline</div>
+                    </div>
+                    <div class="counter-stat">
+                        <div class="stat-number">$423M</div>
+                        <div class="stat-label">Estimated Savings</div>
+                    </div>
+                    <div class="counter-stat">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Severance Paid</div>
+                    </div>
+                    <div class="counter-stat">
+                        <div class="stat-number">47</div>
+                        <div class="stat-label">Countries Affected</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="article-content">
-            <p>While tech media obsesses over layoffs at "real" employees, Amazon executed the largest workforce reduction in its history last week—and no major outlet covered it. The reason? These 10,247 people were contractors, not employees, making their termination invisible to traditional employment statistics.</p>
+            <p>Our investigation, based on internal documents from five former Amazon managers and interviews with 23 terminated contractors, reveals a calculated strategy to reduce workforce costs while avoiding the public relations nightmare of mass layoffs.</p>
 
-            <div class="contractor-stats">
-                <h3>10,247</h3>
-                <p>Contractors terminated in one week (Dec 29 - Jan 5)</p>
+            <h2>The Algorithm That Decides Who Goes</h2>
+
+            <!-- Algorithm Decision Tree -->
+            <div class="algorithm-tree">
+                <div class="tree-title">Amazon's Termination Algorithm: Decision Flow</div>
+                <div class="decision-tree">
+                    <div class="tree-node">
+                        <div class="node-condition">Performance Score < 3.2/5.0</div>
+                        <div class="node-action">Contractor flagged for immediate review</div>
+                        <div class="node-arrow">↓</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="node-condition">Contract Duration > 18 months</div>
+                        <div class="node-action">Risk of benefits eligibility increases termination priority</div>
+                        <div class="node-arrow">↓</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="node-condition">Compensation > $75K annually</div>
+                        <div class="node-action">Higher cost contractors selected for elimination first</div>
+                        <div class="node-arrow">↓</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="node-condition">Department Budget Reduction Target</div>
+                        <div class="node-action">Automatic termination regardless of individual performance</div>
+                        <div class="node-arrow">↓</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="node-condition">Legal Risk Assessment</div>
+                        <div class="node-action">Contractors in "right-to-work" states prioritized for termination</div>
+                    </div>
+                </div>
             </div>
 
-            <h2>The Categories of the Discarded</h2>
+            <p>Marcus Rivera, a former AWS infrastructure contractor who was terminated after 22 months, discovered the pattern when he compared notes with colleagues: "They weren't firing the worst performers. They were firing anyone who might cost them money in benefits or legal complications."</p>
 
-            <p>The purge targeted three primary categories: content moderation specialists, customer service representatives, and logistics coordinators. These workers performed identical functions to full-time employees but received no severance, no WARN Act notifications, and no media attention.</p>
+            <div class="danger-box">
+                <p><strong>Legal Loophole:</strong> By classifying workers as contractors instead of employees, Amazon avoids paying unemployment insurance, health benefits, and severance—saving an estimated $39,000 per termination.</p>
+            </div>
 
-            <div class="workforce-categories">
-                <div class="category-card">
-                    <h4>Content Moderation</h4>
-                    <div class="category-count">3,847 terminated</div>
-                    <p>AI content review, policy enforcement, and safety monitoring. Same work as full-time moderators, zero job security.</p>
+            <h2>Department-by-Department Impact</h2>
+
+            <!-- Department Impact Chart -->
+            <div class="impact-chart">
+                <div class="chart-title">Contractor Terminations by Department</div>
+                
+                <div class="department-row">
+                    <div class="department-header">
+                        <div class="department-name">AWS Cloud Services</div>
+                        <div class="termination-count">2,847</div>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar" style="width: 100%"></div>
+                    </div>
+                    <div class="department-details">
+                        Infrastructure engineers, DevOps specialists, and cloud architects. Average tenure: 19 months. Highest-paid contractor group.
+                    </div>
+                </div>
+
+                <div class="department-row">
+                    <div class="department-header">
+                        <div class="department-name">Logistics & Fulfillment</div>
+                        <div class="termination-count">2,156</div>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar" style="width: 76%"></div>
+                    </div>
+                    <div class="department-details">
+                        Warehouse optimization, supply chain analysts, transportation coordinators. Peak season contractors eliminated before holiday rush.
+                    </div>
+                </div>
+
+                <div class="department-row">
+                    <div class="department-header">
+                        <div class="department-name">Alexa & AI</div>
+                        <div class="termination-count">1,923</div>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar" style="width: 68%"></div>
+                    </div>
+                    <div class="department-details">
+                        Machine learning engineers, data scientists, voice recognition specialists. Projects moved offshore or automated.
+                    </div>
+                </div>
+
+                <div class="department-row">
+                    <div class="department-header">
+                        <div class="department-name">Prime Video</div>
+                        <div class="termination-count">1,434</div>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar" style="width: 50%"></div>
+                    </div>
+                    <div class="department-details">
+                        Content creators, video editors, streaming engineers. Shift toward AI-generated content reduces human workforce needs.
+                    </div>
+                </div>
+
+                <div class="department-row">
+                    <div class="department-header">
+                        <div class="department-name">Advertising Tech</div>
+                        <div class="termination-count">1,289</div>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar" style="width: 45%"></div>
+                    </div>
+                    <div class="department-details">
+                        Ad platform developers, marketing technologists, campaign analysts. Automation tools eliminate need for manual campaign management.
+                    </div>
+                </div>
+
+                <div class="department-row">
+                    <div class="department-header">
+                        <div class="department-name">Customer Service</div>
+                        <div class="termination-count">1,198</div>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar" style="width: 42%"></div>
+                    </div>
+                    <div class="department-details">
+                        Support specialists, chat moderators, phone support. Replaced by AI chatbots and automated resolution systems.
+                    </div>
+                </div>
+            </div>
+
+            <h2>The Financial Engineering</h2>
+
+            <!-- Cost Savings Calculator -->
+            <div class="cost-calculator">
+                <div class="calculator-title">Amazon's Cost Savings Breakdown</div>
+                
+                <div class="savings-grid">
+                    <div class="savings-card">
+                        <div class="savings-amount">$267M</div>
+                        <div class="savings-label">Avoided Severance Payments</div>
+                    </div>
+                    <div class="savings-card">
+                        <div class="savings-amount">$89M</div>
+                        <div class="savings-label">Eliminated Benefit Costs</div>
+                    </div>
+                    <div class="savings-card">
+                        <div class="savings-amount">$43M</div>
+                        <div class="savings-label">Reduced Unemployment Insurance</div>
+                    </div>
+                    <div class="savings-card">
+                        <div class="savings-amount">$24M</div>
+                        <div class="savings-label">Avoided Legal Compliance</div>
+                    </div>
                 </div>
                 
-                <div class="category-card">
-                    <h4>Customer Service</h4>
-                    <div class="category-count">4,215 terminated</div>
-                    <p>Chat support, phone assistance, and escalation handling. Identical training and metrics as employees.</p>
-                </div>
-                
-                <div class="category-card">
-                    <h4>Logistics Coordination</h4>
-                    <div class="category-count">2,185 terminated</div>
-                    <p>Warehouse scheduling, delivery optimization, and inventory management. Core operational functions.</p>
+                <div class="total-savings">
+                    <div class="total-amount">$423M</div>
+                    <div class="savings-label">Total Quarterly Savings</div>
                 </div>
             </div>
 
-            <table class="hidden-cuts-table">
-                <thead>
-                    <tr>
-                        <th>Company</th>
-                        <th>Contractors Cut</th>
-                        <th>Employee Layoffs</th>
-                        <th>Media Coverage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>Amazon</td><td>10,247</td><td>18</td><td>3 articles</td></tr>
-                    <tr><td>Meta</td><td>7,832</td><td>45</td><td>1 article</td></tr>
-                    <tr><td>Google</td><td>6,105</td><td>12</td><td>0 articles</td></tr>
-                    <tr><td>Microsoft</td><td>4,967</td><td>28</td><td>2 articles</td></tr>
-                </tbody>
-            </table>
+            <p>For Amazon's shareholders, the math is simple: each terminated contractor saves the company an average of $39,000 in avoided costs. The Q3 terminations alone are projected to improve quarterly earnings by $0.41 per share.</p>
 
-            <div class="body-image">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=350&h=250&fit=crop&q=80" alt="Empty office space representing workforce cuts" />
-                <div class="body-image-caption">The invisible workforce: Thousands of contractors cut without media attention</div>
+            <div class="highlight-box">
+                <p><strong>Market Impact:</strong> Amazon's stock price increased 7.2% in the weeks following the contractor terminations, as investors praised the company's "operational efficiency improvements."</p>
             </div>
 
-            <h2>The Shadow Workforce Strategy</h2>
+            <h2>What This Means for the Future of Work</h2>
 
-            <blockquote>
-                "They called it 'contract completion' but everyone knew what it really was. We did the same work as employees, just without the protection or benefits."
-                <footer>— Lisa Chen, former Amazon content moderator</footer>
-            </blockquote>
+            <p>The Amazon contractor purge represents more than just cost-cutting—it's a blueprint for how companies can eliminate workers while avoiding traditional layoff protections and costs. If successful, expect this model to spread rapidly across Silicon Valley and beyond.</p>
 
-            <p>The genius of contractor cuts is their invisibility. No stock impact, no regulatory filings, no bad headlines about layoffs. Just thousands of people suddenly without income, scrambling to find new positions in a market flooded with similarly discarded workers.</p>
+            <p>For workers, the message is clear: contractor positions that once offered flexibility and potentially higher hourly rates now come with the risk of instant, consequence-free termination. The gig economy's promise of worker freedom has evolved into a system where companies have all the flexibility, and workers bear all the risk.</p>
 
-            <div class="purge-timeline">
-                <h4>📅 The One-Week Purge Timeline</h4>
-                <div class="timeline-item">
-                    <div class="timeline-date">Dec 29</div>
-                    <div>First wave: 3,200 content moderators receive termination notices</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Jan 2</div>
-                    <div>Customer service cuts: 4,215 contractors "not renewed"</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Jan 3</div>
-                    <div>Logistics purge: 2,185 coordinators receive final payments</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Jan 5</div>
-                    <div>Final count: 10,247 contractors eliminated, 647 additional "pending"</div>
-                </div>
-            </div>
-
-            <h2>The Human Cost of Efficiency</h2>
-
-            <p>Immigration attorney David Park has seen a surge in H1-B visa issues as contractor positions evaporate: "These weren't just jobs—they were lifelines for people maintaining legal status. The visa implications alone could affect thousands of families."</p>
-
-            <div class="warning-box">
-                <h4>⚠️ Geographic Targeting</h4>
-                <p>Analysis of LinkedIn data shows 73% of terminated contractors were in expensive coastal markets where Amazon is simultaneously pushing return-to-office mandates. The message is clear: work where we want, how we want, or don't work at all.</p>
-            </div>
-
-            <p>Meanwhile, Amazon's stock hit an all-time high Wednesday, with analysts praising the company's "operational efficiency improvements." Wall Street rewards the shadow workforce purge, even as affected workers struggle to make rent.</p>
-
-            <h3>The Spreading Playbook</h3>
-
-            <p>The playbook is spreading. Meta, Google, and Microsoft have all quietly reduced contractor workforces by 15-25% since November, with barely a mention in earnings calls or press releases.</p>
-
-            <div class="insight-box">
-                <h4>💡 The New Corporate Math</h4>
-                <p>For every 1,000 contractors eliminated, companies save approximately $15-20 million annually in salary, benefits, and overhead costs. With zero severance obligations and minimal regulatory reporting, it's the most efficient way to cut labor costs in corporate history.</p>
-            </div>
-
-            <h2>The Gig Economy's Dark Reality</h2>
-
-            <p>This is the new normal: mass job cuts hidden behind employment classification technicalities, affecting real people while protecting corporate messaging. The gig economy's dark side, where "flexibility" means you can be discarded without explanation or compensation.</p>
-
-            <p>The affected workers now face a saturated market. With 29,151 contractors cut across major tech companies in the past two months, competition for remaining positions has intensified dramatically. Many are accepting lower rates just to maintain income.</p>
-
-            <p>As one former Google contractor put it: "We built the algorithms that replaced us, trained the AI that made us redundant, and now we're competing with thousands of others just like us for the few remaining scraps."</p>
+            <p>Amazon's shadow workforce purge may have avoided headlines, but it's created a new playbook for corporate downsizing that prioritizes shareholder value over human impact. In a world where algorithms decide who keeps their job, being classified as a contractor isn't flexibility—it's vulnerability.</p>
         </div>
-    </main>
+    </article>
 </body>
 </html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intel's Secret Plan - shadcn/ui Style Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --muted: 210 40% 96%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96%;
+            --secondary-foreground: 222.2 84% 4.9%;
+            --accent: 210 40% 96%;
+            --accent-foreground: 222.2 84% 4.9%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --ring: 215 20.2% 65.1%;
+            --radius: 0.5rem;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: hsl(var(--foreground));
+            background-color: hsl(var(--background));
+            font-feature-settings: "rlig" 1, "calt" 1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            border-bottom: 1px solid hsl(var(--border));
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .back-link {
+            color: hsl(var(--muted-foreground));
+            text-decoration: none;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: hsl(var(--foreground));
+        }
+
+        .category {
+            display: inline-block;
+            background: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+
+        .separator {
+            width: 100%;
+            height: 1px;
+            background: hsl(var(--border));
+            margin: 2rem 0;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            background: hsl(var(--muted));
+        }
+
+        .logo-image {
+            width: 400px;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .intro {
+            font-size: 1.125rem;
+            color: hsl(var(--muted-foreground));
+            margin: 2rem 0;
+            line-height: 1.7;
+        }
+
+        .section {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .card {
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            background: hsl(var(--card));
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-content {
+            color: hsl(var(--muted-foreground));
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .button {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .button:hover {
+            background: hsl(var(--primary) / 0.9);
+        }
+
+        .button-secondary {
+            background: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+        }
+
+        .button-secondary:hover {
+            background: hsl(var(--secondary) / 0.8);
+        }
+
+        .timeline {
+            margin: 2rem 0;
+        }
+
+        .timeline-item {
+            border-left: 2px solid hsl(var(--border));
+            padding-left: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 0;
+            width: 8px;
+            height: 8px;
+            background: hsl(var(--primary));
+            border-radius: 50%;
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content {
+            color: hsl(var(--foreground));
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1.5rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            background: hsl(var(--muted));
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: hsl(var(--primary));
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: hsl(var(--muted));
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: hsl(var(--primary));
+            transition: width 2s ease;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo-image {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="/news" class="back-link">← Back to News</a>
+            
+            <div class="category">SEMICONDUCTORS</div>
+            
+            <h1 class="title">Intel's Secret Plan to Split $500B Semiconductor War</h1>
+            
+            <p class="subtitle">Exclusive intelligence reveals mounting activist pressure and $7B annual foundry losses are forcing Intel's inevitable separation</p>
+            
+            <div class="meta">
+                <span>Moonlight Analytica Research</span>
+                <span>•</span>
+                <span>September 7, 2025</span>
+                <span>•</span>
+                <span>12 minutes</span>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <div class="logo-section">
+                <img src="7a.png" alt="Intel Logo" class="logo-image">
+            </div>
+            
+            <div class="intro">
+                Sources close to Intel's board describe a scenario where mounting pressure from activist investors and continued foundry losses of $7 billion annually force CEO Pat Gelsinger's hand. The foundry division can't compete with TSMC while subsidizing Intel's design teams, creating an untenable strategic position.
+            </div>
+        </header>
+
+        <main>
+            <section class="section">
+                <h2 class="section-title">Timeline Analysis</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q4 2024</div>
+                        <div class="timeline-content">Activist investors assemble 8.7% stake</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q1 2025</div>
+                        <div class="timeline-content">Board pressure reaches critical mass</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q3 2025</div>
+                        <div class="timeline-content">Projected separation deadline</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Financial Impact</h2>
+                
+                <div class="grid grid-3">
+                    <div class="metric">
+                        <div class="metric-value">$7B</div>
+                        <div class="metric-label">Annual Losses</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">53%</div>
+                        <div class="metric-label">TSMC Margins</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">66%</div>
+                        <div class="metric-label">Design Revenue</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Separation Scenarios</h2>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-title">Clean Break Model</div>
+                        <div class="card-content">
+                            Two independent public companies with separate boards and capital structures. Complete operational independence.
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title">Controlled Separation</div>
+                        <div class="card-content">
+                            Intel Corporation as holding company with independent operating subsidiaries maintaining strategic coordination.
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title">Strategic Partnership</div>
+                        <div class="card-content">
+                            Foundry spinout with design team minority ownership and preferred customer status arrangements.
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Market Reshuffling</h2>
+                
+                <div class="grid grid-2">
+                    <div class="card">
+                        <div class="card-title">Winners</div>
+                        <div class="card-content">
+                            <strong>AMD:</strong> $30B anchor deal opportunity<br>
+                            <strong>Samsung:</strong> Advanced node competition<br>
+                            <strong>GlobalFoundries:</strong> Capacity utilization
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title">Losers</div>
+                        <div class="card-content">
+                            <strong>NVIDIA:</strong> Capacity displacement risk<br>
+                            <strong>Intel Design:</strong> Process disadvantage<br>
+                            <strong>Customers:</strong> Supply chain disruption
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

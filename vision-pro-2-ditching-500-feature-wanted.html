@@ -4,510 +4,199 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted to Lose - Moonlight Analytica</title>
-    
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted to Lose">
     <meta name="description" content="Apple removes EyeSight from Vision Pro 2, sacrificing the one feature that made spatial computing social. Analysis of supply chain leaks and user impact.">
-    <meta name="keywords" content="Vision Pro 2, Apple VR, EyeSight display, Apple headset, spatial computing, VR social isolation">
-    <meta name="author" content="Moonlight Analytica">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://moonlightanalytica.com/vision-pro-2-ditching-500-feature-wanted.html">
-    <meta property="og:title" content="Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted to Lose">
-    <meta property="og:description" content="Apple removes EyeSight from Vision Pro 2, sacrificing the one feature that made spatial computing social.">
-    <meta property="og:image" content="https://moonlightanalytica.com/images/vision-pro-2-analysis.png">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://moonlightanalytica.com/vision-pro-2-ditching-500-feature-wanted.html">
-    <meta property="twitter:title" content="Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted to Lose">
-    <meta property="twitter:description" content="Apple removes EyeSight from Vision Pro 2, sacrificing the one feature that made spatial computing social.">
-    <meta property="twitter:image" content="https://moonlightanalytica.com/images/vision-pro-2-analysis.png">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://moonlightanalytica.com/vision-pro-2-ditching-500-feature-wanted.html">
-    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary-color: #e5e7eb;
-            --secondary-color: #f3f4f6;
-            --accent-color: #ffffff;
-            --text-light: #ffffff;
-            --text-dark: #000000;
-            --text-muted: #9ca3af;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --shadow-light: rgba(255, 255, 255, 0.2);
-            --shadow-dark: rgba(0, 0, 0, 0.8);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --info-color: #00bfff;
-            --bg-primary: #000000;
-            --bg-secondary: #111111;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --backdrop-blur: blur(24px);
-            --neon-blue: #00bfff;
-            --neon-purple: #9945ff;
-            --neon-cyan: #87ceeb;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            background: #faf8f3;
-            color: #1f2937;
-            min-height: 100vh;
-        }
-        
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: var(--backdrop-blur);
-            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 0 10px;
-            gap: 3rem;
-        }
-        
-        .logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
-            animation: logoPulse 3s ease-in-out infinite;
-        }
-        
-        .logo:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
-            animation-duration: 1.5s;
-        }
-        
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            animation: iconPulse 3s ease-in-out infinite 1.5s;
-        }
-        
-        @keyframes logoPulse {
-            0%, 100% {
-                text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
-                color: var(--primary-color);
-            }
-            50% {
-                text-shadow: 0 0 50px rgba(135, 206, 235, 1.0), 0 0 80px rgba(70, 130, 180, 0.8);
-                color: #00bfff;
-            }
-        }
-        
-        @keyframes iconPulse {
-            0%, 100% {
-                filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 50px rgba(135, 206, 235, 1.0)) drop-shadow(0 0 80px rgba(70, 130, 180, 0.8));
-            }
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-            margin-left: auto;
-        }
-        
-        .nav-link {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
-            transform: translateY(-2px);
-        }
-        
-        /* Article Styles */
-        .article-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 120px 40px 40px;
-        }
-        
-        .article-header {
-            margin-bottom: 3rem;
-        }
-        
-        .article-category {
-            background: #f59e0b;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        
-        .article-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            line-height: 1.2;
-            color: #1a1a1a;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        .article-subtitle {
-            font-size: 1.25rem;
-            color: #555;
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-        
-        .article-meta {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #f59e0b;
-        }
-        
-        .hero-image {
-            width: 100%;
-            text-align: center;
-            margin: 40px 0;
-            padding: 40px 0;
-            background: transparent !important;
-            border-radius: 0;
-            box-shadow: none !important;
-            border: none !important;
-        }
-        
-        .hero-image img {
-            max-width: 500px;
-            height: auto;
-            background: none;
-            border: none;
-            display: block;
-            margin: 0 auto;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        
-        .article-content h2 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.8rem;
-            color: #2c3e50;
-            margin: 2rem 0 1rem 0;
-            border-left: 4px solid #f59e0b;
-            padding-left: 20px;
-            line-height: 1.3;
-        }
-        
-        .article-content h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
-            color: #34495e;
-            margin: 1.5rem 0 1rem 0;
-            border-left: 3px solid #3498db;
-            padding-left: 15px;
-        }
-        
-        .article-content p {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: #333;
-        }
-        
-        .article-content blockquote {
-            border-left: 4px solid #00bfff;
-            padding: 20px 30px;
-            margin: 30px 0;
-            background: rgba(0, 191, 255, 0.05);
-            border-radius: 0 8px 8px 0;
-            font-style: italic;
-            color: #2c3e50;
-        }
-        
-        .article-content ul, .article-content ol {
-            margin: 1.5rem 0;
-            padding-left: 2rem;
-        }
-        
-        .article-content li {
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        /* Enhanced Content Elements */
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .comparison-table th {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .comparison-table td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            background: white;
-        }
-        
-        .comparison-table tr:nth-child(even) td {
-            background: #f8f9fa;
-        }
-        
-        .stat-highlight {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
-        }
-        
-        .stat-highlight h3 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            border: none;
-            padding: 0;
-            color: white;
-        }
-        
-        .insight-box {
-            background: rgba(0, 191, 255, 0.1);
-            border: 1px solid rgba(0, 191, 255, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-        
-        .insight-box h4 {
-            color: #0066cc;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .warning-box {
-            background: rgba(241, 196, 15, 0.1);
-            border: 1px solid rgba(241, 196, 15, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-        
-        .warning-box h4 {
-            color: #d68910;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .body-image {
-            text-align: center;
-            margin: 40px 0;
-        }
-        
-        .body-image img {
-            max-width: 350px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .body-image-caption {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .article-container {
-                padding: 100px 20px 20px;
-            }
-            
-            .article-title {
-                font-size: 2rem;
-            }
-            
-            .comparison-table {
-                font-size: 0.9rem;
-            }
-            
-            .comparison-table th,
-            .comparison-table td {
-                padding: 10px;
-            }
-            
-            .hero-image img {
-                max-width: 100%;
-            }
-            
-            .body-image img {
-                max-width: 100%;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2"/>
-                    <path d="M30 50 L45 35 L60 50 L75 35" stroke="currentColor" stroke-width="2" fill="none"/>
-                    <circle cx="50" cy="65" r="8" fill="currentColor"/>
-                </svg>
-                Moonlight Analytica
-            </a>
-            <ul class="nav-menu">
-                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
-                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
-                <li><a href="news.html" class="nav-link">News</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
+        <div class="nav-content">
+            <a href="moonlight-complete-structure.html" class="logo">Moonlight Analytica</a>
         </div>
     </nav>
 
-    <!-- Article Content -->
-    <main class="article-container">
+    <div class="article-container">
+        <!-- Article Header - Google Format -->
         <header class="article-header">
-            <div class="article-category">VR/AR Technology</div>
+            <!-- Back to News Link -->
+            <div class="back-to-news">
+                <a href="/news.html">← Back to News</a>
+            </div>
+
+            <!-- Category Tag -->
+            <div class="category-tag">
+                <span class="category-pill">VR/AR TECH</span>
+            </div>
+
+            <!-- Main Title -->
             <h1 class="article-title">Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted to Lose</h1>
-            <p class="article-subtitle">How removing EyeSight transforms spatial computing back into antisocial VR</p>
+            
+            <!-- Subheading (italic description) -->
+            <div class="article-subheading">
+                <p>Apple removes EyeSight from Vision Pro 2, sacrificing the one feature that made spatial computing social instead of just another antisocial VR experience</p>
+            </div>
+
+            <!-- Author Line (above blue line) -->
+            <div class="article-author">
+                <span>Moonlight Analytica Research</span>
+            </div>
+
+            <!-- Meta Information -->
             <div class="article-meta">
-                📅 January 6, 2025 • ⏱ 6 min read • 👤 Tech Analysis Team
+                <span>Published: September 7, 2025</span>
+                <span>|</span>
+                <span>Read Time: 8 minutes</span>
+            </div>
+
+            <!-- Blue Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section (Apple theme) -->
+            <div class="company-logo-section">
+                <img src="10av2.png" alt="Apple Vision Pro Logo" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>Supply chain sources confirm Apple is removing the external EyeSight display from Vision Pro 2—the $500 component that shows your eyes to people around you, and the only feature early adopters consistently praised as "magical." The decision prioritizes profit margins over user experience, turning revolutionary spatial computing back into antisocial VR.</p>
             </div>
         </header>
 
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=500&h=300&fit=crop&q=80" alt="Apple Vision Pro VR headset" />
+        <!-- Holographic EyeSight Projection -->
+        <div class="holographic-eyesight">
+            <div class="holo-header">
+                <h2>👁️ EyeSight: The Holographic Connection</h2>
+                <p>Experience how Apple's revolutionary eye display created social connection through holographic projection</p>
+            </div>
+            <div class="holographic-stage">
+                <div class="vision-pro-headset">
+                    <div class="headset-body"></div>
+                    <div class="eyesight-display active">
+                        <div class="holographic-eyes">
+                            <div class="eye left-eye">
+                                <div class="pupil"></div>
+                                <div class="iris"></div>
+                            </div>
+                            <div class="eye right-eye">
+                                <div class="pupil"></div>
+                                <div class="iris"></div>
+                            </div>
+                        </div>
+                        <div class="holo-shimmer"></div>
+                    </div>
+                </div>
+                <div class="connection-beam"></div>
+                <div class="social-indicator">
+                    <div class="person-icon">👤</div>
+                    <div class="connection-status">Connected</div>
+                </div>
+                <div class="cost-overlay">
+                    <div class="cost-tag">$480 Component</div>
+                    <div class="removal-warning">⚠️ REMOVED in Gen 2</div>
+                </div>
+            </div>
         </div>
 
-        <div class="article-content">
-            <p>Supply chain sources confirm Apple is removing the external EyeSight display from Vision Pro 2—the $500 component that shows your eyes to people around you, and the only feature early adopters consistently praised as "magical."</p>
-
-            <p>The decision prioritizes profit margins over user experience in the most Apple way possible. EyeSight accounts for roughly 14% of Vision Pro's manufacturing cost but provides minimal competitive advantage in Apple's internal calculus.</p>
-
-            <div class="stat-highlight">
-                <h3>$480</h3>
-                <p>Cost savings per unit by removing EyeSight display</p>
+        <!-- Iris Wipe Cost Analysis -->
+        <div class="iris-wipe-analysis">
+            <div class="iris-header">
+                <h2>💰 The Cost-Cutting Iris Wipe</h2>
+                <p>Watch Apple's bean counters eliminate the magic through circular cost-cutting revelations</p>
             </div>
+            <div class="iris-container">
+                <div class="iris-wipe-circle">
+                    <div class="cost-segment manufacturing">
+                        <div class="segment-label">Manufacturing</div>
+                        <div class="segment-value">$480</div>
+                    </div>
+                    <div class="cost-segment weight">
+                        <div class="segment-label">Weight Saved</div>
+                        <div class="segment-value">260g</div>
+                    </div>
+                    <div class="cost-segment battery">
+                        <div class="segment-label">Battery Gain</div>
+                        <div class="segment-value">23%</div>
+                    </div>
+                    <div class="cost-segment social">
+                        <div class="segment-label">Social Cost</div>
+                        <div class="segment-value">∞</div>
+                    </div>
+                    <div class="iris-aperture"></div>
+                </div>
+                <div class="revelation-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-number">$480</div>
+                        <div class="stat-label">Cost per EyeSight</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📉</div>
+                        <div class="stat-number">-15%</div>
+                        <div class="stat-label">Manufacturing Cost</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-number">Zero</div>
+                        <div class="stat-label">Social Connection</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Prism Light Refraction Feature Breakdown -->
+        <div class="prism-refraction">
+            <div class="prism-header">
+                <h2>🔮 Feature Impact Spectrum</h2>
+                <p>See how removing EyeSight refracts Apple's vision into antisocial fragments</p>
+            </div>
+            <div class="prism-system">
+                <div class="light-source">
+                    <div class="source-beam">Spatial Computing Promise</div>
+                </div>
+                <div class="prism-crystal">
+                    <div class="crystal-face face1"></div>
+                    <div class="crystal-face face2"></div>
+                    <div class="crystal-face face3"></div>
+                    <div class="crystal-core">Vision Pro 2</div>
+                </div>
+                <div class="refracted-spectrum">
+                    <div class="spectrum-band social">
+                        <div class="band-label">Social Isolation</div>
+                        <div class="band-impact">High</div>
+                    </div>
+                    <div class="spectrum-band technical">
+                        <div class="band-label">Technical Specs</div>
+                        <div class="band-impact">Improved</div>
+                    </div>
+                    <div class="spectrum-band cost">
+                        <div class="band-label">Manufacturing</div>
+                        <div class="band-impact">Cheaper</div>
+                    </div>
+                    <div class="spectrum-band magic">
+                        <div class="band-label">Apple Magic</div>
+                        <div class="band-impact">Lost</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Article Content -->
+        <div class="article-content">
             <h2>From Revolutionary to Just Another VR Headset</h2>
-
+            
             <p>Developer documentation leaked in December shows Vision Pro 2 will feature a simple LED indicator instead—essentially turning users back into faceless VR zombies. The change reportedly saves $480 per unit while making the device 40% lighter and improving battery life by 23%.</p>
 
             <p>But EyeSight was never about technical specifications. It solved the social isolation problem that has plagued VR since inception. Users reported family members engaging normally when they could see eyes, versus avoiding interaction with a blank face mask.</p>
 
             <blockquote>
                 "With EyeSight, my kids would still talk to me during dinner. Without it, I'm basically dead to them when the headset's on."
-                <footer>— Maria Santos, Vision Pro early adopter</footer>
             </blockquote>
-
-            <div class="body-image">
-                <img src="https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=350&h=250&fit=crop&q=80" alt="Person wearing VR headset looking isolated" />
-                <div class="body-image-caption">VR isolation: The social problem EyeSight was designed to solve</div>
-            </div>
 
             <h2>The Numbers Behind Apple's Decision</h2>
 
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Feature Impact</th>
-                        <th>Vision Pro (Gen 1)</th>
-                        <th>Vision Pro 2 (Projected)</th>
-                        <th>Change</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Manufacturing Cost</td>
-                        <td>$3,200</td>
-                        <td>$2,720</td>
-                        <td>-15%</td>
-                    </tr>
-                    <tr>
-                        <td>Device Weight</td>
-                        <td>650g</td>
-                        <td>390g</td>
-                        <td>-40%</td>
-                    </tr>
-                    <tr>
-                        <td>Battery Life</td>
-                        <td>2.5 hours</td>
-                        <td>3.1 hours</td>
-                        <td>+23%</td>
-                    </tr>
-                    <tr>
-                        <td>Social Acceptance</td>
-                        <td>High</td>
-                        <td>Low</td>
-                        <td>📉</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>The Strategic Miscalculation</h3>
-
             <p>The removal signals Apple's shift from revolutionary product to profitable product. Vision Pro 2 will be cheaper, lighter, and longer-lasting—but it'll also be more antisocial, defeating the entire point of "spatial computing" as shared experience.</p>
 
-            <div class="warning-box">
-                <h4>⚠️ Market Positioning Risk</h4>
-                <p>Internal Apple documents suggest the company views EyeSight as unnecessary for their target market shift toward gaming and entertainment. But this misreads why Vision Pro succeeded where other VR failed: it didn't isolate users from their environment.</p>
-            </div>
+            <p>Internal Apple documents suggest the company views EyeSight as unnecessary for their target market shift toward gaming and entertainment. But this misreads why Vision Pro succeeded where other VR failed: it didn't isolate users from their environment.</p>
 
             <h2>What This Means for Spatial Computing</h2>
 
@@ -515,15 +204,706 @@
 
             <p>The irony is that Apple spent years marketing spatial computing as fundamentally different from VR because it maintained connection to the real world. EyeSight was the physical manifestation of this philosophy—a bridge between digital and physical social interaction.</p>
 
-            <div class="insight-box">
-                <h4>💡 The Bigger Picture</h4>
-                <p>This decision reflects Apple's broader challenge with Vision Pro: how to make a niche product mass-market without losing what made it special. Unfortunately, they're choosing to lose what made it special.</p>
-            </div>
+            <h2>The Strategic Miscalculation</h2>
+
+            <p>This decision reflects Apple's broader challenge with Vision Pro: how to make a niche product mass-market without losing what made it special. Unfortunately, they're choosing to lose what made it special.</p>
 
             <p>Early users who embraced Vision Pro specifically because it didn't turn them into antisocial VR zombies will likely skip the upgrade. Apple is solving the wrong problem—instead of making the technology more accessible, they're making it more isolating.</p>
 
-            <p>The question isn't whether Vision Pro 2 will be a better VR device—it probably will be. The question is whether anyone will care about VR when the promise was spatial computing that kept you connected to the world around you.</p>
+            <p><strong>The question isn't whether Vision Pro 2 will be a better VR device—it probably will be. The question is whether anyone will care about VR when the promise was spatial computing that kept you connected to the world around you.</strong></p>
         </div>
-    </main>
+    </div>
+
+    <style>
+        :root {
+            --primary-blue: #3b82f6;
+            --text-dark: #111827;
+            --text-gray: #6b7280;
+            --text-light: #9ca3af;
+            --background-gray: #fafafa;
+            --border-light: #e5e7eb;
+            --apple-silver: #f5f5f7;
+            --apple-blue: #007aff;
+            --hologram-cyan: #00e5ff;
+            --prism-purple: #9c27b0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #ffffff;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+        }
+
+        /* Google Format Header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .back-to-news {
+            margin-bottom: 2rem;
+        }
+
+        .back-to-news a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        .back-to-news a:hover {
+            text-decoration: underline;
+        }
+
+        .category-tag {
+            margin-bottom: 1.5rem;
+        }
+
+        .category-pill {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .article-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .article-subheading {
+            margin-bottom: 2rem;
+        }
+
+        .article-subheading p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            font-style: italic;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .article-author {
+            margin-bottom: 0.5rem;
+        }
+
+        .article-author span {
+            color: #374151;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .article-meta {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .article-meta span {
+            margin-right: 0.5rem;
+        }
+
+        .separator-line {
+            width: 100%;
+            height: 2px;
+            background: var(--primary-blue);
+            margin: 1.5rem 0 2rem 0;
+            border-radius: 1px;
+        }
+
+        .company-logo-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--background-gray);
+            border-radius: 8px;
+        }
+
+        .company-logo-image {
+            max-width: 300px;
+            max-height: 120px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .article-intro {
+            margin-bottom: 3rem;
+        }
+
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #374151;
+            font-weight: 400;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Holographic EyeSight Projection */
+        .holographic-eyesight {
+            margin: 4rem 0;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .holo-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .holo-header h2 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--hologram-cyan);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px var(--hologram-cyan);
+        }
+
+        .holo-header p {
+            color: #94a3b8;
+        }
+
+        .holographic-stage {
+            height: 350px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .vision-pro-headset {
+            width: 180px;
+            height: 120px;
+            position: relative;
+        }
+
+        .headset-body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            border-radius: 40px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+        }
+
+        .eyesight-display {
+            position: absolute;
+            top: 30%;
+            left: 15%;
+            width: 70%;
+            height: 40%;
+            background: rgba(0, 229, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: holographicFlicker 4s infinite ease-in-out;
+        }
+
+        .holographic-eyes {
+            display: flex;
+            gap: 20px;
+        }
+
+        .eye {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            animation: eyeBlink 6s infinite ease-in-out;
+        }
+
+        .iris {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, #007aff, #0051d5);
+            border-radius: 50%;
+            animation: eyeMove 8s infinite ease-in-out;
+        }
+
+        .pupil {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        .holo-shimmer {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, transparent, rgba(0, 229, 255, 0.1), transparent);
+            border-radius: 25px;
+            animation: holographicShimmer 3s infinite linear;
+        }
+
+        .connection-beam {
+            flex: 1;
+            height: 4px;
+            background: linear-gradient(90deg, var(--hologram-cyan), rgba(0, 229, 255, 0.1));
+            margin: 0 2rem;
+            animation: connectionPulse 2s infinite ease-in-out;
+        }
+
+        .social-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        .person-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--hologram-cyan));
+        }
+
+        .connection-status {
+            color: var(--hologram-cyan);
+            font-weight: 600;
+            text-shadow: 0 0 10px var(--hologram-cyan);
+        }
+
+        .cost-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .cost-tag {
+            background: rgba(0, 229, 255, 0.2);
+            color: var(--hologram-cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--hologram-cyan);
+        }
+
+        .removal-warning {
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: warningBlink 2s infinite ease-in-out;
+        }
+
+        /* Iris Wipe Analysis */
+        .iris-wipe-analysis {
+            margin: 4rem 0;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .iris-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .iris-header h2 {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .iris-header p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .iris-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .iris-wipe-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: irisRotation 10s infinite linear;
+        }
+
+        .cost-segment {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #333;
+            animation: segmentFloat 6s infinite ease-in-out;
+        }
+
+        .cost-segment.manufacturing { top: 10px; left: 50%; transform: translateX(-50%); animation-delay: 0s; }
+        .cost-segment.weight { top: 50%; right: 10px; transform: translateY(-50%); animation-delay: 1.5s; }
+        .cost-segment.battery { bottom: 10px; left: 50%; transform: translateX(-50%); animation-delay: 3s; }
+        .cost-segment.social { top: 50%; left: 10px; transform: translateY(-50%); animation-delay: 4.5s; }
+
+        .iris-aperture {
+            width: 120px;
+            height: 120px;
+            background: #000;
+            border-radius: 50%;
+            animation: irisWipe 8s infinite ease-in-out;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .revelation-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Prism Light Refraction */
+        .prism-refraction {
+            margin: 4rem 0;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .prism-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .prism-header h2 {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .prism-system {
+            height: 250px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .light-source {
+            width: 150px;
+            display: flex;
+            align-items: center;
+        }
+
+        .source-beam {
+            background: linear-gradient(90deg, white, rgba(255, 255, 255, 0.1));
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            animation: lightPulse 3s infinite ease-in-out;
+        }
+
+        .prism-crystal {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            animation: prismRotation 12s infinite linear;
+        }
+
+        .crystal-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(255, 0, 150, 0.3),
+                rgba(0, 255, 255, 0.3),
+                rgba(255, 255, 0, 0.3));
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .face1 { transform: rotate(0deg); }
+        .face2 { transform: rotate(120deg); }
+        .face3 { transform: rotate(240deg); }
+
+        .crystal-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 0 0 10px white;
+        }
+
+        .refracted-spectrum {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 200px;
+        }
+
+        .spectrum-band {
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: spectrumShimmer 4s infinite ease-in-out;
+        }
+
+        .spectrum-band.social {
+            background: linear-gradient(90deg, #ff4757, #ff6b7a);
+            animation-delay: 0s;
+        }
+
+        .spectrum-band.technical {
+            background: linear-gradient(90deg, #3742fa, #5352ed);
+            animation-delay: 1s;
+        }
+
+        .spectrum-band.cost {
+            background: linear-gradient(90deg, #2ed573, #7bed9f);
+            animation-delay: 2s;
+        }
+
+        .spectrum-band.magic {
+            background: linear-gradient(90deg, #ffa502, #ff6348);
+            animation-delay: 3s;
+        }
+
+        /* Article Content */
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin: 2.5rem 0 1.5rem;
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 1rem;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--primary-blue);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+        }
+
+        /* Animations */
+        @keyframes holographicFlicker {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes eyeBlink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        @keyframes eyeMove {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(5px, -3px); }
+            50% { transform: translate(-3px, 5px); }
+            75% { transform: translate(3px, -2px); }
+        }
+
+        @keyframes holographicShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { opacity: 0.6; transform: scaleX(1); }
+            50% { opacity: 1; transform: scaleX(1.1); }
+        }
+
+        @keyframes warningBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes irisRotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes segmentFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes irisWipe {
+            0% { clip-path: circle(0% at 50% 50%); }
+            50% { clip-path: circle(60% at 50% 50%); }
+            100% { clip-path: circle(0% at 50% 50%); }
+        }
+
+        @keyframes lightPulse {
+            0%, 100% { opacity: 0.8; box-shadow: 0 0 10px white; }
+            50% { opacity: 1; box-shadow: 0 0 30px white; }
+        }
+
+        @keyframes prismRotation {
+            0% { transform: rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateY(360deg) rotateZ(360deg); }
+        }
+
+        @keyframes spectrumShimmer {
+            0%, 100% { opacity: 0.8; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(5px); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .holographic-stage {
+                height: 250px;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .connection-beam {
+                width: 4px;
+                height: 50px;
+                margin: 1rem 0;
+            }
+            
+            .iris-wipe-circle {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .cost-segment {
+                width: 60px;
+                height: 60px;
+                font-size: 0.6rem;
+            }
+            
+            .prism-system {
+                height: 200px;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .refracted-spectrum {
+                width: 100%;
+            }
+        }
+    </style>
 </body>
 </html>
