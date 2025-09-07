@@ -7,6 +7,7 @@
     <meta name="description" content="Context windows will hit 10 million tokens by mid-2026, fundamentally changing AI capabilities and making current models seem primitive.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="custom-graphics.css">
+    <link rel="stylesheet" href="advanced-animations.css">
     
     <style>
         :root {
@@ -269,7 +270,11 @@
             <div style="color: var(--text-secondary); margin-top: 1rem;">January 7, 2025 • 6 min read • Future Tech</div>
         </header>
         
-        <div class="context-race-visual">
+        <div class="context-race-visual quantum-field">
+            <div class="quantum-particles"></div>
+            <div class="quantum-particles"></div>
+            <div class="quantum-particles"></div>
+            <div class="quantum-particles"></div>
             <div class="race-title">The Context Window Arms Race</div>
             <div class="timeline-race">
                 <div class="company-progress">
@@ -303,21 +308,25 @@
         </div>
         
         <div class="cost-breakdown">
-            <div class="cost-card">
+            <div class="cost-card" data-hint="Hover for detailed cost breakdown" title="Based on current GPT-4 pricing models scaled to 10M context">
                 <div class="cost-number">$50-100</div>
                 <div class="cost-label">Cost Per 10M Token Query</div>
+                <div class="interaction-hint"><span class="custom-lightbulb"></span></div>
             </div>
-            <div class="cost-card">
+            <div class="cost-card" data-hint="Equivalent text volume" title="Approximately 15 full-length novels or 30,000 pages">
                 <div class="cost-number">7.5M</div>
                 <div class="cost-label">Words in 10M Tokens</div>
+                <div class="interaction-hint"><span class="custom-chart-bar"></span></div>
             </div>
-            <div class="cost-card">
+            <div class="cost-card" data-hint="Literary comparison" title="War and Peace, Lord of the Rings, Harry Potter series combined">
                 <div class="cost-number">15</div>
                 <div class="cost-label">Full Novels Worth</div>
+                <div class="interaction-hint"><span class="custom-book"></span></div>
             </div>
-            <div class="cost-card">
+            <div class="cost-card" data-hint="Industry projections" title="Conservative estimate based on current development timelines">
                 <div class="cost-number">Q4 2026</div>
                 <div class="cost-label">Target Timeline</div>
+                <div class="interaction-hint"><span class="custom-clock"></span></div>
             </div>
         </div>
         
