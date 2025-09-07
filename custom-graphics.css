@@ -1,0 +1,425 @@
+/* 
+ * MOONLIGHT ANALYTICA CUSTOM GRAPHICS SYSTEM
+ * ZERO TOLERANCE EMOJI REPLACEMENT - All icons are custom designed
+ */
+
+/* Base Custom Icon Styles */
+.custom-icon {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin: 0 8px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.custom-icon-large {
+    width: 48px;
+    height: 48px;
+}
+
+/* 🚨 LIGHTNING/ENERGY GRAPHICS (replaces ⚡) */
+.custom-lightning {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.custom-lightning::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid #00bfff;
+    border-top: 12px solid #00bfff;
+    transform: rotate(15deg);
+    animation: lightningPulse 2s infinite;
+}
+
+.custom-lightning::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid #87ceeb;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid #87ceeb;
+    transform: rotate(15deg);
+    animation: lightningPulse 2s infinite 0.5s;
+}
+
+@keyframes lightningPulse {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.6; }
+}
+
+/* 💰 CURRENCY/MONEY GRAPHICS (replaces 💰) */
+.custom-currency {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border: 3px solid #00bfff;
+    border-radius: 50%;
+    background: radial-gradient(circle, #003355, #001122);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.custom-currency::before {
+    content: '$';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #00bfff;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 0 10px #00bfff;
+    animation: shimmerPulse 3s infinite;
+}
+
+@keyframes shimmerPulse {
+    0%, 100% { text-shadow: 0 0 10px #00bfff; }
+    50% { text-shadow: 0 0 20px #00bfff, 0 0 30px #87ceeb; }
+}
+
+/* 📊 CHART/ANALYTICS GRAPHICS (replaces 📊) */
+.custom-chart {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(145deg, #001122, #003355);
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+.custom-chart::before {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    width: 4px;
+    height: 12px;
+    background: linear-gradient(to top, #00bfff, #87ceeb);
+    border-radius: 2px;
+    animation: chartGrow 2s infinite;
+}
+
+.custom-chart::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 16px;
+    width: 4px;
+    height: 8px;
+    background: linear-gradient(to top, #00bfff, #87ceeb);
+    border-radius: 2px;
+    animation: chartGrow 2s infinite 0.5s;
+}
+
+@keyframes chartGrow {
+    0%, 100% { transform: scaleY(0.5); }
+    50% { transform: scaleY(1); }
+}
+
+/* 🔥 FIRE/FLAME GRAPHICS (replaces 🔥) */
+.custom-fire {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.custom-fire::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 24px;
+    background: linear-gradient(to top, #ff4500, #ff6347, #ffa500);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flameFlicker 1.5s infinite alternate;
+}
+
+.custom-fire::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 16px;
+    background: linear-gradient(to top, #ffff00, #ffa500);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flameFlicker 1.2s infinite alternate-reverse;
+}
+
+@keyframes flameFlicker {
+    0% { transform: translateX(-50%) scaleY(1) skewX(0deg); }
+    100% { transform: translateX(-50%) scaleY(1.1) skewX(2deg); }
+}
+
+/* 🏢 BUILDING/OFFICE GRAPHICS (replaces 🏢) */
+.custom-building {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(to top, #001122, #003355);
+    border-radius: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid #00bfff;
+}
+
+.custom-building::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 6px;
+    height: 6px;
+    background: #00bfff;
+    border-radius: 1px;
+    box-shadow: 
+        10px 0 0 #00bfff,
+        0 8px 0 #00bfff,
+        10px 8px 0 #00bfff,
+        0 16px 0 #00bfff,
+        10px 16px 0 #00bfff;
+    animation: buildingLights 3s infinite;
+}
+
+@keyframes buildingLights {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* 📅 CALENDAR/DATE GRAPHICS (replaces 📅) */
+.custom-calendar {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid #00bfff;
+}
+
+.custom-calendar::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 6px;
+    width: 4px;
+    height: 8px;
+    background: #00bfff;
+    border-radius: 2px;
+    box-shadow: 12px 0 0 #00bfff;
+}
+
+.custom-calendar::after {
+    content: attr(data-date);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #00bfff;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+/* 🎯 TARGET/PRECISION GRAPHICS (replaces 🎯) */
+.custom-target {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border: 3px solid #00bfff;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 30%, #00bfff 32%, #00bfff 34%, transparent 36%);
+    display: inline-block;
+    vertical-align: middle;
+    animation: targetPulse 2s infinite;
+}
+
+.custom-target::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #00bfff;
+    border-radius: 50%;
+}
+
+@keyframes targetPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* 🏛️ GOVERNMENT/INSTITUTIONAL GRAPHICS (replaces 🏛️) */
+.custom-government {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.custom-government::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(to top, #003355, #00557f);
+    border-radius: 4px 4px 0 0;
+}
+
+.custom-government::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 8px solid #00bfff;
+}
+
+/* ⚠️ WARNING/ALERT GRAPHICS (replaces ⚠️) */
+.custom-warning {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.custom-warning::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-bottom: 24px solid #ffa500;
+    animation: warningBlink 1s infinite alternate;
+}
+
+.custom-warning::after {
+    content: '!';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    animation: warningBlink 1s infinite alternate;
+}
+
+@keyframes warningBlink {
+    0% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* 💻 COMPUTER/TECH GRAPHICS (replaces 💻) */
+.custom-computer {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.custom-computer::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 2px;
+    width: 24px;
+    height: 16px;
+    background: linear-gradient(145deg, #001122, #003355);
+    border: 2px solid #00bfff;
+    border-radius: 2px;
+}
+
+.custom-computer::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 6px;
+    width: 16px;
+    height: 6px;
+    background: linear-gradient(145deg, #003355, #00557f);
+    border-radius: 0 0 8px 8px;
+}
+
+/* Hover Effects for All Custom Icons */
+.custom-icon:hover,
+.custom-lightning:hover,
+.custom-currency:hover,
+.custom-chart:hover,
+.custom-fire:hover,
+.custom-building:hover,
+.custom-calendar:hover,
+.custom-target:hover,
+.custom-government:hover,
+.custom-warning:hover,
+.custom-computer:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Responsive Scaling */
+@media (max-width: 768px) {
+    .custom-icon,
+    .custom-lightning,
+    .custom-currency,
+    .custom-chart,
+    .custom-fire,
+    .custom-building,
+    .custom-calendar,
+    .custom-target,
+    .custom-government,
+    .custom-warning,
+    .custom-computer {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .custom-icon-large {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* Integration with Article Headers */
+.article-header .custom-icon {
+    margin: 0 12px 0 0;
+}
+
+.article-meta .custom-icon {
+    width: 20px;
+    height: 20px;
+    margin: 0 6px;
+}
