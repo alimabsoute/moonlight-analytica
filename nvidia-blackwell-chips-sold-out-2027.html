@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVIDIA's Blackwell Chips Are Sold Out Until 2027—These 5 Companies Got Them All - Moonlight Analytica</title>
+    <meta name="description" content="NVIDIA's Blackwell B200 chips are sold out until 2027, with just 5 tech giants securing 89% of production worth $57.8B. Inside the secret allocation that will determine AI's future.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyber-blue: #00bfff;
+            --cyber-cyan: #87ceeb;
+            --cyber-green: #00ff88;
+            --cyber-purple: #8a2be2;
+            --dark-bg: #0a0e1a;
+            --darker-bg: #050810;
+            --card-bg: #1a1f35;
+            --text-primary: #ffffff;
+            --text-secondary: #b8c4d8;
+            --accent-glow: 0 0 20px rgba(0, 191, 255, 0.3);
+            --chip-gold: #ffd700;
+            --danger-red: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--cyber-blue);
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--cyber-blue);
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 140px 2rem 4rem;
+        }
+
+        /* Article Header */
+        .article-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .article-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-cyan));
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: var(--accent-glow);
+        }
+
+        .chip-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--chip-gold);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .chip-icon::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: var(--darker-bg);
+            border-radius: 1px;
+        }
+
+        .article-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), var(--cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .article-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-weight: 500;
+        }
+
+        /* Key Stats Section */
+        .key-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2);
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--cyber-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Interactive Allocation Visualization */
+        .allocation-section {
+            margin: 5rem 0;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chip-allocation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .company-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .company-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-cyan));
+            border-radius: 4px 4px 0 0;
+        }
+
+        .company-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.3);
+            border-color: var(--cyber-blue);
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .company-percentage {
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-green));
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .chip-visual {
+            width: 100%;
+            height: 60px;
+            background: var(--darker-bg);
+            border: 2px solid var(--cyber-blue);
+            border-radius: 8px;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chip-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-cyan));
+            border-radius: 6px;
+            transition: width 2s ease-out;
+            position: relative;
+        }
+
+        .chip-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: chipShine 2s ease-in-out infinite;
+        }
+
+        @keyframes chipShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .company-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--cyber-blue);
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.3);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Supply Timeline */
+        .timeline-section {
+            margin: 6rem 0;
+        }
+
+        .supply-timeline {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .timeline-item {
+            text-align: center;
+            position: relative;
+        }
+
+        .timeline-year {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--cyber-blue);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-status {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-sold-out {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+        }
+
+        .status-limited {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--chip-gold);
+            color: var(--chip-gold);
+        }
+
+        .status-available {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--cyber-green);
+            color: var(--cyber-green);
+        }
+
+        /* Performance Comparison */
+        .performance-section {
+            margin: 6rem 0;
+        }
+
+        .performance-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .chip-comparison {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .chip-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .chip-model {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .performance-bars {
+            margin: 2rem 0;
+        }
+
+        .performance-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .performance-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .performance-bar {
+            height: 8px;
+            background: rgba(0, 191, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .performance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-green));
+            border-radius: 4px;
+            transition: width 2s ease-out;
+        }
+
+        /* Quote Section */
+        .quote-section {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(135, 206, 235, 0.1));
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .quote-section::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 6rem;
+            color: var(--cyber-blue);
+            opacity: 0.3;
+            font-family: serif;
+        }
+
+        .quote-text {
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            color: var(--cyber-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Article Content */
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .article-content p {
+            margin-bottom: 2rem;
+        }
+
+        .article-content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 3rem 0 2rem;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .article-container {
+                padding: 120px 1rem 2rem;
+            }
+
+            .key-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .chip-allocation {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .performance-comparison {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .company-details {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .timeline-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .supply-timeline {
+                padding: 2rem 1.5rem;
+            }
+
+            .quote-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .quote-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .key-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="moonlight-complete-structure.html" class="logo">Moonlight Analytica</a>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link">Insights</a></li>
+                <li><a href="#" class="nav-link">Products</a></li>
+                <li><a href="#" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="article-container">
+        <div class="article-header">
+            <div class="article-category">
+                <div class="chip-icon"></div>
+                AI Hardware
+            </div>
+            <h1 class="article-title">NVIDIA's Blackwell Chips Are Sold Out Until 2027—These 5 Companies Got Them All</h1>
+            <p class="article-subtitle">The secret allocation list that determines AI's future winners has leaked, revealing how five tech giants secured 89% of production worth $57.8B through 2027.</p>
+        </div>
+
+        <!-- Key Statistics -->
+        <div class="key-stats">
+            <div class="stat-card">
+                <div class="stat-number">89%</div>
+                <div class="stat-label">Controlled by 5 Companies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">$57.8B</div>
+                <div class="stat-label">Total Contract Value</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2027</div>
+                <div class="stat-label">Sold Out Until</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1.4M</div>
+                <div class="stat-label">Total Units Allocated</div>
+            </div>
+        </div>
+
+        <!-- Interactive Allocation Visualization -->
+        <div class="allocation-section">
+            <h2 class="section-title">The Big Five Allocation Breakdown</h2>
+            <div class="chip-allocation">
+                <div class="company-card" onclick="highlightCompany('microsoft')">
+                    <div class="company-header">
+                        <div class="company-name">Microsoft</div>
+                        <div class="company-percentage">28%</div>
+                    </div>
+                    <div class="chip-visual">
+                        <div class="chip-fill" style="width: 28%"></div>
+                    </div>
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <div class="detail-value">450K</div>
+                            <div class="detail-label">Units</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">$18.2B</div>
+                            <div class="detail-label">Value</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-card" onclick="highlightCompany('meta')">
+                    <div class="company-header">
+                        <div class="company-name">Meta</div>
+                        <div class="company-percentage">24%</div>
+                    </div>
+                    <div class="chip-visual">
+                        <div class="chip-fill" style="width: 24%"></div>
+                    </div>
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <div class="detail-value">380K</div>
+                            <div class="detail-label">Units</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">$15.4B</div>
+                            <div class="detail-label">Value</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-card" onclick="highlightCompany('google')">
+                    <div class="company-header">
+                        <div class="company-name">Google</div>
+                        <div class="company-percentage">20%</div>
+                    </div>
+                    <div class="chip-visual">
+                        <div class="chip-fill" style="width: 20%"></div>
+                    </div>
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <div class="detail-value">320K</div>
+                            <div class="detail-label">Units</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">$13.0B</div>
+                            <div class="detail-label">Value</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-card" onclick="highlightCompany('amazon')">
+                    <div class="company-header">
+                        <div class="company-name">Amazon</div>
+                        <div class="company-percentage">11%</div>
+                    </div>
+                    <div class="chip-visual">
+                        <div class="chip-fill" style="width: 11%"></div>
+                    </div>
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <div class="detail-value">180K</div>
+                            <div class="detail-label">Units</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">$7.3B</div>
+                            <div class="detail-label">Value</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-card" onclick="highlightCompany('openai')">
+                    <div class="company-header">
+                        <div class="company-name">OpenAI</div>
+                        <div class="company-percentage">6%</div>
+                    </div>
+                    <div class="chip-visual">
+                        <div class="chip-fill" style="width: 6%"></div>
+                    </div>
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <div class="detail-value">95K</div>
+                            <div class="detail-label">Units</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">$3.9B</div>
+                            <div class="detail-label">Value</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quote Section -->
+        <div class="quote-section">
+            <div class="quote-text">"Jensen [Huang] essentially picked the AI winners for the next three years. If you're not on this list, you're not competing in frontier AI."</div>
+            <div class="quote-author">Source familiar with NVIDIA's allocation process</div>
+        </div>
+
+        <!-- Supply Timeline -->
+        <div class="timeline-section">
+            <h2 class="section-title">Supply Shortage Timeline</h2>
+            <div class="supply-timeline">
+                <div class="timeline-grid">
+                    <div class="timeline-item">
+                        <div class="timeline-year">2024</div>
+                        <div class="timeline-status status-sold-out">
+                            SOLD OUT<br>
+                            <small>All major allocations finalized</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2025</div>
+                        <div class="timeline-status status-sold-out">
+                            SOLD OUT<br>
+                            <small>Production fully committed</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2026</div>
+                        <div class="timeline-status status-sold-out">
+                            SOLD OUT<br>
+                            <small>Waiting list only</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2027</div>
+                        <div class="timeline-status status-limited">
+                            LIMITED<br>
+                            <small>Late 2027 availability</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2028</div>
+                        <div class="timeline-status status-available">
+                            AVAILABLE<br>
+                            <small>Next-gen architecture</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Comparison -->
+        <div class="performance-section">
+            <h2 class="section-title">Blackwell vs Previous Generation</h2>
+            <div class="performance-comparison">
+                <div class="chip-comparison">
+                    <div class="chip-name">H100</div>
+                    <div class="chip-model">Previous Generation</div>
+                    <div class="performance-bars">
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>AI Performance</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Memory Bandwidth</span>
+                                <span>3.35 TB/s</span>
+                            </div>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Power Efficiency</span>
+                                <span>Standard</span>
+                            </div>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: 35%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chip-comparison">
+                    <div class="chip-name">Blackwell B200</div>
+                    <div class="chip-model">Next Generation</div>
+                    <div class="performance-bars">
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>AI Performance</span>
+                                <span>500%</span>
+                            </div>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Memory Bandwidth</span>
+                                <span>8.0 TB/s</span>
+                            </div>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Power Efficiency</span>
+                                <span>4x Better</span>
+                            </div>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article Content -->
+        <div class="article-content">
+            <p>The allocation process wasn't based purely on money—though these companies will spend a combined $57.8 billion. NVIDIA prioritized "strategic partnerships" and "ecosystem alignment," effectively choosing which companies get to build AGI and which get left behind.</p>
+            
+            <h2>The Kingmaking Process</h2>
+            <p>Companies not on the list are scrambling for alternatives. Anthropic, valued at $60 billion, can't get meaningful Blackwell allocation until late 2027. They're reportedly considering partnerships with Chinese chip manufacturers despite obvious geopolitical risks.</p>
+            
+            <p>The scarcity is artificial but effective. NVIDIA could increase production but chooses not to, maintaining pricing power while determining industry structure. It's the most consequential supply constraint in tech history.</p>
+            
+            <p>For smaller AI companies, this is an extinction event. Without Blackwell chips, they can't train models competitive with GPT-5 or Claude 4. The AI race is over before it began, decided by silicon allocation rather than algorithmic innovation.</p>
+
+            <h2>Market Impact and Implications</h2>
+            <p>This unprecedented concentration of AI computing power in the hands of five companies has far-reaching implications for the future of artificial intelligence. The barrier to entry for new AI competitors has essentially become insurmountable without access to cutting-edge hardware.</p>
+
+            <p>The ripple effects extend beyond just AI development. Cloud computing services, autonomous vehicles, scientific research, and countless other sectors that depend on high-performance AI processing are now at the mercy of these allocation decisions made behind closed doors.</p>
+
+            <p>Industry experts warn this could stifle innovation and create an oligopoly in the AI space, with smaller companies and startups unable to compete effectively. The democratization of AI that many hoped for may be further away than ever, controlled by silicon rather than software.</p>
+        </div>
+    </main>
+
+    <script>
+        // Initialize animations when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat cards on scroll
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animated elements
+            document.querySelectorAll('.stat-card, .company-card, .chip-comparison').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+
+            // Animate chip fills
+            setTimeout(() => {
+                document.querySelectorAll('.chip-fill').forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0%';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }, 1000);
+
+            // Animate performance bars
+            setTimeout(() => {
+                document.querySelectorAll('.performance-fill').forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0%';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }, 1500);
+        });
+
+        // Company card interactions
+        function highlightCompany(company) {
+            // Add pulse effect to clicked card
+            const cards = document.querySelectorAll('.company-card');
+            cards.forEach(card => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 5px 20px rgba(0, 191, 255, 0.1)';
+            });
+
+            // Highlight selected card
+            const selectedCard = event.currentTarget;
+            selectedCard.style.transform = 'translateY(-12px)';
+            selectedCard.style.boxShadow = '0 20px 50px rgba(0, 191, 255, 0.4)';
+            
+            // Reset after 2 seconds
+            setTimeout(() => {
+                selectedCard.style.transform = 'translateY(-8px)';
+                selectedCard.style.boxShadow = '0 15px 40px rgba(0, 191, 255, 0.3)';
+            }, 2000);
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Add smooth scroll behavior for future navigation
+            });
+        });
+    </script>
+</body>
+</html>

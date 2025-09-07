@@ -638,6 +638,7 @@
             transition: all 0.3s ease;
             position: relative;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
         }
         
         .news-card::after {
@@ -664,13 +665,24 @@
         
         .card-image {
             width: 100%;
-            height: 200px;
+            height: 250px;
             background: linear-gradient(135deg, rgba(0, 191, 255, 0.05), rgba(135, 206, 235, 0.02));
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            opacity: 0.5;
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        .card-image img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            opacity: 1;
+            border-radius: 0;
         }
         
         .card-content {
@@ -1099,112 +1111,188 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                                 <span class="meta-item">⏱️ 12 min read</span>
                                 <span class="meta-item">👤 Tech Analysis Team</span>
                             </div>
-                            <a href="google-nano-banana-photoshop-killer.html" class="read-more">Read Full Article →</a>
+                            <a href="https://moonlight-website-deploy-nsj50v0q5-alimabsoute-3065s-projects.vercel.app/google-nano-banana-photoshop-killer.html" class="read-more">Read Full Article →</a>
                         </div>
                     </div>
                 </article>
                 
                 <!-- News Cards -->
-                <article class="news-card">
-                    <div class="card-image">🤖</div>
+                <article class="news-card" onclick="window.open('openai-o1-refusal-pattern-analysis.html', '_blank')">
+                    <div class="card-image">
+                        <img src="1a.png" alt="OpenAI o1 Analysis">
+                    </div>
                     <div class="card-content">
-                        <span class="card-category">AI & Machine Learning</span>
-                        <h3 class="card-title">Google's Gemini Ultra Beats GPT-4 in Benchmark Tests</h3>
-                        <p class="card-excerpt">Latest benchmarks show Google's Gemini Ultra achieving state-of-the-art performance across multiple domains...</p>
+                        <span class="card-category">AI Analysis</span>
+                        <h3 class="card-title">OpenAI o1's Hidden Refusal Pattern: What 47,000 Prompts Revealed</h3>
+                        <p class="card-excerpt">Exclusive data reveals OpenAI o1's systematic refusal behaviors across creative tasks, exposing a fundamental design philosophy that prioritizes safety over user autonomy...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 2 hours ago</span>
+                            <span class="card-read-time">⏱️ 8 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('iphone-17-ai-demo-failure-analysis.html', '_blank')">
+                    <div class="card-image">
+                        <img src="2a.png" alt="iPhone 17 Demo Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Mobile Technology</span>
+                        <h3 class="card-title">iPhone 17 AI Demo Disaster: When Siri Failed on Stage</h3>
+                        <p class="card-excerpt">Apple's most anticipated AI demonstration turned into a public relations nightmare when Siri repeatedly failed to understand basic commands during the iPhone 17 reveal...</p>
                         <div class="card-meta">
                             <span class="card-date">📅 4 hours ago</span>
-                            <span class="card-read-time">⏱️ 3 min</span>
-                        </div>
-                    </div>
-                </article>
-                
-                <article class="news-card">
-                    <div class="card-image">☁️</div>
-                    <div class="card-content">
-                        <span class="card-category">Cloud Computing</span>
-                        <h3 class="card-title">AWS Launches Quantum Computing Service in 10 New Regions</h3>
-                        <p class="card-excerpt">Amazon Web Services expands its quantum computing offerings, making the technology more accessible to developers worldwide...</p>
-                        <div class="card-meta">
-                            <span class="card-date">📅 6 hours ago</span>
-                            <span class="card-read-time">⏱️ 4 min</span>
-                        </div>
-                    </div>
-                </article>
-                
-                <article class="news-card">
-                    <div class="card-image">🔒</div>
-                    <div class="card-content">
-                        <span class="card-category">Security</span>
-                        <h3 class="card-title">Major Security Vulnerability Discovered in Popular Framework</h3>
-                        <p class="card-excerpt">Security researchers have identified a critical vulnerability affecting millions of applications using the framework...</p>
-                        <div class="card-meta">
-                            <span class="card-date">📅 9 hours ago</span>
                             <span class="card-read-time">⏱️ 7 min</span>
                         </div>
                     </div>
                 </article>
                 
-                <article class="news-card">
+                <article class="news-card" onclick="window.open('big-tech-50m-lobbying-california-ai-bill.html', '_blank')">
                     <div class="card-image">
-                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
-                            <rect x="4" y="10" width="32" height="20" rx="2" stroke="#00bfff" stroke-width="2" fill="rgba(0, 191, 255, 0.05)"/>
-                            <path d="M8 18h8M20 18h8M8 22h12M24 22h4" stroke="#87ceeb" stroke-width="1.5" stroke-linecap="round"/>
-                            <circle cx="30" cy="8" r="6" stroke="#4682b4" stroke-width="2" fill="rgba(70, 130, 180, 0.1)"/>
-                            <path d="M26 8h8M30 4v8" stroke="#87ceeb" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
+                        <img src="3a.png" alt="AI Lobbying Analysis">
                     </div>
                     <div class="card-content">
-                        <span class="card-category">Productivity</span>
-                        <h3 class="card-title">AI-Powered Time Tracking Shows 40% Productivity Increase</h3>
-                        <p class="card-excerpt">Recent studies demonstrate significant productivity gains when organizations implement intelligent time tracking systems with automated insights and behavioral analytics...</p>
+                        <span class="card-category">Policy & Regulation</span>
+                        <h3 class="card-title">Big Tech's $50M California AI Bill Lobbying Blitz Exposed</h3>
+                        <p class="card-excerpt">Internal documents reveal how Silicon Valley giants coordinated a massive lobbying campaign to water down California's landmark AI safety legislation...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 12 hours ago</span>
-                            <span class="card-read-time">⏱️ 3 min</span>
+                            <span class="card-date">📅 6 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
                         </div>
                     </div>
                 </article>
                 
-                <article class="news-card">
+                <article class="news-card" onclick="window.open('amazon-shadow-workforce-purge-10000-contractors.html', '_blank')">
                     <div class="card-image">
-                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
-                            <path d="M20 4l16 12v16a4 4 0 01-4 4H8a4 4 0 01-4-4V16L20 4z" stroke="#87ceeb" stroke-width="2" fill="rgba(135, 206, 235, 0.05)"/>
-                            <path d="M8 16l12 8 12-8" stroke="#00bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="20" cy="24" r="3" stroke="#4682b4" stroke-width="2" fill="rgba(70, 130, 180, 0.2)"/>
-                        </svg>
+                        <img src="4a.png" alt="Amazon Workforce Analysis">
                     </div>
                     <div class="card-content">
-                        <span class="card-category">Resume Tech</span>
-                        <h3 class="card-title">ATS Systems Evolve with AI to Better Match Candidate Skills</h3>
-                        <p class="card-excerpt">Modern Applicant Tracking Systems integrate advanced AI algorithms to improve candidate matching, reducing hiring bias and improving job placement success rates...</p>
+                        <span class="card-category">Corporate Strategy</span>
+                        <h3 class="card-title">Amazon's Shadow Workforce Purge: 10,000 Contractors Vanish</h3>
+                        <p class="card-excerpt">Amazon quietly terminated thousands of contract workers without public disclosure, revealing a hidden cost-cutting strategy that bypasses traditional layoff reporting...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 1 day ago</span>
-                            <span class="card-read-time">⏱️ 4 min</span>
+                            <span class="card-date">📅 8 hours ago</span>
+                            <span class="card-read-time">⏱️ 9 min</span>
                         </div>
                     </div>
                 </article>
                 
-                <article class="news-card">
-                    <div class="card-image">🚀</div>
+                <article class="news-card" onclick="window.open('nvidia-blackwell-chips-sold-out-2027.html', '_blank')">
+                    <div class="card-image">
+                        <img src="5a.png" alt="NVIDIA Blackwell Analysis">
+                    </div>
                     <div class="card-content">
-                        <span class="card-category">Startups</span>
-                        <h3 class="card-title">AI Startup Raises $500M at $10B Valuation</h3>
-                        <p class="card-excerpt">The latest funding round positions the company as one of the most valuable AI startups in Silicon Valley...</p>
+                        <span class="card-category">Hardware</span>
+                        <h3 class="card-title">NVIDIA's Blackwell Chips Already Sold Out Through 2027</h3>
+                        <p class="card-excerpt">Industry sources confirm that NVIDIA's next-generation Blackwell architecture is completely booked for the next three years, creating a potential AI development bottleneck...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 12 hours ago</span>
+                            <span class="card-date">📅 10 hours ago</span>
                             <span class="card-read-time">⏱️ 5 min</span>
                         </div>
                     </div>
                 </article>
                 
-                <article class="news-card">
-                    <div class="card-image">💻</div>
+                <article class="news-card" onclick="window.open('intel-secret-plan-split-500b-semiconductor-war.html', '_blank')">
+                    <div class="card-image">
+                        <img src="7a.png" alt="Intel Split Analysis">
+                    </div>
                     <div class="card-content">
-                        <span class="card-category">Development</span>
-                        <h3 class="card-title">React 19 Released with Game-Changing Features</h3>
-                        <p class="card-excerpt">The new version introduces server components, improved performance, and revolutionary developer experience enhancements...</p>
+                        <span class="card-category">Semiconductors</span>
+                        <h3 class="card-title">Intel's Secret Plan to Split Will Trigger $500B Semiconductor War</h3>
+                        <p class="card-excerpt">Intel's inevitable foundry separation will trigger the largest supply chain realignment in semiconductor history, with the split potentially happening as soon as Q3 2025...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 1 day ago</span>
+                            <span class="card-date">📅 12 hours ago</span>
                             <span class="card-read-time">⏱️ 7 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('10-million-token-arms-race-chatgpt-calculator.html', '_blank')">
+                    <div class="card-image">
+                        <img src="8a.png" alt="Token Arms Race Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI & ML</span>
+                        <h3 class="card-title">The 10-Million Token Arms Race That Will Make ChatGPT Look Like a Calculator</h3>
+                        <p class="card-excerpt">Context windows will hit 10 million tokens by mid-2026, fundamentally changing AI capabilities and making current models seem primitive...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 14 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('ai-eating-own-tail-chatgpt-dumber-2026.html', '_blank')">
+                    <div class="card-image">
+                        <img src="6a.png" alt="AI Quality Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI Research</span>
+                        <h3 class="card-title">AI Eating Its Own Tail: Why ChatGPT Gets Dumber by 2026</h3>
+                        <p class="card-excerpt">New research reveals how AI models trained on AI-generated content experience rapid quality degradation, potentially leading to a collapse in capabilities...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 12 hours ago</span>
+                            <span class="card-read-time">⏱️ 7 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('meta-google-apple-twitter-killers-march-2026.html', '_blank')">
+                    <div class="card-image">
+                        <img src="7a.png" alt="Social Media Evolution">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Social Media</span>
+                        <h3 class="card-title">Meta, Google, Apple: The Twitter Killers March Toward 2026</h3>
+                        <p class="card-excerpt">Three tech giants are positioning themselves to capture Twitter's displaced user base, each with fundamentally different approaches to social networking...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 14 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('intel-secret-plan-split-500b-semiconductor-war.html', '_blank')">
+                    <div class="card-image">
+                        <img src="8a.png" alt="Intel Strategy Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Semiconductors</span>
+                        <h3 class="card-title">Intel's Secret Plan to Split: The $500B Semiconductor War</h3>
+                        <p class="card-excerpt">Internal documents reveal Intel's drastic restructuring plan to separate its manufacturing and design divisions, marking a seismic shift in the chip industry...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 16 hours ago</span>
+                            <span class="card-read-time">⏱️ 8 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('10-million-token-arms-race-chatgpt-calculator.html', '_blank')">
+                    <div class="card-image">
+                        <img src="9a.png" alt="Token Context Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI Technology</span>
+                        <h3 class="card-title">The 10 Million Token Arms Race: When ChatGPT Became a Calculator</h3>
+                        <p class="card-excerpt">As AI models expand their context windows to unprecedented lengths, they're becoming less conversational and more computational, fundamentally changing their nature...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 18 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card" onclick="window.open('vision-pro-2-ditching-500-feature-wanted.html', '_blank')">
+                    <div class="card-image">
+                        <img src="10a.png" alt="Vision Pro Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">VR/AR Technology</span>
+                        <h3 class="card-title">Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted</h3>
+                        <p class="card-excerpt">Apple plans to remove the controversial EyeSight feature from Vision Pro 2, acknowledging that the external display was more gimmick than genuine innovation...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 20 hours ago</span>
+                            <span class="card-read-time">⏱️ 5 min</span>
                         </div>
                     </div>
                 </article>
