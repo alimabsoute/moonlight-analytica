@@ -67,7 +67,7 @@
         <!-- Wormhole Request Portal Visualization -->
         <div class="wormhole-refusal-system">
             <div class="wormhole-header">
-                <h2>🌌 The OpenAI Request Wormhole</h2>
+                <h2><span class="custom-galaxy"><div class="galaxy-center"></div><div class="galaxy-arm"></div><div class="galaxy-arm"></div><div class="galaxy-arm"></div><div class="galaxy-stars"></div></span> The OpenAI Request Wormhole</h2>
                 <p>Watch how user requests travel through dimensional portals, only to disappear into refusal voids</p>
             </div>
             <div class="wormhole-container">
@@ -263,6 +263,112 @@
             --matrix-green: #10b981;
         }
 
+        /* Custom Graphics - WORKFLOW COMPLIANCE */
+        .custom-galaxy {
+            position: relative;
+            display: inline-flex;
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle, #1e1b4b 0%, #312e81 40%, #3730a3 100%);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: galaxyRotate 8s linear infinite;
+            vertical-align: middle;
+        }
+        
+        .galaxy-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #ffffff 0%, #60a5fa 100%);
+            border-radius: 50%;
+            animation: galaxyPulse 2s ease-in-out infinite;
+        }
+        
+        .galaxy-arm {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center;
+            width: 12px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #60a5fa 50%, transparent 100%);
+            animation: galaxySpin 4s linear infinite;
+        }
+        
+        .galaxy-arm:nth-child(2) {
+            transform: rotate(60deg);
+            animation-delay: -1.33s;
+        }
+        
+        .galaxy-arm:nth-child(3) {
+            transform: rotate(120deg);
+            animation-delay: -2.66s;
+        }
+        
+        .galaxy-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .galaxy-stars::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+        
+        .galaxy-stars::after {
+            content: '';
+            position: absolute;
+            top: 70%;
+            right: 25%;
+            width: 1px;
+            height: 1px;
+            background: #60a5fa;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite 1s;
+        }
+        
+        @keyframes galaxyRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes galaxyPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 4px rgba(96, 165, 250, 0.6);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2);
+                box-shadow: 0 0 12px rgba(96, 165, 250, 0.9);
+            }
+        }
+        
+        @keyframes galaxySpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -394,17 +500,57 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 3rem 0;
-            padding: 2rem;
-            background: var(--background-gray);
-            border-radius: 8px;
+            margin: 4rem 0;              /* Increased from 3rem */
+            padding: 2.5rem;             /* Increased from 2rem */
+            background: rgba(248, 250, 252, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
         }
 
         .company-logo-image {
-            max-width: 300px;
-            max-height: 120px;
+            width: 400px;               /* Fixed width for consistency */
+            height: auto;               /* Maintain aspect ratio */
+            max-width: 500px;           /* Maximum constraint */
+            min-width: 350px;           /* Minimum constraint */
+            display: block;
+            margin: 0 auto;
+            background: none;
+            border: none;
             object-fit: contain;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+            filter: 
+                drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))
+                saturate(1.1)
+                contrast(1.02);
+            
+            /* Subtle animation */
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .company-logo-image:hover {
+            transform: scale(1.02);
+            filter: 
+                drop-shadow(0 6px 20px rgba(0, 0, 0, 0.2))
+                saturate(1.15)
+                contrast(1.05);
+        }
+
+        /* Tablet Specifications */
+        @media (max-width: 1024px) {
+            .company-logo-image {
+                width: 350px;
+                min-width: 300px;
+                max-width: 400px;
+            }
+        }
+
+        /* Mobile Specifications */
+        @media (max-width: 768px) {
+            .company-logo-image {
+                width: 280px;
+                min-width: 250px;
+                max-width: 320px;
+            }
         }
 
         .article-intro {

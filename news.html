@@ -629,6 +629,154 @@
             text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
         }
         
+        /* Custom Graphics - WORKFLOW COMPLIANCE */
+        .custom-calendar {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #00bfff, #87ceeb);
+            border-radius: 4px;
+            font-size: 10px;
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 0 4px rgba(0, 191, 255, 0.8);
+            animation: calendarPulse 3s ease-in-out infinite;
+            margin-right: 4px;
+        }
+        
+        .custom-calendar::before {
+            content: '07';
+            font-size: 8px;
+            line-height: 1;
+        }
+        
+        .custom-calendar::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 1px;
+        }
+        
+        @keyframes calendarPulse {
+            0%, 100% { 
+                box-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 12px rgba(0, 191, 255, 0.8);
+                transform: scale(1.05);
+            }
+        }
+        
+        .custom-clock {
+            position: relative;
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #00bfff;
+            border-radius: 50%;
+            background: radial-gradient(circle, #001122, #003355);
+            margin-right: 4px;
+            animation: clockGlow 2s ease-in-out infinite;
+        }
+        
+        .clock-hand-hour {
+            position: absolute;
+            width: 1px;
+            height: 6px;
+            background: #00bfff;
+            left: 50%;
+            top: 25%;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(90deg);
+            animation: clockTickHour 43200s linear infinite;
+        }
+        
+        .clock-hand-minute {
+            position: absolute;
+            width: 0.5px;
+            height: 7px;
+            background: #87ceeb;
+            left: 50%;
+            top: 20%;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(180deg);
+            animation: clockTickMinute 3600s linear infinite;
+        }
+        
+        @keyframes clockGlow {
+            0%, 100% { 
+                box-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
+            }
+            50% { 
+                box-shadow: 0 0 8px rgba(0, 191, 255, 0.8);
+            }
+        }
+        
+        @keyframes clockTickHour {
+            0% { transform: translateX(-50%) rotate(90deg); }
+            100% { transform: translateX(-50%) rotate(450deg); }
+        }
+        
+        @keyframes clockTickMinute {
+            0% { transform: translateX(-50%) rotate(180deg); }
+            100% { transform: translateX(-50%) rotate(540deg); }
+        }
+        
+        .custom-user {
+            position: relative;
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #00bfff, #87ceeb);
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: userPulse 2.5s ease-in-out infinite;
+        }
+        
+        .custom-user::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .custom-user::after {
+            content: '';
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 5px;
+            background: white;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        @keyframes userPulse {
+            0%, 100% { 
+                box-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 8px rgba(0, 191, 255, 0.7);
+                transform: scale(1.05);
+            }
+        }
+
         /* News Card */
         .news-card {
             background: rgba(255, 255, 255, 0.8);
@@ -1107,9 +1255,9 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                             </p>
                             
                             <div class="featured-meta">
-                                <span class="meta-item">📅 September 3, 2025</span>
-                                <span class="meta-item">⏱️ 12 min read</span>
-                                <span class="meta-item">👤 Tech Analysis Team</span>
+                                <span class="meta-item"><span class="custom-calendar"></span> September 3, 2025</span>
+                                <span class="meta-item"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 12 min read</span>
+                                <span class="meta-item"><span class="custom-user"></span> Tech Analysis Team</span>
                             </div>
                             <a href="https://moonlight-website-deploy-nsj50v0q5-alimabsoute-3065s-projects.vercel.app/google-nano-banana-photoshop-killer.html" class="read-more">Read Full Article →</a>
                         </div>
@@ -1126,8 +1274,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">OpenAI o1's Hidden Refusal Pattern: What 47,000 Prompts Revealed</h3>
                         <p class="card-excerpt">Exclusive data reveals OpenAI o1's systematic refusal behaviors across creative tasks, exposing a fundamental design philosophy that prioritizes safety over user autonomy...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 2 hours ago</span>
-                            <span class="card-read-time">⏱️ 8 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 2 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 8 min</span>
                         </div>
                     </div>
                 </article>
@@ -1141,8 +1289,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">iPhone 17 AI Demo Disaster: When Siri Failed on Stage</h3>
                         <p class="card-excerpt">Apple's most anticipated AI demonstration turned into a public relations nightmare when Siri repeatedly failed to understand basic commands during the iPhone 17 reveal...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 4 hours ago</span>
-                            <span class="card-read-time">⏱️ 7 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 4 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 7 min</span>
                         </div>
                     </div>
                 </article>
@@ -1156,8 +1304,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">Big Tech's $50M California AI Bill Lobbying Blitz Exposed</h3>
                         <p class="card-excerpt">Internal documents reveal how Silicon Valley giants coordinated a massive lobbying campaign to water down California's landmark AI safety legislation...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 6 hours ago</span>
-                            <span class="card-read-time">⏱️ 6 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 6 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 6 min</span>
                         </div>
                     </div>
                 </article>
@@ -1171,8 +1319,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">Amazon's Shadow Workforce Purge: 10,000 Contractors Vanish</h3>
                         <p class="card-excerpt">Amazon quietly terminated thousands of contract workers without public disclosure, revealing a hidden cost-cutting strategy that bypasses traditional layoff reporting...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 8 hours ago</span>
-                            <span class="card-read-time">⏱️ 9 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 8 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 9 min</span>
                         </div>
                     </div>
                 </article>
@@ -1186,8 +1334,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">NVIDIA's Blackwell Chips Already Sold Out Through 2027</h3>
                         <p class="card-excerpt">Industry sources confirm that NVIDIA's next-generation Blackwell architecture is completely booked for the next three years, creating a potential AI development bottleneck...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 10 hours ago</span>
-                            <span class="card-read-time">⏱️ 5 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 10 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 5 min</span>
                         </div>
                     </div>
                 </article>
@@ -1201,8 +1349,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">Intel's Secret Plan to Split Will Trigger $500B Semiconductor War</h3>
                         <p class="card-excerpt">Intel's inevitable foundry separation will trigger the largest supply chain realignment in semiconductor history, with the split potentially happening as soon as Q3 2025...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 12 hours ago</span>
-                            <span class="card-read-time">⏱️ 7 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 12 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 7 min</span>
                         </div>
                     </div>
                 </article>
@@ -1216,8 +1364,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">The 10-Million Token Arms Race That Will Make ChatGPT Look Like a Calculator</h3>
                         <p class="card-excerpt">Context windows will hit 10 million tokens by mid-2026, fundamentally changing AI capabilities and making current models seem primitive...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 14 hours ago</span>
-                            <span class="card-read-time">⏱️ 6 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 14 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 6 min</span>
                         </div>
                     </div>
                 </article>
@@ -1231,8 +1379,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">AI Eating Its Own Tail: Why ChatGPT Gets Dumber by 2026</h3>
                         <p class="card-excerpt">New research reveals how AI models trained on AI-generated content experience rapid quality degradation, potentially leading to a collapse in capabilities...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 12 hours ago</span>
-                            <span class="card-read-time">⏱️ 7 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 12 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 7 min</span>
                         </div>
                     </div>
                 </article>
@@ -1246,8 +1394,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">Meta, Google, Apple: The Twitter Killers March Toward 2026</h3>
                         <p class="card-excerpt">Three tech giants are positioning themselves to capture Twitter's displaced user base, each with fundamentally different approaches to social networking...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 14 hours ago</span>
-                            <span class="card-read-time">⏱️ 6 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 14 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 6 min</span>
                         </div>
                     </div>
                 </article>
@@ -1261,8 +1409,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">Intel's Secret Plan to Split: The $500B Semiconductor War</h3>
                         <p class="card-excerpt">Internal documents reveal Intel's drastic restructuring plan to separate its manufacturing and design divisions, marking a seismic shift in the chip industry...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 16 hours ago</span>
-                            <span class="card-read-time">⏱️ 8 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 16 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 8 min</span>
                         </div>
                     </div>
                 </article>
@@ -1276,8 +1424,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">The 10 Million Token Arms Race: When ChatGPT Became a Calculator</h3>
                         <p class="card-excerpt">As AI models expand their context windows to unprecedented lengths, they're becoming less conversational and more computational, fundamentally changing their nature...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 18 hours ago</span>
-                            <span class="card-read-time">⏱️ 6 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 18 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 6 min</span>
                         </div>
                     </div>
                 </article>
@@ -1291,8 +1439,8 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                         <h3 class="card-title">Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted</h3>
                         <p class="card-excerpt">Apple plans to remove the controversial EyeSight feature from Vision Pro 2, acknowledging that the external display was more gimmick than genuine innovation...</p>
                         <div class="card-meta">
-                            <span class="card-date">📅 20 hours ago</span>
-                            <span class="card-read-time">⏱️ 5 min</span>
+                            <span class="card-date"><span class="custom-calendar"></span> 20 hours ago</span>
+                            <span class="card-read-time"><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> 5 min</span>
                         </div>
                     </div>
                 </article>

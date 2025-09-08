@@ -258,6 +258,154 @@
                 display: none;
             }
         }
+
+        /* Custom Graphics - WORKFLOW COMPLIANCE */
+        .custom-calendar {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #00bfff, #87ceeb);
+            border-radius: 4px;
+            font-size: 10px;
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 0 4px rgba(0, 191, 255, 0.8);
+            animation: calendarPulse 3s ease-in-out infinite;
+            margin-right: 4px;
+        }
+        
+        .custom-calendar::before {
+            content: '07';
+            font-size: 8px;
+            line-height: 1;
+        }
+        
+        .custom-calendar::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 1px;
+        }
+        
+        .custom-clock {
+            position: relative;
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #00bfff;
+            border-radius: 50%;
+            background: radial-gradient(circle, #001122, #003355);
+            margin-right: 4px;
+            animation: clockGlow 2s ease-in-out infinite;
+        }
+        
+        .clock-hand-hour {
+            position: absolute;
+            width: 1px;
+            height: 6px;
+            background: #00bfff;
+            left: 50%;
+            top: 25%;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(90deg);
+            animation: clockTickHour 43200s linear infinite;
+        }
+        
+        .clock-hand-minute {
+            position: absolute;
+            width: 0.5px;
+            height: 7px;
+            background: #87ceeb;
+            left: 50%;
+            top: 20%;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(180deg);
+            animation: clockTickMinute 3600s linear infinite;
+        }
+        
+        .custom-author {
+            position: relative;
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #00bfff, #87ceeb);
+            border-radius: 4px;
+            margin-right: 4px;
+            animation: authorPulse 2.5s ease-in-out infinite;
+        }
+        
+        .custom-author::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+        
+        .custom-author::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 6px;
+            background: white;
+            border-radius: 2px;
+        }
+        
+        @keyframes calendarPulse {
+            0%, 100% { 
+                box-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 12px rgba(0, 191, 255, 0.8);
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes clockGlow {
+            0%, 100% { 
+                box-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
+            }
+            50% { 
+                box-shadow: 0 0 8px rgba(0, 191, 255, 0.8);
+            }
+        }
+        
+        @keyframes clockTickHour {
+            0% { transform: translateX(-50%) rotate(90deg); }
+            100% { transform: translateX(-50%) rotate(450deg); }
+        }
+        
+        @keyframes clockTickMinute {
+            0% { transform: translateX(-50%) rotate(180deg); }
+            100% { transform: translateX(-50%) rotate(540deg); }
+        }
+        
+        @keyframes authorPulse {
+            0%, 100% { 
+                box-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 8px rgba(0, 191, 255, 0.7);
+                transform: scale(1.05);
+            }
+        }
     </style>
 </head>
 <body>
@@ -281,9 +429,9 @@
             <div class="article-category">[CATEGORY]</div>
             <h1 class="article-title">[ARTICLE TITLE]</h1>
             <div class="article-meta">
-                <span>📅 [DATE]</span>
-                <span>⏱️ [READ TIME]</span>
-                <span>✍️ Moonlight Analytica</span>
+                <span><span class="custom-calendar"></span> [DATE]</span>
+                <span><span class="custom-clock"><span class="clock-hand-hour"></span><span class="clock-hand-minute"></span></span> [READ TIME]</span>
+                <span><span class="custom-author"></span> Moonlight Analytica</span>
             </div>
             <p class="article-excerpt">[ARTICLE EXCERPT/SUMMARY]</p>
         </header>
