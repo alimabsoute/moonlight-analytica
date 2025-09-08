@@ -120,8 +120,60 @@
 
         /* Article Header */
         .article-header {
-            text-align: center;
             margin-bottom: 4rem;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            font-size: 1.2rem;
+        }
+
+        /* Red Separator Line */
+        .separator-line {
+            width: 100%;
+            height: 3px;
+            background-color: #dc2626;
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+
+        /* Company Logo Section */
+        .company-logo-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Article Introduction */
+        .article-intro {
+            margin-bottom: 40px;
+        }
+
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 0;
         }
 
         .article-category {
@@ -169,14 +221,6 @@
             background-clip: text;
             margin-bottom: 2rem;
             line-height: 1.2;
-        }
-
-        .article-subtitle {
-            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-            color: var(--text-secondary);
-            max-width: 800px;
-            margin: 0 auto 3rem;
-            font-weight: 500;
         }
 
         /* Key Stats Section */
@@ -433,7 +477,159 @@
             color: var(--cyber-green);
         }
 
-        /* Performance Comparison */
+        /* Performance Matrix */
+        .performance-matrix {
+            margin: 4rem 0;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+        }
+
+        .performance-matrix h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .performance-matrix > p {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .chip-card {
+            background: var(--darker-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .chip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 191, 255, 0.2);
+        }
+
+        .chip-card.blackwell {
+            border-left-color: var(--cyber-green);
+        }
+
+        .chip-card.h100 {
+            border-left-color: var(--chip-gold);
+        }
+
+        .chip-card.competition {
+            border-left-color: var(--danger-red);
+        }
+
+        .chip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chip-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chip-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .chip-badge.champion {
+            background: var(--cyber-green);
+            color: var(--darker-bg);
+        }
+
+        .chip-badge.legacy {
+            background: var(--chip-gold);
+            color: var(--darker-bg);
+        }
+
+        .chip-badge.competitor {
+            background: var(--danger-red);
+            color: white;
+        }
+
+        .performance-metrics {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .metric-row {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .metric-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-bar {
+            height: 12px;
+            background: rgba(0, 191, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 6px;
+            position: relative;
+            transition: width 2s ease-out;
+        }
+
+        .blackwell-ai, .blackwell-memory, .blackwell-power, .blackwell-speed {
+            background: linear-gradient(90deg, var(--cyber-green), #34d399);
+        }
+
+        .h100-ai, .h100-memory, .h100-power, .h100-speed {
+            background: linear-gradient(90deg, var(--chip-gold), #fbbf24);
+        }
+
+        .amd-ai, .amd-memory, .amd-power, .amd-speed {
+            background: linear-gradient(90deg, var(--danger-red), #f87171);
+        }
+
+        .metric-value {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Performance Comparison (Legacy) */
         .performance-section {
             margin: 6rem 0;
         }
@@ -452,14 +648,6 @@
             padding: 2.5rem;
             text-align: center;
             position: relative;
-        }
-
-        .chip-name {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
         }
 
         .chip-model {
@@ -571,6 +759,16 @@
                 padding: 120px 1rem 2rem;
             }
 
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .company-logo-image {
+                max-width: 150px;
+            }
+
             .key-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
@@ -640,12 +838,31 @@
 
     <main class="article-container">
         <div class="article-header">
-            <div class="article-category">
-                <div class="chip-icon"></div>
-                AI Hardware
-            </div>
             <h1 class="article-title">NVIDIA's Blackwell Chips Are Sold Out Until 2027—These 5 Companies Got Them All</h1>
-            <p class="article-subtitle">The secret allocation list that determines AI's future winners has leaked, revealing how five tech giants secured 89% of production worth $57.8B through 2027.</p>
+            
+            <div class="article-meta">
+                <div class="author-info">
+                    <div class="author-avatar">🌙</div>
+                    <span>Moonlight Analytica Team</span>
+                </div>
+                <span>•</span>
+                <span>January 6, 2025</span>
+                <span>•</span>
+                <span>8 min read</span>
+            </div>
+
+            <!-- Red Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section -->
+            <div class="company-logo-section">
+                <img src="5a.png" alt="NVIDIA Hardware Analysis" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>The secret allocation list that determines AI's future winners has leaked, revealing how five tech giants secured 89% of production worth $57.8B through 2027, leaving the rest of the industry scrambling for scraps.</p>
+            </div>
         </div>
 
         <!-- Key Statistics -->
@@ -666,6 +883,12 @@
                 <div class="stat-number">1.4M</div>
                 <div class="stat-label">Total Units Allocated</div>
             </div>
+        </div>
+
+        <div class="article-content">
+            <p>These numbers tell only part of the story. The real power play becomes clear when you examine exactly how NVIDIA's Jensen Huang personally selected which companies would receive access to the future of AI computing.</p>
+            
+            <p>The allocation breakdown reveals the true power dynamics at play in Silicon Valley's most consequential resource allocation. Behind each percentage lies a carefully calculated strategic decision that will echo through the AI industry for years to come.</p>
         </div>
 
         <!-- Interactive Allocation Visualization -->
@@ -774,10 +997,22 @@
             </div>
         </div>
 
+        <div class="article-content">
+            <p>As shown above, the allocation wasn't random—it was strategic. Microsoft's commanding 28% share reflects their deep Azure partnership and $13 billion OpenAI investment. Meta's substantial 24% signals their desperate pivot to AI infrastructure after massive Reality Labs losses totaling over $46 billion since 2019.</p>
+            
+            <p>The patterns illustrated here reveal something deeper than mere business deals. Each allocation represents Jensen Huang's personal bet on which company will best advance NVIDIA's ecosystem dominance. OpenAI's modest 6% allocation, despite their ChatGPT success, shows the limits of pure innovation without established infrastructure partnerships.</p>
+        </div>
+
         <!-- Quote Section -->
         <div class="quote-section">
             <div class="quote-text">"Jensen [Huang] essentially picked the AI winners for the next three years. If you're not on this list, you're not competing in frontier AI."</div>
             <div class="quote-author">Source familiar with NVIDIA's allocation process</div>
+        </div>
+
+        <div class="article-content">
+            <p>Understanding the allocation is crucial, but the timeline reveals the true scope of the shortage. When industry insiders say "sold out until 2027," they mean it literally—every major Blackwell chip has already been assigned to specific customers through binding contracts.</p>
+            
+            <p>The following timeline demonstrates the unprecedented nature of this supply constraint. Unlike previous chip shortages that lasted months, this represents a deliberate three-year production commitment that reshapes the entire AI landscape.</p>
         </div>
 
         <!-- Supply Timeline -->
@@ -824,73 +1059,138 @@
             </div>
         </div>
 
-        <!-- Performance Comparison -->
-        <div class="performance-section">
-            <h2 class="section-title">Blackwell vs Previous Generation</h2>
-            <div class="performance-comparison">
-                <div class="chip-comparison">
-                    <div class="chip-name">H100</div>
-                    <div class="chip-model">Previous Generation</div>
-                    <div class="performance-bars">
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>AI Performance</span>
-                                <span>100%</span>
-                            </div>
-                            <div class="performance-bar">
-                                <div class="performance-fill" style="width: 45%"></div>
+        <div class="article-content">
+            <p>This data reveals why companies are accepting three-year waits. The supply constraints become more understandable when you examine what makes Blackwell so revolutionary. This isn't just an incremental upgrade—it's a generational leap that explains why CEOs are personally flying to NVIDIA headquarters to plead for allocations.</p>
+            
+            <p>The performance comparison below illustrates exactly why this chip represents an existential upgrade rather than a nice-to-have improvement. These numbers explain the desperation in boardrooms across Silicon Valley.</p>
+            
+            <p>To understand the full scope of Blackwell's dominance, we need to examine how it stacks up against both NVIDIA's previous generation and AMD's best competing architecture. The technical specifications reveal why companies are willing to wait three years and pay premium prices rather than settle for alternatives.</p>
+        </div>
+
+        <!-- Interactive Performance Comparison Matrix -->
+        <div class="performance-matrix">
+            <h3><span class="custom-lightning">⚡</span> Blackwell vs Competition: Performance Breakdown</h3>
+            <p>Why everyone wants these chips: Technical superiority analysis</p>
+            
+            <div class="comparison-grid">
+                <div class="chip-card blackwell">
+                    <div class="chip-header">
+                        <div class="chip-name">Blackwell B200</div>
+                        <div class="chip-badge champion">Champion</div>
+                    </div>
+                    
+                    <div class="performance-metrics">
+                        <div class="metric-row">
+                            <div class="metric-name">AI Performance</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill blackwell-ai" style="width: 100%" data-width="100"></div>
+                                <span class="metric-value">20 ExaFLOPS</span>
                             </div>
                         </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Memory Bandwidth</span>
-                                <span>3.35 TB/s</span>
-                            </div>
-                            <div class="performance-bar">
-                                <div class="performance-fill" style="width: 40%"></div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Memory Bandwidth</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill blackwell-memory" style="width: 95%" data-width="95"></div>
+                                <span class="metric-value">8.0 TB/s</span>
                             </div>
                         </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Power Efficiency</span>
-                                <span>Standard</span>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Power Efficiency</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill blackwell-power" style="width: 90%" data-width="90"></div>
+                                <span class="metric-value">4x vs H100</span>
                             </div>
-                            <div class="performance-bar">
-                                <div class="performance-fill" style="width: 35%"></div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Training Speed</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill blackwell-speed" style="width: 100%" data-width="100"></div>
+                                <span class="metric-value">30x faster</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="chip-comparison">
-                    <div class="chip-name">Blackwell B200</div>
-                    <div class="chip-model">Next Generation</div>
-                    <div class="performance-bars">
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>AI Performance</span>
-                                <span>500%</span>
-                            </div>
-                            <div class="performance-bar">
-                                <div class="performance-fill" style="width: 100%"></div>
-                            </div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Memory Bandwidth</span>
-                                <span>8.0 TB/s</span>
-                            </div>
-                            <div class="performance-bar">
-                                <div class="performance-fill" style="width: 95%"></div>
+                
+                <div class="chip-card h100">
+                    <div class="chip-header">
+                        <div class="chip-name">H100</div>
+                        <div class="chip-badge legacy">Previous Gen</div>
+                    </div>
+                    
+                    <div class="performance-metrics">
+                        <div class="metric-row">
+                            <div class="metric-name">AI Performance</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill h100-ai" style="width: 45%" data-width="45"></div>
+                                <span class="metric-value">4 ExaFLOPS</span>
                             </div>
                         </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Power Efficiency</span>
-                                <span>4x Better</span>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Memory Bandwidth</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill h100-memory" style="width: 40%" data-width="40"></div>
+                                <span class="metric-value">3.35 TB/s</span>
                             </div>
-                            <div class="performance-bar">
-                                <div class="performance-fill" style="width: 90%"></div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Power Efficiency</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill h100-power" style="width: 25%" data-width="25"></div>
+                                <span class="metric-value">Baseline</span>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Training Speed</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill h100-speed" style="width: 30%" data-width="30"></div>
+                                <span class="metric-value">Standard</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chip-card competition">
+                    <div class="chip-header">
+                        <div class="chip-name">AMD MI300X</div>
+                        <div class="chip-badge competitor">Competitor</div>
+                    </div>
+                    
+                    <div class="performance-metrics">
+                        <div class="metric-row">
+                            <div class="metric-name">AI Performance</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill amd-ai" style="width: 35%" data-width="35"></div>
+                                <span class="metric-value">2.8 ExaFLOPS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Memory Bandwidth</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill amd-memory" style="width: 60%" data-width="60"></div>
+                                <span class="metric-value">5.2 TB/s</span>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Power Efficiency</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill amd-power" style="width: 30%" data-width="30"></div>
+                                <span class="metric-value">1.2x vs H100</span>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-name">Training Speed</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill amd-speed" style="width: 20%" data-width="20"></div>
+                                <span class="metric-value">2x faster</span>
                             </div>
                         </div>
                     </div>
@@ -900,7 +1200,13 @@
 
         <!-- Article Content -->
         <div class="article-content">
-            <p>The allocation process wasn't based purely on money—though these companies will spend a combined $57.8 billion. NVIDIA prioritized "strategic partnerships" and "ecosystem alignment," effectively choosing which companies get to build AGI and which get left behind.</p>
+            <p>The performance matrix above reveals the true scale of Blackwell's technological advantage. With 20 ExaFLOPS of AI performance compared to the H100's 4 ExaFLOPS, Blackwell doesn't just outperform—it obliterates the competition. AMD's MI300X, while strong in memory bandwidth, falls far short in the critical AI processing metrics that matter most for large language model training.</p>
+            
+            <p>These aren't marketing numbers—they represent fundamental architectural breakthroughs that took NVIDIA years to develop. The 4x power efficiency improvement alone justifies the three-year wait for most companies. When you're training models that cost millions in compute, power efficiency directly translates to competitive advantage and operational viability.</p>
+            
+            <p>The 30x training speed improvement over H100 is perhaps the most consequential metric. In an industry where being first to market with AGI capabilities could mean trillion-dollar valuations, the ability to train models 30 times faster isn't just an advantage—it's the difference between winning and becoming irrelevant.</p>
+            
+            <p>With these technical specifications clear, the business implications become stark. The allocation process wasn't based purely on money—though these companies will spend a combined $57.8 billion. NVIDIA prioritized "strategic partnerships" and "ecosystem alignment," effectively choosing which companies get to build AGI and which get left behind.</p>
             
             <h2>The Kingmaking Process</h2>
             <p>Companies not on the list are scrambling for alternatives. Anthropic, valued at $60 billion, can't get meaningful Blackwell allocation until late 2027. They're reportedly considering partnerships with Chinese chip manufacturers despite obvious geopolitical risks.</p>
@@ -937,7 +1243,7 @@
             }, observerOptions);
 
             // Observe all animated elements
-            document.querySelectorAll('.stat-card, .company-card, .chip-comparison').forEach(el => {
+            document.querySelectorAll('.stat-card, .company-card, .chip-comparison, .chip-card').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(30px)';
                 el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -955,10 +1261,10 @@
                 });
             }, 1000);
 
-            // Animate performance bars
+            // Animate performance bars and metric fills
             setTimeout(() => {
-                document.querySelectorAll('.performance-fill').forEach(fill => {
-                    const width = fill.style.width;
+                document.querySelectorAll('.performance-fill, .metric-fill').forEach(fill => {
+                    const width = fill.style.width || fill.getAttribute('data-width') + '%';
                     fill.style.width = '0%';
                     setTimeout(() => {
                         fill.style.width = width;

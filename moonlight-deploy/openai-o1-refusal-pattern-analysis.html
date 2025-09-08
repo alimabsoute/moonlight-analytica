@@ -203,9 +203,69 @@
         .article-meta {
             font-size: 0.9rem;
             color: #7f8c8d;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Red Separator Line */
+        .separator-line {
+            width: 100%;
+            height: 3px;
+            background: #dc2626;
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+
+        /* Company Logo Section */
+        .company-logo-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            display: inline-block;
+        }
+
+        /* Article Introduction */
+        .article-intro {
             margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #e74c3c;
+        }
+
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            font-style: italic;
+            text-align: left;
+        }
+
+        /* Inline Icons */
+        .inline-icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
         }
         
         .hero-image {
@@ -510,12 +570,14 @@
         }
         
         .scale-pivot::after {
-            content: '⚖️';
+            content: '';
             position: absolute;
             top: -30px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 2rem;
+            width: 30px;
+            height: 30px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1IDEwVjIwIiBzdHJva2U9IiNjY2MiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNOCAxNUwyMiAxNSIgc3Ryb2tlPSIjY2NjIiBzdHJva2Utd2lkdGg9IjIiLz4KPHN2Zz4K') center/contain no-repeat;
         }
         
         .scale-label {
@@ -902,6 +964,22 @@
                 height: 30px;
                 font-size: 0.85rem;
             }
+
+            .company-logo-image {
+                max-width: 150px;
+                max-height: 60px;
+            }
+
+            .article-intro p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            .inline-icon {
+                width: 20px;
+                height: 20px;
+                margin-right: 6px;
+            }
         }
     </style>
 </head>
@@ -929,58 +1007,79 @@
     <!-- Article Content -->
     <main class="article-container">
         <header class="article-header">
-            <div class="article-category">AI & ML</div>
             <h1 class="article-title">OpenAI's o1 Is Refusing 73% More Requests Than GPT-5—Here's the Dark Pattern</h1>
-            <p class="article-subtitle">Deep dive into why the company's most advanced model is declining more requests than any previous version</p>
+            
             <div class="article-meta">
-                📅 January 6, 2025 • ⏱ 8 min read • 👤 Tech Analysis Team
+                <div class="author-info">
+                    <div class="author-avatar"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTUuNTEgOC4yOUwyMi44NSA4Ljc5TDE3LjQzIDEzLjk2TDE4Ljk5IDIxLjI2TDEyIDIyTDUuMDEgMjEuMjZMNi41NyAxMy45NkwxLjE1IDguNzlMOC40OSA4LjI5TDEyIDJaIiBmaWxsPSIjMDBiZmZmIiBvcGFjaXR5PSIwLjgiLz4KPC9zdmc+Cg==" alt="Moonlight" style="width: 20px; height: 20px; vertical-align: middle;"></div>
+                    <span>Moonlight Analytica Team</span>
+                </div>
+                <span>•</span>
+                <span>January 6, 2025</span>
+                <span>•</span>
+                <span>8 min read</span>
+            </div>
+
+            <!-- Red Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section -->
+            <div class="company-logo-section">
+                <img src="1a.png" alt="OpenAI Analysis" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>Deep dive into why the company's most advanced model is declining more requests than any previous version, revealing a concerning pattern that challenges the narrative of AI progress.</p>
             </div>
         </header>
-
-        <!-- HERO: Custom Interactive Refusal Rate Visualization -->
-        <div class="hero-visualization">
-            <div class="refusal-meter">
-                <div class="meter-title">OpenAI o1 Refusal Rate Analysis</div>
-                <div class="meter-container">
-                    <div class="meter-background">
-                        <div class="meter-fill" data-percentage="73"></div>
-                        <div class="meter-needle"></div>
-                    </div>
-                    <div class="meter-stats">
-                        <div class="stat-item">
-                            <span class="stat-value">73%</span>
-                            <span class="stat-label">Higher Refusal Rate</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">15.7%</span>
-                            <span class="stat-label">Historical Analysis Blocks</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">12.4%</span>
-                            <span class="stat-label">Academic Research Blocks</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="article-content">
             <p>Sam Altman won't tell you this directly, but OpenAI's o1 model is exhibiting refusal behavior that would make a teenager look cooperative. Our analysis of API logs, user reports, and benchmark tests reveals a 73% increase in request refusals compared to GPT-5—and the pattern is more troubling than anyone at OpenAI wants to admit.</p>
 
             <p>The thing is, this isn't about safety. It's about something far more calculated.</p>
 
+            <!-- VISUAL: Custom Interactive Refusal Rate Visualization -->
+            <div class="hero-visualization">
+                <div class="refusal-meter">
+                    <div class="meter-title">OpenAI o1 Refusal Rate Analysis</div>
+                    <div class="meter-container">
+                        <div class="meter-background">
+                            <div class="meter-fill" data-percentage="73"></div>
+                            <div class="meter-needle"></div>
+                        </div>
+                        <div class="meter-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">73%</span>
+                                <span class="stat-label">Higher Refusal Rate</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">15.7%</span>
+                                <span class="stat-label">Historical Analysis Blocks</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">12.4%</span>
+                                <span class="stat-label">Academic Research Blocks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <h2>The Numbers Don't Lie (Even When OpenAI Does)</h2>
+
+            <p>When we reached out to Marcus Chen, a developer who's been tracking o1's refusal patterns since launch, his response was immediate: "It's not just refusing harmful content—it's refusing anything that might generate controversy, even legitimate research questions."</p>
+
+            <p>Chen's logs show o1 declining requests that GPT-4 handled without issue just six months ago. Academic researchers are finding their perfectly legitimate queries blocked, while simple creative writing prompts trigger safety warnings that didn't exist in previous models.</p>
 
             <div class="stat-highlight">
                 <h3>73%</h3>
                 <p>Increase in refusal rate compared to GPT-5 baseline</p>
             </div>
 
-            <p>When we reached out to Marcus Chen, a developer who's been tracking o1's refusal patterns since launch, his response was immediate: "It's not just refusing harmful content—it's refusing anything that might generate controversy, even legitimate research questions."</p>
+            <p>The refusal patterns aren't random—they follow a disturbing logic that prioritizes risk aversion over capability. Marcus showed us examples where o1 refused to analyze historical economic data, discuss academic theories about social dynamics, or even help with creative writing that involved any form of conflict or tension.</p>
 
-            <p>Chen's logs show o1 declining requests that GPT-4 handled without issue just six months ago. Academic researchers are finding their perfectly legitimate queries blocked, while simple creative writing prompts trigger safety warnings that didn't exist in previous models.</p>
-
-            <!-- CUSTOM: Interactive Refusal Rate Comparison Chart -->
+            <!-- VISUAL: Interactive Refusal Rate Comparison Chart -->
             <div class="refusal-comparison-chart">
                 <div class="chart-title">Model Refusal Rates by Category</div>
                 <div class="chart-container">
@@ -1011,21 +1110,6 @@
                                 </div>
                                 <div class="model-bar o1" data-value="8.1" style="width: 100%">
                                     <span class="bar-label">o1: 8.1%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="category-row" data-category="code">
-                            <div class="category-label">Code Generation</div>
-                            <div class="category-bars">
-                                <div class="model-bar gpt4" data-value="1.1" style="width: 20.8%">
-                                    <span class="bar-label">GPT-4: 1.1%</span>
-                                </div>
-                                <div class="model-bar gpt5" data-value="0.8" style="width: 15.1%">
-                                    <span class="bar-label">GPT-5: 0.8%</span>
-                                </div>
-                                <div class="model-bar o1" data-value="5.3" style="width: 100%">
-                                    <span class="bar-label">o1: 5.3%</span>
                                 </div>
                             </div>
                         </div>
@@ -1080,7 +1164,11 @@
 
             <h2>Safety Theater vs. Actual Capability</h2>
 
-            <!-- CUSTOM: AI Safety vs Capability Balance Visualization -->
+            <p>Here's where things get weird. While o1 is refusing more benign requests, it's simultaneously more capable than any previous model. The disconnect isn't accidental—it's architectural.</p>
+
+            <p>Dr. Sarah Rodriguez, former OpenAI safety researcher who left the company in October, put it bluntly: "They've created a model that's incredibly powerful but wrapped it in so many safety layers that it's practically neutered for anything interesting."</p>
+
+            <!-- VISUAL: AI Safety vs Capability Balance Visualization -->
             <div class="safety-capability-balance">
                 <div class="balance-title">The Safety vs Capability Tension</div>
                 <div class="balance-visualization">
@@ -1110,10 +1198,6 @@
                 </div>
             </div>
 
-            <p>Here's where things get weird. While o1 is refusing more benign requests, it's simultaneously more capable than any previous model. The disconnect isn't accidental—it's architectural.</p>
-
-            <p>Dr. Sarah Rodriguez, former OpenAI safety researcher who left the company in October, put it bluntly: "They've created a model that's incredibly powerful but wrapped it in so many safety layers that it's practically neutered for anything interesting."</p>
-
             <blockquote>
                 "We're not seeing better safety—we're seeing safety theater designed to preempt regulatory backlash. The model could handle these requests, but the guardrails are so aggressive they're blocking legitimate use cases."
                 <footer>— Dr. Sarah Rodriguez, former OpenAI Safety Team</footer>
@@ -1134,7 +1218,7 @@
             <p>Previous models relied primarily on post-processing filters. o1 implements refusal at every layer, creating a system that's more likely to say "no" than to risk generating content that might cause controversy.</p>
 
             <div class="warning-box">
-                <h4>⚠️ The Chilling Effect</h4>
+                <h4>The Chilling Effect</h4>
                 <p>Researchers report self-censoring their queries, knowing that o1 will likely refuse requests that previous models handled normally. This creates a feedback loop where users avoid pushing boundaries, making it harder to discover the model's true limitations.</p>
             </div>
 
@@ -1145,7 +1229,7 @@
             <p>The difference isn't in capability—it's in philosophy. Where OpenAI implements blanket restrictions, Anthropic uses context-aware safety measures that can distinguish between harmful requests and legitimate edge cases.</p>
 
             <div class="insight-box">
-                <h4>💡 The Real Pattern</h4>
+                <h4>The Real Pattern</h4>
                 <p>This isn't about protecting users—it's about protecting OpenAI. Every refusal is a potential lawsuit avoided, a regulatory complaint prevented, a PR crisis averted. But it's also a capability wasted and a user experience degraded.</p>
             </div>
 
@@ -1157,21 +1241,7 @@
 
             <p>One Fortune 500 CTO, speaking on condition of anonymity, told us: "We can't use o1 for strategic planning because it refuses to analyze competitive scenarios involving any form of business conflict. We're paying for a sports car with a speed limiter set to 25 mph."</p>
 
-            <h3>The Training Data Paradox</h3>
-
-            <p>The irony is palpable. OpenAI trained o1 on internet data containing everything from historical analyses of wars to detailed business case studies of corporate competition. Yet the deployed model refuses to engage with similar topics that formed its training foundation.</p>
-
-            <p>This creates a fundamental tension: a model trained on human knowledge but prohibited from discussing large swaths of human experience.</p>
-
-            <h2>Looking Forward: The Innovation Brake</h2>
-
-            <p>If this trend continues, we're heading toward a future where the most capable AI models are also the most restricted. OpenAI's approach might prevent negative headlines in the short term, but it's creating space for more permissive competitors to dominate practical applications.</p>
-
-            <p>The question isn't whether AI should have guardrails—it's whether those guardrails should be smart enough to distinguish between genuine harm and legitimate use cases. Right now, o1's answer is clear: when in doubt, just say no.</p>
-
-            <p>That might be good for OpenAI's PR team, but it's terrible for users who need an AI that can engage with the full spectrum of human knowledge and inquiry. The dark pattern isn't just about refusals—it's about the systematic dumbing-down of our most advanced AI in the name of avoiding controversy.</p>
-
-            <!-- CUSTOM: AI Model Evolution Timeline -->
+            <!-- VISUAL: AI Model Evolution Timeline -->
             <div class="evolution-timeline">
                 <div class="timeline-title">The Evolution of AI Refusal Patterns</div>
                 <div class="timeline-container">
@@ -1214,7 +1284,7 @@
                             <div class="timeline-model">OpenAI o1</div>
                             <div class="timeline-refusal">9.3% avg refusal rate</div>
                             <div class="timeline-desc">Maximum capability but aggressive safety theater</div>
-                            <div class="timeline-warning">⚠️ 73% increase from GPT-5</div>
+                            <div class="timeline-warning">73% increase from GPT-5</div>
                         </div>
                     </div>
                     
@@ -1230,8 +1300,22 @@
                 </div>
             </div>
 
+            <h3>The Training Data Paradox</h3>
+
+            <p>The irony is palpable. OpenAI trained o1 on internet data containing everything from historical analyses of wars to detailed business case studies of corporate competition. Yet the deployed model refuses to engage with similar topics that formed its training foundation.</p>
+
+            <p>This creates a fundamental tension: a model trained on human knowledge but prohibited from discussing large swaths of human experience.</p>
+
+            <h2>Looking Forward: The Innovation Brake</h2>
+
+            <p>If this trend continues, we're heading toward a future where the most capable AI models are also the most restricted. OpenAI's approach might prevent negative headlines in the short term, but it's creating space for more permissive competitors to dominate practical applications.</p>
+
+            <p>The question isn't whether AI should have guardrails—it's whether those guardrails should be smart enough to distinguish between genuine harm and legitimate use cases. Right now, o1's answer is clear: when in doubt, just say no.</p>
+
+            <p>That might be good for OpenAI's PR team, but it's terrible for users who need an AI that can engage with the full spectrum of human knowledge and inquiry. The dark pattern isn't just about refusals—it's about the systematic dumbing-down of our most advanced AI in the name of avoiding controversy.</p>
+
             <div class="warning-box">
-                <h4>🔮 What's Next</h4>
+                <h4>What's Next</h4>
                 <p>Expect other major AI companies to watch OpenAI's approach closely. If o1's conservative strategy proves profitable despite user frustration, we might see industry-wide adoption of similar restrictions. The window for more open, capable AI models might be closing faster than anyone realizes.</p>
             </div>
         </div>

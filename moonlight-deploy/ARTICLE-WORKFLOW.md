@@ -76,14 +76,14 @@ After the clean header, include all rich content:
 - `7a.png` - Intel Strategic (UPDATED)
 - `8a.png` - Token Arms Race
 - `9a.png` - Token Context
-- `10a.png` - Vision Pro
+- `10av2.png` - Vision Pro (Apple logo + headset)
 
 ### Company Logo Mapping:
 - Intel articles → `7a.png` (Intel logo)
 - Amazon articles → `4a.png` (Amazon logo)
 - NVIDIA articles → `5a.png` (NVIDIA logo)
 - OpenAI articles → `1a.png`
-- Apple articles → `2a.png` or `10a.png`
+- Apple articles → `2a.png` or `10av2.png`
 - General Tech → `6a.png` or `8a.png`
 
 ## Content Guidelines

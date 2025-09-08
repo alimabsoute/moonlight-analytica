@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "brave-search": {
+      "type": "stdio",
+      "command": "npx -y @modelcontextprotocol/server-brave-search",
+      "args": [],
+      "env": {}
+    },
+    "browserbase": {
+      "type": "stdio",
+      "command": "npx -y @browserbase/mcp-server-browserbase",
+      "args": [],
+      "env": {}
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx -y @modelcontextprotocol/server-github",
+      "args": [],
+      "env": {}
+    },
+    "fetch": {
+      "type": "stdio",
+      "command": "npx -y @modelcontextprotocol/server-fetch",
+      "args": [],
+      "env": {}
+    }
+  }
+}

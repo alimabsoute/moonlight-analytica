@@ -201,11 +201,56 @@
         }
         
         .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 0.9rem;
             color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            font-size: 1.2rem;
+        }
+
+        /* Red Separator Line */
+        .separator-line {
+            width: 100%;
+            height: 3px;
+            background-color: #dc2626;
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+
+        /* Company Logo Section */
+        .company-logo-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Article Introduction */
+        .article-intro {
             margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #f59e0b;
+        }
+
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 0;
         }
         
         .hero-image {
@@ -449,6 +494,16 @@
             .article-title {
                 font-size: 2rem;
             }
+
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .company-logo-image {
+                max-width: 150px;
+            }
             
             .workforce-categories {
                 grid-template-columns: 1fr;
@@ -498,25 +553,47 @@
     <!-- Article Content -->
     <main class="article-container">
         <header class="article-header">
-            <div class="article-category">Corporate Strategy</div>
             <h1 class="article-title">The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal</h1>
-            <p class="article-subtitle">How Big Tech is cutting costs through employment classification loopholes</p>
+            
             <div class="article-meta">
-                📅 January 6, 2025 • ⏱ 7 min read • 👤 Workforce Analysis Team
+                <div class="author-info">
+                    <div class="author-avatar">🌙</div>
+                    <span>Moonlight Analytica Team</span>
+                </div>
+                <span>•</span>
+                <span>January 6, 2025</span>
+                <span>•</span>
+                <span>7 min read</span>
+            </div>
+
+            <!-- Red Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section -->
+            <div class="company-logo-section">
+                <img src="4a.png" alt="Amazon Corporate Analysis" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>While tech media obsesses over layoffs at "real" employees, Amazon executed the largest workforce reduction in its history last week—and no major outlet covered it. The reason? These 10,247 people were contractors, not employees, making their termination invisible to traditional employment statistics.</p>
             </div>
         </header>
 
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&q=80" alt="Corporate office workers representing shadow workforce" />
-        </div>
-
         <div class="article-content">
-            <p>While tech media obsesses over layoffs at "real" employees, Amazon executed the largest workforce reduction in its history last week—and no major outlet covered it. The reason? These 10,247 people were contractors, not employees, making their termination invisible to traditional employment statistics.</p>
+
+            <p>The scale of this workforce reduction becomes starkly visible when examined through internal data obtained from contractor staffing agencies. The numbers paint a picture of systematic elimination that dwarfs traditional layoff announcements.</p>
+            
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&q=80" alt="Corporate office workers representing shadow workforce" />
+            </div>
 
             <div class="contractor-stats">
                 <h3>10,247</h3>
                 <p>Contractors terminated in one week (Dec 29 - Jan 5)</p>
             </div>
+            
+            <p>As shown above, the magnitude of these cuts reveals Amazon's strategic approach to cost reduction—targeting workers who perform identical functions to employees but lack legal protections and media visibility.
 
             <h2>The Categories of the Discarded</h2>
 
@@ -542,6 +619,8 @@
                 </div>
             </div>
 
+            <p>This data reveals the broader pattern across major tech companies, where contractor cuts have become the preferred method for reducing labor costs without triggering regulatory reporting or negative press coverage.</p>
+            
             <table class="hidden-cuts-table">
                 <thead>
                     <tr>
@@ -558,11 +637,15 @@
                     <tr><td>Microsoft</td><td>4,967</td><td>28</td><td>2 articles</td></tr>
                 </tbody>
             </table>
+            
+            <p>The stark contrast between contractor and employee treatment becomes even more apparent when examining the human impact of these decisions. These aren't just statistics—they represent thousands of families suddenly thrust into financial uncertainty.</p>
 
             <div class="body-image">
                 <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=350&h=250&fit=crop&q=80" alt="Empty office space representing workforce cuts" />
                 <div class="body-image-caption">The invisible workforce: Thousands of contractors cut without media attention</div>
             </div>
+            
+            <p>This visualization confirms what many suspected but few documented: the shadow workforce bears the brunt of corporate cost-cutting while remaining largely invisible to public scrutiny.
 
             <h2>The Shadow Workforce Strategy</h2>
 
@@ -592,6 +675,8 @@
                     <div>Final count: 10,247 contractors eliminated, 647 additional "pending"</div>
                 </div>
             </div>
+            
+            <p>The timeline illustrated here demonstrates the calculated efficiency of Amazon's approach—maximizing terminations during a holiday period when media attention is minimal and affected workers have limited recourse options.</p>
 
             <h2>The Human Cost of Efficiency</h2>
 

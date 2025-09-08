@@ -201,11 +201,56 @@
         }
         
         .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 0.9rem;
             color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            font-size: 1.2rem;
+        }
+
+        /* Red Separator Line */
+        .separator-line {
+            width: 100%;
+            height: 3px;
+            background-color: #dc2626;
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+
+        /* Company Logo Section */
+        .company-logo-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Article Introduction */
+        .article-intro {
             margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #8b5cf6;
+        }
+
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 0;
         }
         
         .hero-image {
@@ -490,6 +535,16 @@
             .article-title {
                 font-size: 2rem;
             }
+
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .company-logo-image {
+                max-width: 150px;
+            }
             
             .degradation-visual {
                 grid-template-columns: 1fr;
@@ -539,29 +594,53 @@
     <!-- Article Content -->
     <main class="article-container">
         <header class="article-header">
-            <div class="article-category">AI Research</div>
             <h1 class="article-title">AI's Digital Inbreeding Crisis: The Recursive Collapse Making ChatGPT Dumber</h1>
-            <p class="article-subtitle">How training on synthetic data is poisoning the well of artificial intelligence</p>
+            
             <div class="article-meta">
-                📅 January 6, 2025 • ⏱ 9 min read • 👤 Tech Analysis Team
+                <div class="author-info">
+                    <div class="author-avatar">🌙</div>
+                    <span>Moonlight Analytica Team</span>
+                </div>
+                <span>•</span>
+                <span>January 6, 2025</span>
+                <span>•</span>
+                <span>9 min read</span>
+            </div>
+
+            <!-- Red Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section -->
+            <div class="company-logo-section">
+                <img src="6a.png" alt="AI Quality Analysis" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>The recursive nightmare scenario AI researchers have been warning about is happening faster than anyone predicted. As AI models increasingly train on AI-generated content, we're seeing early signs of the quality degradation that could make ChatGPT significantly worse by 2026.</p>
             </div>
         </header>
 
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=500&h=300&fit=crop&q=80" alt="AI neural network visualization showing degradation" />
-        </div>
-
         <div class="article-content">
-            <p>The recursive nightmare scenario AI researchers have been warning about is happening faster than anyone predicted. As AI models increasingly train on AI-generated content, we're seeing early signs of the quality degradation that could make ChatGPT significantly worse by 2026.</p>
+            <p>The scale of this crisis becomes immediately apparent when we visualize the contamination spreading through neural networks:</p>
 
-            <p>Dr. Maya Patel's research at Stanford tracked this phenomenon across multiple model generations. Her findings are stark: models trained on even 20% synthetic data show measurable declines in reasoning ability, creativity, and factual accuracy.</p>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=500&h=300&fit=crop&q=80" alt="AI neural network visualization showing degradation" />
+                <p class="image-caption">Neural pathways showing recursive degradation patterns as synthetic data contaminates training sets</p>
+            </div>
+
+            <p>This visualization reveals what Dr. Maya Patel's research at Stanford has been tracking across multiple model generations. Her findings are stark: models trained on even 20% synthetic data show measurable declines in reasoning ability, creativity, and factual accuracy. The critical threshold emerges clearly from the data:</p>
 
             <div class="stat-highlight">
                 <h3>20%</h3>
                 <p>Synthetic data threshold where AI quality begins rapid degradation</p>
             </div>
 
+            <p>This 20% threshold represents more than just a number—it's the tipping point where AI begins eating its own tail. To understand how quickly we're approaching this crisis, we need to examine the generational degradation pattern that's already underway.</p>
+
             <h2>The Digital Inbreeding Problem</h2>
+
+            <p>Just as biological inbreeding leads to genetic defects, AI training on AI-generated content creates a cascade of quality degradation. The following visualization demonstrates how each generation compounds the problem:</p>
 
             <div class="degradation-visual">
                 <div class="generation-box gen1">
@@ -590,21 +669,25 @@
                 </div>
             </div>
 
-            <p>The problem is scale. With billions of AI-generated articles, images, and code samples flooding the internet daily, future training datasets will inevitably contain massive amounts of synthetic content. It's digital inbreeding, and the offspring are intellectually compromised.</p>
+            <p>These degradation patterns illustrate a fundamental problem: scale. With billions of AI-generated articles, images, and code samples flooding the internet daily, future training datasets will inevitably contain massive amounts of synthetic content. It's digital inbreeding, and the offspring are intellectually compromised. Dr. Maya Patel's Stanford research team has quantified this crisis:</p>
 
             <div class="research-box">
                 <h4>🔬 Stanford Research Findings</h4>
                 <p>Dr. Maya Patel's team tracked AI model performance across generations, revealing predictable quality degradation patterns when models train on increasingly synthetic datasets. The research suggests we may be approaching a critical threshold.</p>
             </div>
 
+            <p>But academic warnings pale in comparison to what's happening inside the companies building these models. The crisis has already reached the boardrooms of Silicon Valley.</p>
+
             <h2>OpenAI's Internal Crisis</h2>
+
+            <p>OpenAI knows the contamination problem is real—and they're scrambling for solutions. Internal documents obtained by former employees reveal the company is already seeing quality degradation in preliminary GPT-6 training runs. The exponential growth of synthetic content is overwhelming their ability to filter it out:</p>
 
             <div class="body-image">
                 <img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=350&h=250&fit=crop&q=80" alt="Data visualization showing decline" />
-                <div class="body-image-caption">The exponential growth of synthetic content contaminating training datasets</div>
+                <div class="body-image-caption">The exponential growth curve shows synthetic content doubling every 3 months, far outpacing human content creation</div>
             </div>
 
-            <p>OpenAI knows this. Internal documents obtained by former employees reveal the company is already seeing quality degradation in preliminary GPT-6 training runs. The solution isn't technical—it's economic. They need access to pre-2023 "clean" data, and they're willing to pay billions for it.</p>
+            <p>This visualization underscores why the solution isn't technical—it's economic. They need access to pre-2023 "clean" data, and they're willing to pay billions for it. But even that may not be enough, as one former researcher admits:</p>
 
             <blockquote>
                 "The pure training data that built GPT-4 may no longer exist in meaningful quantities. We're seeing the first signs of what happens when AI eats its own tail."

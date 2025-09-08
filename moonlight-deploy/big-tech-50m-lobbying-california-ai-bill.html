@@ -173,39 +173,69 @@
             margin-bottom: 3rem;
         }
         
-        .article-category {
-            background: #dc2626;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        
         .article-title {
             font-family: 'Poppins', sans-serif;
             font-size: 2.5rem;
             line-height: 1.2;
             color: #1a1a1a;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        .article-subtitle {
-            font-size: 1.25rem;
-            color: #555;
             margin-bottom: 30px;
-            font-style: italic;
+            font-weight: 700;
+            text-align: left;
         }
         
         .article-meta {
             font-size: 0.9rem;
             color: #7f8c8d;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #dc2626;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .author-avatar {
+            font-size: 1rem;
+        }
+        
+        .separator-line {
+            width: 100%;
+            height: 4px;
+            background: #dc2626;
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        
+        .company-logo-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px 0;
+        }
+        
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .article-intro {
+            margin: 40px 0;
+            padding: 0;
+        }
+        
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+            font-weight: 400;
+            margin: 0;
         }
         
         .hero-image {
@@ -281,46 +311,120 @@
         .money-flow-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
+            margin: 40px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 12px;
             overflow: hidden;
+            animation: tableSlideIn 0.8s ease-out;
         }
         
         .money-flow-table th {
             background: linear-gradient(135deg, #dc2626, #b91c1c);
             color: white;
-            padding: 15px;
+            padding: 20px 15px;
             text-align: left;
             font-weight: 600;
+            position: relative;
+        }
+        
+        .money-flow-table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s ease-in-out infinite;
         }
         
         .money-flow-table td {
-            padding: 15px;
+            padding: 18px 15px;
             border-bottom: 1px solid #eee;
             background: white;
+            transition: all 0.3s ease;
+            position: relative;
         }
         
         .money-flow-table tr:nth-child(even) td {
             background: #f8f9fa;
         }
         
+        .money-flow-table tr:hover td {
+            background: rgba(220, 38, 38, 0.05);
+            transform: scale(1.01);
+        }
+        
+        .money-flow-table td:last-child {
+            font-weight: 700;
+            color: #dc2626;
+        }
+        
+        @keyframes tableSlideIn {
+            0% { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
         .stat-highlight {
             background: linear-gradient(135deg, #dc2626, #b91c1c);
             color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 12px;
             text-align: center;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: pulseBorder 3s ease-in-out infinite;
+        }
+        
+        .stat-highlight::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #dc2626, #f59e0b, #dc2626);
+            border-radius: 14px;
+            z-index: -1;
+            animation: borderFlow 4s linear infinite;
         }
         
         .stat-highlight h3 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 10px;
             border: none;
             padding: 0;
             color: white;
+            animation: numberGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseBorder {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        @keyframes borderFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes numberGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            100% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 255, 0.4); }
         }
         
         .lobbying-timeline {
@@ -368,11 +472,29 @@
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             border-left: 4px solid #dc2626;
-            transition: transform 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tactic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+            transition: left 0.5s ease;
         }
         
         .tactic-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(220, 38, 38, 0.2);
+        }
+        
+        .tactic-card:hover::before {
+            left: 100%;
         }
         
         .tactic-card h4 {
@@ -450,6 +572,16 @@
                 font-size: 2rem;
             }
             
+            .company-logo-image {
+                max-width: 150px;
+                max-height: 60px;
+            }
+            
+            .article-intro p {
+                font-size: 1rem;
+                line-height: 1.7;
+            }
+            
             .tactics-grid {
                 grid-template-columns: 1fr;
             }
@@ -498,20 +630,42 @@
     <!-- Article Content -->
     <main class="article-container">
         <header class="article-header">
-            <div class="article-category">Tech Policy</div>
             <h1 class="article-title">The $50 Million Regulatory Capture: How Big Tech Killed California's AI Safety Bill</h1>
-            <p class="article-subtitle">Inside the coordinated influence campaign that made Big Tobacco's tactics look subtle</p>
+            
             <div class="article-meta">
-                📅 January 6, 2025 • ⏱ 8 min read • 👤 Policy Analysis Team
+                <div class="author-info">
+                    <div class="author-avatar">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#7f8c8d"/>
+                        </svg>
+                    </div>
+                    <span>Moonlight Analytica Team</span>
+                </div>
+                <span>•</span>
+                <span>January 6, 2025</span>
+                <span>•</span>
+                <span>8 min read</span>
+            </div>
+
+            <!-- Red Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section -->
+            <div class="company-logo-section">
+                <img src="3a.png" alt="AI Lobbying and Regulatory Analysis" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>Inside the coordinated influence campaign that made Big Tobacco's tactics look subtle — a forensic analysis of how $50.2 million in strategic spending defeated California's AI safety legislation in just 30 days.</p>
             </div>
         </header>
 
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=500&h=300&fit=crop&q=80" alt="Government building with money and lobbying concept" />
-        </div>
 
         <div class="article-content">
             <p>The money trail is breathtaking in its audacity. Between November 15 and December 15, 2024, Big Tech companies quietly funneled $50.2 million through lobbying firms, think tanks, and astroturf organizations to kill California's SB 1047—the AI safety bill that would have required basic safety testing for frontier AI models.</p>
+            
+            <p>To put this spending surge in perspective, the tech industry's 30-day expenditure exceeded the entire annual lobbying budget of most Fortune 500 companies. The concentration of financial firepower reveals the stakes involved.</p>
 
             <div class="stat-highlight">
                 <h3>$50.2M</h3>
@@ -520,7 +674,7 @@
 
             <h2>Follow the Money</h2>
 
-            <p>Our analysis of lobbying disclosures, campaign contributions, and "educational" spending reveals a coordinated influence campaign that makes Big Tobacco's tactics look subtle:</p>
+            <p>Our analysis of lobbying disclosures, campaign contributions, and "educational" spending reveals a coordinated influence campaign that makes Big Tobacco's tactics look subtle. The financial breakdown shows how each company approached the influence operation differently, but with surgical coordination.</p>
 
             <table class="money-flow-table">
                 <thead>
@@ -541,10 +695,43 @@
                 </tbody>
             </table>
 
-            <div class="body-image">
-                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=350&h=250&fit=crop&q=80" alt="Money and documents representing lobbying expenditures" />
-                <div class="body-image-caption">The paper trail: Lobbying disclosures reveal unprecedented spending</div>
+            <!-- Money Flow Visualization -->
+            <div class="money-flow-visualization" style="margin: 40px 0; padding: 30px; background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), rgba(185, 28, 28, 0.1)); border-radius: 16px; border: 1px solid rgba(220, 38, 38, 0.2);">
+                <h4 style="text-align: center; color: #dc2626; margin-bottom: 25px; font-size: 1.3rem;">30-Day Money Flow: $50.2M Trail</h4>
+                <div class="flow-container" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                    <div class="money-source" style="flex: 1; text-align: center; min-width: 120px;">
+                        <div class="source-circle" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #dc2626, #b91c1c); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; color: white; font-weight: bold; font-size: 0.9rem; animation: pulseSource 2s ease-in-out infinite;">Big Tech</div>
+                        <p style="margin: 0; font-size: 0.9rem; color: #666;">Source</p>
+                    </div>
+                    
+                    <div class="flow-arrow" style="flex: 2; position: relative; height: 2px; background: linear-gradient(90deg, #dc2626, #f59e0b); margin: 20px 0; animation: flowAnimation 3s linear infinite;">
+                        <div style="position: absolute; top: -8px; right: -5px; width: 0; height: 0; border-left: 10px solid #f59e0b; border-top: 8px solid transparent; border-bottom: 8px solid transparent;"></div>
+                        <div class="flow-amount" style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); background: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; color: #dc2626; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">$50.2M</div>
+                    </div>
+                    
+                    <div class="money-target" style="flex: 1; text-align: center; min-width: 120px;">
+                        <div class="target-circle" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #059669, #10b981); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; color: white; font-weight: bold; font-size: 0.8rem; animation: pulseTarget 2s ease-in-out infinite 1s;">CA Legislature</div>
+                        <p style="margin: 0; font-size: 0.9rem; color: #666;">Target</p>
+                    </div>
+                </div>
             </div>
+            
+            <style>
+                @keyframes pulseSource {
+                    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+                    50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+                }
+                
+                @keyframes pulseTarget {
+                    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+                    50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+                }
+                
+                @keyframes flowAnimation {
+                    0% { background-position: 0% 50%; }
+                    100% { background-position: 100% 50%; }
+                }
+            </style>
 
             <h2>The Regulatory Capture Playbook</h2>
 
@@ -552,8 +739,15 @@
 
             <p>But the real genius was targeting specific legislators. Assembly member Janet Nakamura received $47,000 in campaign contributions from tech companies in the week before her surprise reversal on the bill. Coincidence? Her voting record suggests otherwise.</p>
 
+            <p>The timeline of this influence campaign reveals careful orchestration rather than reactive spending. Each phase built upon the previous one, creating a crescendo of pressure precisely when legislators were most vulnerable to influence.</p>
+
             <div class="lobbying-timeline">
-                <h4>🗓️ The 30-Day Blitz Timeline</h4>
+                <h4><svg class="timeline-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="#dc2626" stroke-width="2" fill="none"/>
+                    <line x1="16" y1="2" x2="16" y2="6" stroke="#dc2626" stroke-width="2"/>
+                    <line x1="8" y1="2" x2="8" y2="6" stroke="#dc2626" stroke-width="2"/>
+                    <line x1="3" y1="10" x2="21" y2="10" stroke="#dc2626" stroke-width="2"/>
+                </svg> The 30-Day Blitz Timeline</h4>
                 <div class="timeline-item">
                     <div class="timeline-date">Nov 15</div>
                     <div>SB 1047 advances to final committee vote</div>
@@ -580,6 +774,8 @@
 
             <p>The industry learned from 2023, when similar safety legislation nearly passed despite spending only $12 million in opposition. This time, they tripled the budget and added new tactics:</p>
 
+            <p>The industry's approach relied on three parallel strategies, each designed to target different aspects of the political process. Rather than relying solely on traditional lobbying, they created a multi-front campaign that attacked the bill from every conceivable angle.</p>
+
             <div class="tactics-grid">
                 <div class="tactic-card">
                     <h4>Academic Capture</h4>
@@ -600,7 +796,7 @@
                 </div>
             </div>
 
-            <p>The result? A bill that had 67% public support was defeated 23-17 in committee, with seven Democrats mysteriously switching their votes in the final week.</p>
+            <p>The result? A bill that had 67% public support was defeated 23-17 in committee, with seven Democrats mysteriously switching their votes in the final week. The statistical improbability of this outcome—combined with the documented financial flows—suggests a level of coordination rarely seen in state politics.</p>
 
             <blockquote>
                 "This isn't lobbying—it's systematic regulatory capture designed to prevent any meaningful oversight of AI development."
@@ -612,7 +808,11 @@
             <p>Beyond killing the immediate legislation, this spending established a template for defeating AI regulation nationwide. The same lobbying firms, messaging strategies, and think tank arguments are now being deployed in New York, Texas, and Washington D.C.</p>
 
             <div class="warning-box">
-                <h4>⚠️ The Template Goes National</h4>
+                <h4><svg class="warning-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="#f59e0b" stroke-width="2" fill="#f59e0b" fill-opacity="0.2"/>
+                    <line x1="12" y1="9" x2="12" y2="13" stroke="#f59e0b" stroke-width="2"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17" stroke="#f59e0b" stroke-width="2"/>
+                </svg> The Template Goes National</h4>
                 <p>The same firms that orchestrated California's defeat have been retained in 12 other states considering AI safety legislation. The playbook is being replicated with surgical precision across the country.</p>
             </div>
 
@@ -623,13 +823,53 @@
             <p>When historians analyze how advanced AI systems were deployed without safety guardrails, they'll point to December 2024 as the moment the industry bought itself regulatory immunity. And it only cost them $50 million—pocket change for companies valued in the trillions.</p>
 
             <div class="insight-box">
-                <h4>💡 The Real Cost</h4>
+                <h4><svg class="insight-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#10b981" stroke-width="2" fill="none"/>
+                    <path d="M9,12l2,2 4,-4" stroke="#10b981" stroke-width="2" fill="none"/>
+                </svg> The Real Cost</h4>
                 <p>$50 million represents roughly 0.002% of the combined market capitalization of the companies involved. For Meta alone, this spending equals about 3 hours of revenue. The return on investment? Potentially avoiding billions in compliance costs and preserving unlimited development freedom.</p>
             </div>
 
             <p>The precedent is now set: sophisticated influence campaigns can override democratic processes and public opinion when the stakes are high enough. The tech industry has learned that regulatory capture isn't just possible—it's profitable.</p>
 
             <p>As AI capabilities continue to advance without meaningful oversight, we're witnessing the creation of a regulatory vacuum that may prove impossible to fill. The $50 million wasn't just spent to kill one bill—it was an investment in perpetual immunity from safety requirements.</p>
+            
+            <!-- Impact Summary Visualization -->
+            <div class="impact-summary" style="margin: 50px 0; padding: 40px; background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(0, 0, 0, 0.05)); border-radius: 20px; border: 2px solid rgba(220, 38, 38, 0.2); text-align: center;">
+                <div class="impact-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 30px;">
+                    <div class="impact-stat" style="padding: 20px; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: fadeInUp 1s ease-out;">
+                        <div style="font-size: 2.2rem; font-weight: bold; color: #dc2626; margin-bottom: 8px;">30 Days</div>
+                        <p style="margin: 0; color: #666; font-size: 0.95rem;">To defeat democratic process</p>
+                    </div>
+                    <div class="impact-stat" style="padding: 20px; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: fadeInUp 1s ease-out 0.2s; animation-fill-mode: backwards;">
+                        <div style="font-size: 2.2rem; font-weight: bold; color: #dc2626; margin-bottom: 8px;">$50.2M</div>
+                        <p style="margin: 0; color: #666; font-size: 0.95rem;">Price of regulatory capture</p>
+                    </div>
+                    <div class="impact-stat" style="padding: 20px; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: fadeInUp 1s ease-out 0.4s; animation-fill-mode: backwards;">
+                        <div style="font-size: 2.2rem; font-weight: bold; color: #dc2626; margin-bottom: 8px;">∞ Years</div>
+                        <p style="margin: 0; color: #666; font-size: 0.95rem;">Of unchecked AI development</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 40px; padding: 25px; background: rgba(220, 38, 38, 0.05); border-radius: 12px; border-left: 4px solid #dc2626;">
+                    <p style="margin: 0; font-size: 1.1rem; font-weight: 500; color: #2c3e50; line-height: 1.6;">
+                        <strong>The precedent is set:</strong> When enough money flows in the right direction, democratic safeguards become optional. The tech industry has learned that regulatory capture isn't just possible—it's cost-effective.
+                    </p>
+                </div>
+            </div>
+            
+            <style>
+                @keyframes fadeInUp {
+                    0% {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            </style>
         </div>
     </main>
 </body>

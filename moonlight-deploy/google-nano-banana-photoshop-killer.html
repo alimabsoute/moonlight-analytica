@@ -305,6 +305,7 @@
             text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
         }
         
+        /* Mobile-responsive infographic styles */
         @media (max-width: 768px) {
             .article-container {
                 padding: 120px 20px 40px;
@@ -316,6 +317,29 @@
             
             .nav-menu {
                 gap: 1.5rem;
+            }
+            
+            /* Infographic mobile optimizations */
+            .market-disruption-infographic div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+            
+            .market-disruption-infographic div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+            
+            .market-disruption-infographic h3 {
+                font-size: 1.4rem !important;
+            }
+            
+            .market-disruption-infographic div[style*="padding: 40px"] {
+                padding: 25px !important;
+            }
+            
+            .market-disruption-infographic div[style*="padding: 25px"] {
+                padding: 20px !important;
             }
         }
     </style>
@@ -388,18 +412,151 @@
     <div class="article-container">
         <a href="news.html" class="back-to-news">← Back to News</a>
         
-        <div class="article-header">
-            <span class="article-category">AI & ML</span>
+        <header class="article-header">
             <h1 class="article-title">The 'Photoshop Killer' That Went Viral Before Google Even Announced It</h1>
-            <p class="article-subtitle">How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing</p>
+            
             <div class="article-meta">
-                <strong>Published:</strong> September 3, 2025 | <strong>Read Time:</strong> 12 minutes
+                <div class="author-info">
+                    <div class="author-avatar">🌙</div>
+                    <span>Moonlight Analytica Team</span>
+                </div>
+                <span>•</span>
+                <span>September 3, 2025</span>
+                <span>•</span>
+                <span>12 min read</span>
             </div>
-        </div>
 
-        <!-- Hero Image -->
-        <div style="width: 100%; text-align: center; margin: 40px 0; padding: 0; background: none;">
-            <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjcyIiBoZWlnaHQ9IjkyIiB2aWV3Qm94PSIwIDAgMjcyIDkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDwhLS0gTm8gYmFja2dyb3VuZCByZWN0ID0gdHJhbnNwYXJlbnQgYmFja2dyb3VuZCAtLT4KICA8ZyBpZD0iZ29vZ2xlLWxvZ28iPgogICAgPCEtLSBHIChibHVlKSAtLT4KICAgIDxwYXRoIGQ9Ik0zNS4yOSA0MS40MVYzMkg2Ny44Yy4zMSAxLjY0LjQ3IDMuNTguNDcgNS42OCAwIDcuMDYtMS45MyAxNS43OS04LjE1IDIyLjAxLTYuMDUgNi4zLTEzLjc4IDkuNjYtMjQuMDIgOS42NkMxNi4zMiA2OS4zNS4zNiA1My44OS4zNiAzNC45MS4zNiAxNS45MyAxNi4zMi40NyAzNS4zLjQ3YzEwLjUgMCAxNy45OCA0LjEyIDIzLjYgOS40OWwtNi42NCA2LjY0Yy00LjAzLTMuNzgtOS40OS02LjcyLTE2Ljk3LTYuNzItMTMuODYgMC0yNC43IDExLjE3LTI0LjcgMjUuMDMgMCAxMy44NiAxMC44NCAyNS4wMyAyNC43IDI1LjAzIDguOTkgMCAxNC4xMS0zLjYxIDE3LjM5LTYuODkgMi42Ni0yLjY2IDQuNDEtNi40NiA1LjEtMTEuNjVsLTIyLjQ5LjAxeiIgZmlsbD0iIzQyODVGNCIvPgogICAgPCEtLSBPIChyZWQpIC0tPgogICAgPHBhdGggZD0iTTExNS43NSA0Ny4xOGMwIDEyLjc3LTkuOTkgMjIuMTgtMjIuMjUgMjIuMThzLTIyLjI1LTkuNDEtMjIuMjUtMjIuMThDNzEuMjUgMzQuMzIgODEuMjQgMjUgOTMuNSAyNXMyMi4yNSA5LjMyIDIyLjI1IDIyLjE4em0tOS43NCAwYzAtNy45OC01Ljc5LTEzLjQ0LTEyLjUxLTEzLjQ0UzgwLjk5IDM5LjIgODAuOTkgNDcuMThjMCA3LjkgNS43OSAxMy40NCAxMi41MSAxMy40NHMxMi41MS01LjU1IDEyLjUxLTEzLjQ0eiIgZmlsbD0iI0VBNDMzNSIvPgogICAgPCEtLSBPICh5ZWxsb3cpIC0tPgogICAgPHBhdGggZD0iTTE2My43NSA0Ny4xOGMwIDEyLjc3LTkuOTkgMjIuMTgtMjIuMjUgMjIuMThzLTIyLjI1LTkuNDEtMjIuMjUtMjIuMThjMC0xMi44NSA5Ljk5LTIyLjE4IDIyLjI1LTIyLjE4czIyLjI1IDkuMzIgMjIuMjUgMjIuMTh6bS05Ljc0IDBjMC03Ljk4LTUuNzktMTMuNDQtMTIuNTEtMTMuNDRzLTEyLjUxIDUuNDYtMTIuNTEgMTMuNDRjMCA3LjkgNS43OSAxMy40NCAxMi41MSAxMy40NHMxMi41MS01LjU1IDEyLjUxLTEzLjQ0eiIgZmlsbD0iI0ZCQkMwNCIvPgogICAgPCEtLSBHIChibHVlKSAtLT4KICAgIDxwYXRoIGQ9Ik0yMDkuNzUgMjYuMzR2MzkuODJjMCAxNi4zOC05LjY2IDIzLjA3LTIxLjA4IDIzLjA3LTEwLjc1IDAtMTcuMjItNy4xOS0xOS42Ni0xMy4wN2w4LjQ4LTMuNTNjMS41MSAzLjYxIDUuMjEgNy44NyAxMS4xNyA3Ljg3IDcuMzEgMCAxMS44NC00LjUxIDExLjg0LTEzdi0zLjE5aC0uMzRjLTIuMTggMi42OS02LjM4IDUuMDQtMTEuNjggNS4wNC0xMS4wOSAwLTIxLjI1LTkuNjYtMjEuMjUtMjIuMDkgMC0xMi41MiAxMC4xNi0yMi4yNiAyMS4yNS0yMi4yNiA1LjI5IDAgOS40OSAyLjM1IDExLjY4IDQuOTZoLjM0di0zLjYxaDkuMjV6bS04LjU2IDIwLjkyYzAtNy44MS01LjIxLTEzLjUyLTExLjg0LTEzLjUyLTYuNzIgMC0xMi4zNSA1LjcxLTEyLjM1IDEzLjUyIDAgNy43MyA1LjYzIDEzLjM2IDEyLjM1IDEzLjM2IDYuNjMgMCAxMS44NC01LjYzIDExLjg0LTEzLjM2eiIgZmlsbD0iIzQyODVGNCIvPgogICAgPCEtLSBMIChncmVlbikgLS0+CiAgICA8cGF0aCBkPSJNMjI1IDN2NjVoLTkuNVYzaDkuNXoiIGZpbGw9IiMzNEE4NTMiLz4KICAgIDwhLS0gRSAocmVkKSAtLT4KICAgIDxwYXRoIGQ9Ik0yNjIuMDIgNTQuNDhsNy41NiA1LjA0Yy0yLjQ0IDMuNjEtOC4zMiA5LjgzLTE4LjQ4IDkuODMtMTIuNiAwLTIyLjAxLTkuNzQtMjIuMDEtMjIuMTggMC0xMy4xOSA5LjQ5LTIyLjE4IDIwLjkyLTIyLjE4IDExLjUxIDAgMTcuMTQgOS4xNiAxOC45OCAxNC4xMWwxLjAxIDIuNTItMjkuNjUgMTIuMjhjMi4yNyA0LjQ1IDUuOCA2LjcyIDEwLjc1IDYuNzIgNC45NiAwIDguNC0yLjQ0IDEwLjkyLTYuMTR6bS0yMy4yNy03Ljk4bDE5LjgyLTguMjNjLTEuMDktMi43Ny00LjM3LTQuNy04LjIzLTQuNy00Ljk1IDAtMTEuODQgNC4zNy0xMS41OSAxMi45M3oiIGZpbGw9IiNFQTQzMzUiLz4KICA8L2c+Cjwvc3ZnPg==" alt="Google Logo" style="width: 400px; height: auto; background: none; border: none; display: block; margin: 0 auto;">
+            <!-- Red Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Company Logo Section -->
+            <div class="company-logo-section">
+                <img src="6a.png" alt="Google AI Analysis" class="company-logo-image">
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing, going viral before Google even made an official announcement.</p>
+            </div>
+        </header>
+
+        <p>The true scale of this disruption becomes evident when examining both the technical capabilities and economic implications that position this AI model as a genuine threat to Adobe's long-standing market dominance.</p>
+        
+        <!-- Professional Market Disruption Infographic -->
+        <div class="market-disruption-infographic" style="width: 100%; margin: 50px 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+            <div style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); padding: 40px; margin: 2px; border-radius: 14px;">
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 35px;">
+                    <h3 style="font-family: 'Poppins', sans-serif; font-size: 1.8rem; color: #2c3e50; margin-bottom: 12px; font-weight: 700;">🍌 The "Nano Banana" Market Disruption</h3>
+                    <p style="color: #666; font-size: 1rem; margin: 0; font-weight: 500;">How Google's AI-Native Approach Challenges Adobe's Legacy Model</p>
+                </div>
+                
+                <!-- Main Comparison Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px;">
+                    <!-- Google Nano Banana Side -->
+                    <div style="background: linear-gradient(135deg, #4285f4 0%, #34a853 100%); padding: 25px; border-radius: 12px; color: white; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; z-index: 1;"></div>
+                        <div style="position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                <div style="width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="font-size: 1.5rem;">🚀</span>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem; margin: 0; font-weight: 600;">Google Nano Banana</h4>
+                                    <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">(Gemini 2.5 Flash Image)</p>
+                                </div>
+                            </div>
+                            
+                            <div style="space-y: 12px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">💰</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">$0.039 per image</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">⚡</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">1-2 second generation</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">🤖</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">AI-native architecture</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">☁️</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Cloud-first deployment</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="color: #FFD700; margin-right: 8px;">🎯</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Conversational interface</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Adobe Creative Suite Side -->
+                    <div style="background: linear-gradient(135deg, #e74c3c 0%, #8e44ad 100%); padding: 25px; border-radius: 12px; color: white; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -20px; left: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; z-index: 1;"></div>
+                        <div style="position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                <div style="width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="font-size: 1.5rem;">🎨</span>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem; margin: 0; font-weight: 600;">Adobe Creative Suite</h4>
+                                    <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">(Photoshop + Ecosystem)</p>
+                                </div>
+                            </div>
+                            
+                            <div style="space-y: 12px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">💸</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">$22.99/month per user</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">🐌</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">10-15 sec per operation</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">🖥️</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Desktop-dependent</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">📚</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Steep learning curve</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">🔧</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Complex tool mastery</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Impact Metrics -->
+                <div style="background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; color: #1a1a1a;">
+                        <div>
+                            <h5 style="font-size: 1.4rem; margin: 0 0 5px 0; font-weight: 700;">589x</h5>
+                            <p style="font-size: 0.85rem; margin: 0; font-weight: 500;">More images for same cost</p>
+                        </div>
+                        <div>
+                            <h5 style="font-size: 1.4rem; margin: 0 0 5px 0; font-weight: 700;">84% 📉</h5>
+                            <p style="font-size: 0.85rem; margin: 0; font-weight: 500;">Cost reduction potential</p>
+                        </div>
+                        <div>
+                            <h5 style="font-size: 1.4rem; margin: 0 0 5px 0; font-weight: 700;">#1 🏆</h5>
+                            <p style="font-size: 0.85rem; margin: 0; font-weight: 500;">LMArena ranking</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Disruption Arrow -->
+                <div style="text-align: center;">
+                    <div style="background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%); display: inline-block; padding: 12px 24px; border-radius: 25px; color: white; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                        📈 The Economics of Creative Disruption: When AI Eliminates Subscription Moats
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="article-content">
@@ -528,6 +685,8 @@
                 <h4>Speed Advantage</h4>
                 <p>While other tools spin for 10–15 seconds per image, Nano Banana often responds in <strong>1–2 seconds</strong>. For creative professionals who iterate rapidly, this speed difference compounds into hours saved weekly.</p>
             </div>
+            
+            <p>This speed advantage analysis reveals a crucial competitive factor often overlooked in technical comparisons—the compound effect of faster iteration cycles on creative productivity and project economics.</p>
 
             <h2>Security and Ethics: The Responsible AI Angle</h2>
 
