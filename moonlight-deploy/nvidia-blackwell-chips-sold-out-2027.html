@@ -7,33 +7,46 @@
     <meta name="description" content="NVIDIA's Blackwell B200 chips are sold out until 2027, with just 5 tech giants securing 89% of production worth $57.8B. Inside the secret allocation that will determine AI's future.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --cyber-blue: #00bfff;
-            --cyber-cyan: #87ceeb;
-            --cyber-green: #00ff88;
-            --cyber-purple: #8a2be2;
-            --dark-bg: #0a0e1a;
-            --darker-bg: #050810;
-            --card-bg: #1a1f35;
-            --text-primary: #ffffff;
-            --text-secondary: #b8c4d8;
-            --accent-glow: 0 0 20px rgba(0, 191, 255, 0.3);
-            --chip-gold: #ffd700;
-            --danger-red: #ff4757;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
+        :root {
+            --primary-color: #1f2937;
+            --secondary-color: #6b7280;
+            --accent-color: #00bfff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(0, 0, 0, 0.05);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #00bfff;
+            --bg-primary: #faf8f3;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --darker-bg: #f3f4f6;
+            --backdrop-blur: blur(12px);
+            --cyber-blue: #00bfff;
+            --cyber-green: #10b981;
+            --cyber-cyan: #87ceeb;
+            --chip-gold: #f59e0b;
+            --danger-red: #ef4444;
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--darker-bg);
-            color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
         }
 
         /* Animated Background */
@@ -60,42 +73,49 @@
         .navbar {
             position: fixed;
             top: 0;
-            width: 100%;
+            left: 0;
+            right: 0;
             z-index: 1000;
             padding: 20px 0;
-            background: rgba(10, 14, 26, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--backdrop-blur);
             border-bottom: 1px solid rgba(0, 191, 255, 0.2);
         }
-
+        
         .nav-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            padding: 0 2rem;
+            padding: 0 10px;
+            gap: 3rem;
         }
-
+        
         .logo {
             font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
             font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--cyber-blue);
+            color: var(--text-primary);
             text-decoration: none;
-            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
             transition: all 0.3s ease;
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
         }
-
+        
         .logo:hover {
-            text-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
             transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
             list-style: none;
+            gap: 2.5rem;
+            margin-left: auto;
         }
 
         .nav-link {
@@ -240,6 +260,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .stat-card::before {
@@ -312,6 +333,7 @@
             overflow: hidden;
             transition: all 0.3s ease;
             cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .company-card::before {
@@ -429,6 +451,7 @@
             margin: 3rem 0;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .timeline-grid {
@@ -484,6 +507,7 @@
             border: 1px solid rgba(0, 191, 255, 0.3);
             border-radius: 20px;
             padding: 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .performance-matrix h3 {
@@ -512,10 +536,10 @@
         }
 
         .chip-card {
-            background: var(--darker-bg);
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             border-left: 4px solid;
             transition: transform 0.3s ease;
             position: relative;
@@ -562,12 +586,12 @@
 
         .chip-badge.champion {
             background: var(--cyber-green);
-            color: var(--darker-bg);
+            color: white;
         }
 
         .chip-badge.legacy {
             background: var(--chip-gold);
-            color: var(--darker-bg);
+            color: white;
         }
 
         .chip-badge.competitor {
@@ -648,6 +672,7 @@
             padding: 2.5rem;
             text-align: center;
             position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .chip-model {
@@ -885,10 +910,16 @@
             </div>
         </div>
 
+        <h2>The Anatomy of Market Control</h2>
+
         <div class="article-content">
-            <p>These numbers tell only part of the story. The real power play becomes clear when you examine exactly how NVIDIA's Jensen Huang personally selected which companies would receive access to the future of AI computing.</p>
+            <p>These numbers tell only part of the story. The real power play becomes clear when you examine exactly how NVIDIA's Jensen Huang personally selected which companies would receive access to the future of AI computing. The $57.8 billion in total contract value represents the largest technology allocation in history, dwarfing previous semiconductor deals by orders of magnitude.</p>
             
-            <p>The allocation breakdown reveals the true power dynamics at play in Silicon Valley's most consequential resource allocation. Behind each percentage lies a carefully calculated strategic decision that will echo through the AI industry for years to come.</p>
+            <p>The allocation breakdown reveals the true power dynamics at play in Silicon Valley's most consequential resource allocation. Behind each percentage lies a carefully calculated strategic decision that will echo through the AI industry for years to come. The 1.4 million total units allocated represent not just chips, but the very foundation upon which the next generation of AI applications will be built.</p>
+
+            <p>What makes these statistics particularly striking is their concentration. While thousands of companies desperately need Blackwell chips to remain competitive, 89% of production has been locked up by just five tech giants. This level of market concentration is unprecedented, even in an industry known for winner-take-all dynamics.</p>
+
+            <p>The implications extend far beyond simple supply and demand. These allocation decisions will determine which companies can compete in frontier AI development and which will be relegated to using older, less capable hardware. In an industry where computational advantage translates directly to market dominance, access to Blackwell chips has become the ultimate competitive moat.</p>
         </div>
 
         <!-- Interactive Allocation Visualization -->
@@ -998,9 +1029,13 @@
         </div>
 
         <div class="article-content">
-            <p>As shown above, the allocation wasn't random—it was strategic. Microsoft's commanding 28% share reflects their deep Azure partnership and $13 billion OpenAI investment. Meta's substantial 24% signals their desperate pivot to AI infrastructure after massive Reality Labs losses totaling over $46 billion since 2019.</p>
+            <p>As shown above, the allocation wasn't random—it was strategic. Microsoft's commanding 28% share reflects their deep Azure partnership and $13 billion OpenAI investment. Meta's substantial 24% signals their desperate pivot to AI infrastructure after massive Reality Labs losses totaling over $46 billion since 2019. These aren't just purchasing decisions—they're multi-billion dollar bets on the future of artificial intelligence.</p>
             
-            <p>The patterns illustrated here reveal something deeper than mere business deals. Each allocation represents Jensen Huang's personal bet on which company will best advance NVIDIA's ecosystem dominance. OpenAI's modest 6% allocation, despite their ChatGPT success, shows the limits of pure innovation without established infrastructure partnerships.</p>
+            <p>The patterns illustrated here reveal something deeper than mere business deals. Each allocation represents Jensen Huang's personal bet on which company will best advance NVIDIA's ecosystem dominance. OpenAI's modest 6% allocation, despite their ChatGPT success, shows the limits of pure innovation without established infrastructure partnerships. In Silicon Valley's power hierarchy, having cutting-edge AI models matters less than having the infrastructure to scale them globally.</p>
+
+            <p>The allocation methodology itself reveals NVIDIA's strategic thinking. Rather than maximizing short-term revenue by auctioning chips to the highest bidder, Huang prioritized long-term ecosystem development. Microsoft's massive allocation ensures Azure remains the dominant AI cloud platform, while Meta's substantial share supports their ambitious plans to challenge OpenAI's dominance in consumer AI applications.</p>
+
+            <p>What's particularly striking is how these allocation decisions create self-reinforcing advantages. Companies with more Blackwell chips can train better models, attract more customers, and generate more revenue to purchase even more chips in future allocation cycles. This creates a compounding effect where early access translates to sustained competitive advantage, potentially for decades to come.</p>
         </div>
 
         <!-- Quote Section -->
@@ -1009,10 +1044,14 @@
             <div class="quote-author">Source familiar with NVIDIA's allocation process</div>
         </div>
 
+        <h2>The Three-Year Shortage Reality</h2>
+
         <div class="article-content">
             <p>Understanding the allocation is crucial, but the timeline reveals the true scope of the shortage. When industry insiders say "sold out until 2027," they mean it literally—every major Blackwell chip has already been assigned to specific customers through binding contracts.</p>
             
             <p>The following timeline demonstrates the unprecedented nature of this supply constraint. Unlike previous chip shortages that lasted months, this represents a deliberate three-year production commitment that reshapes the entire AI landscape.</p>
+
+            <p>The severity of this shortage becomes clear when you consider that NVIDIA is essentially rationing the future of AI development. Companies not on the allocation list face a stark choice: wait three years for access to cutting-edge hardware or attempt to compete using inferior technology. This creates a technological apartheid where access to advanced AI capabilities becomes a luxury available only to the tech elite.</p>
         </div>
 
         <!-- Supply Timeline -->
@@ -1060,11 +1099,23 @@
         </div>
 
         <div class="article-content">
-            <p>This data reveals why companies are accepting three-year waits. The supply constraints become more understandable when you examine what makes Blackwell so revolutionary. This isn't just an incremental upgrade—it's a generational leap that explains why CEOs are personally flying to NVIDIA headquarters to plead for allocations.</p>
+            <p>This data reveals why companies are accepting three-year waits. The supply constraints become more understandable when you examine what makes Blackwell so revolutionary. This isn't just an incremental upgrade—it's a generational leap that explains why CEOs are personally flying to NVIDIA headquarters to plead for allocations. The timeline shows that 2028 represents the earliest possible relief, and even then, it will likely be NVIDIA's next-generation architecture rather than additional Blackwell production.</p>
             
-            <p>The performance comparison below illustrates exactly why this chip represents an existential upgrade rather than a nice-to-have improvement. These numbers explain the desperation in boardrooms across Silicon Valley.</p>
-            
-            <p>To understand the full scope of Blackwell's dominance, we need to examine how it stacks up against both NVIDIA's previous generation and AMD's best competing architecture. The technical specifications reveal why companies are willing to wait three years and pay premium prices rather than settle for alternatives.</p>
+            <p>The unprecedented duration of this shortage reflects the complexity of semiconductor manufacturing at the bleeding edge. Unlike previous chip generations that could be ramped up relatively quickly, Blackwell requires entirely new fabrication processes, specialized materials, and manufacturing techniques that take years to perfect and scale. TSMC, NVIDIA's primary manufacturing partner, has dedicated multiple cutting-edge fabs exclusively to Blackwell production, yet supply still cannot meet demand.</p>
+
+            <p>The three-year commitment timeline also reveals something crucial about NVIDIA's business strategy. By locking in long-term contracts, NVIDIA has essentially pre-sold their entire production capacity through 2027, providing unprecedented revenue visibility and financial stability. This allows them to invest aggressively in next-generation R&D while competitors struggle with uncertain demand forecasting.</p>
+
+            <p>The performance comparison below illustrates exactly why this chip represents an existential upgrade rather than a nice-to-have improvement. These numbers explain the desperation in boardrooms across Silicon Valley. To understand the full scope of Blackwell's dominance, we need to examine how it stacks up against both NVIDIA's previous generation and AMD's best competing architecture. The technical specifications reveal why companies are willing to wait three years and pay premium prices rather than settle for alternatives.</p>
+        </div>
+
+        <h2>Why Blackwell Changes Everything</h2>
+
+        <div class="article-content">
+            <p>The technical specifications below reveal the magnitude of Blackwell's advancement and explain why it has created such unprecedented demand. This isn't merely an incremental improvement—it's a generational leap that fundamentally changes what's possible in AI development.</p>
+
+            <p>When comparing Blackwell's 20 ExaFLOPS performance to the H100's 4 ExaFLOPS, we're looking at a 5x improvement in raw computational power. But the real advantage lies in training speed, where Blackwell delivers 30x faster performance. This means AI models that took weeks to train can now be completed in days, dramatically accelerating the pace of AI development and giving Blackwell users an insurmountable time-to-market advantage.</p>
+
+            <p>The power efficiency improvement is equally transformative. Blackwell's 4x power efficiency advantage over the H100 doesn't just reduce operating costs—it enables entirely new deployment scenarios. Data centers can now pack more AI computation into the same power envelope, while edge deployments become feasible for applications that were previously impossible due to power constraints.</p>
         </div>
 
         <!-- Interactive Performance Comparison Matrix -->

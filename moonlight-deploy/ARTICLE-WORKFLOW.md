@@ -103,6 +103,52 @@ After the clean header, include all rich content:
 5. **DO** include analysis highlights
 6. **DO** make content visually compelling
 
+## 🚨 CRITICAL: VISUAL/TEXT ALTERNATING PATTERN (MANDATORY) 🚨
+
+### The Fundamental Rule:
+**NEVER** have multiple visual elements clustered together. **NEVER** have long streams of text without visual breaks.
+
+### Required Pattern:
+```
+Header Section
+↓
+VISUAL ELEMENT 1 (chart/diagram/infographic)
+↓ 
+SUBSTANTIAL TEXT BLOCK 1 (2-4 paragraphs explaining Visual 1)
+↓
+VISUAL ELEMENT 2 (different chart/diagram/infographic)  
+↓
+SUBSTANTIAL TEXT BLOCK 2 (2-4 paragraphs explaining Visual 2)
+↓
+VISUAL ELEMENT 3 (if exists)
+↓
+SUBSTANTIAL TEXT BLOCK 3 (2-4 paragraphs explaining Visual 3)
+↓
+[Continue for N visual elements...]
+```
+
+### Clustering Violations (FORBIDDEN):
+❌ **NEVER DO THIS:**
+- Visual 1 → Visual 2 → Visual 3 → Long text stream
+- Multiple charts/diagrams stacked together
+- Visual elements appearing consecutively without text separation
+- Orphaned visual elements (like single cards below rows)
+- Text walls longer than 4 paragraphs without visual breaks
+
+✅ **ALWAYS DO THIS:**  
+- Visual 1 → Text Block → Visual 2 → Text Block → Visual 3 → Text Block
+- Each visual gets its own corresponding explanatory text
+- Substantial text blocks (minimum 2 paragraphs per visual)
+- Balanced visual-to-text ratio throughout article
+
+### Implementation Checklist:
+- [ ] Count all visual elements in article (charts, diagrams, infographics, cards, highlights)
+- [ ] Ensure each visual has dedicated text block following it
+- [ ] No visual elements appear consecutively
+- [ ] Text blocks are substantial (2-4 paragraphs minimum)
+- [ ] Pattern flows smoothly from intro to conclusion
+- [ ] Mobile layout maintains alternating pattern
+
 ### Style Consistency:
 - Use Inter font for body text
 - Use Poppins for headings
