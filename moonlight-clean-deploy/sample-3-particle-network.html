@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample 3: Particle Network Constellation - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Particle Network */
+        #networkCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00bfff, #87ceeb, #4682b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #6b7280;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card h3 {
+            color: #00bfff;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Network Canvas -->
+    <canvas id="networkCanvas"></canvas>
+
+    <div class="content">
+        <h1 class="title">Particle Network Constellation</h1>
+        <p class="description">
+            Connected nodes creating a dynamic tech network. Glowing particles connect and disconnect, 
+            forming an ever-changing constellation that responds to mouse movement.
+        </p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>🌐 Interactive</h3>
+                <p>Network responds to mouse movement with new connections forming</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Dynamic</h3>
+                <p>Connections form and break naturally, creating living network effect</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔗 Tech Symbol</h3>
+                <p>Perfect metaphor for data connections and network analytics</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ParticleNetwork {
+            constructor() {
+                this.canvas = document.getElementById('networkCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: 0, y: 0 };
+                
+                this.resize();
+                this.init();
+                this.animate();
+                this.bindEvents();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                this.particles = [];
+                const particleCount = Math.min(60, Math.floor((window.innerWidth * window.innerHeight) / 15000));
+                
+                for (let i = 0; i < particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        radius: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.3
+                    });
+                }
+            }
+
+            bindEvents() {
+                window.addEventListener('resize', () => {
+                    this.resize();
+                    this.init();
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = e.clientX;
+                    this.mouse.y = e.clientY;
+                });
+            }
+
+            drawParticle(particle) {
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = `rgba(0, 191, 255, ${particle.opacity})`;
+                this.ctx.fill();
+                
+                // Add glow effect
+                this.ctx.shadowBlur = 10;
+                this.ctx.shadowColor = 'rgba(0, 191, 255, 0.5)';
+                this.ctx.fill();
+                this.ctx.shadowBlur = 0;
+            }
+
+            drawConnection(p1, p2, distance) {
+                const opacity = Math.max(0, 0.3 - distance / 150);
+                if (opacity <= 0) return;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(p1.x, p1.y);
+                this.ctx.lineTo(p2.x, p2.y);
+                this.ctx.strokeStyle = `rgba(135, 206, 235, ${opacity})`;
+                this.ctx.lineWidth = 1;
+                this.ctx.stroke();
+            }
+
+            updateParticle(particle) {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+
+                // Mouse attraction
+                const dx = this.mouse.x - particle.x;
+                const dy = this.mouse.y - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    const force = (100 - distance) / 100;
+                    particle.vx += dx * force * 0.0001;
+                    particle.vy += dy * force * 0.0001;
+                }
+
+                // Boundary collision
+                if (particle.x <= 0 || particle.x >= this.canvas.width) {
+                    particle.vx *= -1;
+                    particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
+                }
+                if (particle.y <= 0 || particle.y >= this.canvas.height) {
+                    particle.vy *= -1;
+                    particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
+                }
+
+                // Velocity damping
+                particle.vx *= 0.999;
+                particle.vy *= 0.999;
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Update and draw particles
+                for (let i = 0; i < this.particles.length; i++) {
+                    const particle = this.particles[i];
+                    this.updateParticle(particle);
+                    this.drawParticle(particle);
+
+                    // Draw connections
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const otherParticle = this.particles[j];
+                        const dx = particle.x - otherParticle.x;
+                        const dy = particle.y - otherParticle.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 120) {
+                            this.drawConnection(particle, otherParticle, distance);
+                        }
+                    }
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize the particle network
+        window.addEventListener('load', () => {
+            new ParticleNetwork();
+        });
+    </script>
+</body>
+</html>

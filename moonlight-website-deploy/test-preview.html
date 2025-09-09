@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Preview</title>
+    <style>
+        body { 
+            background: #1a1a2e; 
+            color: white; 
+            font-family: Arial, sans-serif; 
+            padding: 20px;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px;
+            background: rgba(0,191,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .demo-box {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background: #00bfff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0099cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 Article Manager Preview Test</h1>
+        <p>Testing if the HTML loads correctly</p>
+    </div>
+    
+    <div class="demo-box">
+        <h2>✅ HTML Loading Successfully</h2>
+        <p>If you can see this, the HTML file is working correctly.</p>
+        <button onclick="testClick()">🚀 Test Button</button>
+        <button onclick="switchDemo()">🔄 Switch Demo</button>
+    </div>
+    
+    <div class="demo-box" id="content">
+        <h3>Demo Content Area</h3>
+        <p>This area will change when you click the switch button.</p>
+    </div>
+
+    <script>
+        function testClick() {
+            alert('✅ JavaScript is working! The article manager should load properly.');
+        }
+        
+        function switchDemo() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <h3>🎉 Demo Switched!</h3>
+                <p>JavaScript is functioning correctly. The full article manager should work.</p>
+                <p><strong>Next:</strong> Try opening the main article-manager-preview.html file again.</p>
+            `;
+        }
+    </script>
+</body>
+</html>

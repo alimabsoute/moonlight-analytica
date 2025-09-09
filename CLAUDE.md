@@ -384,16 +384,22 @@ pip install <package_name>
 
 ## SEO Implementation Details
 
-### Keyword Research Workflows
+### Keyword Research Workflows (100% FREE)
 ```javascript
-// Daily SEO Research (5 AM execution)
-1. Google Trends API: Extract trending tech keywords
-2. Reddit API: Analyze r/technology, r/programming discussions
-3. Hacker News API: Identify viral tech stories
-4. Competitor Analysis: Scrape top-ranking articles for target keywords
-5. AI Expansion: Use ChatGPT Pro to generate related keywords
-6. Search Intent Classification: Categorize by user intent
-7. Difficulty Assessment: AI-powered competition analysis
+// Daily SEO Research (5 AM execution) - NO API KEYS REQUIRED
+1. Brave Search MCP: Extract trending keywords and search suggestions
+2. Reddit MCP: Mine r/technology, r/programming for questions/topics
+3. Puppeteer MCP: Scrape SERP results and competitor meta tags
+4. WebSearch Tool: Find related topics and content gaps
+5. Brave Autocomplete: Harvest long-tail keyword variations
+6. Reddit Comments: Extract user intent from discussions
+7. Competitor Analysis: Free SERP scraping with Puppeteer
+
+// Free SEO Tools We're Using:
+- Brave Search MCP (installed) - Keyword research, SERP analysis
+- Puppeteer MCP (installed) - Meta tag extraction, competitor analysis  
+- Reddit MCP (installed) - Question mining, trend detection
+- WebSearch (built-in) - General research, news monitoring
 ```
 
 ### Internal Linking Automation

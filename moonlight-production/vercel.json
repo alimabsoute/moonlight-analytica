@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "name": "moonlight-analytica-production",
+  "regions": [
+    "iad1"
+  ],
+  "github": {
+    "silent": true
+  },
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/moonlight-complete-structure.html",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "destination": "/moonlight-complete-structure.html",
+      "permanent": true
+    }
+  ]
+}

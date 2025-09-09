@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight Analytica - UI Design Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .showcase-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .showcase-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #87ceeb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .showcase-subtitle {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        
+        .section {
+            margin-bottom: 80px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #87ceeb;
+            text-align: center;
+        }
+        
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .option-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(135, 206, 235, 0.2);
+            border-color: rgba(135, 206, 235, 0.3);
+        }
+        
+        .option-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .option-description {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin-bottom: 25px;
+        }
+        
+        /* Button Styles - Option 1: Glassmorphism Premium */
+        .btn-glass-premium {
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .btn-glass-premium::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #00bfff, #87ceeb, #4682b4, #00bfff);
+            background-size: 300% 300%;
+            z-index: -1;
+            border-radius: 14px;
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+        
+        .btn-glass-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 191, 255, 0.4);
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        /* Button Styles - Option 2: Neon Cyber */
+        .btn-cyber {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(70, 130, 180, 0.1));
+            border: 1px solid #00bfff;
+            border-radius: 8px;
+            color: #00bfff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 5px;
+            text-shadow: 0 0 10px #00bfff;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.3), inset 0 0 20px rgba(0, 191, 255, 0.1);
+        }
+        
+        .btn-cyber::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-cyber:hover::after {
+            left: 100%;
+        }
+        
+        .btn-cyber:hover {
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.5), inset 0 0 30px rgba(0, 191, 255, 0.2);
+            text-shadow: 0 0 15px #00bfff;
+        }
+        
+        /* Button Styles - Option 3: Floating Magnetic */
+        .btn-float {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #87ceeb, #4682b4);
+            border: none;
+            border-radius: 25px;
+            color: #000000;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 0 10px 25px rgba(135, 206, 235, 0.3);
+        }
+        
+        .btn-float:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(135, 206, 235, 0.5);
+            background: linear-gradient(135deg, #00bfff, #87ceeb);
+        }
+        
+        /* Button Styles - Option 4: Minimalist Outline */
+        .btn-minimal {
+            padding: 16px 32px;
+            background: transparent;
+            border: 2px solid #87ceeb;
+            border-radius: 6px;
+            color: #87ceeb;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-minimal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: #87ceeb;
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn-minimal:hover::before {
+            left: 0;
+        }
+        
+        .btn-minimal:hover {
+            color: #000000;
+            border-color: #87ceeb;
+        }
+        
+        /* Email Capture Styles */
+        .email-showcase {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        /* Email Option 1: Floating Glass */
+        .email-glass {
+            display: flex;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(135, 206, 235, 0.3);
+            border-radius: 50px;
+            overflow: hidden;
+            padding: 8px;
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2);
+            transition: all 0.3s ease;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .email-glass:hover {
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.3);
+            border-color: rgba(135, 206, 235, 0.5);
+        }
+        
+        .email-glass input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 14px 20px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        .email-glass input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .email-glass button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #87ceeb, #4682b4);
+            border: none;
+            border-radius: 40px;
+            color: #000000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .email-glass button:hover {
+            background: linear-gradient(135deg, #00bfff, #87ceeb);
+            transform: scale(1.05);
+        }
+        
+        /* Email Option 2: Neon Border */
+        .email-neon {
+            display: flex;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00bfff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .email-neon::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #00bfff, #87ceeb, #4682b4, #00bfff);
+            background-size: 300% 300%;
+            z-index: -1;
+            border-radius: 10px;
+            animation: borderGlow 2s ease-in-out infinite;
+        }
+        
+        .email-neon input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 16px 20px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        .email-neon input::placeholder {
+            color: rgba(135, 206, 235, 0.7);
+        }
+        
+        .email-neon button {
+            padding: 16px 28px;
+            background: #00bfff;
+            border: none;
+            color: #000000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .email-neon button:hover {
+            background: #87ceeb;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.6);
+        }
+        
+        /* Product Card Styles */
+        .product-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Product Card Option 1: Glass Elevated */
+        .product-glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-glass::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, #00bfff, #87ceeb, #4682b4);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .product-glass:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .product-glass:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(135, 206, 235, 0.2);
+            border-color: rgba(135, 206, 235, 0.3);
+        }
+        
+        /* Product Card Option 2: Neon Frame */
+        .product-neon {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .product-neon:hover {
+            border-color: #00bfff;
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.4), inset 0 0 30px rgba(0, 191, 255, 0.1);
+        }
+        
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .product-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .status-live {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid #10b981;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-beta {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .product-desc {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        /* Navigation Styles */
+        .nav-showcase {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-option-1 {
+            border-bottom: 2px solid transparent;
+            background: linear-gradient(135deg, transparent, transparent);
+        }
+        
+        .nav-option-1:hover {
+            border-bottom: 2px solid #87ceeb;
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.1), transparent);
+        }
+        
+        .nav-option-2 {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-option-2::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%;
+            width: 0; height: 2px;
+            background: #00bfff;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-option-2:hover::before {
+            width: 100%;
+        }
+        
+        .demo-nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .demo-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .responsive-note {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .responsive-note h3 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+        
+        .responsive-note p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .option-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .showcase-title {
+                font-size: 2rem;
+            }
+            
+            .email-showcase {
+                width: 100%;
+            }
+            
+            .email-glass,
+            .email-neon {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="showcase-container">
+        <div class="showcase-header">
+            <h1 class="showcase-title">Moonlight Analytica</h1>
+            <h2 class="showcase-subtitle">UI Design Options Showcase</h2>
+            <p style="color: #9ca3af; max-width: 600px; margin: 0 auto;">
+                Explore different button styles, layouts, and UI components to choose the perfect design for your SaaS platform.
+            </p>
+        </div>
+        
+        <!-- Button Styles Section -->
+        <div class="section">
+            <h2 class="section-title">Button Style Options</h2>
+            <div class="option-grid">
+                <div class="option-card">
+                    <h3 class="option-title">Glassmorphism Premium</h3>
+                    <p class="option-description">Elegant glass effect with animated gradient borders. Premium feel with subtle transparency.</p>
+                    <a href="#" class="btn-glass-premium">Explore Products</a>
+                    <a href="#" class="btn-glass-premium">Get Started</a>
+                </div>
+                
+                <div class="option-card">
+                    <h3 class="option-title">Neon Cyber</h3>
+                    <p class="option-description">Futuristic cyberpunk style with glowing effects and scan line animations. High-tech aesthetic.</p>
+                    <a href="#" class="btn-cyber">Explore Products</a>
+                    <a href="#" class="btn-cyber">Get Started</a>
+                </div>
+                
+                <div class="option-card">
+                    <h3 class="option-title">Floating Magnetic</h3>
+                    <p class="option-description">3D floating effect with magnetic hover animation. Solid colors with depth and movement.</p>
+                    <a href="#" class="btn-float">Explore Products</a>
+                    <a href="#" class="btn-float">Get Started</a>
+                </div>
+                
+                <div class="option-card">
+                    <h3 class="option-title">Minimalist Outline</h3>
+                    <p class="option-description">Clean minimal design with smooth fill animation. Professional and understated.</p>
+                    <a href="#" class="btn-minimal">Explore Products</a>
+                    <a href="#" class="btn-minimal">Get Started</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Email Capture Section -->
+        <div class="section">
+            <h2 class="section-title">Email Capture Styles</h2>
+            <div class="option-grid">
+                <div class="option-card">
+                    <h3 class="option-title">Floating Glass Capsule</h3>
+                    <p class="option-description">Rounded glass container with integrated button. Elegant and modern with blur effects.</p>
+                    <div class="email-showcase">
+                        <div class="email-glass">
+                            <input type="email" placeholder="Enter your email for updates">
+                            <button>Get Updates</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="option-card">
+                    <h3 class="option-title">Neon Border Frame</h3>
+                    <p class="option-description">Glowing neon border with animated gradient. Cyberpunk aesthetic with pulsing effects.</p>
+                    <div class="email-showcase">
+                        <div class="email-neon">
+                            <input type="email" placeholder="Enter your email for updates">
+                            <button>Get Updates</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Cards Section -->
+        <div class="section">
+            <h2 class="section-title">Product Card Styles</h2>
+            <div class="product-showcase">
+                <div class="product-glass">
+                    <h3 class="product-title">PhynxTimer</h3>
+                    <span class="product-status status-live">Live</span>
+                    <p class="product-desc">Advanced productivity timer with intelligent analytics and team collaboration features.</p>
+                    <a href="#" class="btn-glass-premium">Visit PhynxTimer</a>
+                </div>
+                
+                <div class="product-neon">
+                    <h3 class="product-title">ATS Resume Helper</h3>
+                    <span class="product-status status-beta">Beta</span>
+                    <p class="product-desc">AI-powered resume optimization tool that helps you pass through Applicant Tracking Systems.</p>
+                    <a href="#" class="btn-cyber">Request Beta Access</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Styles Section -->
+        <div class="section">
+            <h2 class="section-title">Navigation Styles</h2>
+            <div class="option-grid">
+                <div class="option-card">
+                    <h3 class="option-title">Gradient Underline</h3>
+                    <p class="option-description">Subtle gradient background with bottom border on hover.</p>
+                    <div class="nav-showcase">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: #87ceeb;">Moonlight Analytica</div>
+                        <div class="demo-nav">
+                            <a href="#" class="nav-option-1">Home</a>
+                            <a href="#" class="nav-option-1">Products</a>
+                            <a href="#" class="nav-option-1">Insights</a>
+                            <a href="#" class="nav-option-1">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="option-card">
+                    <h3 class="option-title">Expanding Underline</h3>
+                    <p class="option-description">Clean design with expanding underline animation from center.</p>
+                    <div class="nav-showcase">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: #87ceeb;">Moonlight Analytica</div>
+                        <div class="demo-nav">
+                            <a href="#" class="nav-option-2">Home</a>
+                            <a href="#" class="nav-option-2">Products</a>
+                            <a href="#" class="nav-option-2">Insights</a>
+                            <a href="#" class="nav-option-2">Contact</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="responsive-note">
+            <h3>📱 Responsive Design Ready</h3>
+            <p>All UI components are designed to work beautifully across desktop, tablet, and mobile devices with smooth animations and touch-friendly interactions.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Add some interactive effects
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

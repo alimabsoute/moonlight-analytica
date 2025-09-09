@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample 4: Orbital Ring System - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Orbital Ring System */
+        .orbital-system {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orbit-ring-1 {
+            width: 200px;
+            height: 200px;
+            animation: rotate 30s linear infinite;
+        }
+
+        .orbit-ring-2 {
+            width: 320px;
+            height: 320px;
+            animation: rotate 45s linear infinite reverse;
+        }
+
+        .orbit-ring-3 {
+            width: 440px;
+            height: 440px;
+            animation: rotate 60s linear infinite;
+        }
+
+        .orbit-ring-4 {
+            width: 560px;
+            height: 560px;
+            animation: rotate 80s linear infinite reverse;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Orbital Particles */
+        .orbital-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.8);
+        }
+
+        /* Ring 1 particles */
+        .particle-1-1 {
+            background: rgba(0, 191, 255, 0.8);
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: orbitParticle1 30s linear infinite;
+        }
+
+        .particle-1-2 {
+            background: rgba(135, 206, 235, 0.8);
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            animation: orbitParticle1 30s linear infinite;
+            animation-delay: -15s;
+        }
+
+        /* Ring 2 particles */
+        .particle-2-1 {
+            background: rgba(70, 130, 180, 0.8);
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: orbitParticle2 45s linear infinite reverse;
+        }
+
+        .particle-2-2 {
+            background: rgba(0, 191, 255, 0.6);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            animation: orbitParticle2 45s linear infinite reverse;
+            animation-delay: -15s;
+        }
+
+        .particle-2-3 {
+            background: rgba(135, 206, 235, 0.6);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: orbitParticle2 45s linear infinite reverse;
+            animation-delay: -30s;
+        }
+
+        /* Ring 3 particles */
+        .particle-3-1 {
+            background: rgba(0, 191, 255, 0.7);
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: orbitParticle3 60s linear infinite;
+        }
+
+        .particle-3-2 {
+            background: rgba(70, 130, 180, 0.7);
+            top: 25%;
+            right: 0;
+            transform: translateY(-50%);
+            animation: orbitParticle3 60s linear infinite;
+            animation-delay: -20s;
+        }
+
+        @keyframes orbitParticle1 {
+            from { transform: translateX(-50%) rotate(0deg) translateX(100px) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(360deg) translateX(100px) rotate(-360deg); }
+        }
+
+        @keyframes orbitParticle2 {
+            from { transform: translateX(-50%) rotate(0deg) translateX(160px) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(-360deg) translateX(160px) rotate(360deg); }
+        }
+
+        @keyframes orbitParticle3 {
+            from { transform: translateX(-50%) rotate(0deg) translateX(220px) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(360deg) translateX(220px) rotate(-360deg); }
+        }
+
+        /* Central Core */
+        .central-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, rgba(0, 191, 255, 1) 0%, rgba(0, 191, 255, 0.4) 100%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.3);
+                box-shadow: 0 0 30px rgba(0, 191, 255, 1);
+            }
+        }
+
+        /* Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00bfff, #87ceeb, #4682b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #6b7280;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card h3 {
+            color: #00bfff;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Orbital Ring System -->
+    <div class="orbital-system">
+        <!-- Central Core -->
+        <div class="central-core"></div>
+        
+        <!-- Ring 1 -->
+        <div class="orbit-ring orbit-ring-1">
+            <div class="orbital-particle particle-1-1"></div>
+            <div class="orbital-particle particle-1-2"></div>
+        </div>
+        
+        <!-- Ring 2 -->
+        <div class="orbit-ring orbit-ring-2">
+            <div class="orbital-particle particle-2-1"></div>
+            <div class="orbital-particle particle-2-2"></div>
+            <div class="orbital-particle particle-2-3"></div>
+        </div>
+        
+        <!-- Ring 3 -->
+        <div class="orbit-ring orbit-ring-3">
+            <div class="orbital-particle particle-3-1"></div>
+            <div class="orbital-particle particle-3-2"></div>
+        </div>
+        
+        <!-- Ring 4 -->
+        <div class="orbit-ring orbit-ring-4"></div>
+    </div>
+
+    <div class="content">
+        <h1 class="title">Orbital Ring System</h1>
+        <p class="description">
+            Space-age concentric rings with orbiting particles. Different rings rotate at varying speeds, 
+            creating a mesmerizing orbital dance. Perfect for a futuristic, high-tech aesthetic.
+        </p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>🌌 Space-Age</h3>
+                <p>Futuristic orbital system creates sophisticated tech atmosphere</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Multi-Speed</h3>
+                <p>Different orbit speeds create complex, mesmerizing patterns</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎯 Centered Focus</h3>
+                <p>Draws attention to the center while maintaining subtle background presence</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

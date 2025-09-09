@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exact Production Test - 5 Changes Only</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #e5e7eb;
+            --secondary-color: #f3f4f6;
+            --accent-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #00bfff;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+            --neon-blue: #00bfff;
+            --neon-purple: #9945ff;
+            --neon-cyan: #87ceeb;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
+            padding: 50px 20px;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        
+        /* Exact Production Featured Article with ONLY 5 requested changes */
+        .featured-article {
+            grid-column: 1 / -1;
+            /* CHANGE 2: Made 20% less transparent */
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(135, 206, 235, 0.22));
+            /* CHANGE 1: Thicker border with blue glow pulsation */
+            border: 3px solid rgba(0, 191, 255, 0.6);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            /* CHANGE 3: Added pop-out hover animation */
+            transition: all 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            /* CHANGE 4: Made entire card clickable */
+            cursor: pointer;
+            /* CHANGE 1: Added pulsating glow effect */
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        /* CHANGE 1: Pulsating glow animation */
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+                border-color: rgba(0, 191, 255, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+                border-color: rgba(0, 191, 255, 0.8);
+            }
+        }
+        
+        /* CHANGE 3: Hover effects - pop out + more transparency */
+        .featured-article:hover {
+            transform: translateY(-10px) scale(1.02);
+            /* CHANGE 3: Another 20% less transparent on hover */
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.45), rgba(135, 206, 235, 0.42));
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.4);
+        }
+        
+        .featured-article::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00bfff, #87ceeb, #4682b4, #00bfff);
+            border-radius: 16px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            animation: borderRotate 4s linear infinite;
+        }
+        
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .featured-article:hover::before {
+            opacity: 0.5;
+        }
+        
+        .featured-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .featured-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(135, 206, 235, 0.05));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+        
+        .featured-info {
+            padding: 1rem;
+        }
+        
+        .featured-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00bfff, #4682b4);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        
+        .featured-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            line-height: 1.3;
+        }
+        
+        .featured-excerpt {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .featured-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            transform: translateX(5px);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+
+        /* Small cards styling - CHANGE 5: Hover + click functionality */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .article-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            /* CHANGE 5: Made small cards clickable on hover */
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+        }
+
+        .article-image-placeholder {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(135, 206, 235, 0.05));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .article-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #00bfff, #4682b4);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .article-excerpt {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .article-read-more {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .article-read-more:hover {
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .featured-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .featured-title {
+                font-size: 1.5rem;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Exact Production Test - Only 5 Changes</h1>
+            <p>Your exact production layout with ONLY the requested modifications</p>
+        </div>
+
+        <div class="info-box">
+            <h4>ONLY 5 Changes Made:</h4>
+            <p>
+                ✅ 1. Thicker border (3px) with blue glow pulsation animation<br>
+                ✅ 2. Inside 20% less transparent (opacity increased)<br>
+                ✅ 3. Hover: Card pops out + another 20% less transparent<br>
+                ✅ 4. Click anywhere on featured card → goes to article<br>
+                ✅ 5. Small cards: hover + click anywhere → goes to article<br>
+                ❌ Everything else: EXACTLY the same as production
+            </p>
+        </div>
+
+        <!-- Featured Article Card - EXACT production with 5 changes -->
+        <article class="featured-article" onclick="handleCardClick('google-nano-banana-photoshop-killer.html', 'featured')">
+            <div class="featured-content">
+                <div class="featured-info">
+                    <span class="featured-badge">AI & ML</span>
+                    <h2 class="featured-title">The 'Photoshop Killer' That Went Viral Before Google Even Announced It</h2>
+                    <p class="featured-excerpt">How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing. A mysterious AI model nicknamed "Nano Banana" has been quietly dominating image editing benchmarks for weeks, leaving the creative industry buzzing with speculation.</p>
+                    <div class="featured-meta">
+                        <span class="meta-item">📅 September 3, 2025</span>
+                        <span class="meta-item">⏱ 12 min read</span>
+                        <span class="meta-item">👤 Tech Analysis Team</span>
+                    </div>
+                    <a href="#" class="read-more" onclick="event.stopPropagation();">Read Full Article →</a>
+                </div>
+                <div class="featured-image">
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjcyIiBoZWlnaHQ9IjkyIiB2aWV3Qm94PSIwIDAgMjcyIDkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDwhLS0gTm8gYmFja2dyb3VuZCByZWN0ID0gdHJhbnNwYXJlbnQgYmFja2dyb3VuZCAtLT4KICA8ZyBpZD0iZ29vZ2xlLWxvZ28iPgogICAgPCEtLSBHIChibHVlKSAtLT4KICAgIDxwYXRoIGQ9Ik0zNS4yOSA0MS40MVYzMkg2Ny44Yy4zMSAxLjY0LjQ3IDMuNTguNDcgNS42OCAwIDcuMDYtMS45MyAxNS43OS04LjE1IDIyLjAxLTYuMDUgNi4zLTEzLjc4IDkuNjYtMjQuMDIgOS42NkMxNi4zMiA2OS4zNS4zNiA1My44OS4zNiAzNC45MS4zNiAxNS45MyAxNi4zMi40NyAzNS4zLjQ3YzEwLjUgMCAxNy45OCA0LjEyIDIzLjYgOS40OWwtNi42NCA2LjY0Yy00LjAzLTMuNzgtOS40OS02LjcyLTE2Ljk3LTYuNzItMTMuODYgMC0yNC43IDExLjE3LTI0LjcgMjUuMDMgMCAxMy44NiAxMC44NCAyNS4wMyAyNC43IDI1LjAzIDguOTkgMCAxNC4xMS0zLjYxIDE3LjM5LTYuODkgMi42Ni0yLjY2IDQuNDEtNi40NiA1LjEtMTEuNjVsLTIyLjQ5LjAxeiIgZmlsbD0iIzQyODVGNCIvPgogICAgPCEtLSBPIChyZWQpIC0tPgogICAgPHBhdGggZD0iTTExNS43NSA0Ny4xOGMwIDEyLjc3LTkuOTkgMjIuMTgtMjIuMjUgMjIuMThzLTIyLjI1LTkuNDEtMjIuMjUtMjIuMThDNzEuMjUgMzQuMzIgODEuMjQgMjUgOTMuNSAyNXMyMi4yNSA5LjMyIDIyLjI1IDIyLjE4em0tOS43NCAwYzAtNy45OC01Ljc5LTEzLjQ0LTEyLjUxLTEzLjQ0UzgwLjk5IDM5LjIgODAuOTkgNDcuMThjMCA3LjkgNS43OSAxMy40NCAxMi41MSAxMy40NHMxMi41MS01LjU1IDEyLjUxLT1zNDR6IiBmaWxsPSIjRUE0MzM1Ii8+CiAgICA8IS0tIE8gKHllbGxvdykgLS0+CiAgICA8cGF0aCBkPSJNMTYzLjc1IDQ3LjE4YzAgMTIuNzctOS45OSAyMi4xOC0yMi4yNSAyMi4xOHMtMjIuMjUtOS40MS0yMi4yNS0yMi4xOGMwLTEyLjg1IDkuOTktMjIuMTggMjIuMjUtMjIuMThzMjIuMjUgOS4zMiAyMi4yNSAyMi4xOHptLTkuNzQgMGMwLTcuOTgtNS43OS0xMy40NC0xMi41MS0xMy40NHMtMTIuNTEgNS40Ni0xMi41MSAxMy40NGMwIDcuOSA1Ljc5IDEzLjQ0IDEyLjUxIDEzLjQ0czEyLjUxLTUuNTUgMTIuNTEtMTMuNDR6IiBmaWxsPSIjRkJCQzA0Ii8+CiAgICA8IS0tIEcgKGJsdWUpIC0tPgogICAgPHBhdGggZD0iTTIwOS43NSAyNi4zNHYzOS44MmMwIDE2LjM4LTkuNjYgMjMuMDctMjEuMDggMjMuMDctMTAuNzUgMC0xNy4yMi03LjE5LTE5LjY2LTEzLjA3bDguNDgtMy41M2MxLjUxIDMuNjEgNS4yMSA3Ljg3IDExLjE3IDcuODcgNy4zMSAwIDExLjg0LTQuNTEgMTEuODQtMTN2LTMuMTloLS4zNGMtMi4xOCAyLjY5LTYuMzggNS4wNC0xMS42OCA1LjA0LTExLjA5IDAtMjEuMjUtOS42Ni0yMS4yNS0yMi4wOSAwLTEyLjUyIDEwLjE2LTIyLjI2IDIxLjI1LTIyLjI2IDUuMjkgMCA5LjQ5IDIuMzUgMTEuNjggNC45NmguMzR2LTMuNjFoOS4yNXptLTguNTYgMjAuOTJjMC03LjgxLTUuMjEtMTMuNTItMTEuODQtMTMuNTItNi43MiAwLTEyLjM1IDUuNzEtMTIuMzUgMTMuNTIgMCA3LjczIDUuNjMgMTMuMzYgMTIuMzUgMTMuMzYgNi42MyAwIDExLjg0LTUuNjMgMTEuODQtMTMuMzZ6IiBmaWxsPSIjNDI4NUY0Ii8+CiAgICA8IS0tIEwgKGdyZWVuKSAtLT4KICAgIDxwYXRoIGQ9Ik0yMjUgM3Y2NWgtOS41VjNoOS41eiIgZmlsbD0iIzM0QTg1MyIvPgogICAgPCEtLSBFIChyZWQpIC0tPgogICAgPHBhdGggZD0iTTI2Mi4wMiA1NC40OGw3LjU2IDUuMDRjLTIuNDQgMy42MS04LjMyIDkuODMtMTguNDggOS44My0xMi42IDAtMjIuMDEtOS43NC0yMi4wMS0yMi4xOCAwLTEzLjE5IDkuNDktMjIuMTggMjAuOTItMjIuMTggMTEuNTEgMCAxNy4xNCA5LjE2IDE4Ljk4IDE0LjExbDEuMDEgMi41Mi0yOS42NSAxMi4yOGMyLjI3IDQuNDUgNS44IDYuNzIgMTAuNzUgNi43MiA0Ljk2IDAgOC40LTIuNDQgMTAuOTItNi4xNHptLTIzLjI3LTcuOThsMTkuODItOC4yM2MtMS4wOS0yLjc3LTQuMzctNC43LTguMjMtNC43LTQuOTUgMC0xMS44NCA0LjM3LTExLjU5IDEyLjkzeiIgZmlsbD0iI0VBNDMzNSIvPgogIDwvZz4KPC9zdmc+" alt="Google Logo" style="width: auto; height: auto; max-width: 100%; max-height: 120px; object-fit: contain;">
+                </div>
+            </div>
+        </article>
+
+        <!-- Small Article Cards - CHANGE 5: Hover + click functionality -->
+        <div class="articles-grid">
+            <article class="article-card" onclick="handleCardClick('gemini-ultra-beats-gpt4.html', 'small')">
+                <div class="article-image-placeholder">📊</div>
+                <span class="article-category">AI & ML</span>
+                <h3 class="article-title">Google's Gemini Ultra Beats GPT-4 in Benchmark Tests</h3>
+                <p class="article-excerpt">Latest benchmarks show Google's Gemini Ultra achieving state-of-the-art performance across multiple domains...</p>
+                <div class="article-meta">
+                    <span>4 hours ago</span>
+                    <span>3 min</span>
+                </div>
+            </article>
+
+            <article class="article-card" onclick="handleCardClick('aws-quantum-computing.html', 'small')">
+                <div class="article-image-placeholder">⚛️</div>
+                <span class="article-category">Cloud Computing</span>
+                <h3 class="article-title">AWS Launches Quantum Computing Service in 10 New Regions</h3>
+                <p class="article-excerpt">Amazon Web Services expands its quantum computing offerings, making the technology more accessible to developers worldwide...</p>
+                <div class="article-meta">
+                    <span>6 hours ago</span>
+                    <span>4 min</span>
+                </div>
+            </article>
+
+            <article class="article-card" onclick="handleCardClick('security-vulnerability.html', 'small')">
+                <div class="article-image-placeholder">🔒</div>
+                <span class="article-category">Security</span>
+                <h3 class="article-title">Major Security Vulnerability Discovered in Popular Framework</h3>
+                <p class="article-excerpt">Security researchers have identified a critical vulnerability affecting millions of applications using the framework...</p>
+                <div class="article-meta">
+                    <span>9 hours ago</span>
+                    <span>7 min</span>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <script>
+        // CHANGE 4 & 5: Card click functionality
+        function handleCardClick(articleUrl, cardType) {
+            console.log(`${cardType} card clicked: ${articleUrl}`);
+            alert(`${cardType === 'featured' ? 'Featured' : 'Small'} card clicked! Would navigate to: ${articleUrl}`);
+            // In production: window.location.href = articleUrl;
+        }
+
+        // Prevent Read More link from triggering card click
+        document.querySelector('.read-more').addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Read More link clicked');
+            alert('Read More link clicked (would navigate to article)');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+# Image Verification Agent Requirements
+# Core dependencies for comprehensive image verification system
+
+# Web automation and screenshot capture
+selenium>=4.15.0
+webdriver-manager>=4.0.0
+
+# Image processing and computer vision
+opencv-python>=4.8.0
+Pillow>=10.0.0
+numpy>=1.24.0
+scikit-image>=0.21.0
+imagehash>=4.3.1
+
+# Additional image processing
+imageio>=2.31.0
+matplotlib>=3.7.0
+
+# HTTP requests and utilities
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Data handling and configuration
+pydantic>=2.4.0
+python-dotenv>=1.0.0
+
+# Logging and monitoring
+structlog>=23.2.0
+rich>=13.5.0
+
+# Testing and quality assurance
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Optional: Playwright alternative (uncomment if preferred over Selenium)
+# playwright>=1.40.0
+
+# Optional: Advanced image analysis
+# tensorflow>=2.13.0  # For AI-based image analysis
+# torch>=2.0.0        # PyTorch for deep learning models
+# torchvision>=0.15.0 # Computer vision models

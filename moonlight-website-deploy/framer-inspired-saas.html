@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight Analytica - Enterprise Analytics Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Framer-Inspired Dark SaaS Design */
+            --primary: #ffffff;
+            --primary-rgb: 255, 255, 255;
+            --secondary: #f8fafc;
+            --accent: #3b82f6;
+            --accent-rgb: 59, 130, 246;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #1a1a1a;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.16);
+            --glass: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --glow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            font-feature-settings: 'cv11', 'ss01', 'zero';
+            font-variant-numeric: tabular-nums;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Sophisticated gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59, 130, 246, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 60%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
+                linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+            z-index: -2;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* 3D Cube Canvas */
+        #cube-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .navbar.scrolled {
+            padding: 0.75rem 0;
+            background: rgba(0, 0, 0, 0.95);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.04em;
+            text-transform: lowercase;
+        }
+        
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: all 0.15s ease;
+            position: relative;
+            text-transform: lowercase;
+            letter-spacing: -0.01em;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-cta {
+            background: var(--primary);
+            color: var(--bg-primary);
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            box-shadow: var(--glow);
+            text-transform: lowercase;
+            letter-spacing: -0.01em;
+        }
+        
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 2rem;
+        }
+        
+        .hero-container {
+            max-width: 1400px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .hero-badge:hover {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .badge-dot::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: ripple 2s infinite;
+        }
+        
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3.5rem, 9vw, 7rem);
+            font-weight: 700;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            letter-spacing: -0.04em;
+            text-transform: lowercase;
+            position: relative;
+        }
+        
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            text-transform: lowercase;
+            letter-spacing: -0.01em;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--primary);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+        
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+        
+        .section-badge {
+            display: inline-block;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 600;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            letter-spacing: -0.03em;
+            text-transform: lowercase;
+        }
+        
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .feature-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            text-transform: lowercase;
+            letter-spacing: -0.02em;
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+        
+        .scroll-arrow {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero {
+                padding: 0 1rem;
+            }
+            
+            .features {
+                padding: 4rem 1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-gradient"></div>
+    
+    <!-- 3D Cube Canvas -->
+    <canvas id="cube-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Moonlight</a>
+            <ul class="nav-menu">
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#" class="nav-cta">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Enterprise Analytics Platform
+            </div>
+            <h1 class="hero-title">
+                enterprise<br>
+                analytics
+            </h1>
+            <p class="hero-subtitle">
+                Intelligence-driven platform that transforms raw data into actionable insights. 
+                Built for teams who demand precision, performance, and scale.
+            </p>
+            <div class="hero-actions">
+                <a href="#" class="btn btn-primary">get started</a>
+                <a href="#" class="btn btn-secondary">view demo</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            Explore features
+            <span class="scroll-arrow">↓</span>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <div class="section-badge">Powerful Features</div>
+                <h2 class="section-title">built for performance</h2>
+                <p class="section-subtitle">
+                    Enterprise-grade tools designed for modern teams who move fast and think big
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Real-time Analytics</h3>
+                    <p class="feature-description">
+                        Monitor your business performance with live dashboards 
+                        and instant insights that help you make better decisions.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Enterprise Security</h3>
+                    <p class="feature-description">
+                        Bank-grade security with end-to-end encryption, 
+                        compliance certifications, and advanced access controls.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3 class="feature-title">Seamless Integration</h3>
+                    <p class="feature-description">
+                        Connect with your existing tools through our robust API 
+                        and pre-built integrations with popular platforms.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Advanced Reporting</h3>
+                    <p class="feature-description">
+                        Create beautiful, interactive reports with customizable 
+                        templates and automated distribution to stakeholders.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Cube Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        class ModernCube3D {
+            constructor() {
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createCube();
+                this.createParticles();
+                this.setupControls();
+                this.animate();
+            }
+
+            init() {
+                this.canvas = document.getElementById('cube-canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 0, 25);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                
+                this.mouse = new THREE.Vector2();
+                this.time = 0;
+            }
+
+            createScene() {
+                // Minimal background for modern look
+                this.scene.background = null;
+            }
+
+            createLights() {
+                this.ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+                this.scene.add(this.ambientLight);
+                
+                this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+                this.directionalLight.position.set(10, 10, 5);
+                this.scene.add(this.directionalLight);
+                
+                // Key light
+                this.keyLight = new THREE.PointLight(0xffffff, 2.0, 50);
+                this.keyLight.position.set(-10, 10, 10);
+                this.scene.add(this.keyLight);
+                
+                // Fill light
+                this.fillLight = new THREE.PointLight(0xffffff, 1.0, 30);
+                this.fillLight.position.set(10, -5, -5);
+                this.scene.add(this.fillLight);
+            }
+
+            createCube() {
+                this.cubeGroup = new THREE.Group();
+                this.scene.add(this.cubeGroup);
+                
+                // Modern minimalist cube
+                const cubeGeometry = new THREE.BoxGeometry(8, 8, 8);
+                const cubeMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 0.0,
+                    roughness: 0.1,
+                    transmission: 0.9,
+                    transparent: true,
+                    opacity: 0.1,
+                    thickness: 0.5,
+                    ior: 1.5,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.0,
+                });
+                
+                this.mainCube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                this.cubeGroup.add(this.mainCube);
+                
+                // Wireframe
+                const wireframeGeometry = new THREE.EdgesGeometry(cubeGeometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: 0xffffff,
+                    transparent: true, 
+                    opacity: 0.3
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cubeGroup.add(this.wireframe);
+                
+                // Inner glow
+                const innerGeometry = new THREE.SphereGeometry(2, 16, 12);
+                const innerMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.05,
+                });
+                this.innerGlow = new THREE.Mesh(innerGeometry, innerMaterial);
+                this.cubeGroup.add(this.innerGlow);
+            }
+            
+            createParticles() {
+                this.particles = [];
+                this.maxParticles = 50;
+                
+                this.particleGeometry = new THREE.SphereGeometry(0.05, 6, 4);
+                this.particleMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.6
+                });
+            }
+            
+            createParticle() {
+                if (this.particles.length >= this.maxParticles) return;
+                
+                const particle = new THREE.Mesh(this.particleGeometry, this.particleMaterial.clone());
+                
+                const angle = Math.random() * Math.PI * 2;
+                const elevation = (Math.random() - 0.5) * Math.PI;
+                const distance = 20 + Math.random() * 10;
+                
+                particle.position.set(
+                    Math.cos(angle) * Math.cos(elevation) * distance,
+                    Math.sin(elevation) * distance,
+                    Math.sin(angle) * Math.cos(elevation) * distance
+                );
+                
+                particle.userData = {
+                    speed: 0.01 + Math.random() * 0.02,
+                    life: 1.0
+                };
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+            
+            updateParticles() {
+                if (Math.random() < 0.03) {
+                    this.createParticle();
+                }
+                
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    const direction = new THREE.Vector3()
+                        .subVectors(this.cubeGroup.position, particle.position)
+                        .normalize();
+                    particle.position.add(direction.multiplyScalar(userData.speed));
+                    
+                    const distance = particle.position.distanceTo(this.cubeGroup.position);
+                    
+                    if (distance < 6.0) {
+                        userData.life -= 0.02;
+                        particle.material.opacity = userData.life * 0.6;
+                    }
+                    
+                    if (userData.life <= 0 || distance < 3.0) {
+                        this.scene.remove(particle);
+                        this.particles.splice(i, 1);
+                    }
+                }
+            }
+            
+            setupControls() {
+                document.addEventListener('mousemove', (e) => {
+                    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+                
+                // Navbar scroll effect
+                window.addEventListener('scroll', () => {
+                    const navbar = document.getElementById('navbar');
+                    if (window.scrollY > 50) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.01;
+                
+                // Smooth rotation
+                this.cubeGroup.rotation.x += 0.002;
+                this.cubeGroup.rotation.y += 0.003;
+                
+                // Subtle floating
+                this.cubeGroup.position.y = Math.sin(this.time * 0.5) * 0.5;
+                
+                // Inner glow animation
+                if (this.innerGlow) {
+                    this.innerGlow.rotation.x += 0.01;
+                    this.innerGlow.rotation.y -= 0.008;
+                    const pulse = 1 + Math.sin(this.time * 2) * 0.1;
+                    this.innerGlow.scale.setScalar(pulse);
+                }
+                
+                // Wireframe glow
+                if (this.wireframe) {
+                    const glow = 0.3 + Math.sin(this.time * 1.5) * 0.1;
+                    this.wireframe.material.opacity = glow;
+                }
+                
+                // Mouse interaction
+                this.cubeGroup.rotation.x += this.mouse.y * 0.0005;
+                this.cubeGroup.rotation.y += this.mouse.x * 0.0005;
+                
+                this.updateParticles();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            new ModernCube3D();
+        });
+    </script>
+</body>
+</html>

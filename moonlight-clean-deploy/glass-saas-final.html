@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight Analytica - Premium Glass SaaS Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* High Contrast Black & Titanium Design */
+            --primary-color: #e5e7eb;      /* Light gray */
+            --secondary-color: #f3f4f6;    /* Lighter gray */
+            --accent-color: #ffffff;       /* Pure white */
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #e5e7eb;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-light);
+        }
+        
+        /* 3D Glass Cube Background */
+        #glass-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .hero-content {
+            max-width: 1000px;
+            z-index: 10;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+        
+        .hero-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            line-height: 0.9;
+            letter-spacing: -2px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-weight: 500;
+            line-height: 1.4;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 3rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-btn {
+            padding: 20px 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            letter-spacing: 1px;
+            font-family: 'JetBrains Mono', monospace;
+            backdrop-filter: var(--backdrop-blur);
+        }
+        
+        .cta-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.4);
+        }
+        
+        .cta-btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--glass-border);
+            color: var(--primary-color);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px var(--shadow-light);
+        }
+        
+        .cta-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-align: center;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .scroll-indicator::after {
+            content: '↓';
+            display: block;
+            font-size: 1.5rem;
+            margin-top: 5px;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Glass Cube Background -->
+    <canvas id="glass-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80">
+                    <defs>
+                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff"/>
+                            <stop offset="50%" style="stop-color:#e5e7eb"/>
+                            <stop offset="100%" style="stop-color:#9ca3af"/>
+                        </linearGradient>
+                    </defs>
+                    <g transform="translate(40, 40)">
+                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
+                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+                Moonlight Analytica
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#products" class="nav-link">Solutions</a></li>
+                <li><a href="#insights" class="nav-link">Resources</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">Premium Analytics Platform</div>
+            <h1 class="hero-title">Innovation.<br>Intelligence.<br>Impact.</h1>
+            <p class="hero-subtitle">
+                Enterprise-grade SaaS solutions designed for professional organizations. 
+                Implement intelligent systems that deliver measurable performance improvements 
+                and sustainable competitive advantages through advanced data analytics.
+            </p>
+            <div class="cta-buttons">
+                <a href="#products" class="cta-btn primary">Get Started</a>
+                <a href="#insights" class="cta-btn secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">Discover More</div>
+    </section>
+
+    <!-- 3D Glass Cube Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        class GlassCube3D {
+            constructor() {
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createGlassCube();
+                this.createParticles();
+                this.setupControls();
+                this.animate();
+            }
+
+            init() {
+                this.canvas = document.getElementById('glass-canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 0, 30);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                this.mouse = new THREE.Vector2();
+                this.time = 0;
+            }
+
+            createScene() {
+                // Premium gradient background
+                const canvas = document.createElement('canvas');
+                canvas.width = 2;
+                canvas.height = 256;
+                const context = canvas.getContext('2d');
+                
+                const gradient = context.createLinearGradient(0, 0, 0, 256);
+                gradient.addColorStop(0, '#000000');
+                gradient.addColorStop(0.5, '#111111');
+                gradient.addColorStop(1, '#222222');
+                
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 2, 256);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const geometry = new THREE.SphereGeometry(100, 32, 16);
+                const material = new THREE.MeshBasicMaterial({ 
+                    map: texture, 
+                    side: THREE.BackSide 
+                });
+                
+                this.backgroundSphere = new THREE.Mesh(geometry, material);
+                this.scene.add(this.backgroundSphere);
+            }
+
+            createLights() {
+                this.ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+                this.scene.add(this.ambientLight);
+                
+                this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+                this.directionalLight.position.set(20, 20, 15);
+                this.directionalLight.castShadow = true;
+                this.scene.add(this.directionalLight);
+                
+                // High contrast white/silver accent lights
+                this.pointLight1 = new THREE.PointLight(0xffffff, 2.5, 60);
+                this.pointLight1.position.set(-15, 10, 10);
+                this.scene.add(this.pointLight1);
+                
+                this.pointLight2 = new THREE.PointLight(0xe5e7eb, 2.0, 60);
+                this.pointLight2.position.set(15, -10, -10);
+                this.scene.add(this.pointLight2);
+                
+                // Additional ambient lighting for titanium effect
+                this.rimLight = new THREE.PointLight(0xf3f4f6, 1.5, 40);
+                this.rimLight.position.set(0, 20, 0);
+                this.scene.add(this.rimLight);
+                
+                // Subtle pulsating blue light from cube center
+                this.cubeLight = new THREE.PointLight(0x87ceeb, 0.8, 35);
+                this.cubeLight.position.set(0, 0, 0);
+                this.scene.add(this.cubeLight);
+            }
+
+            createGlassCube() {
+                this.cubeGroup = new THREE.Group();
+                this.scene.add(this.cubeGroup);
+                
+                // Main premium glass cube
+                const cubeGeometry = new THREE.BoxGeometry(12, 12, 12);
+                this.updateGlassMaterials();
+                
+                this.mainCube = new THREE.Mesh(cubeGeometry, this.glassMaterials);
+                this.mainCube.castShadow = true;
+                this.cubeGroup.add(this.mainCube);
+                
+                // Inner titanium sphere with subtle blue emission
+                const coreGeometry = new THREE.SphereGeometry(3, 32, 16);
+                const coreMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 1.0,
+                    roughness: 0.1,
+                    transmission: 0.1,
+                    transparent: true,
+                    opacity: 0.8,
+                    thickness: 1.0,
+                    ior: 1.5,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.0,
+                    emissive: 0x1a3352,
+                    emissiveIntensity: 0.2
+                });
+                this.innerCore = new THREE.Mesh(coreGeometry, coreMaterial);
+                this.cubeGroup.add(this.innerCore);
+                
+                this.createCircuitLines();
+                this.createWireframe();
+            }
+            
+            updateGlassMaterials() {
+                // High contrast titanium/glass cube faces
+                this.glassMaterials = [
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xffffff, 
+                        metalness: 0.9, 
+                        roughness: 0.1, 
+                        transmission: 0.3, 
+                        transparent: true, 
+                        opacity: 0.8,
+                        thickness: 0.5,
+                        ior: 1.5,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.0,
+                        emissive: 0x222222,
+                        emissiveIntensity: 0.1
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xe5e7eb, 
+                        metalness: 0.8, 
+                        roughness: 0.2, 
+                        transmission: 0.2, 
+                        transparent: true, 
+                        opacity: 0.9,
+                        thickness: 0.5,
+                        ior: 1.5,
+                        emissive: 0x333333,
+                        emissiveIntensity: 0.15
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xf3f4f6, 
+                        metalness: 0.7, 
+                        roughness: 0.1, 
+                        transmission: 0.4, 
+                        transparent: true, 
+                        opacity: 0.7,
+                        thickness: 0.5,
+                        ior: 1.5,
+                        emissive: 0x444444,
+                        emissiveIntensity: 0.1
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xd1d5db, 
+                        metalness: 0.9, 
+                        roughness: 0.05, 
+                        transmission: 0.3, 
+                        transparent: true, 
+                        opacity: 0.8,
+                        thickness: 0.5,
+                        ior: 1.5,
+                        emissive: 0x333333,
+                        emissiveIntensity: 0.12
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xffffff, 
+                        metalness: 1.0, 
+                        roughness: 0.0, 
+                        transmission: 0.1, 
+                        transparent: true, 
+                        opacity: 0.9,
+                        thickness: 0.5,
+                        ior: 1.5,
+                        clearcoat: 1.0,
+                        emissive: 0x444444,
+                        emissiveIntensity: 0.2
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xf9fafb, 
+                        metalness: 0.8, 
+                        roughness: 0.02, 
+                        transmission: 0.2, 
+                        transparent: true, 
+                        opacity: 0.85,
+                        thickness: 0.5,
+                        ior: 1.5,
+                        emissive: 0x555555,
+                        emissiveIntensity: 0.08
+                    })
+                ];
+            }
+            
+            createCircuitLines() {
+                this.circuitLines = [];
+                
+                // Create high contrast glowing circuit lines on each face of the cube
+                const lineMaterial = new THREE.LineBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.9,
+                    linewidth: 4
+                });
+                
+                // Circuit patterns for each face
+                const patterns = [
+                    // Front face circuits
+                    [[-4, -4, 6.01], [4, -4, 6.01], [4, 4, 6.01], [-4, 4, 6.01], [-4, -4, 6.01]],
+                    [[-2, -2, 6.01], [2, -2, 6.01], [2, 2, 6.01], [-2, 2, 6.01], [-2, -2, 6.01]],
+                    [[0, -4, 6.01], [0, 4, 6.01]], // Vertical line
+                    [[-4, 0, 6.01], [4, 0, 6.01]], // Horizontal line
+                    
+                    // Back face circuits
+                    [[-4, -4, -6.01], [4, -4, -6.01], [4, 4, -6.01], [-4, 4, -6.01], [-4, -4, -6.01]],
+                    [[-2, -2, -6.01], [2, -2, -6.01], [2, 2, -6.01], [-2, 2, -6.01], [-2, -2, -6.01]],
+                    
+                    // Top face circuits
+                    [[-4, 6.01, -4], [4, 6.01, -4], [4, 6.01, 4], [-4, 6.01, 4], [-4, 6.01, -4]],
+                    [[-2, 6.01, -2], [2, 6.01, -2], [2, 6.01, 2], [-2, 6.01, 2], [-2, 6.01, -2]],
+                    
+                    // Bottom face circuits
+                    [[-4, -6.01, -4], [4, -6.01, -4], [4, -6.01, 4], [-4, -6.01, 4], [-4, -6.01, -4]],
+                    [[-2, -6.01, -2], [2, -6.01, -2], [2, -6.01, 2], [-2, -6.01, 2], [-2, -6.01, -2]]
+                ];
+                
+                patterns.forEach((pattern, i) => {
+                    const geometry = new THREE.BufferGeometry().setFromPoints(
+                        pattern.map(p => new THREE.Vector3(...p))
+                    );
+                    const line = new THREE.Line(geometry, lineMaterial.clone());
+                    line.userData = { patternIndex: i, originalOpacity: 0.8 };
+                    this.circuitLines.push(line);
+                    this.cubeGroup.add(line);
+                });
+            }
+            
+            createWireframe() {
+                const wireframeGeometry = new THREE.EdgesGeometry(this.mainCube.geometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: 0xffffff,
+                    transparent: true, 
+                    opacity: 0.6
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cubeGroup.add(this.wireframe);
+            }
+            
+            createParticles() {
+                this.particles = [];
+                this.maxParticles = 150;
+                
+                this.particleGeometry = new THREE.SphereGeometry(0.08, 6, 4);
+                this.particleMaterials = [
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xffffff, 
+                        emissive: 0x888888, 
+                        emissiveIntensity: 0.8,
+                        transparent: true,
+                        opacity: 0.9,
+                        metalness: 0.8,
+                        roughness: 0.1,
+                        transmission: 0.1,
+                        thickness: 0.1,
+                        ior: 1.5
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xe5e7eb, 
+                        emissive: 0x666666, 
+                        emissiveIntensity: 0.7,
+                        transparent: true,
+                        opacity: 0.85,
+                        metalness: 0.7,
+                        roughness: 0.2,
+                        transmission: 0.2,
+                        thickness: 0.1,
+                        ior: 1.5
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xf3f4f6, 
+                        emissive: 0x777777, 
+                        emissiveIntensity: 0.75,
+                        transparent: true,
+                        opacity: 0.8,
+                        metalness: 0.9,
+                        roughness: 0.1,
+                        transmission: 0.15,
+                        thickness: 0.1,
+                        ior: 1.5
+                    })
+                ];
+            }
+            
+            createParticle() {
+                if (this.particles.length >= this.maxParticles) return;
+                
+                const material = this.particleMaterials[Math.floor(Math.random() * this.particleMaterials.length)].clone();
+                const particle = new THREE.Mesh(this.particleGeometry, material);
+                
+                // Start from random position around the cube
+                const angle = Math.random() * Math.PI * 2;
+                const elevation = (Math.random() - 0.5) * Math.PI;
+                const distance = 35 + Math.random() * 15;
+                
+                particle.position.set(
+                    Math.cos(angle) * Math.cos(elevation) * distance,
+                    Math.sin(elevation) * distance,
+                    Math.sin(angle) * Math.cos(elevation) * distance
+                );
+                
+                particle.userData = {
+                    speed: 0.015 + Math.random() * 0.02,
+                    life: 1.0,
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.04,
+                        y: (Math.random() - 0.5) * 0.04,
+                        z: (Math.random() - 0.5) * 0.04
+                    }
+                };
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+            
+            updateParticles() {
+                // Create new particles
+                if (Math.random() < 0.06) {
+                    this.createParticle();
+                }
+                
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    // Move toward cube center
+                    const direction = new THREE.Vector3()
+                        .subVectors(this.cubeGroup.position, particle.position)
+                        .normalize();
+                    particle.position.add(direction.multiplyScalar(userData.speed));
+                    
+                    const distance = particle.position.distanceTo(this.cubeGroup.position);
+                    
+                    if (distance < 8.0) {
+                        userData.life -= 0.03;
+                        particle.material.opacity = userData.life * 0.8;
+                        particle.scale.setScalar(userData.life);
+                    }
+                    
+                    if (userData.life <= 0 || distance < 5.0) {
+                        this.scene.remove(particle);
+                        particle.geometry.dispose();
+                        particle.material.dispose();
+                        this.particles.splice(i, 1);
+                    }
+                }
+            }
+            
+            setupControls() {
+                document.addEventListener('mousemove', (e) => {
+                    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.016;
+                
+                // Elegant cube rotation
+                this.cubeGroup.rotation.x += 0.008;
+                this.cubeGroup.rotation.y += 0.012;
+                this.cubeGroup.rotation.z += 0.005;
+                
+                // Subtle floating motion
+                this.cubeGroup.position.y = Math.sin(this.time * 0.8) * 1.5;
+                this.cubeGroup.position.x = Math.cos(this.time * 0.6) * 0.8;
+                
+                // Animate inner core with pulsating blue light
+                if (this.innerCore) {
+                    this.innerCore.rotation.x -= 0.015;
+                    this.innerCore.rotation.y += 0.018;
+                    const pulse = 1 + Math.sin(this.time * 3) * 0.1;
+                    this.innerCore.scale.setScalar(pulse);
+                    
+                    // Subtle blue pulse synchronized with cube position
+                    const bluePulse = Math.sin(this.time * 2.5) * 0.3 + 0.7;
+                    this.cubeLight.intensity = 0.6 * bluePulse;
+                    this.cubeLight.position.copy(this.cubeGroup.position);
+                    
+                    // Sync inner core emission with light
+                    this.innerCore.material.emissiveIntensity = 0.15 * bluePulse;
+                }
+                
+                // Animate circuit lines
+                this.circuitLines?.forEach((line, i) => {
+                    const flow = Math.sin(this.time * 4 + i * 0.8) * 0.4 + 0.6;
+                    line.material.opacity = line.userData.originalOpacity * flow;
+                });
+                
+                // Animate wireframe
+                if (this.wireframe) {
+                    const wireGlow = Math.sin(this.time * 2) * 0.2 + 0.5;
+                    this.wireframe.material.opacity = 0.4 * wireGlow;
+                }
+                
+                // Mouse interaction
+                this.cubeGroup.rotation.x += this.mouse.y * 0.0008;
+                this.cubeGroup.rotation.y += this.mouse.x * 0.0008;
+                
+                this.updateParticles();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new GlassCube3D();
+        });
+    </script>
+</body>
+</html>

@@ -186,6 +186,17 @@
             gap: 2rem;
             margin: 4rem 0;
         }
+        
+        /* Fix orphaned elements in key-stats (4 items) */
+        .key-stats > *:last-child:nth-child(4n+1) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 400px;
+        }
+        .key-stats > *:last-child:nth-child(4n+2) {
+            grid-column: span 2;
+            justify-self: center;
+        }
 
         .stat-card {
             background: var(--card-bg);
@@ -257,6 +268,17 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-bottom: 4rem;
+        }
+        
+        /* Fix orphaned elements in chip-allocation (5 items) */
+        .chip-allocation > *:last-child:nth-child(5n+1) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 500px;
+        }
+        .chip-allocation > *:last-child:nth-child(5n+2) {
+            grid-column: span 2;
+            justify-self: center;
         }
 
         .company-card {
@@ -392,6 +414,17 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
+        }
+        
+        /* Fix orphaned elements in timeline-grid (5 items) */
+        .timeline-grid > *:last-child:nth-child(5n+1) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 300px;
+        }
+        .timeline-grid > *:last-child:nth-child(5n+2) {
+            grid-column: span 2;
+            justify-self: center;
         }
 
         .timeline-item {

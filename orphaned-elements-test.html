@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orphaned Elements Test - Moonlight Analytica</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .test-section { margin: 40px 0; background: white; padding: 20px; border-radius: 8px; }
+        .test-title { color: #333; border-bottom: 2px solid #0066cc; padding-bottom: 10px; }
+        
+        /* 3-item grid (like tactics-grid) */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 > *:last-child:nth-child(3n) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 300px;
+        }
+        
+        /* 4-item grid (like key-stats, cost-breakdown) */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-4 > *:last-child:nth-child(4n+1) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 400px;
+        }
+        .grid-4 > *:last-child:nth-child(4n+2) {
+            grid-column: span 2;
+            justify-self: center;
+        }
+        
+        /* 5-item grid (like chip-allocation, timeline-grid) */
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .grid-5 > *:last-child:nth-child(5n+1) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 300px;
+        }
+        .grid-5 > *:last-child:nth-child(5n+2) {
+            grid-column: span 2;
+            justify-self: center;
+        }
+        
+        .test-card {
+            background: linear-gradient(135deg, #0066cc, #3498db);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .result { 
+            margin: 10px 0; 
+            padding: 10px; 
+            background: #e8f5e8; 
+            border-left: 4px solid #10b981; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Orphaned Elements Fix Verification</h1>
+    <p><strong>Testing CSS grid solutions for orphaned visual elements in Moonlight Analytica articles</strong></p>
+    
+    <div class="test-section">
+        <h2 class="test-title">✅ 3-Item Grid Test (Big Tech Lobbying - tactics-grid)</h2>
+        <div class="grid-3">
+            <div class="test-card">Card 1</div>
+            <div class="test-card">Card 2</div>
+            <div class="test-card">Card 3 (Centered)</div>
+        </div>
+        <div class="result">✓ Third item should be centered and constrained to 300px max-width</div>
+    </div>
+    
+    <div class="test-section">
+        <h2 class="test-title">✅ 4-Item Grid Test (NVIDIA - key-stats, 10M Token - cost-breakdown)</h2>
+        <div class="grid-4">
+            <div class="test-card">Card 1</div>
+            <div class="test-card">Card 2</div>
+            <div class="test-card">Card 3</div>
+            <div class="test-card">Card 4 (Auto-centered)</div>
+        </div>
+        <div class="result">✓ On narrow screens, orphaned 4th item should auto-center</div>
+    </div>
+    
+    <div class="test-section">
+        <h2 class="test-title">✅ 5-Item Grid Test (NVIDIA - chip-allocation, timeline-grid)</h2>
+        <div class="grid-5">
+            <div class="test-card">Item 1</div>
+            <div class="test-card">Item 2</div>
+            <div class="test-card">Item 3</div>
+            <div class="test-card">Item 4</div>
+            <div class="test-card">Item 5 (Centered)</div>
+        </div>
+        <div class="result">✓ Fifth item should be centered when orphaned on various screen sizes</div>
+    </div>
+    
+    <div class="test-section">
+        <h2 class="test-title">📊 Implementation Summary</h2>
+        <ul>
+            <li><strong>OpenAI O1 Article:</strong> Fixed 3-item meter-stats grid</li>
+            <li><strong>NVIDIA Blackwell Article:</strong> Fixed 4-item key-stats, 5-item chip-allocation, 5-item timeline-grid</li>
+            <li><strong>Big Tech Lobbying Article:</strong> Fixed 3-item tactics-grid</li>
+            <li><strong>Intel Split Article:</strong> Rebuilt from scratch with 3-item financial-impact grid fixes</li>
+            <li><strong>10M Token Article:</strong> Fixed 4-item cost-breakdown grid</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2 class="test-title">🎯 CSS Solutions Applied</h2>
+        <pre><code>/* Auto-center orphaned elements with nth-child selectors */
+.container > *:last-child:nth-child(3n) { 
+    grid-column: 1 / -1; justify-self: center; max-width: 400px; 
+}
+.container > *:last-child:nth-child(4n+1) { 
+    grid-column: 1 / -1; justify-self: center; max-width: 400px; 
+}
+.container > *:last-child:nth-child(5n+1) { 
+    grid-column: 1 / -1; justify-self: center; max-width: 300px; 
+}</code></pre>
+    </div>
+    
+    <p style="text-align: center; margin-top: 40px; color: #666;">
+        <strong>Resize this window to test responsive behavior at different breakpoints</strong>
+    </p>
+</body>
+</html>

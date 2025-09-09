@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Article Manager - Enhanced Preview System</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-glow: #00bfff;
+            --secondary-glow: #87ceeb;
+            --accent-purple: #6366f1;
+            --dark-bg: #0a0d14;
+            --darker-bg: #050810;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a9c0;
+            --text-muted: #6b7280;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, #0f1419 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 191, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-glow), var(--secondary-glow), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--accent-purple));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            animation: gradient-shift 4s ease-in-out infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 8px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Article Creation Section */
+        .create-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .create-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            color: var(--secondary-glow);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .topic-input {
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, var(--success), #059669);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            min-width: 200px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .generate-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Articles Grid */
+        .articles-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .article-preview-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 0;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            height: fit-content;
+        }
+
+        .article-preview-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary-glow);
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.4),
+                0 0 100px rgba(0, 191, 255, 0.2);
+        }
+
+        .article-card-header {
+            padding: 25px 30px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .article-card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-glow);
+            margin-bottom: 10px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .article-card-body {
+            padding: 20px 30px;
+        }
+
+        .article-card-excerpt {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .article-tag {
+            background: rgba(0, 191, 255, 0.15);
+            color: var(--primary-glow);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .article-card-footer {
+            padding: 15px 30px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .article-quality-score {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(45deg, var(--success), #0d9488);
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 191, 255, 0.15);
+            border-color: var(--primary-glow);
+            color: var(--primary-glow);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            border-color: var(--primary-glow);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: linear-gradient(45deg, var(--secondary-glow), var(--primary-glow));
+            box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4);
+        }
+
+        /* Full Article Modal */
+        .article-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .article-modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .article-modal-content {
+            background: var(--dark-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: auto;
+        }
+
+        .article-modal-header {
+            padding: 30px 40px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            background: var(--dark-bg);
+            backdrop-filter: blur(20px);
+            z-index: 10;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .article-modal-body {
+            padding: 30px 40px;
+        }
+
+        .full-article-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-glow);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .full-article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .full-article-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .full-article-content h3 {
+            color: var(--secondary-glow);
+            font-size: 1.4rem;
+            margin: 30px 0 15px;
+            font-weight: 700;
+        }
+
+        .full-article-content p {
+            margin-bottom: 20px;
+        }
+
+        /* Progress Tracking */
+        .progress-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .step-icon.pending {
+            background: rgba(107, 114, 128, 0.3);
+            color: #9ca3af;
+        }
+
+        .step-icon.active {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .step-icon.completed {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        /* Status Messages */
+        .status-message {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #f87171;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #34d399;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .article-modal-content {
+                margin: 20px;
+                max-height: 85vh;
+            }
+
+            .article-modal-header,
+            .article-modal-body {
+                padding: 20px;
+            }
+
+            .full-article-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Article Manager Pro</h1>
+            <p>AI-Powered Article Generation & Management System</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('create')">🚀 Create Article</button>
+            <button class="tab-btn" onclick="switchTab('articles')">📚 Article Library</button>
+        </div>
+
+        <!-- Create Article Tab -->
+        <div id="createTab" class="tab-content active">
+            <div class="create-section">
+                <h2 style="color: var(--primary-glow); margin-bottom: 20px; font-size: 1.6rem;">🤖 AI Article Generator</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 25px;">
+                    Enter a topic idea (1-2 sentences) and let our AI create a comprehensive, TechCrunch-style article for you.
+                </p>
+                
+                <div class="create-form">
+                    <div class="form-group">
+                        <label class="form-label">Article Topic/Idea</label>
+                        <textarea 
+                            id="topicInput" 
+                            class="form-input topic-input"
+                            placeholder="Example: Is the new Google Bard product good enough to replace Photoshop for most people? What are the implications for creative professionals?"
+                        ></textarea>
+                    </div>
+                    
+                    <button id="generateBtn" class="generate-btn" onclick="generateArticle()">
+                        🚀 Generate Article
+                    </button>
+                </div>
+
+                <div id="statusMessages"></div>
+
+                <!-- Progress Tracking -->
+                <div id="progressContainer" class="progress-container">
+                    <h3 style="color: var(--primary-glow); margin-bottom: 15px;">🔄 Generation Progress</h3>
+                    <div class="progress-step">
+                        <div class="step-icon pending" data-step="1">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Topic Research & Analysis</div>
+                            <div class="step-description">Analyzing topic and gathering relevant context</div>
+                        </div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-icon pending" data-step="2">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Content Generation</div>
+                            <div class="step-description">Creating comprehensive article content</div>
+                        </div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-icon pending" data-step="3">3</div>
+                        <div class="step-content">
+                            <div class="step-title">SEO Optimization</div>
+                            <div class="step-description">Enhancing article for search optimization</div>
+                        </div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-icon pending" data-step="4">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Quality Review</div>
+                            <div class="step-description">Final review and polishing</div>
+                        </div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-icon pending" data-step="5">5</div>
+                        <div class="step-content">
+                            <div class="step-title">Article Finalization</div>
+                            <div class="step-description">Creating preview and adding to library</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Articles Library Tab -->
+        <div id="articlesTab" class="tab-content">
+            <div class="articles-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="color: var(--primary-glow); font-size: 1.6rem;">📚 Article Library</h2>
+                    <div style="color: var(--text-secondary);">
+                        <span id="articleCount">0</span> articles
+                    </div>
+                </div>
+                
+                <div id="articlesGrid" class="articles-grid">
+                    <!-- Article cards will be generated here -->
+                </div>
+                
+                <div id="noArticles" style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">📝</div>
+                    <h3>No Articles Yet</h3>
+                    <p>Create your first AI-generated article using the "Create Article" tab.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="article-modal">
+        <div class="article-modal-content">
+            <div class="article-modal-header">
+                <button class="modal-close-btn" onclick="closeArticleModal()">&times;</button>
+            </div>
+            <div class="article-modal-body">
+                <div id="fullArticleContent">
+                    <!-- Full article content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize system
+        let articles = JSON.parse(localStorage.getItem('moonlight-articles') || '[]');
+        let articleIdCounter = articles.length > 0 ? Math.max(...articles.map(a => a.id)) + 1 : 1;
+
+        // Mock AI Article Generation (replace with actual Claude prompt)
+        class MockAIArticleGenerator {
+            async generateFromTopic(topic) {
+                // Simulate the detailed Claude prompt processing
+                const steps = [
+                    { step: 1, message: 'Analyzing topic and researching context...' },
+                    { step: 2, message: 'Generating comprehensive article content...' },
+                    { step: 3, message: 'Optimizing for SEO and readability...' },
+                    { step: 4, message: 'Performing quality review and fact-checking...' },
+                    { step: 5, message: 'Finalizing article and creating preview...' }
+                ];
+
+                for (const { step, message } of steps) {
+                    updateProgress(step, 'active');
+                    showMessage(message, 'status');
+                    await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
+                    updateProgress(step, 'completed');
+                }
+
+                return this.generateMockArticle(topic);
+            }
+
+            generateMockArticle(topic) {
+                const titles = [
+                    `${topic.split(' ').slice(0, 8).join(' ')}: A Comprehensive Analysis`,
+                    `Breaking: ${topic.split(' ').slice(0, 6).join(' ')} - What This Means`,
+                    `The Future of ${topic.split(' ').slice(2, 7).join(' ')}: Expert Insights`,
+                    `${topic.split(' ').slice(0, 5).join(' ')}: Market Impact & Analysis`
+                ];
+
+                const categories = ['AI & ML', 'Technology', 'Analysis', 'Innovation', 'Industry Trends'];
+                const category = categories[Math.floor(Math.random() * categories.length)];
+
+                const content = this.generateDetailedContent(topic);
+                const excerpt = content.replace(/<[^>]*>/g, '').substring(0, 200) + '...';
+
+                return {
+                    id: articleIdCounter++,
+                    title: titles[Math.floor(Math.random() * titles.length)],
+                    content: content,
+                    excerpt: excerpt,
+                    category: category,
+                    tags: this.extractTags(topic),
+                    createdAt: new Date().toISOString(),
+                    readTime: Math.ceil(content.length / 1000) + ' min read',
+                    qualityScore: Math.floor(Math.random() * 15) + 85, // 85-100
+                    seoTitle: `${topic.split(' ').slice(0, 6).join(' ')} - Complete Analysis`,
+                    metaDescription: `Comprehensive analysis of ${topic.substring(0, 120)}...`,
+                    status: 'published'
+                };
+            }
+
+            generateDetailedContent(topic) {
+                return `
+                    <p>In today's rapidly evolving technology landscape, ${topic} represents a significant development that demands careful analysis and consideration.</p>
+                    
+                    <h3>Current Market Context</h3>
+                    <p>The technology sector has witnessed unprecedented changes in recent months, with artificial intelligence and machine learning innovations reshaping how we approach traditional workflows and creative processes. This development occurs at a time when businesses and individuals are increasingly seeking efficient, cost-effective solutions to complex challenges.</p>
+                    
+                    <h3>Technical Analysis and Capabilities</h3>
+                    <p>From a technical standpoint, the capabilities demonstrated in ${topic.split(' ').slice(0, 8).join(' ')} showcase remarkable advances in computational efficiency and user experience design. The integration of AI-powered features with intuitive interfaces creates new possibilities for both professional and consumer applications.</p>
+                    
+                    <p>Key technical considerations include:</p>
+                    <ul>
+                        <li>Performance optimization and resource utilization</li>
+                        <li>User interface design and accessibility</li>
+                        <li>Integration capabilities with existing workflows</li>
+                        <li>Security and privacy implications</li>
+                    </ul>
+                    
+                    <h3>Industry Impact and Competitive Landscape</h3>
+                    <p>This development is positioned to influence competitive dynamics across multiple sectors. Traditional market leaders must now evaluate their strategies and consider how to adapt to these changing market conditions. The implications extend beyond immediate technical capabilities to encompass broader business model considerations.</p>
+                    
+                    <h3>User Experience and Practical Applications</h3>
+                    <p>For end users, the practical applications of this technology present both opportunities and challenges. Professional users will need to assess how these tools fit into their existing workflows, while considering the learning curve and potential productivity gains.</p>
+                    
+                    <h3>Future Outlook and Recommendations</h3>
+                    <p>Looking forward, several key trends are likely to shape the evolution of this space:</p>
+                    <ul>
+                        <li>Continued integration of AI capabilities across platforms</li>
+                        <li>Enhanced personalization and adaptive user experiences</li>
+                        <li>Greater emphasis on collaborative features and workflow integration</li>
+                        <li>Ongoing focus on accessibility and democratization of advanced tools</li>
+                    </ul>
+                    
+                    <h3>Conclusion</h3>
+                    <p>While it's still early to predict the full long-term impact, the implications for both individual users and the broader industry are substantial. Organizations and professionals should monitor these developments closely, as they may influence future technology adoption decisions and competitive positioning.</p>
+                    
+                    <p>The key to success in this evolving landscape will be maintaining flexibility while making informed decisions about when and how to integrate new technologies into existing workflows and business processes.</p>
+                `;
+            }
+
+            extractTags(topic) {
+                const commonTags = ['AI', 'Technology', 'Innovation', 'Analysis', 'Industry', 'Future', 'Digital'];
+                const topicWords = topic.toLowerCase().split(' ').filter(word => word.length > 3);
+                const selectedTags = [...commonTags.slice(0, 3), ...topicWords.slice(0, 2)];
+                return selectedTags.map(tag => tag.charAt(0).toUpperCase() + tag.slice(1));
+            }
+        }
+
+        const aiGenerator = new MockAIArticleGenerator();
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+
+            if (tabName === 'articles') {
+                renderArticles();
+            }
+        }
+
+        // Progress tracking
+        function updateProgress(step, status) {
+            const stepIcon = document.querySelector(`[data-step="${step}"]`);
+            if (stepIcon) {
+                stepIcon.className = `step-icon ${status}`;
+                
+                if (status === 'active' || status === 'completed') {
+                    for (let i = 1; i < step; i++) {
+                        const prevStep = document.querySelector(`[data-step="${i}"]`);
+                        if (prevStep && !prevStep.classList.contains('completed')) {
+                            prevStep.className = 'step-icon completed';
+                        }
+                    }
+                }
+            }
+        }
+
+        function resetProgress() {
+            document.querySelectorAll('.step-icon').forEach(icon => {
+                icon.className = 'step-icon pending';
+            });
+        }
+
+        // Status messages
+        function showMessage(message, type = 'status') {
+            const container = document.getElementById('statusMessages');
+            const div = document.createElement('div');
+            div.className = `${type}-message`;
+            div.textContent = message;
+            container.appendChild(div);
+            
+            if (type === 'status') {
+                setTimeout(() => div.remove(), 4000);
+            }
+        }
+
+        function clearMessages() {
+            document.getElementById('statusMessages').innerHTML = '';
+        }
+
+        // Article generation
+        async function generateArticle() {
+            const topicInput = document.getElementById('topicInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            
+            const topic = topicInput.value.trim();
+            if (!topic) {
+                showMessage('Please enter a topic idea to generate an article.', 'error');
+                return;
+            }
+
+            // Reset UI
+            clearMessages();
+            generateBtn.disabled = true;
+            generateBtn.textContent = '⏳ Generating...';
+            progressContainer.style.display = 'block';
+            resetProgress();
+
+            try {
+                showMessage('Starting AI article generation...', 'success');
+                
+                const article = await aiGenerator.generateFromTopic(topic);
+                
+                // Save article
+                articles.push(article);
+                localStorage.setItem('moonlight-articles', JSON.stringify(articles));
+                
+                showMessage('Article generated successfully!', 'success');
+                
+                // Clear form and switch to articles tab
+                topicInput.value = '';
+                setTimeout(() => {
+                    switchTab('articles');
+                    // Highlight the new article
+                    renderArticles();
+                    document.querySelector(`.article-preview-card[data-id="${article.id}"]`)?.scrollIntoView({ behavior: 'smooth' });
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Generation error:', error);
+                showMessage(`Article generation failed: ${error.message}`, 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = '🚀 Generate Article';
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // Article rendering
+        function renderArticles() {
+            const articlesGrid = document.getElementById('articlesGrid');
+            const noArticles = document.getElementById('noArticles');
+            const articleCount = document.getElementById('articleCount');
+
+            articleCount.textContent = articles.length;
+
+            if (articles.length === 0) {
+                articlesGrid.innerHTML = '';
+                noArticles.style.display = 'block';
+                return;
+            }
+
+            noArticles.style.display = 'none';
+            articlesGrid.innerHTML = articles.slice().reverse().map(article => `
+                <div class="article-preview-card" data-id="${article.id}" onclick="openArticle(${article.id})">
+                    <div class="article-card-header">
+                        <div class="article-card-title">${article.title}</div>
+                        <div class="article-card-meta">
+                            <span>📅 ${new Date(article.createdAt).toLocaleDateString()}</span>
+                            <span>⏱️ ${article.readTime}</span>
+                            <span>📂 ${article.category}</span>
+                        </div>
+                    </div>
+                    <div class="article-card-body">
+                        <div class="article-card-excerpt">${article.excerpt}</div>
+                        <div class="article-card-tags">
+                            ${article.tags.map(tag => `<span class="article-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="article-card-footer">
+                        <div class="article-quality-score">
+                            ✨ ${article.qualityScore}/100
+                        </div>
+                        <div class="article-actions">
+                            <button class="action-btn primary" onclick="event.stopPropagation(); openArticle(${article.id})">Read Full</button>
+                            <button class="action-btn" onclick="event.stopPropagation(); editArticle(${article.id})">Edit</button>
+                            <button class="action-btn" onclick="event.stopPropagation(); deleteArticle(${article.id})">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Article modal functions
+        function openArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            const modal = document.getElementById('articleModal');
+            const fullArticleContent = document.getElementById('fullArticleContent');
+
+            fullArticleContent.innerHTML = `
+                <div class="full-article-title">${article.title}</div>
+                <div class="full-article-meta">
+                    <span>📅 Published: ${new Date(article.createdAt).toLocaleDateString()}</span>
+                    <span>⏱️ Read Time: ${article.readTime}</span>
+                    <span>📂 Category: ${article.category}</span>
+                    <span>✨ Quality Score: ${article.qualityScore}/100</span>
+                </div>
+                <div class="full-article-content">${article.content}</div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArticleModal() {
+            const modal = document.getElementById('articleModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Article management functions
+        function editArticle(articleId) {
+            // TODO: Implement article editing
+            showMessage('Article editing feature coming soon!', 'status');
+        }
+
+        function deleteArticle(articleId) {
+            if (confirm('Are you sure you want to delete this article? This cannot be undone.')) {
+                articles = articles.filter(a => a.id !== articleId);
+                localStorage.setItem('moonlight-articles', JSON.stringify(articles));
+                renderArticles();
+                showMessage('Article deleted successfully.', 'success');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('articleModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeArticleModal();
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderArticles();
+            
+            // Auto-populate example topic
+            const topicInput = document.getElementById('topicInput');
+            topicInput.placeholder = 'Example: Is the new Google Bard product good enough to replace Photoshop for most people? What are the implications for creative professionals and the digital design industry?';
+        });
+    </script>
+</body>
+</html>

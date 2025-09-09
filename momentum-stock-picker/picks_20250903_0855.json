@@ -1,0 +1,39 @@
+{
+  "timestamp": "20250903_0855",
+  "date": "2025-09-03T08:55:10.612565",
+  "picks": [
+    {
+      "symbol": "GOOGL",
+      "current_price": 211.35000610351562,
+      "momentum_score": 95,
+      "continuation_score": 70,
+      "combined_score": 85.0,
+      "price_change_5d": 1.3717686867466439,
+      "volume_ratio": 1.1960879868561296,
+      "rsi": 65.55343545376434,
+      "above_ma20": true
+    },
+    {
+      "symbol": "BA",
+      "current_price": 237.3800048828125,
+      "momentum_score": 90,
+      "continuation_score": 60,
+      "combined_score": 78.0,
+      "price_change_5d": 4.6326133873261455,
+      "volume_ratio": 0.9023601186507737,
+      "rsi": 56.37190375420249,
+      "above_ma20": true
+    },
+    {
+      "symbol": "NOW",
+      "current_price": 911.4199829101562,
+      "momentum_score": 90,
+      "continuation_score": 60,
+      "combined_score": 78.0,
+      "price_change_5d": 3.5775144193249897,
+      "volume_ratio": 1.067826117726155,
+      "rsi": 64.60631388382936,
+      "above_ma20": true
+    }
+  ]
+}

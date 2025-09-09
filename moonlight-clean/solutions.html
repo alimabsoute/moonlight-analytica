@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #e5e7eb;
+            --secondary-color: #f3f4f6;
+            --accent-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #e5e7eb;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-light);
+        }
+        
+        /* Simplified particle background */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #87ceeb;
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 80%; left: 80%; animation-delay: 1s; }
+        .particle:nth-child(3) { top: 40%; left: 40%; animation-delay: 2s; }
+        .particle:nth-child(4) { top: 60%; left: 60%; animation-delay: 3s; }
+        .particle:nth-child(5) { top: 10%; left: 90%; animation-delay: 4s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); opacity: 0.7; }
+            50% { transform: translateY(-20px); opacity: 1; }
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 3rem;
+            padding: 0 10px;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            margin-left: auto;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-toggle:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 12px;
+            padding: 15px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 191, 255, 0.15),
+                0 0 80px rgba(135, 206, 235, 0.1),
+                inset 0 0 20px rgba(135, 206, 235, 0.05);
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #00bfff, transparent);
+            transition: height 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(135, 206, 235, 0.1);
+            color: #00bfff;
+            padding-left: 30px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .dropdown-item:hover::before {
+            height: 100%;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.3), transparent);
+            margin: 10px 20px;
+        }
+        
+        .dropdown-label {
+            padding: 5px 25px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 120px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Product Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+        
+        .product-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00bfff, #87ceeb, #4682b4);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 191, 255, 0.2);
+            border-color: rgba(135, 206, 235, 0.4);
+        }
+        
+        .product-card:hover::before {
+            opacity: 1;
+        }
+        
+        .product-header {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .product-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #87ceeb, #4682b4);
+            border-radius: 16px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .product-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-status {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .status-live {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .status-beta {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .status-coming {
+            background: var(--info-color);
+            color: var(--text-dark);
+        }
+        
+        .product-content {
+            padding: 0 2rem 2rem;
+        }
+        
+        .product-description {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .product-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .product-features li {
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .product-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--text-dark);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-color);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple particle background -->
+    <div class="particle-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="moonlight-complete-structure.html" class="logo">
+                <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80">
+                    <defs>
+                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff"/>
+                            <stop offset="50%" style="stop-color:#e5e7eb"/>
+                            <stop offset="100%" style="stop-color:#9ca3af"/>
+                        </linearGradient>
+                    </defs>
+                    <g transform="translate(40, 40)">
+                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
+                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+                Moonlight Analytica
+            </a>
+            <ul class="nav-menu">
+                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
+                <li><a href="solutions.html" class="nav-link active">Solutions</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                    </div>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Products</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-label">Discover</span>
+                        <a href="products-discovery.html" class="dropdown-item">Today's Launches</a>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-label">Categories</span>
+                        <a href="products-discovery.html#ai-tools" class="dropdown-item">AI Tools</a>
+                        <a href="products-discovery.html#saas" class="dropdown-item">SaaS Solutions</a>
+                        <a href="products-discovery.html#developer" class="dropdown-item">Developer Tools</a>
+                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                    </div>
+                </li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <header class="page-header">
+                <h1 class="page-title">Our Solutions</h1>
+                <p class="page-subtitle">
+                    Innovative SaaS solutions designed to enhance productivity, optimize workflows, and deliver intelligent analytics for modern businesses.
+                </p>
+            </header>
+
+            <!-- Products Grid -->
+            <div class="products-grid">
+                <!-- PhynxTimer -->
+                <article class="product-card">
+                    <div class="product-header">
+                        <div class="product-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="24" cy="24" r="20" stroke="#fff" stroke-width="2"/>
+                                <path d="M24 8v16l8 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="24" cy="24" r="2" fill="#fff"/>
+                            </svg>
+                        </div>
+                        <h2 class="product-title">PhynxTimer</h2>
+                        <span class="product-status status-live">Live</span>
+                    </div>
+                    <div class="product-content">
+                        <p class="product-description">
+                            Advanced productivity timer with intelligent analytics, team collaboration features, and comprehensive workflow optimization. Track time like never before with AI-powered insights and automated reporting.
+                        </p>
+                        <ul class="product-features">
+                            <li>Intelligent time tracking with AI insights</li>
+                            <li>Team collaboration and shared workspaces</li>
+                            <li>Automated productivity reports</li>
+                            <li>Goal setting and achievement tracking</li>
+                            <li>Integration with popular project management tools</li>
+                            <li>Real-time analytics dashboard</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a href="https://phynxtimer.com" class="btn btn-primary" target="_blank">Visit PhynxTimer</a>
+                            <a href="#" class="btn btn-secondary">View Demo</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ATS Resume Helper -->
+                <article class="product-card">
+                    <div class="product-header">
+                        <div class="product-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="8" y="6" width="28" height="36" rx="2" stroke="#fff" stroke-width="2" fill="none"/>
+                                <path d="M14 14h16M14 20h16M14 26h12M14 32h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M28 6v8h8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h2 class="product-title">ATS Resume Helper</h2>
+                        <span class="product-status status-beta">Beta</span>
+                    </div>
+                    <div class="product-content">
+                        <p class="product-description">
+                            AI-powered resume optimization tool that analyzes job descriptions and tailors your resume to pass through Applicant Tracking Systems. Increase your interview chances with data-driven insights.
+                        </p>
+                        <ul class="product-features">
+                            <li>ATS compatibility analysis and scoring</li>
+                            <li>Keyword optimization for job descriptions</li>
+                            <li>Real-time resume scoring and suggestions</li>
+                            <li>Industry-specific template library</li>
+                            <li>Cover letter generation and optimization</li>
+                            <li>Interview preparation tools</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a href="#" class="btn btn-primary">Request Beta Access</a>
+                            <a href="#" class="btn btn-secondary">Learn More</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Janus Beta -->
+                <article class="product-card">
+                    <div class="product-header">
+                        <div class="product-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="16" cy="16" r="8" stroke="#fff" stroke-width="2" fill="none"/>
+                                <circle cx="32" cy="16" r="8" stroke="#fff" stroke-width="2" fill="none"/>
+                                <path d="M16 24v12M32 24v12" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M8 16h8M32 16h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                                <circle cx="16" cy="16" r="3" fill="#fff"/>
+                                <circle cx="32" cy="16" r="3" fill="#fff"/>
+                                <path d="M12 36h8M28 36h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h2 class="product-title">Janus Beta</h2>
+                        <span class="product-status status-beta">Beta Access</span>
+                    </div>
+                    <div class="product-content">
+                        <p class="product-description">
+                            Revolutionary visual line counter and code analysis platform using advanced machine vision technology. Track code metrics, analyze complexity, and optimize your codebase with enterprise-grade precision and real-time insights.
+                        </p>
+                        <ul class="product-features">
+                            <li>Machine vision-powered line counting</li>
+                            <li>Code complexity analysis and metrics</li>
+                            <li>Multi-language support and detection</li>
+                            <li>Real-time codebase visualization</li>
+                            <li>Team collaboration and insights sharing</li>
+                            <li>Git integration and history tracking</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a href="#" class="btn btn-primary">Request Beta Access</a>
+                            <a href="#" class="btn btn-secondary">View Demo</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

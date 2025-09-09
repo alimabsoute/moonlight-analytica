@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Preview - Updated Images - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #e5e7eb;
+            --secondary-color: #f3f4f6;
+            --accent-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: rgba(255, 255, 255, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #00bfff;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --backdrop-blur: blur(24px);
+            --neon-blue: #00bfff;
+            --neon-purple: #9945ff;
+            --neon-cyan: #87ceeb;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+        
+        /* Background Elements */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 191, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(70, 130, 180, 0.02) 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes bgShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-20px, -20px) rotate(120deg); }
+            66% { transform: translate(20px, -10px) rotate(240deg); }
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 10px;
+            gap: 3rem;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
+            animation-duration: 1.5s;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            animation: iconPulse 3s ease-in-out infinite 1.5s;
+        }
+        
+        @keyframes logoPulse {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+                color: var(--primary-color);
+            }
+            50% {
+                text-shadow: 0 0 50px rgba(135, 206, 235, 1.0), 0 0 80px rgba(70, 130, 180, 0.8);
+                color: #00bfff;
+            }
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 50px rgba(135, 206, 235, 1.0)) drop-shadow(0 0 80px rgba(70, 130, 180, 0.8));
+            }
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            margin-left: auto;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 120px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00bfff, #87ceeb, #4682b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 60px rgba(0, 191, 255, 0.5);
+        }
+        
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Preview Banner */
+        .preview-banner {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+        }
+        
+        /* Category Filters */
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 24px;
+            background: rgba(0, 191, 255, 0.05);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 25px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.3) 0%, transparent 70%);
+            transition: width 0.3s, height 0.3s;
+            transform: translate(-50%, -50%);
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 191, 255, 0.3);
+            border-color: var(--neon-blue);
+        }
+        
+        .filter-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(135, 206, 235, 0.1));
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        /* News Card */
+        .news-card {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+        
+        .news-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00bfff, transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 191, 255, 0.15);
+            border-color: rgba(0, 191, 255, 0.3);
+        }
+        
+        .news-card:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* Updated cards highlighting */
+        .news-card.updated {
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .updated-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00ff00;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.05), rgba(135, 206, 235, 0.02));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        .card-image img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            opacity: 1;
+            border-radius: 0;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-category {
+            display: inline-block;
+            color: var(--neon-cyan);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #1f2937;
+            line-height: 1.3;
+        }
+        
+        .card-excerpt {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9ca3af;
+            font-size: 0.85rem;
+        }
+        
+        .card-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-read-time {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="moonlight-complete-structure.html" class="logo">
+                <svg class="logo-icon" width="50" height="50" viewBox="0 0 80 80">
+                    <defs>
+                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff">
+                                <animate attributeName="stop-color" values="#ffffff;#00bfff;#ffffff" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="50%" style="stop-color:#e5e7eb">
+                                <animate attributeName="stop-color" values="#e5e7eb;#87ceeb;#e5e7eb" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#9ca3af">
+                                <animate attributeName="stop-color" values="#9ca3af;#4682b4;#9ca3af" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </stop>
+                        </linearGradient>
+                        <filter id="glowFilter">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge> 
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                            <animate attributeName="stdDeviation" values="3;8;3" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </filter>
+                    </defs>
+                    <g transform="translate(40, 40)" filter="url(#glowFilter)">
+                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;1.0;0.8" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.9;1.0;0.9" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;1.0;0.6" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
+                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.7;1.0;0.7" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
+                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+                Moonlight Analytica
+            </a>
+            <ul class="nav-menu">
+                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
+                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li><a href="news.html" class="nav-link active">News</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Preview Banner -->
+            <div class="preview-banner">
+                📸 PREVIEW MODE: Showing updated images for Intel (7a), Amazon (4a), and NVIDIA (5a) - Green borders indicate updated cards
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Tech News</h1>
+                <p class="page-subtitle">Breaking stories and analysis from the world of technology</p>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="category-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">AI & ML</button>
+                <button class="filter-btn">Cloud</button>
+                <button class="filter-btn">Security</button>
+                <button class="filter-btn">Startups</button>
+                <button class="filter-btn">Development</button>
+            </div>
+            
+            <!-- News Grid -->
+            <div class="news-grid">                
+                <!-- News Cards -->
+                <article class="news-card">
+                    <div class="card-image">
+                        <img src="1a.png" alt="OpenAI o1 Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI Analysis</span>
+                        <h3 class="card-title">OpenAI o1's Hidden Refusal Pattern: What 47,000 Prompts Revealed</h3>
+                        <p class="card-excerpt">Exclusive data reveals OpenAI o1's systematic refusal behaviors across creative tasks, exposing a fundamental design philosophy that prioritizes safety over user autonomy...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 2 hours ago</span>
+                            <span class="card-read-time">⏱️ 8 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card">
+                    <div class="card-image">
+                        <img src="2a.png" alt="iPhone 17 Demo Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Mobile Technology</span>
+                        <h3 class="card-title">iPhone 17 AI Demo Disaster: When Siri Failed on Stage</h3>
+                        <p class="card-excerpt">Apple's most anticipated AI demonstration turned into a public relations nightmare when Siri repeatedly failed to understand basic commands during the iPhone 17 reveal...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 4 hours ago</span>
+                            <span class="card-read-time">⏱️ 7 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card">
+                    <div class="card-image">
+                        <img src="3a.png" alt="AI Lobbying Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Policy & Regulation</span>
+                        <h3 class="card-title">Big Tech's $50M California AI Bill Lobbying Blitz Exposed</h3>
+                        <p class="card-excerpt">Internal documents reveal how Silicon Valley giants coordinated a massive lobbying campaign to water down California's landmark AI safety legislation...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 6 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- UPDATED: Amazon card with new image -->
+                <article class="news-card updated">
+                    <div class="updated-label">NEW IMAGE</div>
+                    <div class="card-image">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPCEtLSBXaGl0ZSBiYWNrZ3JvdW5kIC0tPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjZmZmZmZmIi8+CiAgCiAgPCEtLSBBbWF6b24gbG9nbyAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMCwgNDApIj4KICAgIDwhLS0gQW1hem9uIHRleHQgLS0+CiAgICA8cGF0aCBkPSJNMjggODhMMjguNCAxMDBMMzkuMiAxMDBRNDMuNiAxMDAgNDcuNiAxMDEuNlE1MS42IDEwMy4yIDU0LjggMTA2LjJRNTggMTA5LjIgNTkuOCAxMTMuMlE2MS42IDExNy4yIDYxLjYgMTIxLjZRNjEuNiAxMjYgNTkuOCAxMzBRNTggMTM0IDU0LjggMTM3UTUxLjYgMTQwIDQ3LjYgMTQxLjZRNDMuNiAxNDMuMiAzOS4yIDE0My4yTDI4IDE0My4yTDI4IDE1NS4yTDEyIDEzMC4yTDE0LjYgMTMwLjJMMTQuNiAxNDMuMkwxMS44IDE0My4yUTcuNCAxNDMuMiAzLjQgMTQxLjZRLTAuNiAxNDAgLTMuOCAxMzdRLTcgMTM0IC04LjggMTMwUS0xMC42IDEyNiAtMTAuNiAxMjEuNlEtMTAuNiAxMTcuMiAtOC44IDExMy4yUS03IDEwOS4yIC0zLjggMTA2LjJRLTAuNiAxMDMuMiAzLjQgMTAxLjZRNy40IDEwMCAxMS44IDEwMEwyOSAxMDBMMjggODhaTTI4IDEwMS44TDE4LjggMTAxLjhRMTYgMTAxLjggMTMuNiAxMDIuNlExMS4yIDEwMy40IDkuNCAxMDQuNlE3LjYgMTA1LjggNi40IDEwNy40UTUuMiAxMDkgNC42IDExMC42UTQuMiAxMTIuMiA0LjIgMTEzLjhRNC4yIDExNy4yIDUuOCAxMjBRNy40IDEyMi44IDkuOCAxMjQuNlExMi4yIDEyNi40IDE1LjQgMTI3LjJRMTguNiAxMjggMjMgMTI4TDMxIDEyOEwzMSAxMDEuOFpNMzUgMTEwLjZMMTkgMTEwLjZMMTkgMTIwLjJMMzUgMTIwLjJMMzUgMTEwLjZaIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8IS0tIGFtYXpvbiBzbWlsZSBhcnJvdyAtLT4KICAgIDxwYXRoIGQ9Ik0wIDEzMFExOTAgMTMwIDM2MCAxMzBRMzY0IDEzNCAzNjAgMTM4UTM2NCAxNDIgMzYwIDE0NlEyNDUgMTQ5IDEzNSAxNDlRNzkgMTQ5IDI1IDE0NkwyNSAxNDJRMjUgMTM4IDI1IDEzNFE0MiAxMzEgNjIgMTMwUTgxIDEzMCAxMDAgMTMwUTE1MCAyMTAgMjkwIDEzMEwwIDEzMFoiIGZpbGw9IiNmZjkwMDAiLz4KICA8L2c+CiAgCiAgPCEtLSBUaHJlZSB3YWxraW5nIHNpbGhvdWV0dGVzIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYwLCAyMjApIj4KICAgIDwhLS0gUGVyc29uIDEgLS0+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwKSI+CiAgICAgIDxjaXJjbGUgY3g9IjMwIiBjeT0iMjUiIHI9IjE4IiBmaWxsPSIjOTk5OTk5IiBvcGFjaXR5PSIwLjgiLz4KICAgICAgPHJlY3QgeD0iMTgiIHk9IjQwIiB3aWR0aD0iMjQiIGhlaWdodD0iNDAiIHJ4PSI0IiBmaWxsPSIjOTk5OTk5IiBvcGFjaXR5PSIwLjgiLz4KICAgICAgPHJlY3QgeD0iOCIgeT0iNDUiIHdpZHRoPSI1MCIgaGVpZ2h0PSIxNSIgcng9IjQiIGZpbGw9IiM5OTk5OTkiIG9wYWNpdHk9IjAuOCIvPgogICAgICA8cmVjdCB4PSIxNSIgeT0iODAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIzNSIgZmlsbD0iIzk5OTk5OSIgb3BhY2l0eT0iMC44Ii8+CiAgICAgIDxyZWN0IHg9IjM1IiB5PSI4NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjOTk5OTk5IiBvcGFjaXR5PSIwLjgiLz4KICAgIDwvZz4KICAgIDwhLS0gUGVyc29uIDIgLS0+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDAsIDUpIj4KICAgICAgPGNpcmNsZSBjeD0iMzAiIGN5PSIyNSIgcj0iMTgiIGZpbGw9IiM5OTk5OTkiIG9wYWNpdHk9IjAuOCIvPgogICAgICA8cmVjdCB4PSIxOCIgeT0iNDAiIHdpZHRoPSIyNCIgaGVpZ2h0PSI0MCIgcng9IjQiIGZpbGw9IiM5OTk5OTkiIG9wYWNpdHk9IjAuOCIvPgogICAgICA8cmVjdCB4PSI4IiB5PSI0NSIgd2lkdGg9IjUwIiBoZWlnaHQ9IjE1IiByeD0iNCIgZmlsbD0iIzk5OTk5OSIgb3BhY2l0eT0iMC44Ii8+CiAgICAgIDxyZWN0IHg9IjEwIiB5PSI4MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjOTk5OTk5IiBvcGFjaXR5PSIwLjgiLz4KICAgICAgPHJlY3QgeD0iNDAiIHk9Ijc1IiB3aWR0aD0iMTAiIGhlaWdodD0iNDAiIGZpbGw9IiM5OTk5OTkiIG9wYWNpdHk9IjAuOCIvPgogICAgPC9nPgogICAgPCEtLSBQZXJzb24gMyAtLT4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwMCwgMTApIj4KICAgICAgPGNpcmNsZSBjeD0iMzAiIGN5PSIyNSIgcj0iMTgiIGZpbGw9IiM5OTk5OTkiIG9wYWNpdHk9IjAuOCIvPgogICAgICA8cmVjdCB4PSIxOCIgeT0iNDAiIHdpZHRoPSIyNCIgaGVpZ2h0PSI0MCIgcng9IjQiIGZpbGw9IiM5OTk5OTkiIG9wYWNpdHk9IjAuOCIvPgogICAgICA8cmVjdCB4PSI4IiB5PSI0NSIgd2lkdGg9IjUwIiBoZWlnaHQ9IjE1IiByeD0iNCIgZmlsbD0iIzk5OTk5OSIgb3BhY2l0eT0iMC44Ii8+CiAgICAgIDxyZWN0IHg9IjIwIiB5PSI4MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjM1IiBmaWxsPSIjOTk5OTk5IiBvcGFjaXR5PSIwLjgiLz4KICAgICAgPHJlY3QgeD0iMzAiIHk9Ijc1IiB3aWR0aD0iMTAiIGhlaWdodD0iNDAiIGZpbGw9IiM5OTk5OTkiIG9wYWNpdHk9IjAuOCIvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+" alt="Amazon Workforce Analysis" style="max-width: 90%; max-height: 90%;">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Corporate Strategy</span>
+                        <h3 class="card-title">Amazon's Shadow Workforce Purge: 10,000 Contractors Vanish</h3>
+                        <p class="card-excerpt">Amazon quietly terminated thousands of contract workers without public disclosure, revealing a hidden cost-cutting strategy that bypasses traditional layoff reporting...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 8 hours ago</span>
+                            <span class="card-read-time">⏱️ 9 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- UPDATED: NVIDIA card with new image -->
+                <article class="news-card updated">
+                    <div class="updated-label">NEW IMAGE</div>
+                    <div class="card-image">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDI4MCAxNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPCEtLSBUcmFuc3BhcmVudCBiYWNrZ3JvdW5kIC0tPgogIDwhLS0gTlZJRElBIEV5ZSBTeW1ib2wgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAsIDIwKSI+CiAgICA8IS0tIE91dGVyIEJveCAoR3JlZW4pIC0tPgogICAgPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjNzZiOTAwIi8+CiAgICA8IS0tIElubmVyIEV5ZSBTaGFwZSAoV2hpdGUpIC0tPgogICAgPHBhdGggZD0iTTEwIDE1IEMyMCAxMCA2MCAzMCA3MCAzNSBDNjUgNDUgNTUgNTUgNDAgNjAgQzI1IDY1IDE1IDU1IDEwIDUwIFogTTIwIDI1IEMzMCAyMCA1MCAzNSA2MCA0MCBDNTUgNDUgNDUgNTAgMzUgNTIgQzI1IDU1IDIwIDQ1IDIwIDQwIFogTTMwIDM1IEMzNSAzMiA0NSAzOCA1MCA0MCBDNDggNDIgNDIgNDUgMzggNDYgQzM0IDQ3IDMwIDQ1IDMwIDQyIFoiIGZpbGw9IndoaXRlIi8+CiAgPC9nPgogIAogIDwhLS0gTlZJRElBIFRleHQgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTIwLCAzNSkiPgogICAgPCEtLSBOIC0tPgogICAgPHBhdGggZD0iTTAgMTAgTDAgNzAgTDEwIDcwIEwxMCA0MCBMMzAgNzAgTDQ1IDcwIEw0NSAxMCBMMzUgMTAgTDM1IDUwIEwxNSAxMCBMMCAxMCBaIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8IS0tIFYgLS0+CiAgICA8cGF0aCBkPSJNNTUgMTAgTDY1IDUwIEw3NSAxMCBMOTAgMTAgTDc1IDcwIEw1NSA3MCEBS00gNzAgTDU1IDEwIFoiIGZpbGw9IiMwMDAwMDAiLz4KICAgIDwhLS0gSSAtLT4KICAgIDxwYXRoIGQ9Ik0xMDAgMTAgTDEwMCA3MCBMMTE1IDcwIEwxMTUgMTAgTDEwMCAxMCBaIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8IS0tIEQgLS0+CiAgICA8cGF0aCBkPSJNMTI1IDEwIEwxMjUgNzAgTDE1MCA3MCBRMTU1IDcwIDE2MCA2NSBRMTY1IDYwIDE2NSA0MFEMTU1IDIwIDE0MCAyMCBMMTI1IDIwIEwxMjUgMTAgWiBNMTM1IDI1IEwxNDAgMjUgUTE0NSAyNSAxNTAgMzAgUTE1NSAzNSAxNTUgNDAgUTE1NSA0NSAxNTAgNTAgUTE0NSA1NSAxNDAgNTUgTDEzNSA1NSBMMTM1IDI1IFoiIGZpbGw9IiMwMDAwMDAiLz4KICAgIDwhLS0gSSAtLT4KICAgIDxwYXRoIGQ9Ik0xNzUgMTAgTDE3NSA3MCBMMTU5MCA3MCBMMTU5MCAxMCBMMTc1IDEwIFoiIGZpbGw9IiMwMDAwMDAiLz4KICAgIDwhLS0gQSAtLT4KICAgIDxwYXRoIGQ9Ik0yMDUgMTAgTDIxNSAzNSBMMjI1IDEwIEwyNDAgMTAgTDIzMCA0NSBMMJU0MCA3MCBMMTI5MCA3MCBMMTI4MCA0NSBMMTkwIDEwIEwyMDUgMTAgWiBNMjEwIDIwIEwyMjAgMjAgTDIyNSAzNSBMMjE1IDM1IEwyMTAgMjAgWiIgZmlsbD0iIzAwMDAwMCIvPgogIDwvZz4KPC9zdmc+" alt="NVIDIA Blackwell Analysis" style="max-width: 90%; max-height: 90%;">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Hardware</span>
+                        <h3 class="card-title">NVIDIA's Blackwell Chips Already Sold Out Through 2027</h3>
+                        <p class="card-excerpt">Industry sources confirm that NVIDIA's next-generation Blackwell architecture is completely booked for the next three years, creating a potential AI development bottleneck...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 10 hours ago</span>
+                            <span class="card-read-time">⏱️ 5 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- UPDATED: Intel card with new image -->
+                <article class="news-card updated">
+                    <div class="updated-label">NEW IMAGE</div>
+                    <div class="card-image">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPCEtLSBJbnRlbCBsb2dvIGJhc2VkIG9uIGJsdWUgb3ZhbCBzaGFwZSAtLT4KICA8IS0tIE91dGVyIG92YWwgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjUwIiByeD0iOTUiIHJ5PSI0NSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDA3N2NjIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8IS0tIElubmVyIG92YWwgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjUwIiByeD0iODAiIHJ5PSIzNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDA3N2NjIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8IS0tIElubmVybW9zdCBvdmFsIC0tPgogIDxlbGxpcHNlIGN4PSIxMDAiIGN5PSI1MCIgcng9IjY1IiByeT0iMjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwNzdjYyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8IS0tIGludGVsIHRleHQgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzUsIDMwKSI+CiAgICA8IS0tIEkgLS0+CiAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTIiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDc3Y2MiLz4KICAgIDwhLS0gTiAtLT4KICAgIDxwYXRoIGQ9Ik0xOCAwIEwxOCA0MCBMMTI2IDQwIEwyNiAyMCBMMjYgNDAgTDMwIDQwIEwzMCAwIEwxOCAwIFogTTIyIDggTDI2IDE2IEwyNiAwIEwyMiA4IFoiIGZpbGw9IiMwMDc3Y2MiLz4KICAgIDwhLS0gVCAtLT4KICAgIDxwYXRoIGQ9Ik0zOCAwIEwzOCAzNiBMNTQgMzYgTDU0IDQwIEwzNCA0MCBMMTQ0IDQwIEwzNCAzNiBMNTAgMzYgTDUwIDAgTDM4IDAgWiIgZmlsbD0iIzAwNzdjYyIvPgogICAgPCEtLSBFIC0tPgogICAgPHBhdGggZD0iTTU4IDAgTDU4IDQwIEw4MCA0MCBMODA0IC4zzMCA4MCBMODA0IDIyIEw3NCAyMiBMNzQgMTggTDgwIDE4IEw4MCAwIEw1OCAwIFogTTYyIDQgTDc2IDQgTDc2IDE0IEw2NiAxNCBMNjYgMjYgTDc2IDI2IEw3NiAzNiBMNjIgMzYgTDYyIDQgWiIgZmlsbD0iIzAwNzdjYyIvPgogICAgPCEtLSBMIC0tPgogICAgPHBhdGggZD0iTTg2IDAgTDg2IDQwIEwxMDYgNDAgTDEwNiAzNiBMOTAgMzYgTDkwIDAgTDg2IDAgWiIgZmlsbD0iIzAwNzdjYyIvPgogICAgPCEtLSBTZWNvbmQgSSAtLT4KICAgIDxyZWN0IHg9IjExMCIgeT0iMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMDA3N2NjIi8+CiAgICA8IS0tIFJlZ2lzdGVyZWQgdHJhZGVtYXJrIC0tPgogICAgPGNpcmNsZSBjeD0iMTI4IiBjeT0iNiIgcj0iNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDA3N2NjIiBzdHJva2Utd2lkdGg9IjEiLz4KICAgIDx0ZXh0IHg9IjEyOCIgeT0iMTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzAwNzdjYyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UjwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" alt="Intel Split Analysis" style="max-width: 90%; max-height: 90%;">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">Semiconductors</span>
+                        <h3 class="card-title">Intel's Secret Plan to Split Will Trigger $500B Semiconductor War</h3>
+                        <p class="card-excerpt">Intel's inevitable foundry separation will trigger the largest supply chain realignment in semiconductor history, with the split potentially happening as soon as Q3 2025...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 12 hours ago</span>
+                            <span class="card-read-time">⏱️ 7 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card">
+                    <div class="card-image">
+                        <img src="8a.png" alt="Token Arms Race Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI & ML</span>
+                        <h3 class="card-title">The 10-Million Token Arms Race That Will Make ChatGPT Look Like a Calculator</h3>
+                        <p class="card-excerpt">Context windows will hit 10 million tokens by mid-2026, fundamentally changing AI capabilities and making current models seem primitive...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 14 hours ago</span>
+                            <span class="card-read-time">⏱️ 6 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card">
+                    <div class="card-image">
+                        <img src="6a.png" alt="AI Quality Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI Research</span>
+                        <h3 class="card-title">AI Eating Its Own Tail: Why ChatGPT Gets Dumber by 2026</h3>
+                        <p class="card-excerpt">New research reveals how AI models trained on AI-generated content experience rapid quality degradation, potentially leading to a collapse in capabilities...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 12 hours ago</span>
+                            <span class="card-read-time">⏱️ 7 min</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="news-card">
+                    <div class="card-image">
+                        <img src="10a.png" alt="Vision Pro Analysis">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">VR/AR Technology</span>
+                        <h3 class="card-title">Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted</h3>
+                        <p class="card-excerpt">Apple plans to remove the controversial EyeSight feature from Vision Pro 2, acknowledging that the external display was more gimmick than genuine innovation...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 20 hours ago</span>
+                            <span class="card-read-time">⏱️ 5 min</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -438,6 +438,13 @@
             margin-top: 30px;
         }
         
+        /* Fix orphaned elements in meter-stats (3 items) */
+        .meter-stats > *:last-child:nth-child(3n) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 300px;
+        }
+        
         .stat-item {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;

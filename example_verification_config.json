@@ -1,0 +1,110 @@
+{
+  "environment": "production",
+  "verification": {
+    "screenshot_dir": "./verification_screenshots",
+    "report_dir": "./verification_reports",
+    "max_wait_time": 30,
+    "viewport_width": 1920,
+    "viewport_height": 1080,
+    "mobile_width": 375,
+    "mobile_height": 667,
+    "similarity_threshold": 0.95,
+    "pixel_diff_threshold": 10,
+    "hash_threshold": 5,
+    "enable_mobile_testing": true,
+    "enable_performance_monitoring": true
+  },
+  "deployment": {
+    "base_url": "https://moonlightanalytica.com",
+    "pages_to_verify": [
+      {
+        "name": "homepage",
+        "url": "/",
+        "wait_for": ".hero-section",
+        "critical": true
+      },
+      {
+        "name": "products",
+        "url": "/products",
+        "wait_for": ".products-grid",
+        "critical": true
+      },
+      {
+        "name": "insights",
+        "url": "/insights",
+        "wait_for": ".articles-container",
+        "critical": false
+      },
+      {
+        "name": "contact",
+        "url": "/contact",
+        "wait_for": ".contact-form",
+        "critical": false
+      },
+      {
+        "name": "solutions",
+        "url": "/solutions",
+        "wait_for": ".solutions-grid",
+        "critical": false
+      }
+    ],
+    "wait_after_deployment": 45,
+    "retry_attempts": 3,
+    "retry_delay": 15,
+    "enable_rollback_suggestions": true
+  },
+  "notifications": {
+    "slack_webhook": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+    "notification_webhook": "https://your-api.com/notifications/verification",
+    "email_notifications": [
+      "dev-team@moonlightanalytica.com",
+      "alerts@moonlightanalytica.com"
+    ],
+    "discord_webhook": null,
+    "teams_webhook": null
+  },
+  "advanced": {
+    "enable_ai_analysis": false,
+    "enable_performance_tracking": true,
+    "enable_accessibility_checks": false,
+    "custom_comparison_algorithms": [],
+    "batch_processing": {
+      "max_workers": 4,
+      "batch_size": 10,
+      "enable_parallel_processing": true
+    },
+    "storage": {
+      "retention_days": 30,
+      "compress_old_screenshots": true,
+      "archive_reports": true
+    }
+  },
+  "thresholds": {
+    "critical_page_similarity": 0.98,
+    "standard_page_similarity": 0.95,
+    "mobile_similarity": 0.92,
+    "max_pixel_differences": 50000,
+    "max_hash_difference": 8
+  },
+  "environments": {
+    "development": {
+      "base_url": "http://localhost:3000",
+      "similarity_threshold": 0.80,
+      "skip_mobile_testing": true,
+      "notifications_enabled": false
+    },
+    "staging": {
+      "base_url": "https://staging.moonlightanalytica.com",
+      "similarity_threshold": 0.90,
+      "notifications_enabled": true,
+      "wait_after_deployment": 30
+    },
+    "production": {
+      "base_url": "https://moonlightanalytica.com",
+      "similarity_threshold": 0.95,
+      "notifications_enabled": true,
+      "wait_after_deployment": 45,
+      "enable_rollback_suggestions": true
+    }
+  }
+}

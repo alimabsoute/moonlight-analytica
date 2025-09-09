@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Manager - Moonlight Analytica</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00bfff, #87ceeb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #a0a9c0;
+            font-size: 1.1rem;
+        }
+
+        .connection-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .status-connected {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-disconnected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            height: calc(100vh - 200px);
+        }
+
+        .articles-sidebar {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .sidebar-header h3 {
+            color: #87ceeb;
+            font-size: 1.2rem;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, #00bfff, #4682b4);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.3);
+        }
+
+        .article-list {
+            list-style: none;
+        }
+
+        .article-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .article-item:hover {
+            border-color: #00bfff;
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        .article-item.active {
+            border-color: #00bfff;
+            background: rgba(0, 191, 255, 0.1);
+        }
+
+        .article-preview {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .article-preview-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .article-preview-placeholder {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #333, #444);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .article-preview-placeholder .placeholder-icon {
+            font-size: 1.2rem;
+            opacity: 0.6;
+        }
+
+        .article-preview-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .article-preview-content h4 {
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            line-height: 1.3;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #a0a9c0;
+            gap: 8px;
+        }
+
+        .article-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-draft {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-pending {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+        }
+
+        .status-published {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .editor-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 30px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .editor-header h2 {
+            color: #87ceeb;
+            font-size: 1.5rem;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00bfff, #4682b4);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #a0a9c0;
+            border: 1px solid #333;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #87ceeb;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #a0a9c0;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.6;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #00bfff;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2);
+        }
+
+        .content-editor {
+            min-height: 400px;
+            font-family: 'Georgia', serif;
+            line-height: 1.7;
+        }
+
+        .image-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .image-upload {
+            border: 2px dashed #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload:hover {
+            border-color: #00bfff;
+            background: rgba(0, 191, 255, 0.02);
+        }
+
+        .image-upload.has-image {
+            border-color: #22c55e;
+            border-style: solid;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .image-info {
+            font-size: 0.85rem;
+            color: #a0a9c0;
+            margin-bottom: 10px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-button {
+            background: rgba(0, 191, 255, 0.1);
+            color: #00bfff;
+            border: 1px solid #00bfff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-button:hover {
+            background: rgba(0, 191, 255, 0.2);
+        }
+
+        .no-article {
+            text-align: center;
+            color: #a0a9c0;
+            padding: 60px 20px;
+        }
+
+        .no-article h3 {
+            margin-bottom: 10px;
+            color: #87ceeb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #a0a9c0;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .article-preview {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .preview-content {
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .preview-content h1, .preview-content h2, .preview-content h3 {
+            color: #87ceeb;
+            margin: 20px 0 10px 0;
+        }
+
+        .preview-content p {
+            margin-bottom: 15px;
+        }
+
+        .preview-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .preview-images img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .articles-sidebar {
+                max-height: 300px;
+            }
+
+            .image-section {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Article Manager</h1>
+            <p>Review, edit, and publish your articles</p>
+            <div id="connectionStatus" class="connection-status status-disconnected">
+                🔌 Connecting to database...
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Articles Sidebar -->
+            <div class="articles-sidebar">
+                <div class="sidebar-header">
+                    <h3>Articles</h3>
+                    <button class="refresh-btn" onclick="loadArticles()">🔄</button>
+                </div>
+                <ul id="articlesList" class="article-list">
+                    <li class="loading">Loading articles...</li>
+                </ul>
+            </div>
+
+            <!-- Editor Panel -->
+            <div class="editor-panel">
+                <div id="editorContent">
+                    <div class="no-article">
+                        <h3>📰 Select an Article</h3>
+                        <p>Choose an article from the sidebar to start editing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Update with your Supabase URL
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Update with your anon key
+
+        let supabase;
+        let articles = [];
+        let currentArticle = null;
+        let originalImages = [];
+
+        // Initialize Supabase client
+        function initSupabase() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                document.getElementById('connectionStatus').className = 'connection-status status-connected';
+                document.getElementById('connectionStatus').innerHTML = '✅ Connected to database';
+                loadArticles();
+            } catch (error) {
+                console.error('Failed to connect to Supabase:', error);
+                document.getElementById('connectionStatus').innerHTML = '❌ Connection Failed';
+                showMessage('Failed to connect to database. Please check configuration.', 'error');
+            }
+        }
+
+        // Show status message
+        function showMessage(message, type = 'success') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.innerHTML = message;
+            
+            const editorContent = document.getElementById('editorContent');
+            editorContent.insertBefore(messageDiv, editorContent.firstChild);
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        // Load articles from database
+        async function loadArticles() {
+            try {
+                // This would connect to your articles table
+                // For now, we'll create mock data structure
+                const { data, error } = await supabase
+                    .from('articles')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error && error.code !== '42P01') throw error;
+
+                // If table doesn't exist, create mock data
+                articles = data || createMockArticles();
+                renderArticlesList();
+
+            } catch (error) {
+                console.error('Load articles error:', error);
+                // Create mock articles for demonstration
+                articles = createMockArticles();
+                renderArticlesList();
+            }
+        }
+
+        // Create mock articles for demonstration
+        function createMockArticles() {
+            return [
+                {
+                    id: 1,
+                    title: "The Rise of AI in Software Development",
+                    content: "Artificial Intelligence is revolutionizing how we build software. From code generation to automated testing, AI tools are becoming indispensable for modern developers...",
+                    status: "draft",
+                    created_at: "2024-01-15",
+                    images: [],
+                    category: "AI & Development"
+                },
+                {
+                    id: 2,
+                    title: "Understanding React Server Components",
+                    content: "React Server Components represent a paradigm shift in how we think about client-server boundaries in React applications...",
+                    status: "pending",
+                    created_at: "2024-01-14",
+                    images: [],
+                    category: "Web Development"
+                },
+                {
+                    id: 3,
+                    title: "The Future of Cloud Computing in 2024",
+                    content: "Cloud computing continues to evolve at breakneck speed. This year brings new innovations in serverless architecture, edge computing, and AI-powered cloud services...",
+                    status: "published",
+                    created_at: "2024-01-13",
+                    images: [],
+                    category: "Cloud Technology"
+                }
+            ];
+        }
+
+        // Render articles list
+        function renderArticlesList() {
+            const list = document.getElementById('articlesList');
+            
+            if (articles.length === 0) {
+                list.innerHTML = '<li class="loading">No articles found</li>';
+                return;
+            }
+
+            list.innerHTML = articles.map(article => {
+                // Use Image 1 as preview, fallback to placeholder
+                const previewImage = article.image_1_url || article.images?.[0] || '';
+                const imageHtml = previewImage ? 
+                    `<img src="${previewImage}" alt="${article.title}" class="article-preview-image">` :
+                    `<div class="article-preview-placeholder">
+                        <span class="placeholder-icon">📄</span>
+                    </div>`;
+                
+                return `
+                    <li class="article-item" onclick="selectArticle(${article.id})">
+                        <div class="article-preview">
+                            ${imageHtml}
+                            <div class="article-preview-content">
+                                <h4>${article.title}</h4>
+                                <div class="article-meta">
+                                    <span>${new Date(article.created_at).toLocaleDateString()}</span>
+                                    <span class="article-status status-${article.status}">${article.status}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        // Select and load article for editing
+        function selectArticle(id) {
+            // Remove active class from all items
+            document.querySelectorAll('.article-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to selected item
+            event.currentTarget.classList.add('active');
+
+            currentArticle = articles.find(a => a.id === id);
+            if (currentArticle) {
+                renderEditor();
+            }
+        }
+
+        // Render the editor interface
+        function renderEditor() {
+            if (!currentArticle) return;
+
+            const editorContent = document.getElementById('editorContent');
+            editorContent.innerHTML = `
+                <div class="editor-header">
+                    <h2>Edit Article</h2>
+                    <div class="editor-actions">
+                        <button class="btn btn-secondary" onclick="previewArticle()">👁️ Preview</button>
+                        <button class="btn btn-primary" onclick="saveArticle()">💾 Save Draft</button>
+                        <button class="btn btn-success" onclick="publishArticle()">🚀 Publish</button>
+                        <button class="btn btn-danger" onclick="deleteArticle()">🗑️ Delete</button>
+                    </div>
+                </div>
+
+                <!-- Article Metadata -->
+                <div class="form-section">
+                    <h3>📄 Article Information</h3>
+                    <div class="form-group">
+                        <label for="articleTitle">Title</label>
+                        <input type="text" id="articleTitle" value="${currentArticle.title}">
+                    </div>
+                    <div class="form-group">
+                        <label for="articleCategory">Category</label>
+                        <select id="articleCategory">
+                            <option value="AI & Development" ${currentArticle.category === 'AI & Development' ? 'selected' : ''}>AI & Development</option>
+                            <option value="Web Development" ${currentArticle.category === 'Web Development' ? 'selected' : ''}>Web Development</option>
+                            <option value="Cloud Technology" ${currentArticle.category === 'Cloud Technology' ? 'selected' : ''}>Cloud Technology</option>
+                            <option value="Data Analytics" ${currentArticle.category === 'Data Analytics' ? 'selected' : ''}>Data Analytics</option>
+                            <option value="Technology News" ${currentArticle.category === 'Technology News' ? 'selected' : ''}>Technology News</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Content Editor -->
+                <div class="form-section">
+                    <h3>✏️ Content</h3>
+                    <div class="form-group">
+                        <label for="articleContent">Article Content</label>
+                        <textarea id="articleContent" class="content-editor" placeholder="Write your article content here...">${currentArticle.content}</textarea>
+                    </div>
+                </div>
+
+                <!-- Image Management -->
+                <div class="form-section">
+                    <h3>🖼️ Images</h3>
+                    <div class="image-section">
+                        <!-- Image 1 -->
+                        <div class="image-upload" id="image1Upload">
+                            <div id="image1Preview">
+                                ${currentArticle.images && currentArticle.images[0] ? 
+                                    `<img src="${currentArticle.images[0]}" class="image-preview" alt="Image 1">
+                                     <div class="image-info">Current Image 1</div>` :
+                                    `<div class="image-info">📸 Image 1</div>
+                                     <p style="color: #a0a9c0; font-size: 0.9rem;">No image selected</p>`
+                                }
+                            </div>
+                            <input type="file" id="image1File" class="file-input" accept="image/*" onchange="handleImageUpload(1, event)">
+                            <button type="button" class="file-button" onclick="document.getElementById('image1File').click()">
+                                Choose Image 1
+                            </button>
+                            ${currentArticle.images && currentArticle.images[0] ? 
+                                '<button type="button" class="file-button" onclick="removeImage(1)" style="margin-left: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444;">Remove</button>' : 
+                                ''
+                            }
+                        </div>
+
+                        <!-- Image 2 -->
+                        <div class="image-upload" id="image2Upload">
+                            <div id="image2Preview">
+                                ${currentArticle.images && currentArticle.images[1] ? 
+                                    `<img src="${currentArticle.images[1]}" class="image-preview" alt="Image 2">
+                                     <div class="image-info">Current Image 2</div>` :
+                                    `<div class="image-info">📸 Image 2</div>
+                                     <p style="color: #a0a9c0; font-size: 0.9rem;">No image selected</p>`
+                                }
+                            </div>
+                            <input type="file" id="image2File" class="file-input" accept="image/*" onchange="handleImageUpload(2, event)">
+                            <button type="button" class="file-button" onclick="document.getElementById('image2File').click()">
+                                Choose Image 2
+                            </button>
+                            ${currentArticle.images && currentArticle.images[1] ? 
+                                '<button type="button" class="file-button" onclick="removeImage(2)" style="margin-left: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444;">Remove</button>' : 
+                                ''
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div id="previewContainer" style="display: none;">
+                    <div class="article-preview">
+                        <div class="preview-header">
+                            <h3>📖 Article Preview</h3>
+                            <button class="btn btn-secondary" onclick="hidePreview()">✕ Close</button>
+                        </div>
+                        <div id="previewContent" class="preview-content"></div>
+                    </div>
+                </div>
+            `;
+
+            // Store original images for reference
+            originalImages = currentArticle.images ? [...currentArticle.images] : [];
+        }
+
+        // Handle image upload
+        function handleImageUpload(imageNumber, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Check file size (limit to 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showMessage('File size too large. Please choose an image under 10MB.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewDiv = document.getElementById(`image${imageNumber}Preview`);
+                const uploadDiv = document.getElementById(`image${imageNumber}Upload`);
+                
+                previewDiv.innerHTML = `
+                    <img src="${e.target.result}" class="image-preview" alt="Image ${imageNumber}">
+                    <div class="image-info">New Image ${imageNumber} (${file.name})</div>
+                `;
+                
+                uploadDiv.classList.add('has-image');
+                
+                // Update the button to show remove option
+                const buttons = uploadDiv.querySelector('.file-button').parentNode;
+                if (!buttons.querySelector('.file-button[onclick*="removeImage"]')) {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'file-button';
+                    removeBtn.style.cssText = 'margin-left: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444;';
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.onclick = () => removeImage(imageNumber);
+                    buttons.appendChild(removeBtn);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove image
+        function removeImage(imageNumber) {
+            const previewDiv = document.getElementById(`image${imageNumber}Preview`);
+            const uploadDiv = document.getElementById(`image${imageNumber}Upload`);
+            const fileInput = document.getElementById(`image${imageNumber}File`);
+            
+            previewDiv.innerHTML = `
+                <div class="image-info">📸 Image ${imageNumber}</div>
+                <p style="color: #a0a9c0; font-size: 0.9rem;">No image selected</p>
+            `;
+            
+            uploadDiv.classList.remove('has-image');
+            fileInput.value = '';
+            
+            // Remove the remove button
+            const removeBtn = uploadDiv.querySelector('.file-button[onclick*="removeImage"]');
+            if (removeBtn) {
+                removeBtn.remove();
+            }
+        }
+
+        // Preview article
+        function previewArticle() {
+            const title = document.getElementById('articleTitle').value;
+            const content = document.getElementById('articleContent').value;
+            const previewContainer = document.getElementById('previewContainer');
+            const previewContent = document.getElementById('previewContent');
+            
+            let previewHTML = `<h1>${title}</h1>`;
+            
+            // Add images if they exist
+            const image1 = document.getElementById('image1Preview').querySelector('img');
+            const image2 = document.getElementById('image2Preview').querySelector('img');
+            
+            if (image1 || image2) {
+                previewHTML += '<div class="preview-images">';
+                if (image1) previewHTML += `<img src="${image1.src}" alt="Image 1">`;
+                if (image2) previewHTML += `<img src="${image2.src}" alt="Image 2">`;
+                previewHTML += '</div>';
+            }
+            
+            // Convert content line breaks to paragraphs
+            const contentParagraphs = content.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+            previewHTML += contentParagraphs;
+            
+            previewContent.innerHTML = previewHTML;
+            previewContainer.style.display = 'block';
+            previewContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Hide preview
+        function hidePreview() {
+            document.getElementById('previewContainer').style.display = 'none';
+        }
+
+        // Save article as draft
+        async function saveArticle() {
+            if (!currentArticle) return;
+
+            try {
+                const updatedArticle = {
+                    ...currentArticle,
+                    title: document.getElementById('articleTitle').value,
+                    content: document.getElementById('articleContent').value,
+                    category: document.getElementById('articleCategory').value,
+                    status: 'draft',
+                    updated_at: new Date().toISOString(),
+                    images: getCurrentImages()
+                };
+
+                // In a real implementation, this would save to Supabase
+                const index = articles.findIndex(a => a.id === currentArticle.id);
+                if (index !== -1) {
+                    articles[index] = updatedArticle;
+                    currentArticle = updatedArticle;
+                }
+
+                renderArticlesList();
+                showMessage('Article saved as draft!', 'success');
+
+            } catch (error) {
+                console.error('Save error:', error);
+                showMessage(`Failed to save article: ${error.message}`, 'error');
+            }
+        }
+
+        // Publish article
+        async function publishArticle() {
+            if (!currentArticle) return;
+
+            if (!confirm('Are you sure you want to publish this article? It will be visible to all visitors.')) {
+                return;
+            }
+
+            try {
+                const publishedArticle = {
+                    ...currentArticle,
+                    title: document.getElementById('articleTitle').value,
+                    content: document.getElementById('articleContent').value,
+                    category: document.getElementById('articleCategory').value,
+                    status: 'published',
+                    published_at: new Date().toISOString(),
+                    images: getCurrentImages()
+                };
+
+                // In a real implementation, this would:
+                // 1. Save to Supabase
+                // 2. Generate HTML file
+                // 3. Deploy to production site
+                
+                const index = articles.findIndex(a => a.id === currentArticle.id);
+                if (index !== -1) {
+                    articles[index] = publishedArticle;
+                    currentArticle = publishedArticle;
+                }
+
+                renderArticlesList();
+                showMessage('Article published successfully! 🎉', 'success');
+
+            } catch (error) {
+                console.error('Publish error:', error);
+                showMessage(`Failed to publish article: ${error.message}`, 'error');
+            }
+        }
+
+        // Delete article
+        async function deleteArticle() {
+            if (!currentArticle) return;
+
+            if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                // Remove from local array
+                articles = articles.filter(a => a.id !== currentArticle.id);
+                
+                renderArticlesList();
+                
+                // Clear editor
+                document.getElementById('editorContent').innerHTML = `
+                    <div class="no-article">
+                        <h3>📰 Select an Article</h3>
+                        <p>Choose an article from the sidebar to start editing</p>
+                    </div>
+                `;
+
+                showMessage('Article deleted successfully.', 'success');
+                currentArticle = null;
+
+            } catch (error) {
+                console.error('Delete error:', error);
+                showMessage(`Failed to delete article: ${error.message}`, 'error');
+            }
+        }
+
+        // Get current images from the editor
+        function getCurrentImages() {
+            const images = [];
+            
+            const image1 = document.getElementById('image1Preview').querySelector('img');
+            if (image1) images.push(image1.src);
+            
+            const image2 = document.getElementById('image2Preview').querySelector('img');
+            if (image2) images.push(image2.src);
+            
+            return images;
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+                document.getElementById('connectionStatus').innerHTML = '⚠️ Please configure Supabase credentials';
+                document.getElementById('connectionStatus').className = 'connection-status status-disconnected';
+                
+                // Still load mock articles for demonstration
+                articles = createMockArticles();
+                renderArticlesList();
+                return;
+            }
+            
+            initSupabase();
+        });
+    </script>
+</body>
+</html>

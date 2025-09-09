@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Floating Cube Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        #canvas {
+            display: block;
+            cursor: grab;
+        }
+        
+        #canvas:active {
+            cursor: grabbing;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .title {
+            font-size: 3em;
+            font-weight: 300;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.8;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out 2s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 0.9em;
+            opacity: 0.7;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="overlay">
+        <h1 class="title">Quantum Data Processing</h1>
+        <p class="subtitle">Advanced algorithms visualized in real-time</p>
+    </div>
+    
+    <div class="controls">
+        <div>Mouse: Rotate • Scroll: Zoom</div>
+        <div>Space: Toggle Particles</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        class ParticleSystem {
+            constructor(scene) {
+                this.scene = scene;
+                this.particles = [];
+                this.maxParticles = 200;
+                this.cubePosition = new THREE.Vector3(0, 0, 0);
+                this.particlesEnabled = true;
+                
+                this.createParticleGeometry();
+            }
+            
+            createParticleGeometry() {
+                // Create different particle geometries
+                this.particleGeometries = [
+                    new THREE.BoxGeometry(0.05, 0.05, 0.05),
+                    new THREE.BoxGeometry(0.08, 0.03, 0.03),
+                    new THREE.BoxGeometry(0.03, 0.08, 0.03),
+                    new THREE.BoxGeometry(0.03, 0.03, 0.08)
+                ];
+                
+                this.particleMaterials = [
+                    new THREE.MeshLambertMaterial({ color: 0x00ffff, transparent: true }),
+                    new THREE.MeshLambertMaterial({ color: 0xff6b6b, transparent: true }),
+                    new THREE.MeshLambertMaterial({ color: 0x4ecdc4, transparent: true }),
+                    new THREE.MeshLambertMaterial({ color: 0xffe66d, transparent: true }),
+                    new THREE.MeshLambertMaterial({ color: 0xff6b9d, transparent: true })
+                ];
+            }
+            
+            createParticle(type = 'incoming') {
+                const geometry = this.particleGeometries[Math.floor(Math.random() * this.particleGeometries.length)];
+                const material = this.particleMaterials[Math.floor(Math.random() * this.particleMaterials.length)].clone();
+                
+                const particle = new THREE.Mesh(geometry, material);
+                
+                if (type === 'incoming') {
+                    // Particles coming towards the cube from random directions
+                    const angle = Math.random() * Math.PI * 2;
+                    const elevation = (Math.random() - 0.5) * Math.PI;
+                    const distance = 15 + Math.random() * 10;
+                    
+                    particle.position.set(
+                        Math.cos(angle) * Math.cos(elevation) * distance,
+                        Math.sin(elevation) * distance,
+                        Math.sin(angle) * Math.cos(elevation) * distance
+                    );
+                    
+                    particle.userData = {
+                        type: 'incoming',
+                        speed: 0.02 + Math.random() * 0.03,
+                        life: 1.0,
+                        rotationSpeed: {
+                            x: (Math.random() - 0.5) * 0.1,
+                            y: (Math.random() - 0.5) * 0.1,
+                            z: (Math.random() - 0.5) * 0.1
+                        }
+                    };
+                } else {
+                    // Particles being emitted from the cube
+                    particle.position.copy(this.cubePosition);
+                    particle.position.add(new THREE.Vector3(
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2
+                    ));
+                    
+                    const direction = new THREE.Vector3(
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2
+                    ).normalize();
+                    
+                    particle.userData = {
+                        type: 'outgoing',
+                        direction: direction,
+                        speed: 0.03 + Math.random() * 0.05,
+                        life: 1.0,
+                        rotationSpeed: {
+                            x: (Math.random() - 0.5) * 0.2,
+                            y: (Math.random() - 0.5) * 0.2,
+                            z: (Math.random() - 0.5) * 0.2
+                        }
+                    };
+                }
+                
+                this.scene.add(particle);
+                this.particles.push(particle);
+            }
+            
+            update() {
+                if (!this.particlesEnabled) return;
+                
+                // Add new particles
+                if (Math.random() < 0.3 && this.particles.length < this.maxParticles) {
+                    this.createParticle(Math.random() < 0.6 ? 'incoming' : 'outgoing');
+                }
+                
+                // Update existing particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    const userData = particle.userData;
+                    
+                    // Rotate particle
+                    particle.rotation.x += userData.rotationSpeed.x;
+                    particle.rotation.y += userData.rotationSpeed.y;
+                    particle.rotation.z += userData.rotationSpeed.z;
+                    
+                    if (userData.type === 'incoming') {
+                        // Move towards cube
+                        const direction = new THREE.Vector3().subVectors(this.cubePosition, particle.position).normalize();
+                        particle.position.add(direction.multiplyScalar(userData.speed));
+                        
+                        // Check if close to cube
+                        const distance = particle.position.distanceTo(this.cubePosition);
+                        if (distance < 1.5) {
+                            userData.life -= 0.05;
+                            particle.material.opacity = userData.life;
+                            particle.scale.setScalar(userData.life);
+                        }
+                        
+                        if (userData.life <= 0 || distance < 0.5) {
+                            this.removeParticle(i);
+                        }
+                    } else {
+                        // Move away from cube
+                        particle.position.add(userData.direction.clone().multiplyScalar(userData.speed));
+                        userData.life -= 0.008;
+                        particle.material.opacity = userData.life;
+                        
+                        if (userData.life <= 0) {
+                            this.removeParticle(i);
+                        }
+                    }
+                }
+            }
+            
+            removeParticle(index) {
+                this.scene.remove(this.particles[index]);
+                this.particles[index].geometry.dispose();
+                this.particles[index].material.dispose();
+                this.particles.splice(index, 1);
+            }
+            
+            toggle() {
+                this.particlesEnabled = !this.particlesEnabled;
+            }
+        }
+        
+        class FloatingCube {
+            constructor() {
+                this.init();
+                this.createScene();
+                this.createLights();
+                this.createCube();
+                this.createParticleSystem();
+                this.setupControls();
+                this.animate();
+            }
+            
+            init() {
+                this.canvas = document.getElementById('canvas');
+                this.scene = new THREE.Scene();
+                
+                this.camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                this.camera.position.set(0, 0, 8);
+                
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas, 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                this.mouse = new THREE.Vector2();
+                this.mouseTarget = new THREE.Vector2();
+                this.time = 0;
+            }
+            
+            createScene() {
+                // Add subtle fog for depth
+                this.scene.fog = new THREE.Fog(0x1a1a2e, 10, 50);
+            }
+            
+            createLights() {
+                // Main directional light
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                directionalLight.position.set(10, 10, 5);
+                directionalLight.castShadow = true;
+                directionalLight.shadow.mapSize.width = 2048;
+                directionalLight.shadow.mapSize.height = 2048;
+                this.scene.add(directionalLight);
+                
+                // Ambient light
+                const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+                this.scene.add(ambientLight);
+                
+                // Colored point lights for dramatic effect
+                const pointLight1 = new THREE.PointLight(0x00ffff, 0.5, 20);
+                pointLight1.position.set(-8, 5, 3);
+                this.scene.add(pointLight1);
+                
+                const pointLight2 = new THREE.PointLight(0xff6b6b, 0.5, 20);
+                pointLight2.position.set(8, -5, -3);
+                this.scene.add(pointLight2);
+                
+                const pointLight3 = new THREE.PointLight(0x4ecdc4, 0.3, 15);
+                pointLight3.position.set(0, 8, 5);
+                this.scene.add(pointLight3);
+            }
+            
+            createCube() {
+                // Create main cube with advanced materials
+                const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+                
+                // Create materials for each face
+                const materials = [
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x2c3e50,
+                        metalness: 0.7,
+                        roughness: 0.1,
+                        transparent: true,
+                        opacity: 0.9
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x3498db,
+                        metalness: 0.6,
+                        roughness: 0.2,
+                        transparent: true,
+                        opacity: 0.8
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xe74c3c,
+                        metalness: 0.5,
+                        roughness: 0.3,
+                        transparent: true,
+                        opacity: 0.8
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0xf39c12,
+                        metalness: 0.6,
+                        roughness: 0.2,
+                        transparent: true,
+                        opacity: 0.8
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x9b59b6,
+                        metalness: 0.7,
+                        roughness: 0.1,
+                        transparent: true,
+                        opacity: 0.9
+                    }),
+                    new THREE.MeshPhysicalMaterial({ 
+                        color: 0x1abc9c,
+                        metalness: 0.5,
+                        roughness: 0.3,
+                        transparent: true,
+                        opacity: 0.8
+                    })
+                ];
+                
+                this.cube = new THREE.Mesh(cubeGeometry, materials);
+                this.cube.castShadow = true;
+                this.cube.receiveShadow = true;
+                this.scene.add(this.cube);
+                
+                // Add wireframe overlay for tech look
+                const wireframeGeometry = new THREE.EdgesGeometry(cubeGeometry);
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: 0x00ffff, 
+                    transparent: true, 
+                    opacity: 0.3 
+                });
+                this.wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+                this.cube.add(this.wireframe);
+            }
+            
+            createParticleSystem() {
+                this.particleSystem = new ParticleSystem(this.scene);
+            }
+            
+            setupControls() {
+                // Mouse controls
+                this.canvas.addEventListener('mousemove', (e) => {
+                    this.mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouseTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                // Smooth mouse following
+                setInterval(() => {
+                    this.mouse.lerp(this.mouseTarget, 0.05);
+                }, 16);
+                
+                // Keyboard controls
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.particleSystem.toggle();
+                    }
+                });
+                
+                // Scroll for zoom
+                this.canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    this.camera.position.z += e.deltaY * 0.01;
+                    this.camera.position.z = Math.max(3, Math.min(20, this.camera.position.z));
+                });
+                
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.01;
+                
+                // Rotate cube with complex motion
+                this.cube.rotation.x += 0.005;
+                this.cube.rotation.y += 0.008;
+                this.cube.rotation.z += 0.003;
+                
+                // Floating motion
+                this.cube.position.y = Math.sin(this.time * 0.5) * 0.3;
+                this.cube.position.x = Math.cos(this.time * 0.3) * 0.2;
+                
+                // Pulsing effect
+                const scale = 1 + Math.sin(this.time * 2) * 0.05;
+                this.cube.scale.setScalar(scale);
+                
+                // Mouse interaction
+                this.cube.rotation.x += this.mouse.y * 0.01;
+                this.cube.rotation.y += this.mouse.x * 0.01;
+                
+                // Update wireframe opacity based on rotation
+                this.wireframe.material.opacity = 0.3 + Math.sin(this.time) * 0.2;
+                
+                // Update particle system
+                this.particleSystem.update();
+                
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new FloatingCube();
+        });
+        
+        // Add loading screen fade out
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

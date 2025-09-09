@@ -1,0 +1,45 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\alima"],
+      "env": {}
+    },
+    "puppeteer-standard": {
+      "type": "stdio",
+      "command": "npx -y puppeteer-mcp-server",
+      "args": [],
+      "env": {}
+    },
+    "brave-search": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@brave/brave-search-mcp-server", "--transport", "stdio"],
+      "env": {
+        "BRAVE_API_KEY": "BSA5cK5ZYURpBc1Gm-oQcHKht3MJple"
+      }
+    },
+    "reddit": {
+      "type": "stdio",
+      "command": "npx -y reddit-mcp",
+      "args": [],
+      "env": {
+        "REDDIT_CLIENT_ID": "YOUR_REDDIT_CLIENT_ID_HERE",
+        "REDDIT_CLIENT_SECRET": "YOUR_REDDIT_CLIENT_SECRET_HERE"
+      }
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@cyanheads/git-mcp-server"],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {}
+    }
+  }
+}

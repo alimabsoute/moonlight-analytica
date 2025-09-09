@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\alima\\logs\\.5f4ad50ebfbb8fc682a82b89ef17559f2abebd30-audit.json",
+    "files": [
+        {
+            "date": 1757316688628,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2025-09-08.log",
+            "hash": "410ed50e2c5812b697bff965f72cf0b455f4f30dbb210ad1b14ccd6f01020ba4"
+        },
+        {
+            "date": 1757398731645,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2025-09-09.log",
+            "hash": "e99a9ebd91be7c4c6f46bfb0d59fae76be95d71603745b1f831a2fb57cf13bdd"
+        }
+    ],
+    "hashType": "sha256"
+}

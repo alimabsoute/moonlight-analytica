@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage Preview - New Why Choose Us Cards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00bfff;
+            --secondary-color: #87ceeb;
+            --accent-color: #4682b4;
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --text-light: #ffffff;
+            --text-muted: #a0a0a0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(135, 206, 235, 0.2);
+            --backdrop-blur: blur(10px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .preview-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 3rem;
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+        }
+
+        /* Hero CTA Buttons Preview */
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .cta-btn.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 191, 255, 0.3);
+        }
+
+        .cta-btn.secondary {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            color: var(--text-light);
+        }
+
+        /* Why Choose Us Section */
+        .why-choose-us {
+            margin-top: 5rem;
+        }
+
+        .benefits-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .benefits-icon {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            filter: drop-shadow(0 0 8px var(--primary-color));
+        }
+
+        .benefits-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .why-choose-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .why-choose-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .capability-card {
+            background: rgba(15, 15, 25, 0.8);
+            border: 1px solid rgba(135, 206, 235, 0.15);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .capability-card:hover::before {
+            left: 100%;
+        }
+
+        .capability-card:hover {
+            background: rgba(25, 25, 40, 0.9);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(0, 191, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* Analytics Visualizations */
+        .analytics-viz {
+            height: 120px;
+            margin-bottom: 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Bar Chart Animation */
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            gap: 8px;
+            height: 80px;
+        }
+
+        .bar {
+            width: 12px;
+            background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+            transition: height 0.8s ease;
+        }
+
+        .bar:nth-child(1) { height: 30px; }
+        .bar:nth-child(2) { height: 50px; }
+        .bar:nth-child(3) { height: 70px; }
+        .bar:nth-child(4) { height: 45px; }
+        .bar:nth-child(5) { height: 65px; }
+
+        .capability-card:hover .bar:nth-child(1) { height: 55px; }
+        .capability-card:hover .bar:nth-child(2) { height: 75px; }
+        .capability-card:hover .bar:nth-child(3) { height: 40px; }
+        .capability-card:hover .bar:nth-child(4) { height: 80px; }
+        .capability-card:hover .bar:nth-child(5) { height: 35px; }
+
+        /* Network Graph Animation */
+        .network-graph {
+            position: relative;
+            width: 100px;
+            height: 80px;
+            margin: 0 auto;
+        }
+
+        .network-node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
+        }
+
+        .network-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+            transition: all 0.6s ease;
+            opacity: 0.6;
+        }
+
+        .network-node:nth-child(1) { top: 10px; left: 20px; }
+        .network-node:nth-child(3) { top: 10px; right: 20px; }
+        .network-node:nth-child(5) { bottom: 10px; left: 30px; }
+        .network-node:nth-child(7) { bottom: 10px; right: 30px; }
+        .network-node:nth-child(9) { top: 35px; left: 50%; transform: translateX(-50%); }
+
+        .capability-card:hover .network-node {
+            transform: scale(1.5);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.8);
+        }
+
+        /* Pulse Animation */
+        .pulse-viz {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .pulse-ring:nth-child(1) {
+            width: 40px;
+            height: 40px;
+            top: 20px;
+            left: 20px;
+        }
+
+        .pulse-ring:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 10px;
+            left: 10px;
+            animation-delay: 0.5s;
+        }
+
+        .pulse-ring:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 0;
+            left: 0;
+            animation-delay: 1s;
+        }
+
+        .capability-card:hover .pulse-ring {
+            animation-duration: 1s;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+
+        .capability-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .capability-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0 10px;
+            }
+
+            .capability-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .why-choose-title {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .capabilities-grid {
+                gap: 1.5rem;
+                padding: 0 20px;
+            }
+
+            .capability-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <h1 class="preview-title">New Homepage Design Preview</h1>
+        
+        <!-- Hero CTA Buttons (for context) -->
+        <div class="cta-buttons">
+            <a href="#" class="cta-btn primary">See What We've Built</a>
+            <a href="#" class="cta-btn secondary">Join the Beta Program</a>
+        </div>
+
+        <!-- Why Choose Us Section -->
+        <section class="why-choose-us">
+            <div class="benefits-header">
+                <span class="benefits-icon">✨</span>
+                <span class="benefits-label">Benefits</span>
+            </div>
+            
+            <h2 class="why-choose-title">Why Choose <em>Us</em>?</h2>
+            <p class="why-choose-subtitle">Everything you need to automate, optimize, and scale</p>
+            
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <div class="analytics-viz">
+                        <div class="bar-chart">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                    <h3 class="capability-title">Real-Time Intelligence</h3>
+                    <p class="capability-description">Access accurate, real-time data to drive smarter decisions</p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="analytics-viz">
+                        <div class="network-graph">
+                            <div class="network-node"></div>
+                            <div class="network-line" style="width: 60px; top: 15px; left: 20px; transform: rotate(25deg);"></div>
+                            <div class="network-node"></div>
+                            <div class="network-line" style="width: 40px; top: 45px; left: 15px; transform: rotate(-45deg);"></div>
+                            <div class="network-node"></div>
+                            <div class="network-line" style="width: 40px; top: 45px; right: 15px; transform: rotate(45deg);"></div>
+                            <div class="network-node"></div>
+                            <div class="network-line" style="width: 50px; bottom: 15px; left: 30px;"></div>
+                            <div class="network-node"></div>
+                        </div>
+                    </div>
+                    <h3 class="capability-title">Measurable Impact</h3>
+                    <p class="capability-description">Track performance, uncover insights, and achieve data-backed growth</p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="analytics-viz">
+                        <div class="pulse-viz">
+                            <div class="pulse-ring"></div>
+                            <div class="pulse-ring"></div>
+                            <div class="pulse-ring"></div>
+                        </div>
+                    </div>
+                    <h3 class="capability-title">Seamless Integration</h3>
+                    <p class="capability-description">Connect tools, teams, and workflows with intelligent automation</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

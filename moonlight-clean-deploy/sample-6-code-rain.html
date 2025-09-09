@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample 6: Refined Code Rain - Moonlight Analytica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf8f3;
+            color: #1f2937;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Code Rain Background */
+        .code-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        .code-column {
+            position: absolute;
+            top: -200px;
+            white-space: pre;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
+        }
+
+        /* Different columns with various languages */
+        .code-column:nth-child(1) {
+            left: 5%;
+            color: rgba(0, 191, 255, 0.4);
+            animation-duration: 20s;
+            animation-delay: 0s;
+        }
+
+        .code-column:nth-child(2) {
+            left: 15%;
+            color: rgba(135, 206, 235, 0.4);
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        .code-column:nth-child(3) {
+            left: 25%;
+            color: rgba(70, 130, 180, 0.4);
+            animation-duration: 18s;
+            animation-delay: -10s;
+        }
+
+        .code-column:nth-child(4) {
+            left: 40%;
+            color: rgba(0, 191, 255, 0.3);
+            animation-duration: 22s;
+            animation-delay: -3s;
+        }
+
+        .code-column:nth-child(5) {
+            left: 55%;
+            color: rgba(135, 206, 235, 0.3);
+            animation-duration: 16s;
+            animation-delay: -12s;
+        }
+
+        .code-column:nth-child(6) {
+            left: 70%;
+            color: rgba(70, 130, 180, 0.4);
+            animation-duration: 24s;
+            animation-delay: -7s;
+        }
+
+        .code-column:nth-child(7) {
+            left: 85%;
+            color: rgba(0, 191, 255, 0.3);
+            animation-duration: 19s;
+            animation-delay: -15s;
+        }
+
+        .code-column:nth-child(8) {
+            left: 95%;
+            color: rgba(135, 206, 235, 0.4);
+            animation-duration: 21s;
+            animation-delay: -2s;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-200px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(calc(100vh + 200px));
+                opacity: 0;
+            }
+        }
+
+        /* Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00bfff, #87ceeb, #4682b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #6b7280;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card h3 {
+            color: #00bfff;
+            margin-bottom: 1rem;
+        }
+
+        /* Syntax highlighting colors */
+        .keyword { color: rgba(0, 191, 255, 0.8); }
+        .string { color: rgba(135, 206, 235, 0.8); }
+        .comment { color: rgba(70, 130, 180, 0.6); }
+        .number { color: rgba(0, 191, 255, 0.7); }
+    </style>
+</head>
+<body>
+    <!-- Code Rain Background -->
+    <div class="code-rain">
+        <div class="code-column">
+<span class="keyword">const</span> analytics = {
+  <span class="string">'users'</span>: <span class="number">15847</span>,
+  <span class="string">'sessions'</span>: <span class="number">23451</span>,
+  <span class="string">'conversion'</span>: <span class="number">3.7</span>
+};
+
+<span class="keyword">function</span> processData(data) {
+  <span class="keyword">return</span> data.map(item => 
+    item.value * <span class="number">1.2</span>
+  );
+}
+
+<span class="comment">// Calculate insights</span>
+<span class="keyword">const</span> insights = processData(
+  analytics.data
+);
+
+<span class="keyword">if</span> (insights.length > <span class="number">0</span>) {
+  console.log(<span class="string">'Insights found'</span>);
+}</div>
+
+        <div class="code-column">
+<span class="keyword">SELECT</span> 
+  DATE(created_at) <span class="keyword">as</span> date,
+  COUNT(*) <span class="keyword">as</span> events,
+  AVG(engagement) <span class="keyword">as</span> avg_eng
+<span class="keyword">FROM</span> user_events
+<span class="keyword">WHERE</span> created_at >= <span class="string">'2023-09-01'</span>
+<span class="keyword">GROUP BY</span> DATE(created_at)
+<span class="keyword">ORDER BY</span> date <span class="keyword">DESC</span>;
+
+<span class="comment">-- Analytics Query</span>
+<span class="keyword">WITH</span> monthly_stats <span class="keyword">AS</span> (
+  <span class="keyword">SELECT</span> 
+    user_id,
+    SUM(pageviews) <span class="keyword">as</span> total_views
+  <span class="keyword">FROM</span> analytics_data
+  <span class="keyword">GROUP BY</span> user_id
+)
+
+<span class="keyword">UPDATE</span> user_profiles 
+<span class="keyword">SET</span> activity_score = <span class="number">95.7</span>
+<span class="keyword">WHERE</span> last_active > NOW();</div>
+
+        <div class="code-column">
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForest
+
+<span class="comment"># Load analytics data</span>
+df = pd.read_csv(<span class="string">'user_data.csv'</span>)
+
+<span class="comment"># Feature engineering</span>
+df[<span class="string">'engagement_score'</span>] = (
+  df[<span class="string">'clicks'</span>] * <span class="number">0.3</span> + 
+  df[<span class="string">'time_spent'</span>] * <span class="number">0.7</span>
+)
+
+<span class="comment"># Train model</span>
+model = RandomForest(n_estimators=<span class="number">100</span>)
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+accuracy = accuracy_score(y_test, predictions)
+
+<span class="keyword">print</span>(<span class="string">f'Model accuracy: {accuracy:.3f}'</span>)</div>
+
+        <div class="code-column">
+{
+  <span class="string">"api_version"</span>: <span class="string">"v2.1"</span>,
+  <span class="string">"timestamp"</span>: <span class="number">1693123456</span>,
+  <span class="string">"metrics"</span>: {
+    <span class="string">"active_users"</span>: <span class="number">15847</span>,
+    <span class="string">"bounce_rate"</span>: <span class="number">0.23</span>,
+    <span class="string">"conversion_rate"</span>: <span class="number">0.087</span>
+  },
+  <span class="string">"insights"</span>: [
+    {
+      <span class="string">"type"</span>: <span class="string">"trend"</span>,
+      <span class="string">"confidence"</span>: <span class="number">0.94</span>,
+      <span class="string">"description"</span>: <span class="string">"User engagement up 23%"</span>
+    }
+  ]
+}
+
+<span class="comment">/* GraphQL Query */</span>
+query GetAnalytics($timeframe: String!) {
+  analytics(period: $timeframe) {
+    users
+    sessions
+    revenue
+  }
+}</div>
+
+        <div class="code-column">
+<span class="keyword">class</span> AnalyticsEngine:
+    <span class="keyword">def</span> __init__(self, config):
+        self.config = config
+        self.data_processor = DataProcessor()
+        
+    <span class="keyword">def</span> process_events(self, events):
+        <span class="string">"""Process incoming analytics events"""</span>
+        processed = []
+        <span class="keyword">for</span> event <span class="keyword">in</span> events:
+            <span class="keyword">if</span> self.validate_event(event):
+                result = self.transform_event(event)
+                processed.append(result)
+        <span class="keyword">return</span> processed
+    
+    <span class="keyword">def</span> calculate_metrics(self):
+        <span class="keyword">return</span> {
+            <span class="string">'ctr'</span>: self.clicks / self.impressions,
+            <span class="string">'engagement'</span>: self.time_spent / <span class="number">60</span>
+        }</div>
+
+        <div class="code-column">
+<span class="keyword">interface</span> UserMetrics {
+  userId: string;
+  pageViews: number;
+  sessionDuration: number;
+  bounceRate: number;
+}
+
+<span class="keyword">type</span> AnalyticsConfig = {
+  trackingId: string;
+  sampleRate: number;
+  enableDebug: boolean;
+}
+
+<span class="keyword">const</span> processMetrics = <span class="keyword">async</span> (
+  config: AnalyticsConfig
+): Promise&lt;UserMetrics[]&gt; =&gt; {
+  <span class="keyword">const</span> response = <span class="keyword">await</span> fetch(
+    <span class="string">`/api/analytics/${config.trackingId}`</span>
+  );
+  
+  <span class="keyword">return</span> response.json();
+};
+
+<span class="comment">// Real-time analytics</span>
+<span class="keyword">const</span> stream = <span class="keyword">new</span> EventSource(<span class="string">'/events'</span>);
+stream.onmessage = (event) =&gt; {
+  <span class="keyword">const</span> data = JSON.parse(event.data);
+  updateDashboard(data);
+};</div>
+
+        <div class="code-column">
+<span class="comment">#!/bin/bash</span>
+<span class="comment"># Analytics pipeline deployment</span>
+
+<span class="keyword">echo</span> <span class="string">"Starting analytics deployment..."</span>
+
+<span class="comment"># Build Docker image</span>
+docker build -t analytics:latest .
+
+<span class="comment"># Deploy to Kubernetes</span>
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+
+<span class="comment"># Wait for rollout</span>
+kubectl rollout status deployment/analytics
+
+<span class="comment"># Run health checks</span>
+<span class="keyword">if</span> curl -f http://localhost:8080/health; <span class="keyword">then</span>
+  <span class="keyword">echo</span> <span class="string">"Deployment successful"</span>
+<span class="keyword">else</span>
+  <span class="keyword">echo</span> <span class="string">"Health check failed"</span>
+  exit <span class="number">1</span>
+<span class="keyword">fi</span>
+
+<span class="comment"># Set up monitoring</span>
+prometheus --config.file=prometheus.yml</div>
+
+        <div class="code-column">
+<span class="keyword">package</span> main
+
+<span class="keyword">import</span> (
+    <span class="string">"fmt"</span>
+    <span class="string">"log"</span>
+    <span class="string">"net/http"</span>
+    <span class="string">"encoding/json"</span>
+)
+
+<span class="keyword">type</span> Metrics <span class="keyword">struct</span> {
+    Users     <span class="keyword">int</span>    `json:<span class="string">"users"</span>`
+    Sessions  <span class="keyword">int</span>    `json:<span class="string">"sessions"</span>`
+    Revenue   <span class="keyword">float64</span> `json:<span class="string">"revenue"</span>`
+}
+
+<span class="keyword">func</span> analyticsHandler(w http.ResponseWriter, r *http.Request) {
+    metrics := Metrics{
+        Users:    <span class="number">15847</span>,
+        Sessions: <span class="number">23451</span>,
+        Revenue:  <span class="number">47289.50</span>,
+    }
+    
+    w.Header().Set(<span class="string">"Content-Type"</span>, <span class="string">"application/json"</span>)
+    json.NewEncoder(w).Encode(metrics)
+}
+
+<span class="keyword">func</span> main() {
+    http.HandleFunc(<span class="string">"/analytics"</span>, analyticsHandler)
+    log.Fatal(http.ListenAndServe(<span class="string">":8080"</span>, <span class="keyword">nil</span>))
+}</div>
+    </div>
+
+    <div class="content">
+        <h1 class="title">Refined Code Rain</h1>
+        <p class="description">
+            Elegant falling code with syntax highlighting in multiple programming languages. 
+            A sophisticated take on the classic matrix effect, perfect for tech companies.
+        </p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>💻 Multi-Language</h3>
+                <p>JavaScript, Python, SQL, TypeScript, Go, and more</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Syntax Highlighted</h3>
+                <p>Color-coded syntax makes it visually appealing and readable</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Analytics Themed</h3>
+                <p>Code snippets focus on analytics, data processing, and insights</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

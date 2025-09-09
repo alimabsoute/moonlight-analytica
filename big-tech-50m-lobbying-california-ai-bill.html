@@ -362,6 +362,13 @@
             margin: 30px 0;
         }
         
+        /* Fix orphaned elements in tactics-grid (3 items) */
+        .tactics-grid > *:last-child:nth-child(3n) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            max-width: 400px;
+        }
+        
         .tactic-card {
             background: white;
             border-radius: 12px;
