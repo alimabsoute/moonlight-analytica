@@ -144,12 +144,11 @@
         }
 
         .article-meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
             font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 30px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3498db;
         }
 
         .author-info {
@@ -233,14 +232,11 @@
 
         .article-title {
             font-family: 'Poppins', sans-serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--text-primary), var(--cyber-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 2rem;
+            font-size: 2.5rem;
             line-height: 1.2;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-weight: 700;
         }
 
         /* Key Stats Section */
@@ -845,6 +841,75 @@
                 padding: 1.5rem;
             }
         }
+        
+        /* Google Template Styles */
+        .separator-line {
+            width: 100%;
+            height: 3px;
+            background: #3498db;
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        
+        .company-logo-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            display: inline-block;
+        }
+        
+        .article-intro {
+            margin-bottom: 40px;
+        }
+        
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            font-style: italic;
+            text-align: left;
+        }
+        
+        .lead {
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .hero-image {
+            width: 100%;
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px 0;
+            background: transparent !important;
+            border-radius: 0;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        
+        .article-content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 40px 0 20px 0;
+            font-weight: 600;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
     </style>
 </head>
 <body>
@@ -862,12 +927,12 @@
     </nav>
 
     <main class="article-container">
-        <div class="article-header">
+        <header class="article-header">
             <h1 class="article-title">NVIDIA's Blackwell Chips Are Sold Out Until 2027—These 5 Companies Got Them All</h1>
             
             <div class="article-meta">
                 <div class="author-info">
-                    <div class="author-avatar">🌙</div>
+                    <div class="author-avatar"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTUuNTEgOC4yOUwyMi44NSA4Ljc5TDE3LjQzIDEzLjk2TDE4Ljk5IDIxLjI2TDEyIDIyTDUuMDEgMjEuMjZMNi41NyAxMy45NkwxLjE1IDguNzlMOC40OSA4LjI5TDEyIDJaIiBmaWxsPSIjMDBiZmZmIiBvcGFjaXR5PSIwLjgiLz4KPC9zdmc+Cg==" alt="Moonlight" style="width: 20px; height: 20px; vertical-align: middle;"></div>
                     <span>Moonlight Analytica Team</span>
                 </div>
                 <span>•</span>
@@ -888,7 +953,7 @@
             <div class="article-intro">
                 <p>The secret allocation list that determines AI's future winners has leaked, revealing how five tech giants secured 89% of production worth $57.8B through 2027, leaving the rest of the industry scrambling for scraps.</p>
             </div>
-        </div>
+        </header>
 
         <!-- Key Statistics -->
         <div class="key-stats">
@@ -913,13 +978,153 @@
         <h2>The Anatomy of Market Control</h2>
 
         <div class="article-content">
-            <p>These numbers tell only part of the story. The real power play becomes clear when you examine exactly how NVIDIA's Jensen Huang personally selected which companies would receive access to the future of AI computing. The $57.8 billion in total contract value represents the largest technology allocation in history, dwarfing previous semiconductor deals by orders of magnitude.</p>
+            <p class="lead">These numbers tell only part of the story. The real power play becomes clear when you examine exactly how NVIDIA's Jensen Huang personally selected which companies would receive access to the future of AI computing. The $57.8 billion in total contract value represents the largest technology allocation in history, dwarfing previous semiconductor deals by orders of magnitude.</p>
+            
+            <!-- INFOGRAPHIC: Allocation Breakdown -->
+            <div class="hero-image">
+                <svg viewBox="0 0 600 350" style="max-width: 400px; height: auto;">
+                    <!-- Background -->
+                    <rect width="600" height="350" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="30" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="18" font-weight="700">NVIDIA Blackwell Allocation Control</text>
+                    
+                    <!-- Main pie chart -->
+                    <circle cx="300" cy="180" r="80" fill="#333" stroke="#555" stroke-width="2"/>
+                    
+                    <!-- 89% slice for Big 5 -->
+                    <path d="M 300 100 A 80 80 0 1 1 235 232 L 300 180 Z" fill="#10b981" opacity="0.8"/>
+                    <!-- 11% slice for Others -->
+                    <path d="M 235 232 A 80 80 0 0 1 300 100 L 300 180 Z" fill="#ef4444" opacity="0.6"/>
+                    
+                    <!-- Center statistics -->
+                    <text x="300" y="175" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="24" font-weight="700">89%</text>
+                    <text x="300" y="195" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="10">Big 5 Control</text>
+                    
+                    <!-- Legend -->
+                    <rect x="100" y="280" width="15" height="15" fill="#10b981" opacity="0.8"/>
+                    <text x="120" y="292" fill="#fff" font-family="Inter" font-size="12">Big 5 Tech Giants: 89% ($57.8B)</text>
+                    
+                    <rect x="100" y="300" width="15" height="15" fill="#ef4444" opacity="0.6"/>
+                    <text x="120" y="312" fill="#fff" font-family="Inter" font-size="12">Rest of Industry: 11% ($7.2B)</text>
+                    
+                    <!-- Key stats -->
+                    <rect x="450" y="120" width="120" height="80" fill="#2a2a2a" rx="5"/>
+                    <text x="510" y="140" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="16" font-weight="700">1.4M</text>
+                    <text x="510" y="155" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="10">Total Units</text>
+                    
+                    <text x="510" y="175" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="16" font-weight="700">2027</text>
+                    <text x="510" y="190" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="10">Sold Out Until</text>
+                </svg>
+            </div>
             
             <p>The allocation breakdown reveals the true power dynamics at play in Silicon Valley's most consequential resource allocation. Behind each percentage lies a carefully calculated strategic decision that will echo through the AI industry for years to come. The 1.4 million total units allocated represent not just chips, but the very foundation upon which the next generation of AI applications will be built.</p>
 
+            <!-- INFOGRAPHIC: Big 5 Power Dynamics -->
+            <div class="hero-image">
+                <svg viewBox="0 0 500 300" style="max-width: 350px; height: auto;">
+                    <!-- Background -->
+                    <rect width="500" height="300" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="250" y="25" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="16" font-weight="700">The Big 5 Chip Allocation Strategy</text>
+                    
+                    <!-- Company bars -->
+                    <!-- Microsoft -->
+                    <rect x="50" y="50" width="140" height="30" fill="#0078d4" opacity="0.8" rx="5"/>
+                    <text x="60" y="70" fill="#fff" font-family="Inter" font-size="12" font-weight="600">Microsoft: 28%</text>
+                    <text x="200" y="70" fill="#fff" font-family="Inter" font-size="10">450K units</text>
+                    
+                    <!-- Meta -->
+                    <rect x="50" y="90" width="120" height="30" fill="#1877f2" opacity="0.8" rx="5"/>
+                    <text x="60" y="110" fill="#fff" font-family="Inter" font-size="12" font-weight="600">Meta: 24%</text>
+                    <text x="180" y="110" fill="#fff" font-family="Inter" font-size="10">380K units</text>
+                    
+                    <!-- Google -->
+                    <rect x="50" y="130" width="100" height="30" fill="#ea4335" opacity="0.8" rx="5"/>
+                    <text x="60" y="150" fill="#fff" font-family="Inter" font-size="12" font-weight="600">Google: 20%</text>
+                    <text x="160" y="150" fill="#fff" font-family="Inter" font-size="10">315K units</text>
+                    
+                    <!-- Amazon -->
+                    <rect x="50" y="170" width="85" height="30" fill="#ff9900" opacity="0.8" rx="5"/>
+                    <text x="60" y="190" fill="#fff" font-family="Inter" font-size="12" font-weight="600">Amazon: 17%</text>
+                    <text x="145" y="190" fill="#fff" font-family="Inter" font-size="10">255K units</text>
+                    
+                    <!-- Others -->
+                    <rect x="50" y="210" width="55" height="30" fill="#666" opacity="0.6" rx="5"/>
+                    <text x="60" y="230" fill="#fff" font-family="Inter" font-size="12" font-weight="600">Others: 11%</text>
+                    <text x="115" y="230" fill="#ccc" font-family="Inter" font-size="10">155K units</text>
+                    
+                    <!-- Strategic implications -->
+                    <text x="320" y="80" fill="#fff" font-family="Poppins" font-size="12" font-weight="600">Strategic Impact</text>
+                    <text x="285" y="100" fill="#10b981" font-family="Inter" font-size="10">• AI model training monopoly</text>
+                    <text x="285" y="115" fill="#10b981" font-family="Inter" font-size="10">• Cloud service dominance</text>
+                    <text x="285" y="130" fill="#10b981" font-family="Inter" font-size="10">• Startup dependency creation</text>
+                    <text x="285" y="145" fill="#10b981" font-family="Inter" font-size="10">• Innovation bottleneck</text>
+                    
+                    <text x="250" y="275" text-anchor="middle" fill="#f59e0b" font-family="Inter" font-size="11" font-weight="600">89% market concentration = Unprecedented tech oligopoly</text>
+                </svg>
+            </div>
+
             <p>What makes these statistics particularly striking is their concentration. While thousands of companies desperately need Blackwell chips to remain competitive, 89% of production has been locked up by just five tech giants. This level of market concentration is unprecedented, even in an industry known for winner-take-all dynamics.</p>
 
+            <h2>The Anatomy of Market Control</h2>
+
             <p>The implications extend far beyond simple supply and demand. These allocation decisions will determine which companies can compete in frontier AI development and which will be relegated to using older, less capable hardware. In an industry where computational advantage translates directly to market dominance, access to Blackwell chips has become the ultimate competitive moat.</p>
+
+            <!-- INFOGRAPHIC: Market Control Structure -->
+            <div class="hero-image">
+                <svg viewBox="0 0 600 350" style="max-width: 400px; height: auto;">
+                    <!-- Background -->
+                    <rect width="600" height="350" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="25" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="18" font-weight="700">AI Market Control: The New Tech Oligopoly</text>
+                    
+                    <!-- Center circle showing concentration -->
+                    <circle cx="300" cy="180" r="100" fill="none" stroke="#10b981" stroke-width="3" opacity="0.8"/>
+                    <text x="300" y="175" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="24" font-weight="700">Big 5</text>
+                    <text x="300" y="195" text-anchor="middle" fill="#10b981" font-family="Inter" font-size="14" font-weight="600">89% Control</text>
+                    
+                    <!-- Surrounding smaller circles for other companies -->
+                    <circle cx="150" cy="120" r="25" fill="#ef4444" opacity="0.6"/>
+                    <text x="150" y="125" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10">Anthropic</text>
+                    
+                    <circle cx="450" cy="120" r="25" fill="#ef4444" opacity="0.6"/>
+                    <text x="450" y="125" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10">OpenAI</text>
+                    
+                    <circle cx="120" cy="240" r="20" fill="#ef4444" opacity="0.6"/>
+                    <text x="120" y="245" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">Cohere</text>
+                    
+                    <circle cx="480" cy="240" r="20" fill="#ef4444" opacity="0.6"/>
+                    <text x="480" y="245" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">Stability</text>
+                    
+                    <circle cx="200" cy="300" r="18" fill="#ef4444" opacity="0.6"/>
+                    <text x="200" y="305" text-anchor="middle" fill="#fff" font-family="Inter" font-size="8">Hugging Face</text>
+                    
+                    <circle cx="400" cy="300" r="18" fill="#ef4444" opacity="0.6"/>
+                    <text x="400" y="305" text-anchor="middle" fill="#fff" font-family="Inter" font-size="8">Character.AI</text>
+                    
+                    <!-- Impact arrows -->
+                    <path d="M200 180 L120 200" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <path d="M400 180 L480 200" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    
+                    <!-- Arrow marker -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b" />
+                        </marker>
+                    </defs>
+                    
+                    <!-- Key statistics -->
+                    <text x="50" y="60" fill="#fff" font-family="Poppins" font-size="14" font-weight="600">Market Reality:</text>
+                    <text x="50" y="80" fill="#10b981" font-family="Inter" font-size="12">• 5 companies control 89% of AI compute</text>
+                    <text x="50" y="95" fill="#ef4444" font-family="Inter" font-size="12">• 1,000+ startups fight for 11%</text>
+                    <text x="50" y="110" fill="#f59e0b" font-family="Inter" font-size="12">• Average wait time: 3+ years</text>
+                    
+                    <text x="300" y="330" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="11" style="opacity: 0.8">Silicon scarcity creates artificial tech oligopoly</text>
+                </svg>
+            </div>
         </div>
 
         <!-- Interactive Allocation Visualization -->
@@ -1253,6 +1458,45 @@
         <div class="article-content">
             <p>The performance matrix above reveals the true scale of Blackwell's technological advantage. With 20 ExaFLOPS of AI performance compared to the H100's 4 ExaFLOPS, Blackwell doesn't just outperform—it obliterates the competition. AMD's MI300X, while strong in memory bandwidth, falls far short in the critical AI processing metrics that matter most for large language model training.</p>
             
+            <!-- INFOGRAPHIC: Performance Breakthrough -->
+            <div class="hero-image">
+                <svg viewBox="0 0 500 300" style="max-width: 380px; height: auto;">
+                    <!-- Background -->
+                    <rect width="500" height="300" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="250" y="25" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="16" font-weight="700">Blackwell vs Competition: Performance Gap</text>
+                    
+                    <!-- Blackwell bar -->
+                    <rect x="50" y="60" width="350" height="40" fill="#10b981" opacity="0.9" rx="5"/>
+                    <text x="60" y="85" fill="#fff" font-family="Poppins" font-size="14" font-weight="600">Blackwell: 20 ExaFLOPS</text>
+                    <text x="410" y="85" fill="#fff" font-family="Inter" font-size="12">5x faster</text>
+                    
+                    <!-- H100 bar -->
+                    <rect x="50" y="110" width="70" height="35" fill="#f59e0b" opacity="0.8" rx="5"/>
+                    <text x="60" y="135" fill="#fff" font-family="Inter" font-size="12" font-weight="600">H100: 4 ExaFLOPS</text>
+                    
+                    <!-- AMD bar -->
+                    <rect x="50" y="155" width="45" height="30" fill="#ef4444" opacity="0.7" rx="5"/>
+                    <text x="60" y="175" fill="#fff" font-family="Inter" font-size="11" font-weight="600">AMD MI300X: 2.6 ExaFLOPS</text>
+                    
+                    <!-- Power efficiency section -->
+                    <text x="250" y="220" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="14" font-weight="600">Power Efficiency Advantage</text>
+                    
+                    <!-- Efficiency comparison -->
+                    <rect x="100" y="235" width="100" height="20" fill="#10b981" opacity="0.9" rx="3"/>
+                    <text x="105" y="250" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Blackwell: 4x efficient</text>
+                    
+                    <rect x="220" y="240" width="25" height="15" fill="#f59e0b" opacity="0.8" rx="3"/>
+                    <text x="225" y="252" fill="#fff" font-family="Inter" font-size="9">H100</text>
+                    
+                    <rect x="260" y="242" width="20" height="13" fill="#ef4444" opacity="0.7" rx="3"/>
+                    <text x="265" y="252" fill="#fff" font-family="Inter" font-size="9">AMD</text>
+                    
+                    <text x="250" y="285" text-anchor="middle" fill="#f59e0b" font-family="Inter" font-size="11" font-weight="600">Training speed: 30x faster than H100</text>
+                </svg>
+            </div>
+            
             <p>These aren't marketing numbers—they represent fundamental architectural breakthroughs that took NVIDIA years to develop. The 4x power efficiency improvement alone justifies the three-year wait for most companies. When you're training models that cost millions in compute, power efficiency directly translates to competitive advantage and operational viability.</p>
             
             <p>The 30x training speed improvement over H100 is perhaps the most consequential metric. In an industry where being first to market with AGI capabilities could mean trillion-dollar valuations, the ability to train models 30 times faster isn't just an advantage—it's the difference between winning and becoming irrelevant.</p>
@@ -1262,12 +1506,112 @@
             <h2>The Kingmaking Process</h2>
             <p>Companies not on the list are scrambling for alternatives. Anthropic, valued at $60 billion, can't get meaningful Blackwell allocation until late 2027. They're reportedly considering partnerships with Chinese chip manufacturers despite obvious geopolitical risks.</p>
             
+            <!-- INFOGRAPHIC: The Wait List Crisis -->
+            <div class="hero-image">
+                <svg viewBox="0 0 550 300" style="max-width: 400px; height: auto;">
+                    <!-- Background -->
+                    <rect width="550" height="300" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="275" y="25" text-anchor="middle" fill="#ef4444" font-family="Poppins" font-size="16" font-weight="700">The $60B+ Companies Still Waiting</text>
+                    
+                    <!-- Anthropic -->
+                    <rect x="50" y="50" width="200" height="35" fill="#ef4444" opacity="0.8" rx="5"/>
+                    <text x="60" y="72" fill="#fff" font-family="Poppins" font-size="13" font-weight="600">Anthropic: $60B valuation</text>
+                    <text x="260" y="72" fill="#ccc" font-family="Inter" font-size="11">Wait: Late 2027</text>
+                    
+                    <!-- OpenAI -->
+                    <rect x="50" y="95" width="180" height="35" fill="#ef4444" opacity="0.7" rx="5"/>
+                    <text x="60" y="117" fill="#fff" font-family="Poppins" font-size="13" font-weight="600">OpenAI: $90B valuation</text>
+                    <text x="240" y="117" fill="#ccc" font-family="Inter" font-size="11">Wait: 2028+</text>
+                    
+                    <!-- Others -->
+                    <rect x="50" y="140" width="160" height="30" fill="#ef4444" opacity="0.6" rx="5"/>
+                    <text x="60" y="160" fill="#fff" font-family="Inter" font-size="12" font-weight="600">100+ AI startups</text>
+                    <text x="220" y="160" fill="#ccc" font-family="Inter" font-size="11">Wait: Unknown</text>
+                    
+                    <!-- Desperation measures -->
+                    <text x="320" y="70" fill="#fff" font-family="Poppins" font-size="12" font-weight="600">Desperate Alternatives:</text>
+                    <text x="320" y="90" fill="#f59e0b" font-family="Inter" font-size="11">• Chinese chip partnerships</text>
+                    <text x="320" y="105" fill="#f59e0b" font-family="Inter" font-size="11">• Cloud compute rentals</text>
+                    <text x="320" y="120" fill="#f59e0b" font-family="Inter" font-size="11">• Older H100 stockpiling</text>
+                    <text x="320" y="135" fill="#f59e0b" font-family="Inter" font-size="11">• Development delays</text>
+                    
+                    <!-- Key insight -->
+                    <rect x="50" y="190" width="450" height="50" fill="#2a2a2a" rx="5" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="275" y="210" text-anchor="middle" fill="#f59e0b" font-family="Poppins" font-size="13" font-weight="700">"Artificial Scarcity Strategy"</text>
+                    <text x="275" y="225" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="11">NVIDIA could increase production but chooses market control</text>
+                    
+                    <text x="275" y="270" text-anchor="middle" fill="#10b981" font-family="Inter" font-size="11" font-weight="600">Most consequential supply constraint in tech history</text>
+                </svg>
+            </div>
+            
             <p>The scarcity is artificial but effective. NVIDIA could increase production but chooses not to, maintaining pricing power while determining industry structure. It's the most consequential supply constraint in tech history.</p>
             
             <p>For smaller AI companies, this is an extinction event. Without Blackwell chips, they can't train models competitive with GPT-5 or Claude 4. The AI race is over before it began, decided by silicon allocation rather than algorithmic innovation.</p>
 
             <h2>Market Impact and Implications</h2>
             <p>This unprecedented concentration of AI computing power in the hands of five companies has far-reaching implications for the future of artificial intelligence. The barrier to entry for new AI competitors has essentially become insurmountable without access to cutting-edge hardware.</p>
+
+            <!-- INFOGRAPHIC: Ripple Effects Across Industries -->
+            <div class="hero-image">
+                <svg viewBox="0 0 600 350" style="max-width: 420px; height: auto;">
+                    <!-- Background -->
+                    <rect width="600" height="350" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="25" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="16" font-weight="700">Industry Impact: Beyond AI Development</text>
+                    
+                    <!-- Center: Blackwell chips -->
+                    <circle cx="300" cy="175" r="60" fill="#10b981" opacity="0.9"/>
+                    <text x="300" y="170" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="12" font-weight="700">Blackwell</text>
+                    <text x="300" y="185" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10">Chips</text>
+                    
+                    <!-- Connected industries -->
+                    <!-- Cloud Computing -->
+                    <circle cx="150" cy="100" r="40" fill="#3b82f6" opacity="0.8"/>
+                    <text x="150" y="105" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Cloud Computing</text>
+                    <line x1="240" y1="140" x2="190" y2="120" stroke="#f59e0b" stroke-width="2"/>
+                    
+                    <!-- Autonomous Vehicles -->
+                    <circle cx="450" cy="100" r="40" fill="#8b5cf6" opacity="0.8"/>
+                    <text x="450" y="100" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Autonomous</text>
+                    <text x="450" y="112" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Vehicles</text>
+                    <line x1="360" y1="140" x2="410" y2="120" stroke="#f59e0b" stroke-width="2"/>
+                    
+                    <!-- Scientific Research -->
+                    <circle cx="100" cy="250" r="40" fill="#06b6d4" opacity="0.8"/>
+                    <text x="100" y="245" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Scientific</text>
+                    <text x="100" y="257" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Research</text>
+                    <line x1="240" y1="210" x2="140" y2="230" stroke="#f59e0b" stroke-width="2"/>
+                    
+                    <!-- Healthcare AI -->
+                    <circle cx="500" cy="250" r="40" fill="#10b981" opacity="0.8"/>
+                    <text x="500" y="245" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Healthcare</text>
+                    <text x="500" y="257" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">AI</text>
+                    <line x1="360" y1="210" x2="460" y2="230" stroke="#f59e0b" stroke-width="2"/>
+                    
+                    <!-- Financial Services -->
+                    <circle cx="300" cy="80" r="35" fill="#f59e0b" opacity="0.8"/>
+                    <text x="300" y="75" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9" font-weight="600">Financial</text>
+                    <text x="300" y="87" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9" font-weight="600">Services</text>
+                    <line x1="300" y1="115" x2="300" y2="135" stroke="#f59e0b" stroke-width="2"/>
+                    
+                    <!-- Gaming -->
+                    <circle cx="300" cy="270" r="35" fill="#ef4444" opacity="0.8"/>
+                    <text x="300" y="270" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">Gaming</text>
+                    <text x="300" y="282" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10" font-weight="600">& Media</text>
+                    <line x1="300" y1="235" x2="300" y2="255" stroke="#f59e0b" stroke-width="2"/>
+                    
+                    <!-- Impact labels -->
+                    <text x="50" y="40" fill="#ef4444" font-family="Poppins" font-size="12" font-weight="600">Critical Dependencies:</text>
+                    <text x="50" y="55" fill="#ccc" font-family="Inter" font-size="10">• Cloud service bottlenecks</text>
+                    <text x="50" y="68" fill="#ccc" font-family="Inter" font-size="10">• Research project delays</text>
+                    <text x="50" y="81" fill="#ccc" font-family="Inter" font-size="10">• Innovation stagnation</text>
+                    
+                    <text x="300" y="330" text-anchor="middle" fill="#f59e0b" font-family="Inter" font-size="11" font-weight="600">6+ industries now dependent on Big 5 allocation decisions</text>
+                </svg>
+            </div>
 
             <p>The ripple effects extend beyond just AI development. Cloud computing services, autonomous vehicles, scientific research, and countless other sectors that depend on high-performance AI processing are now at the mercy of these allocation decisions made behind closed doors.</p>
 

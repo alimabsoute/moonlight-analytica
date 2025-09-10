@@ -1,0 +1,21 @@
+{
+  "name": "moonlight-deploy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "free-seo-automation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "format:html": "prettier --write \"*.html\"",
+    "format:js": "prettier --write \"*.js\"",
+    "format:css": "prettier --write \"*.css\"",
+    "format:json": "prettier --write \"*.json\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}

@@ -1,0 +1,23 @@
+<svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="30" cy="30" r="25" stroke="#ff8c00" stroke-width="2" fill="rgba(255, 140, 0, 0.1)"/>
+  
+  <!-- Progress bars/counter motif -->
+  <rect x="20" y="20" width="8" height="4" rx="2" fill="#ff8c00"/>
+  <rect x="20" y="26" width="12" height="4" rx="2" fill="#ff8c00"/>
+  <rect x="20" y="32" width="16" height="4" rx="2" fill="#ff8c00"/>
+  <rect x="20" y="38" width="10" height="4" rx="2" fill="#ff8c00" opacity="0.6"/>
+  
+  <!-- Dual-perspective elements -->
+  <circle cx="24" cy="22" r="2" fill="#ff8c00"/>
+  <circle cx="36" cy="22" r="2" fill="#ff8c00" opacity="0.7"/>
+  
+  <!-- Text -->
+  <text x="65" y="20" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#ff8c00">PROJECT</text>
+  <text x="65" y="40" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="white">JANUS</text>
+  
+  <!-- Tracking dots -->
+  <circle cx="45" cy="15" r="1.5" fill="#ff8c00" opacity="0.8"/>
+  <circle cx="50" cy="15" r="1.5" fill="#ff8c00" opacity="0.6"/>
+  <circle cx="55" cy="15" r="1.5" fill="#ff8c00" opacity="0.4"/>
+</svg>

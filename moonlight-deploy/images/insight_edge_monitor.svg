@@ -1,0 +1,35 @@
+<svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Monitor outline -->
+  <rect x="10" y="15" width="100" height="60" rx="4" stroke="#00bfff" stroke-width="2" fill="rgba(0, 191, 255, 0.05)"/>
+  
+  <!-- Screen bezel -->
+  <rect x="13" y="18" width="94" height="54" rx="2" fill="rgba(0, 0, 0, 0.8)"/>
+  
+  <!-- Left side - Charts -->
+  <rect x="15" y="20" width="44" height="50" rx="1" fill="rgba(0, 191, 255, 0.1)"/>
+  
+  <!-- Chart lines -->
+  <path d="M18 55L25 45L32 50L39 35L46 40L53 30" stroke="#00bfff" stroke-width="2" fill="none"/>
+  <path d="M18 60L25 52L32 58L39 48L46 50L53 45" stroke="#87ceeb" stroke-width="2" fill="none"/>
+  
+  <!-- Bar chart -->
+  <rect x="18" y="50" width="3" height="15" fill="#00bfff" opacity="0.7"/>
+  <rect x="23" y="45" width="3" height="20" fill="#00bfff" opacity="0.7"/>
+  <rect x="28" y="52" width="3" height="13" fill="#00bfff" opacity="0.7"/>
+  <rect x="33" y="40" width="3" height="25" fill="#00bfff" opacity="0.7"/>
+  
+  <!-- Right side - Insights badge -->
+  <rect x="63" y="20" width="42" height="50" rx="1" fill="rgba(0, 191, 255, 0.08)"/>
+  
+  <!-- "INSIGHTS READY" badge -->
+  <rect x="67" y="35" width="34" height="20" rx="10" fill="#00bfff" stroke="#87ceeb" stroke-width="1"/>
+  <text x="73" y="43" font-family="Inter, sans-serif" font-size="7" font-weight="700" fill="white">INSIGHTS</text>
+  <text x="78" y="51" font-family="Inter, sans-serif" font-size="7" font-weight="700" fill="white">READY</text>
+  
+  <!-- Glow effect -->
+  <circle cx="84" cy="45" r="12" fill="rgba(0, 191, 255, 0.2)" opacity="0.6"/>
+  
+  <!-- Monitor stand -->
+  <rect x="52" y="75" width="16" height="3" rx="1.5" fill="#444"/>
+  <rect x="56" y="72" width="8" height="6" rx="1" fill="#333"/>
+</svg>

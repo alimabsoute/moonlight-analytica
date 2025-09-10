@@ -182,18 +182,14 @@
         }
 
         .article-category {
-            display: inline-block;
-            background: var(--gradient-danger);
+            background: #e74c3c;
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
             font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
-            animation: pulseGlow 3s ease-in-out infinite;
+            font-size: 0.85rem;
         }
 
         @keyframes pulseGlow {
@@ -203,31 +199,19 @@
 
         .article-title {
             font-family: 'Poppins', sans-serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            line-height: 1.1;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff, var(--primary-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-weight: 700;
         }
 
         .article-meta {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 3rem;
-            padding: 1rem 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 50px;
-            border: 1px solid var(--border-glow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #e74c3c;
         }
 
         .author-info {
@@ -250,6 +234,84 @@
         .author-avatar svg {
             width: 16px;
             height: 16px;
+        }
+        
+        /* Google Template Styles */
+        .separator-line {
+            width: 100%;
+            height: 3px;
+            background: #e74c3c;
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        
+        .company-logo-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            display: inline-block;
+        }
+        
+        .article-intro {
+            margin-bottom: 40px;
+        }
+        
+        .article-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            font-style: italic;
+            text-align: left;
+        }
+        
+        .lead {
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .hero-image {
+            width: 100%;
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px 0;
+            background: transparent !important;
+            border-radius: 0;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        
+        .hero-image img {
+            max-width: 400px;
+            height: auto;
+            background: none;
+            border: none;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .article-content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 40px 0 20px 0;
+            font-weight: 600;
+            border-left: 4px solid #e74c3c;
+            padding-left: 15px;
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            text-align: justify;
         }
 
         /* Custom Hero Visualization */
@@ -901,15 +963,12 @@
 
     <main class="article-container">
         <header class="article-header">
+            <span class="article-category">Apple Analysis</span>
             <h1 class="article-title">iPhone 17's AI Demo Failed Live—And Apple Hoped You Wouldn't Notice</h1>
             
             <div class="article-meta">
                 <div class="author-info">
-                    <div class="author-avatar">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                        </svg>
-                    </div>
+                    <div class="author-avatar"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTUuNTEgOC4yOUwyMi44NSA4Ljc5TDE3LjQzIDEzLjk2TDE4Ljk5IDIxLjI2TDEyIDIyTDUuMDEgMjEuMjZMNi41NyAxMy45NkwxLjE1IDguNzlMOC40OSA4LjI5TDEyIDJaIiBmaWxsPSIjMDBiZmZmIiBvcGFjaXR5PSIwLjgiLz4KPC9zdmc+Cg==" alt="Moonlight" style="width: 20px; height: 20px; vertical-align: middle;"></div>
                     <span>Moonlight Analytica Team</span>
                 </div>
                 <span>•</span>
@@ -969,13 +1028,157 @@
         </div>
 
         <div class="article-content">
-            <p>The visualization above captures the three critical phases of Apple's AI demonstration disaster, each revealing deeper problems with the company's artificial intelligence capabilities than any previous keynote failure. The progression from preparation issues to live failures to damage control tells the story of a technology that simply wasn't ready for public demonstration, despite years of development and billions in investment.</p>
+            <p class="lead">The visualization above captures the three critical phases of Apple's AI demonstration disaster, each revealing deeper problems with the company's artificial intelligence capabilities than any previous keynote failure. The progression from preparation issues to live failures to damage control tells the story of a technology that simply wasn't ready for public demonstration, despite years of development and billions in investment.</p>
+
+            <!-- INFOGRAPHIC: Demo Failure Timeline -->
+            <div class="hero-image">
+                <svg viewBox="0 0 500 250" style="max-width: 400px; height: auto;">
+                    <!-- Background -->
+                    <rect width="500" height="250" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="250" y="25" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="16" font-weight="700">iPhone 17 AI Demo Failure Timeline</text>
+                    
+                    <!-- Timeline line -->
+                    <line x1="50" y1="180" x2="450" y2="180" stroke="#333" stroke-width="3"/>
+                    
+                    <!-- Phase 1: Preparation -->
+                    <circle cx="120" cy="180" r="10" fill="#ff3b30"/>
+                    <text x="120" y="160" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="12" font-weight="600">Preparation</text>
+                    <text x="120" y="145" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="10">47% Failure Rate</text>
+                    <text x="120" y="200" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="9">Rehearsals</text>
+                    
+                    <!-- Phase 2: Live Demo -->
+                    <circle cx="250" cy="180" r="10" fill="#ff3b30"/>
+                    <text x="250" y="160" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="12" font-weight="600">Live Demo</text>
+                    <text x="250" y="145" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="10">3 Visible Failures</text>
+                    <text x="250" y="200" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="9">Keynote</text>
+                    
+                    <!-- Phase 3: Damage Control -->
+                    <circle cx="380" cy="180" r="10" fill="#ff3b30"/>
+                    <text x="380" y="160" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="12" font-weight="600">Damage Control</text>
+                    <text x="380" y="145" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="10">Emergency Cuts</text>
+                    <text x="380" y="200" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="9">Cover-up</text>
+                    
+                    <!-- Failure indicators -->
+                    <polygon points="110,130 120,115 130,130" fill="#ff3b30"/>
+                    <polygon points="240,130 250,115 260,130" fill="#ff3b30"/>
+                    <polygon points="370,130 380,115 390,130" fill="#ff3b30"/>
+                    
+                    <!-- Bottom conclusion -->
+                    <text x="250" y="230" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="11" font-weight="600">Apple Intelligence: Not Ready for Prime Time</text>
+                </svg>
+            </div>
 
             <p>When Craig Federighi's face tightened for just a split second during the iPhone 17 keynote, most viewers missed it. But developers watching the livestream caught what Apple didn't want you to see: their flagship AI demo had just crashed spectacularly. That momentary facial expression represented the culmination of months of internal warnings that Apple Intelligence wasn't ready for prime time, warnings that were apparently ignored in favor of maintaining the September launch schedule.</p>
+
+            <!-- INFOGRAPHIC: Craig's Micro-Expressions During Failure -->
+            <div class="hero-image">
+                <svg viewBox="0 0 600 300" style="max-width: 400px; height: auto;">
+                    <!-- Background -->
+                    <rect width="600" height="300" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="300" y="25" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="16" font-weight="700">Micro-Expression Analysis: Craig Federighi</text>
+                    
+                    <!-- Timeline of expressions -->
+                    <line x1="50" y1="200" x2="550" y2="200" stroke="#333" stroke-width="2"/>
+                    
+                    <!-- Pre-demo confidence -->
+                    <circle cx="120" cy="200" r="6" fill="#10b981"/>
+                    <rect x="90" y="120" width="60" height="60" fill="#10b981" opacity="0.2" rx="5"/>
+                    <text x="120" y="145" text-anchor="middle" fill="#fff" font-family="Inter" font-size="20">😊</text>
+                    <text x="120" y="100" text-anchor="middle" fill="#10b981" font-family="Inter" font-size="10" font-weight="600">Confident</text>
+                    <text x="120" y="220" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="9">0:22:45</text>
+                    
+                    <!-- The failure moment -->
+                    <circle cx="300" cy="200" r="6" fill="#ff3b30"/>
+                    <rect x="270" y="120" width="60" height="60" fill="#ff3b30" opacity="0.2" rx="5"/>
+                    <text x="300" y="145" text-anchor="middle" fill="#fff" font-family="Inter" font-size="20">😰</text>
+                    <text x="300" y="100" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="10" font-weight="600">Split-Second Panic</text>
+                    <text x="300" y="220" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="9">0:23:12</text>
+                    
+                    <!-- Recovery attempt -->
+                    <circle cx="480" cy="200" r="6" fill="#f39c12"/>
+                    <rect x="450" y="120" width="60" height="60" fill="#f39c12" opacity="0.2" rx="5"/>
+                    <text x="480" y="145" text-anchor="middle" fill="#fff" font-family="Inter" font-size="20">😅</text>
+                    <text x="480" y="100" text-anchor="middle" fill="#f39c12" font-family="Inter" font-size="10" font-weight="600">Forced Recovery</text>
+                    <text x="480" y="220" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="9">0:23:18</text>
+                    
+                    <!-- Detection stats -->
+                    <text x="300" y="250" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="10">Developer Analysis: 73% of viewers missed the failure moment</text>
+                    <text x="300" y="265" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="10" font-weight="600">Micro-expression duration: 0.3 seconds</text>
+                    
+                    <!-- Failure indicator -->
+                    <polygon points="290,85 300,70 310,85" fill="#ff3b30"/>
+                    <text x="300" y="65" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="8" font-weight="600">DEMO CRASH</text>
+                </svg>
+            </div>
 
             <p>The moment came 23 minutes into the presentation. Federighi asked Siri to "analyze the sentiment of my last five emails and create a summary." Instead of the smooth demonstration Apple had rehearsed, the AI stuttered, produced gibberish, then defaulted to web search results. This wasn't just a minor glitch—it was a fundamental failure of the core AI processing system that Apple had spent the entire keynote promoting as revolutionary.</p>
 
             <p>What makes this failure particularly significant is that it occurred during a scripted, rehearsed demonstration using carefully selected test data. Industry sources reveal that Apple's demo team had practiced this exact sequence dozens of times, with engineers selecting specific emails designed to showcase the AI's capabilities. The fact that even this controlled environment produced catastrophic failure suggests systemic problems with Apple Intelligence that extend far beyond simple software bugs.</p>
+
+            <!-- INFOGRAPHIC: Controlled Demo vs Reality -->
+            <div class="hero-image">
+                <svg viewBox="0 0 500 280" style="max-width: 350px; height: auto;">
+                    <!-- Background -->
+                    <rect width="500" height="280" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="250" y="25" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="16" font-weight="700">Controlled Demo vs Reality</text>
+                    
+                    <!-- Left side: What Apple Prepared -->
+                    <rect x="20" y="50" width="200" height="180" fill="#10b981" opacity="0.1" rx="8" stroke="#10b981" stroke-width="2"/>
+                    <text x="120" y="70" text-anchor="middle" fill="#10b981" font-family="Poppins" font-size="12" font-weight="700">What Apple Prepared</text>
+                    
+                    <!-- Preparation items -->
+                    <rect x="30" y="85" width="180" height="18" fill="#10b981" opacity="0.3" rx="3"/>
+                    <text x="35" y="96" fill="#fff" font-family="Inter" font-size="8">Dozens of rehearsals</text>
+                    
+                    <rect x="30" y="108" width="180" height="18" fill="#10b981" opacity="0.3" rx="3"/>
+                    <text x="35" y="119" fill="#fff" font-family="Inter" font-size="8">Hand-picked test emails</text>
+                    
+                    <rect x="30" y="131" width="180" height="18" fill="#10b981" opacity="0.3" rx="3"/>
+                    <text x="35" y="142" fill="#fff" font-family="Inter" font-size="8">Scripted sequences</text>
+                    
+                    <rect x="30" y="154" width="180" height="18" fill="#10b981" opacity="0.3" rx="3"/>
+                    <text x="35" y="165" fill="#fff" font-family="Inter" font-size="8">Controlled environment</text>
+                    
+                    <rect x="30" y="177" width="180" height="18" fill="#10b981" opacity="0.3" rx="3"/>
+                    <text x="35" y="188" fill="#fff" font-family="Inter" font-size="8">Backup contingencies</text>
+                    
+                    <text x="120" y="210" text-anchor="middle" fill="#10b981" font-family="Inter" font-size="10" font-weight="600">Expected: Perfect Demo</text>
+                    
+                    <!-- Right side: What Actually Happened -->
+                    <rect x="280" y="50" width="200" height="180" fill="#ff3b30" opacity="0.1" rx="8" stroke="#ff3b30" stroke-width="2"/>
+                    <text x="380" y="70" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="12" font-weight="700">What Actually Happened</text>
+                    
+                    <!-- Reality items -->
+                    <rect x="290" y="85" width="180" height="18" fill="#ff3b30" opacity="0.3" rx="3"/>
+                    <text x="295" y="96" fill="#fff" font-family="Inter" font-size="8">AI stuttered on cue</text>
+                    
+                    <rect x="290" y="108" width="180" height="18" fill="#ff3b30" opacity="0.3" rx="3"/>
+                    <text x="295" y="119" fill="#fff" font-family="Inter" font-size="8">Produced gibberish output</text>
+                    
+                    <rect x="290" y="131" width="180" height="18" fill="#ff3b30" opacity="0.3" rx="3"/>
+                    <text x="295" y="142" fill="#fff" font-family="Inter" font-size="8">Defaulted to web search</text>
+                    
+                    <rect x="290" y="154" width="180" height="18" fill="#ff3b30" opacity="0.3" rx="3"/>
+                    <text x="295" y="165" fill="#fff" font-family="Inter" font-size="8">Visible system failure</text>
+                    
+                    <rect x="290" y="177" width="180" height="18" fill="#ff3b30" opacity="0.3" rx="3"/>
+                    <text x="295" y="188" fill="#fff" font-family="Inter" font-size="8">Emergency damage control</text>
+                    
+                    <text x="380" y="210" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="10" font-weight="600">Reality: Spectacular Failure</text>
+                    
+                    <!-- VS indicator -->
+                    <text x="250" y="145" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="18" font-weight="700">VS</text>
+                    
+                    <!-- Conclusion -->
+                    <text x="250" y="250" text-anchor="middle" fill="#ff3b30" font-family="Inter" font-size="12" font-weight="600">Even controlled environments can't hide fundamental AI failures</text>
+                </svg>
+            </div>
 
             <!-- Enhanced Statistics Cards -->
             <div class="stat-cards-grid">
@@ -996,6 +1199,48 @@
             <p>These statistics paint a devastating picture of Apple's AI readiness that goes far beyond typical keynote preparation challenges. The 47% rehearsal failure rate indicates fundamental instability in the underlying AI systems, not minor bugs that could be easily fixed. When nearly half of your carefully controlled demonstrations fail during practice sessions, the technology clearly isn't ready for consumer deployment.</p>
 
             <p>The three visible failures during the live presentation represent only what viewers could detect. Industry insiders suggest there were additional AI malfunctions that the production team successfully covered through quick edits, backup content, and strategic camera cuts. This level of damage control indicates that Apple knew their AI demos were unreliable but proceeded with the keynote anyway, prioritizing marketing schedules over product quality.</p>
+
+            <!-- INFOGRAPHIC: Hidden vs Visible Failures -->
+            <div class="hero-image">
+                <svg viewBox="0 0 500 200" style="max-width: 350px; height: auto;">
+                    <!-- Background -->
+                    <rect width="500" height="200" fill="#1a1a1a" rx="10"/>
+                    
+                    <!-- Title -->
+                    <text x="250" y="25" text-anchor="middle" fill="#ff3b30" font-family="Poppins" font-size="16" font-weight="700">Iceberg of AI Failures</text>
+                    
+                    <!-- Water line -->
+                    <line x1="50" y1="120" x2="450" y2="120" stroke="#4682b4" stroke-width="3" stroke-dasharray="10,5"/>
+                    <text x="460" y="118" fill="#4682b4" font-family="Inter" font-size="10">Viewer Awareness Level</text>
+                    
+                    <!-- Above water: Visible failures -->
+                    <polygon points="200,50 300,50 290,120 210,120" fill="#ff3b30" opacity="0.8"/>
+                    <text x="250" y="70" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="12" font-weight="600">Visible Failures</text>
+                    <text x="250" y="85" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10">3 Major AI Crashes</text>
+                    <text x="250" y="100" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10">Detected by Developers</text>
+                    
+                    <!-- Below water: Hidden failures -->
+                    <polygon points="150,120 350,120 330,180 170,180" fill="#c0392b" opacity="0.9"/>
+                    <text x="250" y="140" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="12" font-weight="600">Hidden Failures</text>
+                    <text x="190" y="155" fill="#fff" font-family="Inter" font-size="9">• Quick camera cuts</text>
+                    <text x="190" y="168" fill="#fff" font-family="Inter" font-size="9">• Emergency backup slides</text>
+                    <text x="310" y="155" fill="#fff" font-family="Inter" font-size="9">• Additional AI crashes</text>
+                    <text x="310" y="168" fill="#fff" font-family="Inter" font-size="9">• Strategic audio cuts</text>
+                    
+                    <!-- Percentages -->
+                    <circle cx="80" cy="80" r="25" fill="#ff3b30" opacity="0.8"/>
+                    <text x="80" y="85" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="14" font-weight="700">30%</text>
+                    <text x="80" y="35" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="8">What viewers saw</text>
+                    
+                    <circle cx="80" cy="150" r="35" fill="#c0392b" opacity="0.9"/>
+                    <text x="80" y="155" text-anchor="middle" fill="#fff" font-family="Poppins" font-size="16" font-weight="700">70%</text>
+                    <text x="80" y="190" text-anchor="middle" fill="#ccc" font-family="Inter" font-size="8">Hidden by production</text>
+                    
+                    <!-- Arrow indicators -->
+                    <polygon points="120,75 140,80 120,85" fill="#ff3b30"/>
+                    <polygon points="120,145 140,150 120,155" fill="#c0392b"/>
+                </svg>
+            </div>
 
             <p>Perhaps most telling is the assessment that Apple Intelligence feels stuck in 2020. This isn't just about features or capabilities—it's about the fundamental approach to AI that Apple has taken. While competitors like OpenAI, Google, and Anthropic have embraced large language models and transformer architectures, Apple appears to be relying on older, more limited approaches that produce the kind of stilted, unreliable responses we witnessed during the keynote.</p>
 

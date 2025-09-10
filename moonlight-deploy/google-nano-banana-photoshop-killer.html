@@ -429,9 +429,79 @@
             <!-- Red Separator Line -->
             <div class="separator-line"></div>
 
-            <!-- Company Logo Section -->
+            <!-- Cost Comparison Infographic -->
             <div class="company-logo-section">
-                <img src="6a.png" alt="Google AI Analysis" class="company-logo-image">
+                <svg viewBox="0 0 800 300" style="width: 100%; max-width: 600px; height: auto;">
+                    <!-- Background -->
+                    <defs>
+                        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f8fafc"/>
+                            <stop offset="100%" style="stop-color:#e2e8f0"/>
+                        </linearGradient>
+                        <linearGradient id="googleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#4285f4"/>
+                            <stop offset="25%" style="stop-color:#ea4335"/>
+                            <stop offset="50%" style="stop-color:#fbbc04"/>
+                            <stop offset="75%" style="stop-color:#34a853"/>
+                            <stop offset="100%" style="stop-color:#4285f4"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect width="800" height="300" fill="url(#bgGrad)" rx="20"/>
+                    
+                    <!-- Title -->
+                    <text x="400" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#1f2937">
+                        Google vs Adobe: The Cost Revolution
+                    </text>
+                    
+                    <!-- Google Section -->
+                    <g transform="translate(100, 80)">
+                        <rect width="250" height="120" fill="url(#googleGrad)" rx="12" opacity="0.1"/>
+                        <text x="125" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#1f2937">
+                            Google Gemini 2.5
+                        </text>
+                        <text x="125" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="32" font-weight="800" fill="#4285f4">
+                            $0.039
+                        </text>
+                        <text x="125" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#6b7280">
+                            per image
+                        </text>
+                        <text x="125" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#34a853">
+                            ✨ 589x more cost-effective
+                        </text>
+                    </g>
+                    
+                    <!-- VS -->
+                    <text x="400" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#9ca3af">
+                        VS
+                    </text>
+                    
+                    <!-- Adobe Section -->
+                    <g transform="translate(450, 80)">
+                        <rect width="250" height="120" fill="#ff0000" rx="12" opacity="0.1"/>
+                        <text x="125" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#1f2937">
+                            Adobe Photoshop
+                        </text>
+                        <text x="125" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="32" font-weight="800" fill="#dc2626">
+                            $22.99
+                        </text>
+                        <text x="125" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#6b7280">
+                            per month
+                        </text>
+                        <text x="125" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#dc2626">
+                            💸 Traditional subscription
+                        </text>
+                    </g>
+                    
+                    <!-- Bottom insight -->
+                    <text x="400" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="#4b5563">
+                        589 AI-edited images for the price of 1 month Photoshop
+                    </text>
+                    
+                    <!-- Decorative elements -->
+                    <circle cx="80" cy="150" r="3" fill="#4285f4" opacity="0.3"/>
+                    <circle cx="720" cy="150" r="3" fill="#dc2626" opacity="0.3"/>
+                </svg>
             </div>
 
             <!-- Introduction Paragraph -->
@@ -675,6 +745,107 @@
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Nano Banana Capabilities Infographic -->
+            <div style="margin: 40px 0; text-align: center;">
+                <svg viewBox="0 0 800 400" style="width: 100%; max-width: 700px; height: auto;">
+                    <!-- Background -->
+                    <defs>
+                        <linearGradient id="mainBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f8fafc"/>
+                            <stop offset="100%" style="stop-color:#e2e8f0"/>
+                        </linearGradient>
+                        <linearGradient id="googleColors" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#4285f4"/>
+                            <stop offset="33%" style="stop-color:#ea4335"/>
+                            <stop offset="66%" style="stop-color:#fbbc04"/>
+                            <stop offset="100%" style="stop-color:#34a853"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect width="800" height="400" fill="url(#mainBg)" rx="16"/>
+                    
+                    <!-- Title -->
+                    <text x="400" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#1f2937">
+                        Example of Nano Banana's Advanced Image Editing Capabilities
+                    </text>
+                    
+                    <!-- Before/After Demonstration -->
+                    <g transform="translate(50, 80)">
+                        <!-- Before Section -->
+                        <rect x="0" y="0" width="300" height="200" fill="white" stroke="#e5e7eb" stroke-width="2" rx="12"/>
+                        <text x="150" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#374151">
+                            BEFORE: Input Photos
+                        </text>
+                        
+                        <!-- Torso representation -->
+                        <rect x="20" y="40" width="80" height="60" fill="#4285f4" opacity="0.3" rx="8"/>
+                        <text x="60" y="75" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1f2937">
+                            Torso Only
+                        </text>
+                        
+                        <!-- Chair representation -->
+                        <rect x="120" y="40" width="80" height="60" fill="#ea4335" opacity="0.3" rx="8"/>
+                        <text x="160" y="75" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1f2937">
+                            Red Chair
+                        </text>
+                        
+                        <!-- Plus sign -->
+                        <text x="150" y="135" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#9ca3af">
+                            +
+                        </text>
+                        
+                        <!-- Prompt -->
+                        <rect x="20" y="150" width="260" height="30" fill="#f3f4f6" rx="6"/>
+                        <text x="150" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#6b7280">
+                            "Draw him seated in the red chair"
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow -->
+                    <g transform="translate(380, 160)">
+                        <path d="M0 20 L40 20 M30 10 L40 20 L30 30" stroke="url(#googleColors)" stroke-width="3" fill="none"/>
+                        <text x="20" y="45" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#4285f4">
+                            AI Magic
+                        </text>
+                    </g>
+                    
+                    <!-- After Section -->
+                    <g transform="translate(450, 80)">
+                        <rect x="0" y="0" width="300" height="200" fill="white" stroke="#34a853" stroke-width="3" rx="12"/>
+                        <text x="150" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#374151">
+                            AFTER: Complete Scene
+                        </text>
+                        
+                        <!-- Complete figure in chair -->
+                        <rect x="60" y="50" width="180" height="120" fill="#34a853" opacity="0.2" rx="12"/>
+                        <text x="150" y="75" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#1f2937">
+                            ✨ Complete Person
+                        </text>
+                        <text x="150" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Generated Arms & Legs
+                        </text>
+                        <text x="150" y="110" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Completed T-shirt Logo
+                        </text>
+                        <text x="150" y="125" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Perfect Chair Positioning
+                        </text>
+                        <text x="150" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Realistic Proportions
+                        </text>
+                    </g>
+                    
+                    <!-- Key Insight -->
+                    <rect x="100" y="320" width="600" height="60" fill="url(#googleColors)" opacity="0.1" rx="12"/>
+                    <text x="400" y="345" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#1f2937">
+                        🎯 Intelligent Context Understanding: Gemini doesn't just edit - it comprehends and creates
+                    </text>
+                    <text x="400" y="365" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#6b7280">
+                        Completion time: 1-2 seconds | Cost: $0.039 per image | Accuracy: Professional-grade
+                    </text>
+                </svg>
             </div>
 
             <h2>Adobe's Strategic Response: If You Can't Beat Them...</h2>
