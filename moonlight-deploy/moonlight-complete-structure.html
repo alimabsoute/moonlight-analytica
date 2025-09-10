@@ -1682,6 +1682,41 @@
             color: #87ceeb;
         }
 
+        /* Logo animations */
+        .floating-logo {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .pulsing-logo {
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .scaling-logo {
+            animation: scale 3.5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* Coming Soon status styling */
+        .coming-soon {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
         .live-status {
             background: rgba(34, 197, 94, 0.2);
             color: #22c55e;
@@ -2567,22 +2602,46 @@
             <div class="product-card-new" data-product="phynxtimer">
                 <div class="product-header">
                     <div class="product-icon">
-                        <img src="phynxtimer-logo-new.png?v=2" alt="PhynxTimer" class="product-logo" />
+                        <img src="/images/phynxtimer_card_logo.png" alt="PhynxTimer" class="product-logo floating-logo" />
                     </div>
                     <div class="product-status live-status">Live</div>
                 </div>
                 <h3 class="product-name">PhynxTimer</h3>
-                <p class="product-tagline">Advanced Time Tracking & Analytics</p>
+                <p class="product-tagline">Intelligent productivity timer with team collaboration & insights</p>
                 <p class="product-desc">
-                    Intelligent productivity timer with team collaboration and deep analytics. Track time across 50+ platforms with AI-powered insights.
+                    Advanced time tracking and analytics platform designed for modern teams and professionals.
                 </p>
                 <div class="product-features">
                     <div class="feature">⚡ Real-time tracking</div>
-                    <div class="feature">📊 Advanced analytics</div>
-                    <div class="feature">🤝 Team collaboration</div>
+                    <div class="feature">📊 Team insights</div>
+                    <div class="feature">🤝 Collaboration tools</div>
                 </div>
-                <button class="product-cta" onclick="window.open('https://phynxtimer.com', '_blank')">
+                <button class="product-cta" onclick="window.open('/phynxtimer', '_blank')">
                     <span>Visit PhynxTimer</span>
+                    <div class="cta-arrow">→</div>
+                </button>
+            </div>
+
+            <!-- Project: Janus Card -->
+            <div class="product-card-new" data-product="janus">
+                <div class="product-header">
+                    <div class="product-icon custom-icon janus-icon">
+                        <img src="/images/janus_wordmark_bars.svg" alt="Project: Janus" class="product-logo pulsing-logo" />
+                    </div>
+                    <div class="product-status beta-status">Beta</div>
+                </div>
+                <h3 class="product-name">Project: Janus</h3>
+                <p class="product-tagline">Dual-perspective AI for tracking, counting, and precision decisioning</p>
+                <p class="product-desc">
+                    Revolutionary platform combining visual analysis with intelligent tracking capabilities.
+                </p>
+                <div class="product-features">
+                    <div class="feature">👁️ Dual perspective</div>
+                    <div class="feature">📊 Precision tracking</div>
+                    <div class="feature">🧠 AI decisioning</div>
+                </div>
+                <button class="product-cta" onclick="window.location.href='/janus'">
+                    <span>Request Beta Access</span>
                     <div class="cta-arrow">→</div>
                 </button>
             </div>
@@ -2591,63 +2650,22 @@
             <div class="product-card-new" data-product="insight-edge">
                 <div class="product-header">
                     <div class="product-icon custom-icon">
-                        <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8 42L20 30L28 38L42 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="42" cy="24" r="4" fill="currentColor"/>
-                            <circle cx="28" cy="38" r="4" fill="currentColor"/>
-                            <circle cx="20" cy="30" r="4" fill="currentColor"/>
-                            <circle cx="8" cy="42" r="4" fill="currentColor"/>
-                            <path d="M25 8V18M20 13H30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M35 10L40 15M40 10L35 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+                        <img src="/images/insight_edge_monitor.svg" alt="Insight Edge" class="product-logo scaling-logo" />
                     </div>
-                    <div class="product-status beta-status">New</div>
+                    <div class="product-status beta-status coming-soon">Coming Soon</div>
                 </div>
                 <h3 class="product-name">Insight Edge</h3>
-                <p class="product-tagline">CSV to Insights in 30 Seconds</p>
+                <p class="product-tagline">Next-gen analytics platform—charts on the left, instant actionable insights on the right</p>
                 <p class="product-desc">
-                    Upload your CSV and get instant AI-powered analysis with beautiful visualizations and actionable insights.
+                    Revolutionary analytics experience with immediate visual feedback and actionable recommendations.
                 </p>
                 <div class="product-features">
-                    <div class="feature">📈 Instant analysis</div>
-                    <div class="feature">🎨 Auto visualizations</div>
-                    <div class="feature">🧠 AI insights</div>
+                    <div class="feature">📈 Real-time charts</div>
+                    <div class="feature">⚡ Instant insights</div>
+                    <div class="feature">🎯 Actionable data</div>
                 </div>
-                <button class="product-cta">
-                    <span>Try It Free</span>
-                    <div class="cta-arrow">→</div>
-                </button>
-            </div>
-
-            <!-- Project Janus Card -->
-            <div class="product-card-new" data-product="janus">
-                <div class="product-header">
-                    <div class="product-icon custom-icon janus-icon">
-                        <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="25" cy="25" r="18" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="25" cy="25" r="10" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="25" cy="25" r="4" fill="currentColor"/>
-                            <path d="M25 7V12M25 38V43M7 25H12M38 25H43" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 13L17 17M33 33L37 37M37 13L33 17M17 33L13 37" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <rect x="22" y="19" width="6" height="2" rx="1" fill="currentColor"/>
-                            <rect x="22" y="23" width="6" height="2" rx="1" fill="currentColor"/>
-                            <rect x="22" y="27" width="6" height="2" rx="1" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <div class="product-status beta-status">Beta</div>
-                </div>
-                <h3 class="product-name">Project: Janus</h3>
-                <p class="product-tagline">Visual Line & People Tracking</p>
-                <p class="product-desc">
-                    Revolutionary platform for visual code complexity analysis and real-time people tracking with advanced heat mapping.
-                </p>
-                <div class="product-features">
-                    <div class="feature">👁️ Visual analysis</div>
-                    <div class="feature">🔥 Heat mapping</div>
-                    <div class="feature">⚡ Real-time tracking</div>
-                </div>
-                <button class="product-cta">
-                    <span>Join Beta Waitlist</span>
+                <button class="product-cta" onclick="window.location.href='/insight-edge'">
+                    <span>Join Waitlist</span>
                     <div class="cta-arrow">→</div>
                 </button>
             </div>

@@ -2,6 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚀 ACTIVE PROJECTS
+
+### 1. MOONLIGHT ANALYTICA (Website)
+- **Status**: Live Production
+- **URL**: https://moonlightanalytica.com
+- **Directory**: `moonlight-deploy/`
+- **Priority**: Ongoing maintenance
+
+### 2. ROBINHOOD TRADING SYSTEM (NEW - January 2025)
+- **Status**: In Development
+- **Directory**: `robinhood-trading-system/`
+- **Due Date**: January 10, 2025 (Friday)
+- **Purpose**: Automated trading signal generation for small accounts ($100-1000/month)
+- **Features**: Multi-strategy scanners, risk management, PDT compliance, alerts
+- **Next Steps**: Complete implementation by Friday, begin testing next week
+
 # 🚨 PROJECT IDENTITY - NEVER FORGET THESE FACTS 🚨
 
 ## MOONLIGHT ANALYTICA - LIVE PRODUCTION WEBSITE
