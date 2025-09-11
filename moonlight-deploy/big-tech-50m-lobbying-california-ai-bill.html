@@ -113,7 +113,7 @@
             color: #7f8c8d;
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 3px solid #3498db;
+            border-bottom: 3px solid #3498db !important;
         }
         
         .hero-image {
@@ -166,14 +166,17 @@
         }
         
         .company-logo-section img {
-            max-width: 200px;
-            height: auto;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
+            max-width: 80px !important;
+            height: auto !important;
+            opacity: 0.8 !important;
+            transition: opacity 0.3s ease !important;
+            display: block !important;
+            margin: 0 auto !important;
+            background: transparent !important;
         }
         
         .company-logo-section img:hover {
-            opacity: 1;
+            opacity: 1 !important;
         }
         
         /* Navigation */
@@ -268,6 +271,87 @@
             text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
             transform: translateY(-2px);
         }
+
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-toggle:hover {
+            color: var(--neon-blue);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 12px;
+            padding: 15px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 191, 255, 0.15),
+                0 0 80px rgba(135, 206, 235, 0.1);
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(135, 206, 235, 0.1);
+            color: #00bfff;
+            padding-left: 30px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
         
         /* Article Styles */
         .article-container {
@@ -285,9 +369,20 @@
             font-size: 2.5rem;
             line-height: 1.2;
             color: #1a1a1a;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: 700;
             text-align: left;
+        }
+        
+        .article-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 400;
+            text-align: left;
+            font-style: italic;
         }
         
         .article-meta {
@@ -728,7 +823,15 @@
             <ul class="nav-menu">
                 <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
                 <li><a href="solutions.html" class="nav-link">Solutions</a></li>
-                <li><a href="news.html" class="nav-link">News</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                    </div>
+                </li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
         </div>
@@ -738,6 +841,8 @@
     <main class="article-container">
         <header class="article-header">
             <h1 class="article-title">The $50 Million Regulatory Capture: How Big Tech Killed California's AI Safety Bill</h1>
+            
+            <h2 class="article-subtitle">Exclusive analysis reveals how unprecedented lobbying spending and regulatory capture tactics defeated California's pioneering AI safety legislation</h2>
             
             <div class="article-meta">
                 <div class="author-info">
