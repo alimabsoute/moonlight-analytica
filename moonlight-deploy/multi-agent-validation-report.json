@@ -1,0 +1,611 @@
+{
+  "timestamp": "2025-09-12T06:34:11.257Z",
+  "summary": {
+    "total": 10,
+    "passed": 0,
+    "failed": 10,
+    "successRate": 0
+  },
+  "agentSummary": {
+    "Structure Validation Agent": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "issues": 0,
+      "warnings": 16,
+      "recommendations": 11
+    },
+    "Visual Design Validation Agent": {
+      "total": 10,
+      "passed": 0,
+      "failed": 10,
+      "issues": 21,
+      "warnings": 0,
+      "recommendations": 5
+    },
+    "SEO Compliance Agent": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "issues": 0,
+      "warnings": 2,
+      "recommendations": 26
+    },
+    "Accessibility Validation Agent": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "issues": 0,
+      "warnings": 4,
+      "recommendations": 20
+    }
+  },
+  "detailedResults": [
+    {
+      "file": "nvidia-blackwell-chips-sold-out-2027.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\nvidia-blackwell-chips-sold-out-2027.html",
+      "timestamp": "2025-09-12T06:34:11.168Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "nvidia-blackwell-chips-sold-out-2027.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (109 chars < 120)"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "nvidia-blackwell-chips-sold-out-2027.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": []
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "nvidia-blackwell-chips-sold-out-2027.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Missing Open Graph tags for social media sharing"
+          ],
+          "recommendations": [
+            "Add Twitter Card meta tags for better Twitter sharing",
+            "Add canonical URL to prevent duplicate content issues",
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 2 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "nvidia-blackwell-chips-sold-out-2027.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "intel-secret-plan-split-500b-semiconductor-war.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\intel-secret-plan-split-500b-semiconductor-war.html",
+      "timestamp": "2025-09-12T06:34:11.190Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "intel-secret-plan-split-500b-semiconductor-war.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (104 chars < 120)"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "intel-secret-plan-split-500b-semiconductor-war.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*#1",
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": []
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "intel-secret-plan-split-500b-semiconductor-war.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Add Twitter Card meta tags for better Twitter sharing",
+            "Add canonical URL to prevent duplicate content issues",
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 1 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "intel-secret-plan-split-500b-semiconductor-war.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "ai-eating-own-tail-chatgpt-dumber-2026.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\ai-eating-own-tail-chatgpt-dumber-2026.html",
+      "timestamp": "2025-09-12T06:34:11.197Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "ai-eating-own-tail-chatgpt-dumber-2026.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (111 chars < 120)",
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "ai-eating-own-tail-chatgpt-dumber-2026.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*#0",
+            "Dark background detected with pattern: background.*#1",
+            "Dark background detected with pattern: background.*#2",
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": []
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "ai-eating-own-tail-chatgpt-dumber-2026.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 3 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "ai-eating-own-tail-chatgpt-dumber-2026.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "meta-google-apple-twitter-killers-march-2026.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\meta-google-apple-twitter-killers-march-2026.html",
+      "timestamp": "2025-09-12T06:34:11.203Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "meta-google-apple-twitter-killers-march-2026.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "meta-google-apple-twitter-killers-march-2026.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*#1",
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": [
+            "Consider using CSS custom properties for consistent theming"
+          ]
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "meta-google-apple-twitter-killers-march-2026.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 3 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "meta-google-apple-twitter-killers-march-2026.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Ensure sufficient color contrast for text readability"
+          ],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "vision-pro-2-ditching-500-feature-wanted.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\vision-pro-2-ditching-500-feature-wanted.html",
+      "timestamp": "2025-09-12T06:34:11.210Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "vision-pro-2-ditching-500-feature-wanted.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "vision-pro-2-ditching-500-feature-wanted.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": [
+            "Consider using CSS custom properties for consistent theming"
+          ]
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "vision-pro-2-ditching-500-feature-wanted.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 3 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "vision-pro-2-ditching-500-feature-wanted.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Ensure sufficient color contrast for text readability"
+          ],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "big-tech-50m-lobbying-california-ai-bill.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\big-tech-50m-lobbying-california-ai-bill.html",
+      "timestamp": "2025-09-12T06:34:11.218Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "big-tech-50m-lobbying-california-ai-bill.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (109 chars < 120)",
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "big-tech-50m-lobbying-california-ai-bill.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*#0",
+            "Dark background detected with pattern: background.*#1",
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": [
+            "Consider using CSS custom properties for consistent theming"
+          ]
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "big-tech-50m-lobbying-california-ai-bill.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 1 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "big-tech-50m-lobbying-california-ai-bill.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Ensure sufficient color contrast for text readability"
+          ],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "amazon-shadow-workforce-purge-10000-contractors.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\amazon-shadow-workforce-purge-10000-contractors.html",
+      "timestamp": "2025-09-12T06:34:11.225Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "amazon-shadow-workforce-purge-10000-contractors.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (103 chars < 120)",
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "amazon-shadow-workforce-purge-10000-contractors.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": []
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "amazon-shadow-workforce-purge-10000-contractors.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 3 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "amazon-shadow-workforce-purge-10000-contractors.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "google-nano-banana-photoshop-killer.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\google-nano-banana-photoshop-killer.html",
+      "timestamp": "2025-09-12T06:34:11.231Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "google-nano-banana-photoshop-killer.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (106 chars < 120)",
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <main> element for primary content",
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "google-nano-banana-photoshop-killer.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*#0",
+            "Dark background detected with pattern: background.*#2"
+          ],
+          "warnings": [],
+          "recommendations": [
+            "Consider using CSS custom properties for consistent theming"
+          ]
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "google-nano-banana-photoshop-killer.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Missing Open Graph tags for social media sharing"
+          ],
+          "recommendations": [
+            "Add Twitter Card meta tags for better Twitter sharing",
+            "Add canonical URL to prevent duplicate content issues",
+            "Consider adding structured data (JSON-LD) for rich snippets"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "google-nano-banana-photoshop-killer.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Ensure sufficient color contrast for text readability"
+          ],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "openai-o1-refusal-pattern-analysis.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\openai-o1-refusal-pattern-analysis.html",
+      "timestamp": "2025-09-12T06:34:11.239Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "openai-o1-refusal-pattern-analysis.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (108 chars < 120)",
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "openai-o1-refusal-pattern-analysis.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*#0",
+            "Dark background detected with pattern: background.*#1",
+            "Dark background detected with pattern: background.*#2",
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": []
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "openai-o1-refusal-pattern-analysis.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 2 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "openai-o1-refusal-pattern-analysis.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "iphone-17-ai-demo-failure-analysis.html",
+      "path": "C:\\Users\\alima\\moonlight-deploy\\iphone-17-ai-demo-failure-analysis.html",
+      "timestamp": "2025-09-12T06:34:11.248Z",
+      "overallPassed": false,
+      "agentResults": [
+        {
+          "agent": "Structure Validation Agent",
+          "file": "iphone-17-ai-demo-failure-analysis.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [
+            "Meta description too short (110 chars < 120)",
+            "Heading hierarchy issue detected - avoid skipping heading levels"
+          ],
+          "recommendations": [
+            "Consider using <article> element for article content"
+          ]
+        },
+        {
+          "agent": "Visual Design Validation Agent",
+          "file": "iphone-17-ai-demo-failure-analysis.html",
+          "passed": false,
+          "issues": [
+            "Dark background detected with pattern: background.*rgba\\(0"
+          ],
+          "warnings": [],
+          "recommendations": [
+            "Define consistent button styling"
+          ]
+        },
+        {
+          "agent": "SEO Compliance Agent",
+          "file": "iphone-17-ai-demo-failure-analysis.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Add Twitter Card meta tags for better Twitter sharing",
+            "Consider adding structured data (JSON-LD) for rich snippets",
+            "Consider adding title attributes to 2 images"
+          ]
+        },
+        {
+          "agent": "Accessibility Validation Agent",
+          "file": "iphone-17-ai-demo-failure-analysis.html",
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "recommendations": [
+            "Consider adding ARIA labels for better screen reader support",
+            "Add skip navigation links for keyboard users"
+          ]
+        }
+      ]
+    }
+  ]
+}

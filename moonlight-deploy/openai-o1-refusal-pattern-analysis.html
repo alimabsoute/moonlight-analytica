@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAI's o1 Is Refusing 73% More Requests Than GPT-5—Here's the Dark Pattern - Moonlight Analytica</title>
+    <title>OpenAI O1 Refusal Patterns: Inside Analysis</title>
     
     <!-- Primary Meta Tags -->
     <meta name="title" content="OpenAI's o1 Is Refusing 73% More Requests Than GPT-5—Here's the Dark Pattern">
-    <meta name="description" content="Deep analysis reveals disturbing training patterns in OpenAI's o1 model. The model's refusal rate surged 73% compared to GPT-5, revealing safety theater over actual capability improvements.">
+    <meta name="description" content="Deep analysis reveals OpenAI O1's refusal patterns, exposing systematic biases in AI safety implementations.">
     <meta name="keywords" content="OpenAI o1, GPT-5, AI safety, model refusal, safety theater, AI alignment, OpenAI analysis, machine learning ethics">
     <meta name="author" content="Moonlight Analytica">
     <meta name="robots" content="index, follow">
@@ -31,6 +31,20 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Focus states for accessibility */
+        button:focus, 
+        input:focus, 
+        textarea:focus, 
+        select:focus, 
+        a:focus {
+            outline: 2px solid var(--cyber-blue, #00bfff);
+            outline-offset: 2px;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -44,10 +58,10 @@
             --text-primary: #1f2937;
             --text-secondary: #6b7280;
             --text-muted: #9ca3af;
-            --glass-bg: rgba(0, 0, 0, 0.05);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --shadow-light: rgba(0, 0, 0, 0.1);
-            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-light: rgba(255, 255, 255, 0.1);
+            --shadow-dark: rgba(255, 255, 255, 0.3);
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --info-color: #00bfff;
@@ -81,7 +95,7 @@
             right: 0;
             z-index: 1000;
             padding: 20px 0;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: var(--backdrop-blur);
             border-bottom: 1px solid rgba(135, 206, 235, 0.2);
         }
@@ -350,7 +364,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             overflow: hidden;
         }
@@ -428,7 +442,7 @@
             max-width: 300px;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
         }
         
         .body-image-caption {
@@ -702,7 +716,7 @@
         
         .model-bar:hover {
             transform: scaleX(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
         }
         
         .model-bar.gpt4 {
@@ -723,7 +737,7 @@
         .bar-label {
             color: #fff;
             font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
             font-size: 0.95rem;
         }
         

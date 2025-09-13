@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal - Moonlight Analytica</title>
+    <title>Amazon's Shadow Workforce: 10,000 Contractor Purge</title>
     
     <!-- Primary Meta Tags -->
     <meta name="title" content="The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal">
-    <meta name="description" content="Exclusive analysis reveals how Amazon quietly terminated 10,247 contractors in one week, avoiding headlines and severance packages through employment classification loopholes.">
+    <meta name="description" content="Amazon cuts 10,000 contractors from shadow workforce as company restructures operations for efficiency.">
     <meta name="keywords" content="Amazon layoffs, contractor workforce, shadow workforce, gig economy, employment classification, tech layoffs, corporate cost cutting">
     <meta name="author" content="Moonlight Analytica">
     <meta name="robots" content="index, follow">
@@ -31,6 +31,20 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Focus states for accessibility */
+        button:focus, 
+        input:focus, 
+        textarea:focus, 
+        select:focus, 
+        a:focus {
+            outline: 2px solid var(--cyber-blue, #00bfff);
+            outline-offset: 2px;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -44,10 +58,10 @@
             --text-primary: #1f2937;
             --text-secondary: #6b7280;
             --text-muted: #9ca3af;
-            --glass-bg: rgba(0, 0, 0, 0.05);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --shadow-light: rgba(0, 0, 0, 0.1);
-            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-light: rgba(255, 255, 255, 0.1);
+            --shadow-dark: rgba(255, 255, 255, 0.3);
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --info-color: #00bfff;
@@ -190,7 +204,7 @@
             right: 0;
             z-index: 1000;
             padding: 20px 0;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: var(--backdrop-blur);
             border-bottom: 1px solid rgba(135, 206, 235, 0.2);
         }
@@ -351,7 +365,7 @@
             max-width: 200px;
             max-height: 80px;
             border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
         }
 
         /* Article Introduction */
@@ -385,7 +399,7 @@
             display: block;
             margin: 0 auto;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
         }
         
         .article-content h2 {
@@ -458,7 +472,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             overflow: hidden;
         }
@@ -492,7 +506,7 @@
             background: white;
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
             border-left: 4px solid #f59e0b;
             transition: transform 0.3s ease;
         }
@@ -588,7 +602,7 @@
             max-width: 350px;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
         }
         
         .body-image-caption {
@@ -677,12 +691,12 @@
             position: absolute !important;
             top: 100% !important;
             left: 0 !important;
-            background: rgba(0, 0, 0, 0.95) !important;
+            background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(10px) !important;
             border: 1px solid rgba(135, 206, 235, 0.2) !important;
             border-radius: 8px !important;
             min-width: 180px !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.5) !important;
             opacity: 0 !important;
             visibility: hidden !important;
             transform: translateY(-10px) !important;

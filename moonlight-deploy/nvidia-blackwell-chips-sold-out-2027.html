@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NVIDIA's Blackwell Chips Are Sold Out Until 2027—These 5 Companies Got Them All - Moonlight Analytica</title>
-    <meta name="description" content="NVIDIA's Blackwell B200 chips are sold out until 2027, with just 5 tech giants securing 89% of production worth $57.8B. Inside the secret allocation that will determine AI's future.">
+    <title>NVIDIA Blackwell Chips Sold Out Until 2027</title>
+    <meta name="description" content="NVIDIA's Blackwell B200 chips sold out until 2027. Five tech giants secured 89% of production worth $57.8B.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Focus states for accessibility */
+        button:focus, 
+        input:focus, 
+        textarea:focus, 
+        select:focus, 
+        a:focus {
+            outline: 2px solid var(--cyber-blue, #00bfff);
+            outline-offset: 2px;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -20,10 +34,10 @@
             --text-primary: #1f2937;
             --text-secondary: #6b7280;
             --text-muted: #9ca3af;
-            --glass-bg: rgba(0, 0, 0, 0.05);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --shadow-light: rgba(0, 0, 0, 0.1);
-            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-light: rgba(255, 255, 255, 0.1);
+            --shadow-dark: rgba(255, 255, 255, 0.3);
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --info-color: #00bfff;
@@ -180,7 +194,7 @@
             max-width: 200px;
             max-height: 80px;
             border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
         }
 
         /* Article Introduction */
@@ -256,7 +270,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
         }
 
         .stat-card::before {
@@ -329,7 +343,7 @@
             overflow: hidden;
             transition: all 0.3s ease;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
         }
 
         .company-card::before {
@@ -447,7 +461,7 @@
             margin: 3rem 0;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
         }
 
         .timeline-grid {
@@ -503,7 +517,7 @@
             border: 1px solid rgba(0, 191, 255, 0.3);
             border-radius: 20px;
             padding: 3rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
         }
 
         .performance-matrix h3 {
@@ -535,7 +549,7 @@
             background: var(--bg-secondary);
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
             border-left: 4px solid;
             transition: transform 0.3s ease;
             position: relative;
@@ -546,7 +560,7 @@
             box-shadow: 0 8px 24px rgba(0, 191, 255, 0.2);
         }
 
-        .chip-card.blackwell {
+        .chip-card.Blackwell {
             border-left-color: var(--cyber-green);
         }
 
@@ -626,7 +640,7 @@
             transition: width 2s ease-out;
         }
 
-        .blackwell-ai, .blackwell-memory, .blackwell-power, .blackwell-speed {
+        .Blackwell-ai, .Blackwell-memory, .Blackwell-power, .Blackwell-speed {
             background: linear-gradient(90deg, var(--cyber-green), #34d399);
         }
 
@@ -646,7 +660,7 @@
             font-size: 0.8rem;
             font-weight: 600;
             color: white;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
         }
 
         /* Performance Comparison (Legacy) */
@@ -668,7 +682,7 @@
             padding: 2.5rem;
             text-align: center;
             position: relative;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
         }
 
         .chip-model {
@@ -1329,7 +1343,7 @@
             <p>Why everyone wants these chips: Technical superiority analysis</p>
             
             <div class="comparison-grid">
-                <div class="chip-card blackwell">
+                <div class="chip-card Blackwell">
                     <div class="chip-header">
                         <div class="chip-name">Blackwell B200</div>
                         <div class="chip-badge champion">Champion</div>
@@ -1339,7 +1353,7 @@
                         <div class="metric-row">
                             <div class="metric-name">AI Performance</div>
                             <div class="metric-bar">
-                                <div class="metric-fill blackwell-ai" style="width: 100%" data-width="100"></div>
+                                <div class="metric-fill Blackwell-ai" style="width: 100%" data-width="100"></div>
                                 <span class="metric-value">20 ExaFLOPS</span>
                             </div>
                         </div>
@@ -1347,7 +1361,7 @@
                         <div class="metric-row">
                             <div class="metric-name">Memory Bandwidth</div>
                             <div class="metric-bar">
-                                <div class="metric-fill blackwell-memory" style="width: 95%" data-width="95"></div>
+                                <div class="metric-fill Blackwell-memory" style="width: 95%" data-width="95"></div>
                                 <span class="metric-value">8.0 TB/s</span>
                             </div>
                         </div>
@@ -1355,7 +1369,7 @@
                         <div class="metric-row">
                             <div class="metric-name">Power Efficiency</div>
                             <div class="metric-bar">
-                                <div class="metric-fill blackwell-power" style="width: 90%" data-width="90"></div>
+                                <div class="metric-fill Blackwell-power" style="width: 90%" data-width="90"></div>
                                 <span class="metric-value">4x vs H100</span>
                             </div>
                         </div>
@@ -1363,7 +1377,7 @@
                         <div class="metric-row">
                             <div class="metric-name">Training Speed</div>
                             <div class="metric-bar">
-                                <div class="metric-fill blackwell-speed" style="width: 100%" data-width="100"></div>
+                                <div class="metric-fill Blackwell-speed" style="width: 100%" data-width="100"></div>
                                 <span class="metric-value">30x faster</span>
                             </div>
                         </div>

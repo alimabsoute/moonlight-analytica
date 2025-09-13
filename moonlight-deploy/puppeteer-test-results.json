@@ -1,0 +1,440 @@
+{
+  "timestamp": "2025-09-12T06:23:06.536Z",
+  "results": [
+    {
+      "success": false,
+      "article": "nvidia-blackwell-chips-sold-out-2027.html",
+      "totalTests": 7,
+      "passedTests": 5,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"NVIDIA's Blackwell Chips Are Sold Out Until 2027—These 5 Companies Got Them All - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 101chars, Description: 181chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 6, Paragraphs: 8, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 0, With Alt: 0, Loaded: 0"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 630ms, DOM: 537ms, Resources: 2"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": true,
+          "details": "Focusable: 4, Heading hierarchy: true, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "intel-secret-plan-split-500b-semiconductor-war.html",
+      "totalTests": 7,
+      "passedTests": 5,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"Intel's Secret Plan to Split in Two Will Trigger a $500B Semiconductor War - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 96chars, Description: 170chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 1, Paragraphs: 8, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 0, With Alt: 0, Loaded: 0"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 160ms, DOM: 149ms, Resources: 1"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": true,
+          "details": "Focusable: 1, Heading hierarchy: true, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "ai-eating-own-tail-chatgpt-dumber-2026.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"AI's Digital Inbreeding Crisis: The Recursive Collapse Making ChatGPT Dumber - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 98chars, Description: 184chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 15, Paragraphs: 19, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 2, With Alt: 2, Loaded: 2"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 252ms, DOM: 103ms, Resources: 3"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 5, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "meta-google-apple-twitter-killers-march-2026.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"The March 2026 Twitter Apocalypse: Meta, Google, Apple Launch Coordinated Attack - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 102chars, Description: 154chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 14, Paragraphs: 15, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 2, With Alt: 2, Loaded: 2"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 177ms, DOM: 117ms, Resources: 3"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 5, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "vision-pro-2-ditching-500-feature-wanted.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"Vision Pro 2: Apple's Ditching the $500 Feature Nobody Wanted to Lose - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 91chars, Description: 153chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 8, Paragraphs: 13, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 2, With Alt: 2, Loaded: 2"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 168ms, DOM: 124ms, Resources: 3"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 5, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "big-tech-50m-lobbying-california-ai-bill.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"The $50 Million Regulatory Capture: How Big Tech Killed California's AI Safety Bill - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 105chars, Description: 213chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 13, Paragraphs: 18, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 2, With Alt: 2, Loaded: 2"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 195ms, DOM: 127ms, Resources: 3"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 5, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "amazon-shadow-workforce-purge-10000-contractors.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 91chars, Description: 175chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 13, Paragraphs: 16, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 2, With Alt: 2, Loaded: 2"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 190ms, DOM: 132ms, Resources: 3"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 5, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "google-nano-banana-photoshop-killer.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"The 'Photoshop Killer' That Went Viral Before Google Even Announced It - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 92chars, Description: 0chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 18, Paragraphs: 32, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 1, With Alt: 1, Loaded: 1"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 230ms, DOM: 168ms, Resources: 1"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 6, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "openai-o1-refusal-pattern-analysis.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"OpenAI's o1 Is Refusing 73% More Requests Than GPT-5—Here's the Dark Pattern - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 98chars, Description: 189chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 12, Paragraphs: 24, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 0, With Alt: 0, Loaded: 0"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 166ms, DOM: 164ms, Resources: 1"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 5, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    },
+    {
+      "success": false,
+      "article": "iphone-17-ai-demo-failure-analysis.html",
+      "totalTests": 7,
+      "passedTests": 4,
+      "tests": [
+        {
+          "name": "Page Load",
+          "passed": true,
+          "details": "Title: \"iPhone 17's AI Demo Failed Live—And Apple Hoped You Wouldn't Notice - Moonlight Analytica\", Has content: true"
+        },
+        {
+          "name": "SEO Elements",
+          "passed": false,
+          "details": "Title: 89chars, Description: 198chars, H1: true"
+        },
+        {
+          "name": "Content Structure",
+          "passed": true,
+          "details": "Headers: 14, Paragraphs: 17, Sections: 0"
+        },
+        {
+          "name": "Images",
+          "passed": true,
+          "details": "Images: 0, With Alt: 0, Loaded: 0"
+        },
+        {
+          "name": "Performance",
+          "passed": true,
+          "details": "Load: 171ms, DOM: 161ms, Resources: 1"
+        },
+        {
+          "name": "Mobile Responsiveness",
+          "passed": false,
+          "details": "Error: this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "Accessibility",
+          "passed": false,
+          "details": "Focusable: 5, Heading hierarchy: false, Skip links: false"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "passed": 0,
+    "failed": 10
+  }
+}
