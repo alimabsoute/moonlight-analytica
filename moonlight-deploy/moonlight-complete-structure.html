@@ -1480,6 +1480,229 @@
             }
         }
         
+        /* Gallery Hover Carousel Styles */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 24px;
+            transition: transform 0.5s ease;
+            padding: 0 12px;
+        }
+
+        .carousel-nav-btn {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            color: #00bfff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .carousel-nav-btn:hover:not(:disabled) {
+            background: rgba(0, 191, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .carousel-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .gallery-card {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            flex-shrink: 0;
+            border-radius: 24px;
+            overflow: hidden;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 191, 255, 0.2);
+            border-color: rgba(0, 191, 255, 0.4);
+        }
+
+        .gallery-card-image {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+
+        .gallery-card:hover .gallery-card-image {
+            height: 50%;
+        }
+
+        .gallery-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-card:hover .gallery-card-image img {
+            transform: scale(1.1);
+        }
+
+        .gallery-card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .gallery-card:hover .gallery-card-overlay {
+            opacity: 1;
+        }
+
+        .gallery-card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(15, 15, 30, 0.98));
+            backdrop-filter: blur(20px);
+            transform: translateY(100%);
+            transition: all 0.5s ease;
+            opacity: 0;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .gallery-card:hover .gallery-card-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .gallery-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+        }
+
+        .gallery-card-description {
+            color: #87ceeb;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .gallery-card-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 191, 255, 0.2);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            color: #00bfff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .gallery-card-btn:hover {
+            background: rgba(0, 191, 255, 0.3);
+            transform: rotate(-45deg);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+        }
+
+        .gallery-card-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        /* Flex utility classes */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .justify-between { justify-content: space-between; }
+        .items-end { align-items: flex-end; }
+        .gap-2 { gap: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .max-w-2xl { max-width: 42rem; }
+        .container {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
+        }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+
+        @media (min-width: 768px) {
+            .md\\:mb-14 { margin-bottom: 3.5rem; }
+            .md\\:flex-row { flex-direction: row; }
+            .md\\:items-end { align-items: flex-end; }
+            .md\\:mt-0 { margin-top: 0; }
+        }
+
+        @media (min-width: 1024px) {
+            .lg\\:mb-16 { margin-bottom: 4rem; }
+        }
+
+        /* Mobile Responsive for Carousel */
+        @media (max-width: 768px) {
+            .carousel-track {
+                gap: 16px;
+                padding: 0 8px;
+            }
+
+            .gallery-card {
+                width: 300px;
+                height: 300px;
+            }
+
+            .gallery-card-content {
+                padding: 20px;
+            }
+
+            .gallery-card-title {
+                font-size: 1.1rem;
+            }
+
+            .gallery-card-description {
+                font-size: 0.85rem;
+                -webkit-line-clamp: 2;
+            }
+        }
+
         /* Products Section */
         .products-grid {
             display: grid;
@@ -2611,78 +2834,117 @@
     
     <!-- Products Section -->
     <section class="section" id="products">
-        <h2 class="section-title">Our Products</h2>
-        <div class="products-grid-new">
-            <!-- PhynxTimer Card -->
-            <div class="product-card-new" data-product="phynxtimer">
-                <div class="product-header">
-                    <div class="product-icon">
-                        <img src="/images/phynxtimer_card_logo.png" alt="PhynxTimer" class="product-logo floating-logo" />
-                    </div>
-                    <div class="product-status live-status">Live</div>
+        <div class="container mx-auto px-6">
+            <div class="mb-8 flex flex-col justify-between md:mb-14 md:flex-row md:items-end lg:mb-16">
+                <div class="max-w-2xl">
+                    <h2 class="section-title">Featured Projects <span class="text-gray-500 text-sm sm:text-base lg:text-xl">Explore our collection of innovative solutions and cutting-edge technologies designed to transform your business.</span></h2>
                 </div>
-                <h3 class="product-name">PhynxTimer</h3>
-                <p class="product-tagline">Intelligent productivity timer with team collaboration & insights</p>
-                <p class="product-desc">
-                    Advanced time tracking and analytics platform designed for modern teams and professionals.
-                </p>
-                <div class="product-features">
-                    <div class="feature">⚡ Real-time tracking</div>
-                    <div class="feature">📊 Team insights</div>
-                    <div class="feature">🤝 Collaboration tools</div>
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <button id="carousel-prev" class="carousel-nav-btn" disabled>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <button id="carousel-next" class="carousel-nav-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </button>
                 </div>
-                <button class="product-cta" onclick="window.open('/phynxtimer', '_blank')">
-                    <span>Visit PhynxTimer</span>
-                    <div class="cta-arrow">→</div>
-                </button>
             </div>
 
-            <!-- Project: Janus Card -->
-            <div class="product-card-new" data-product="janus">
-                <div class="product-header">
-                    <div class="product-icon custom-icon janus-icon">
-                        <img src="/images/janus_wordmark_bars.svg" alt="Project: Janus" class="product-logo pulsing-logo" />
+            <div class="carousel-container">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- PhynxTimer Card -->
+                    <div class="gallery-card" data-product="phynxtimer">
+                        <div class="gallery-card-image">
+                            <img src="https://pub-940ccf6255b54fa799a9b01050e6c227.r2.dev/dashboard-02.png" alt="PhynxTimer" />
+                            <div class="gallery-card-overlay"></div>
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="product-status live-status">Live</div>
+                            <h3 class="gallery-card-title">PhynxTimer</h3>
+                            <p class="gallery-card-description">Advanced time tracking and analytics platform designed for modern teams and professionals with intelligent insights.</p>
+                            <button class="gallery-card-btn" onclick="window.open('/phynxtimer', '_blank')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="product-status beta-status">Beta</div>
-                </div>
-                <h3 class="product-name">Project: Janus</h3>
-                <p class="product-tagline">Dual-perspective AI for tracking, counting, and precision decisioning</p>
-                <p class="product-desc">
-                    Revolutionary platform combining visual analysis with intelligent tracking capabilities.
-                </p>
-                <div class="product-features">
-                    <div class="feature">👁️ Dual perspective</div>
-                    <div class="feature">📊 Precision tracking</div>
-                    <div class="feature">🧠 AI decisioning</div>
-                </div>
-                <button class="product-cta" onclick="window.location.href='/janus'">
-                    <span>Request Beta Access</span>
-                    <div class="cta-arrow">→</div>
-                </button>
-            </div>
 
-            <!-- Insight Edge Card -->
-            <div class="product-card-new" data-product="insight-edge">
-                <div class="product-header">
-                    <div class="product-icon custom-icon">
-                        <img src="/images/insight_edge_monitor.svg" alt="Insight Edge" class="product-logo scaling-logo" />
+                    <!-- Project: Janus Card -->
+                    <div class="gallery-card" data-product="janus">
+                        <div class="gallery-card-image">
+                            <img src="https://pub-940ccf6255b54fa799a9b01050e6c227.r2.dev/dashboard-gradient.png" alt="Project: Janus" />
+                            <div class="gallery-card-overlay"></div>
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="product-status beta-status">Beta</div>
+                            <h3 class="gallery-card-title">Project: Janus</h3>
+                            <p class="gallery-card-description">Revolutionary platform combining visual analysis with intelligent tracking capabilities and dual-perspective AI decisioning.</p>
+                            <button class="gallery-card-btn" onclick="window.location.href='/janus'">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="product-status beta-status coming-soon">Coming Soon</div>
+
+                    <!-- Insight Edge Card -->
+                    <div class="gallery-card" data-product="insight-edge">
+                        <div class="gallery-card-image">
+                            <img src="https://pub-940ccf6255b54fa799a9b01050e6c227.r2.dev/featured-01.png" alt="Insight Edge" />
+                            <div class="gallery-card-overlay"></div>
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="product-status beta-status coming-soon">Coming Soon</div>
+                            <h3 class="gallery-card-title">Insight Edge</h3>
+                            <p class="gallery-card-description">Next-gen analytics platform with charts on the left and instant actionable insights on the right for immediate visual feedback.</p>
+                            <button class="gallery-card-btn" onclick="window.location.href='/insight-edge'">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Computer Vision Technology Card -->
+                    <div class="gallery-card" data-product="computer-vision">
+                        <div class="gallery-card-image">
+                            <img src="https://pub-940ccf6255b54fa799a9b01050e6c227.r2.dev/featured-06.png" alt="Computer Vision Technology" />
+                            <div class="gallery-card-overlay"></div>
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="product-status beta-status">Research</div>
+                            <h3 class="gallery-card-title">Computer Vision Technology</h3>
+                            <p class="gallery-card-description">Powerful image recognition and processing capabilities that allow AI systems to analyze, understand, and interpret visual information from the world.</p>
+                            <button class="gallery-card-btn" onclick="window.location.href='#'">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Neural Network Architecture Card -->
+                    <div class="gallery-card" data-product="neural-network">
+                        <div class="gallery-card-image">
+                            <img src="https://pub-940ccf6255b54fa799a9b01050e6c227.r2.dev/Screenshot%202025-08-05%20at%2021-15-55%20Ruixen%20-%20Beautifully%20crafted%20UI%20components%20to%20elevate%20your%20web%20projects.png" alt="Neural Network Architecture" />
+                            <div class="gallery-card-overlay"></div>
+                        </div>
+                        <div class="gallery-card-content">
+                            <div class="product-status beta-status">Research</div>
+                            <h3 class="gallery-card-title">Neural Network Architecture</h3>
+                            <p class="gallery-card-description">Sophisticated AI models inspired by human brain structure, capable of solving complex problems through deep learning and pattern recognition.</p>
+                            <button class="gallery-card-btn" onclick="window.location.href='#'">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="product-name">Insight Edge</h3>
-                <p class="product-tagline">Next-gen analytics platform—charts on the left, instant actionable insights on the right</p>
-                <p class="product-desc">
-                    Revolutionary analytics experience with immediate visual feedback and actionable recommendations.
-                </p>
-                <div class="product-features">
-                    <div class="feature">📈 Real-time charts</div>
-                    <div class="feature">⚡ Instant insights</div>
-                    <div class="feature">🎯 Actionable data</div>
-                </div>
-                <button class="product-cta" onclick="window.location.href='/insight-edge'">
-                    <span>Join Waitlist</span>
-                    <div class="cta-arrow">→</div>
-                </button>
             </div>
         </div>
     </section>
@@ -3655,6 +3917,193 @@
         }
         
         reportPerformanceMetrics();
+
+        // Gallery Hover Carousel Functionality
+        class GalleryCarousel {
+            constructor() {
+                this.track = document.getElementById('carousel-track');
+                this.prevBtn = document.getElementById('carousel-prev');
+                this.nextBtn = document.getElementById('carousel-next');
+                this.cards = document.querySelectorAll('.gallery-card');
+                this.currentIndex = 0;
+                this.cardsToShow = this.getCardsToShow();
+                this.cardWidth = 350;
+                this.gap = 24;
+
+                this.init();
+                this.bindEvents();
+            }
+
+            getCardsToShow() {
+                const width = window.innerWidth;
+                if (width < 768) return 1;
+                if (width < 1024) return 2;
+                return 3;
+            }
+
+            init() {
+                this.updateButtons();
+                this.setInitialPosition();
+            }
+
+            bindEvents() {
+                this.prevBtn.addEventListener('click', () => this.goToPrevious());
+                this.nextBtn.addEventListener('click', () => this.goToNext());
+
+                // Handle resize
+                window.addEventListener('resize', () => {
+                    const newCardsToShow = this.getCardsToShow();
+                    if (newCardsToShow !== this.cardsToShow) {
+                        this.cardsToShow = newCardsToShow;
+                        this.currentIndex = Math.min(this.currentIndex, this.getMaxIndex());
+                        this.updatePosition();
+                        this.updateButtons();
+                    }
+                });
+
+                // Touch/swipe support
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+
+                this.track.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                });
+
+                this.track.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.touches[0].clientX;
+                    e.preventDefault();
+                });
+
+                this.track.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+
+                    const diff = startX - currentX;
+                    const threshold = 50;
+
+                    if (Math.abs(diff) > threshold) {
+                        if (diff > 0) {
+                            this.goToNext();
+                        } else {
+                            this.goToPrevious();
+                        }
+                    }
+
+                    isDragging = false;
+                });
+
+                // Analytics tracking
+                this.cards.forEach((card, index) => {
+                    card.addEventListener('click', () => {
+                        const productName = card.dataset.product;
+                        if (typeof MoonlightAnalytics !== 'undefined') {
+                            MoonlightAnalytics.track('product_card_click', {
+                                category: 'engagement',
+                                label: productName,
+                                value: 1,
+                                position: index + 1,
+                                user_segment: 'interested',
+                                product_interest: productName
+                            });
+                        }
+                    });
+                });
+            }
+
+            getMaxIndex() {
+                return Math.max(0, this.cards.length - this.cardsToShow);
+            }
+
+            setInitialPosition() {
+                this.updatePosition();
+            }
+
+            updatePosition() {
+                const translateX = -(this.currentIndex * (this.cardWidth + this.gap));
+                this.track.style.transform = `translateX(${translateX}px)`;
+            }
+
+            updateButtons() {
+                const maxIndex = this.getMaxIndex();
+                this.prevBtn.disabled = this.currentIndex <= 0;
+                this.nextBtn.disabled = this.currentIndex >= maxIndex;
+            }
+
+            goToPrevious() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                    this.updatePosition();
+                    this.updateButtons();
+
+                    // Analytics
+                    if (typeof MoonlightAnalytics !== 'undefined') {
+                        MoonlightAnalytics.track('carousel_navigation', {
+                            category: 'engagement',
+                            label: 'previous',
+                            value: this.currentIndex,
+                            user_segment: 'engaged'
+                        });
+                    }
+                }
+            }
+
+            goToNext() {
+                const maxIndex = this.getMaxIndex();
+                if (this.currentIndex < maxIndex) {
+                    this.currentIndex++;
+                    this.updatePosition();
+                    this.updateButtons();
+
+                    // Analytics
+                    if (typeof MoonlightAnalytics !== 'undefined') {
+                        MoonlightAnalytics.track('carousel_navigation', {
+                            category: 'engagement',
+                            label: 'next',
+                            value: this.currentIndex,
+                            user_segment: 'engaged'
+                        });
+                    }
+                }
+            }
+        }
+
+        // Initialize carousel when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const carousel = new GalleryCarousel();
+
+            // Auto-play functionality (optional)
+            let autoPlayInterval;
+            const startAutoPlay = () => {
+                autoPlayInterval = setInterval(() => {
+                    if (carousel.currentIndex < carousel.getMaxIndex()) {
+                        carousel.goToNext();
+                    } else {
+                        carousel.currentIndex = 0;
+                        carousel.updatePosition();
+                        carousel.updateButtons();
+                    }
+                }, 5000);
+            };
+
+            const stopAutoPlay = () => {
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                    autoPlayInterval = null;
+                }
+            };
+
+            // Auto-play controls
+            const carouselContainer = document.querySelector('.carousel-container');
+            if (carouselContainer) {
+                carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+                carouselContainer.addEventListener('mouseleave', startAutoPlay);
+
+                // Start auto-play initially (uncomment if desired)
+                // startAutoPlay();
+            }
+        });
     </script>
 </body>
 </html>

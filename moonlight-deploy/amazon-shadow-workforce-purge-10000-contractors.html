@@ -130,7 +130,7 @@
             color: #7f8c8d;
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 3px solid #3498db !important;
+            border-bottom: none;
         }
         
         .hero-image {
@@ -169,10 +169,10 @@
         }
         
         .separator-line {
-            width: 60px;
-            height: 4px;
-            background: #3498db;
-            margin: 20px auto;
+            width: 100%;
+            height: 3px;
+            background: #dc2626;
+            margin: 1.5rem 0;
             border-radius: 2px;
         }
         
@@ -182,18 +182,11 @@
             padding: 20px;
         }
         
-        .company-logo-section img {
-            max-width: 300px !important;
-            height: auto !important;
-            opacity: 0.8 !important;
-            transition: opacity 0.3s ease !important;
-            display: block !important;
-            margin: 0 auto !important;
-            background: transparent !important;
-        }
-        
-        .company-logo-section img:hover {
-            opacity: 1 !important;
+        .company-logo-image {
+            max-width: 200px;
+            max-height: 80px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
         }
         
         /* Navigation */
@@ -346,26 +339,13 @@
             font-size: 1.2rem;
         }
 
-        /* Red Separator Line */
-        .separator-line {
-            width: 100%;
-            height: 3px;
-            background-color: #dc2626;
-            margin: 30px 0;
-            border-radius: 2px;
-        }
-
         /* Company Logo Section */
         .company-logo-section {
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        .company-logo-image {
-            max-width: 200px;
-            max-height: 80px;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
         }
 
         /* Article Introduction */
@@ -763,7 +743,7 @@
                         <a href="news.html" class="dropdown-item">News</a>
                         <a href="insights.html" class="dropdown-item">Insights</a>
                         <a href="trends.html" class="dropdown-item">Trends</a>
-                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                        <a href="games.html" class="dropdown-item">Games</a>
                     </div>
                 </li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>

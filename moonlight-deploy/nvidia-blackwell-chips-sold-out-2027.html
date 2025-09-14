@@ -145,6 +145,63 @@
             text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
         }
 
+        /* Dropdown Navigation */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-dropdown-toggle:hover {
+            color: var(--cyber-blue);
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 8px;
+            padding: 10px 0;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 191, 255, 0.1);
+            color: var(--cyber-blue);
+            transform: translateX(5px);
+        }
+
         /* Article Container */
         .article-container {
             max-width: 1200px;
@@ -860,8 +917,8 @@
         .separator-line {
             width: 100%;
             height: 3px;
-            background: #3498db;
-            margin: 30px 0;
+            background: #dc2626;
+            margin: 1.5rem 0;
             border-radius: 2px;
         }
         
@@ -933,9 +990,18 @@
         <div class="nav-container">
             <a href="moonlight-complete-structure.html" class="logo">Moonlight Analytica</a>
             <ul class="nav-links">
-                <li><a href="#" class="nav-link">Insights</a></li>
-                <li><a href="#" class="nav-link">Products</a></li>
-                <li><a href="#" class="nav-link">Contact</a></li>
+                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
+                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                        <a href="games.html" class="dropdown-item">Games</a>
+                    </div>
+                </li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
         </div>
     </nav>
@@ -996,7 +1062,7 @@
             
             <!-- INFOGRAPHIC: Allocation Breakdown -->
             <div class="hero-image">
-                <svg viewBox="0 0 600 350" style="max-width: 400px; height: auto;">
+                <svg viewBox="0 0 600 350" style="max-width: 700px; width: 100%; height: auto;">
                     <!-- Background -->
                     <rect width="600" height="350" fill="#1a1a1a" rx="10"/>
                     
@@ -1036,7 +1102,7 @@
 
             <!-- INFOGRAPHIC: Big 5 Power Dynamics -->
             <div class="hero-image">
-                <svg viewBox="0 0 500 300" style="max-width: 350px; height: auto;">
+                <svg viewBox="0 0 500 300" style="max-width: 650px; width: 100%; height: auto;">
                     <!-- Background -->
                     <rect width="500" height="300" fill="#1a1a1a" rx="10"/>
                     
@@ -1088,7 +1154,7 @@
 
             <!-- INFOGRAPHIC: Market Control Structure -->
             <div class="hero-image">
-                <svg viewBox="0 0 600 350" style="max-width: 400px; height: auto;">
+                <svg viewBox="0 0 600 350" style="max-width: 700px; width: 100%; height: auto;">
                     <!-- Background -->
                     <rect width="600" height="350" fill="#1a1a1a" rx="10"/>
                     
@@ -1474,7 +1540,7 @@
             
             <!-- INFOGRAPHIC: Performance Breakthrough -->
             <div class="hero-image">
-                <svg viewBox="0 0 500 300" style="max-width: 380px; height: auto;">
+                <svg viewBox="0 0 500 300" style="max-width: 680px; width: 100%; height: auto;">
                     <!-- Background -->
                     <rect width="500" height="300" fill="#1a1a1a" rx="10"/>
                     
@@ -1522,7 +1588,7 @@
             
             <!-- INFOGRAPHIC: The Wait List Crisis -->
             <div class="hero-image">
-                <svg viewBox="0 0 550 300" style="max-width: 400px; height: auto;">
+                <svg viewBox="0 0 550 300" style="max-width: 700px; width: 100%; height: auto;">
                     <!-- Background -->
                     <rect width="550" height="300" fill="#1a1a1a" rx="10"/>
                     
@@ -1569,7 +1635,7 @@
 
             <!-- INFOGRAPHIC: Ripple Effects Across Industries -->
             <div class="hero-image">
-                <svg viewBox="0 0 600 350" style="max-width: 420px; height: auto;">
+                <svg viewBox="0 0 600 350" style="max-width: 720px; width: 100%; height: auto;">
                     <!-- Background -->
                     <rect width="600" height="350" fill="#1a1a1a" rx="10"/>
                     

@@ -167,6 +167,65 @@
             text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
             transform: translateY(-2px);
         }
+
+        /* Dropdown Navigation */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-dropdown-toggle:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 8px;
+            padding: 10px 0;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 191, 255, 0.1);
+            color: var(--neon-blue);
+            transform: translateX(5px);
+        }
         
         /* Article Styles */
         .article-container {
@@ -676,7 +735,15 @@
             <ul class="nav-menu">
                 <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
                 <li><a href="solutions.html" class="nav-link">Solutions</a></li>
-                <li><a href="news.html" class="nav-link">News</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">Content Hub</a>
+                    <div class="dropdown-menu">
+                        <a href="news.html" class="dropdown-item">News</a>
+                        <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="trends.html" class="dropdown-item">Trends</a>
+                        <a href="games.html" class="dropdown-item">Games</a>
+                    </div>
+                </li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
         </div>

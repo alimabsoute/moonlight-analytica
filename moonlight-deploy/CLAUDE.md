@@ -7,17 +7,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## MOONLIGHT ANALYTICA - LIVE PRODUCTION WEBSITE
 - **Project Name**: Moonlight Analytica  
 - **Live Production URL**: https://moonlightanalytica.com
-- **Current Deployment URL**: https://moonlight-deploy-qxrzdiuyl-alimabsoute-3065s-projects.vercel.app
+- **Current Deployment URL**: https://moonlight-deploy-2h6uthf6b-alimabsoute-3065s-projects.vercel.app
 - **Deployment Method**: Vercel from `moonlight-deploy/` directory
-- **Last Deployment**: January 7, 2025 (Article system updates)
-- **Status**: Active production website with ongoing development
+- **Last Deployment**: September 13, 2025 (Navigation structure fixes)
+- **Status**: Active production website with corrected navigation structure
 
 ## CRITICAL DEPLOYMENT FACTS
 - **Deployment Directory**: `C:\Users\alima\moonlight-deploy\`
 - **Deployment Command**: `cd moonlight-deploy && vercel --prod --yes`
 - **Domain Mapping**: moonlightanalytica.com → Vercel deployment
 - **Project Type**: Long-term ongoing website project
-- **Latest Features**: Google-style article headers, updated company logos, news system
+- **Latest Features**: Google-style article headers, updated company logos, news system, corrected navigation structure with Content Hub dropdown (including Games)
 
 ## KEY FILES & LOCATIONS
 - **Main Site**: `moonlight-complete-structure.html` (homepage)
