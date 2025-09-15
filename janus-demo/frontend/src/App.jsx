@@ -9,6 +9,8 @@ const API_BASE = "http://localhost:8000";
 
 export default function App(){
   const [tab, setTab] = useHashTabs("tracker");
+  const [toast,setToast] = useState(null);
+  const showToast = (msg)=>{ setToast(msg); setTimeout(()=>setToast(null),2000); };
   const [sessions,setSessions]=useState([]);
   const [currentSession,setCurrentSession]=useState(null);
   const [counts,setCounts]=useState([]);
@@ -53,13 +55,24 @@ export default function App(){
           <button onClick={() => { location.hash = "#counter"; }} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="counter"?"#fff":"#f3f4f6"}} id="tab-counter">Counter</button>
           <button onClick={() => { location.hash = "#analytics"; }} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="analytics"?"#fff":"#f3f4f6"}} id="tab-analytics">Analytics</button>
           <button
-            onClick={async()=>{ try { await seedDemo(); } catch(e){} window.location.href='/?auto=1#analytics'; }}
+            onClick={async()=>{ try { await seedDemo(); showToast("Demo reseeded!"); } catch(e){ showToast("Seed failed"); } window.location.href='/?auto=1#analytics'; }}
             style={{marginLeft:8,padding:'6px 12px',border:'1px solid #e5e7eb',borderRadius:8}}
           >
             Start Demo
           </button>
         </div>
       </header>
+
+      {/* tiny toast */}
+      {toast ? (
+        <div role="status" aria-live="polite" style={{
+          position:"fixed", right:16, bottom:16, padding:"10px 14px",
+          background:"#111827", color:"#fff", borderRadius:8,
+          boxShadow:"0 6px 20px rgba(0,0,0,.25)", zIndex:9999
+        }}>
+          {toast}
+        </div>
+      ) : null}
 
       {tab==="tracker" && (
         <div style={{maxWidth:1200, margin:"0 auto", padding:"16px"}}>
