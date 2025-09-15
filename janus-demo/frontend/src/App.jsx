@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useHashTabs } from "./useHashTabs";
+import { seedDemo } from "./api";
 import Analytics from "./Analytics";
 import Tracker from "./Tracker";
 import "./App.css";
@@ -50,7 +51,13 @@ export default function App(){
         <div style={{marginTop:12}}>
           <button onClick={() => { location.hash = "#tracker"; }} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="tracker"?"#fff":"#f3f4f6"}} id="tab-tracker">Tracker</button>
           <button onClick={() => { location.hash = "#counter"; }} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="counter"?"#fff":"#f3f4f6"}} id="tab-counter">Counter</button>
-          <button onClick={() => { location.hash = "#analytics"; }} style={{padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="analytics"?"#fff":"#f3f4f6"}} id="tab-analytics">Analytics</button>
+          <button onClick={() => { location.hash = "#analytics"; }} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="analytics"?"#fff":"#f3f4f6"}} id="tab-analytics">Analytics</button>
+          <button
+            onClick={async()=>{ try { await seedDemo(); } catch(e){} window.location.href='/?auto=1#analytics'; }}
+            style={{marginLeft:8,padding:'6px 12px',border:'1px solid #e5e7eb',borderRadius:8}}
+          >
+            Start Demo
+          </button>
         </div>
       </header>
 
