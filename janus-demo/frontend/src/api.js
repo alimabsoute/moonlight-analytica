@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000';
+export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 async function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 async function fetchWithRetry(url, opts={}, tries=3, backoff=[300,800,1500]){
@@ -29,7 +29,6 @@ export async function getSeriesCsv(hours){
 }
 
 export function parseSeries(csvText){
-  // very light CSV -> array parsing
   const [header, ...rows] = csvText.trim().split(/\r?\n/);
   const cols = header.split(',');
   return rows.map(r=>{
