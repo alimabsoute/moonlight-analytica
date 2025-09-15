@@ -132,19 +132,6 @@ def add_count(sid: int):
         conn.commit()
         return jsonify({"session_id": sid, "count_value": int(data["count_value"])})
 
-def last_hours_series(hours: int = 168):
-    with db() as conn:
-        last = conn.execute("SELECT timestamp FROM counts ORDER BY timestamp DESC LIMIT 1").fetchone()
-        if not last: return []
-        last_ts = last["timestamp"]
-        rows = conn.execute("""
-          SELECT substr(timestamp,1,13) as hour, AVG(count_value) as avg_val, MAX(count_value) as peak, SUM(count_value) as throughput
-          FROM counts
-          WHERE timestamp > datetime(?, '-' || ? || ' hours')
-          GROUP BY substr(timestamp,1,13)
-          ORDER BY hour ASC
-        """, (last_ts, hours)).fetchall()
-        return rows
 
 @app.route("/count", methods=["POST"])
 def record_count():
@@ -164,8 +151,18 @@ def record_count():
 
 @app.route("/kpis")
 def kpis():
-    hours = parse_hours(168.0)
-    rows = last_hours_series(hours)
+    hours = parse_hours()
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+
+    with db() as conn:
+        rows = conn.execute("""
+          SELECT substr(timestamp,1,13) as hour, AVG(count_value) as avg_val, MAX(count_value) as peak, SUM(count_value) as throughput
+          FROM counts
+          WHERE timestamp > ?
+          GROUP BY substr(timestamp,1,13)
+          ORDER BY hour ASC
+        """, (since.isoformat(),)).fetchall()
+
     if not rows: return jsonify({"error":"no data"}), 404
     avg_people = sum(r["avg_val"] for r in rows)/len(rows)
     peak_people = max(r["peak"] for r in rows)
@@ -179,8 +176,18 @@ def kpis():
 
 @app.route("/series.csv")
 def series_csv():
-    hours = parse_hours(168.0)
-    rows = last_hours_series(hours)
+    hours = parse_hours()
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+
+    with db() as conn:
+        rows = conn.execute("""
+          SELECT substr(timestamp,1,13) as hour, AVG(count_value) as avg_val, MAX(count_value) as peak, SUM(count_value) as throughput
+          FROM counts
+          WHERE timestamp > ?
+          GROUP BY substr(timestamp,1,13)
+          ORDER BY hour ASC
+        """, (since.isoformat(),)).fetchall()
+
     if not rows: return Response("hour,avg_val,peak,throughput\n", mimetype="text/csv")
     header = "hour,avg_val,peak,throughput\n"
     body = "\n".join([f"{r['hour']}:00,{round(r['avg_val'],2)},{int(r['peak'])},{int(r['throughput'])}" for r in rows])
