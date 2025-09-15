@@ -1,14 +1,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { getKpis, getSeriesCsv, parseSeries, seedDemo } from './api';
+import { API_BASE, getKpis, getSeriesCsv, parseSeries, seedDemo } from './api';
 
 export default function Analytics(){
-  const [hours, setHours] = useState(0.167); // 10 minutes default
+  // Default to 10 minutes so the live view looks active
+  const [hours, setHours] = useState(0.167);
   const [kpis, setKpis] = useState(null);
   const [series, setSeries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(false);
+
+  // Parse URL params once on mount to optionally enable auto-refresh & range
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    if (sp.get('auto') === '1') setAutoRefresh(true);
+    const rng = (sp.get('range') || '').toLowerCase();
+    if (rng === '24h') setHours(24);
+    else if (rng === '7d') setHours(168);
+    else if (rng === '30d') setHours(720);
+    else if (rng === '10m') setHours(0.167);
+  }, []);
 
   const chartData = useMemo(() => {
     return series.map(d => ({ ...d, count_value: Number(d.count_value) }));
@@ -39,13 +51,21 @@ export default function Analytics(){
     }
   }
 
+  // initial & on-range change
   useEffect(() => { reload(); }, [hours]);
 
+  // auto-refresh interval
   useEffect(() => {
     if(!autoRefresh) return;
     const id = setInterval(reload, 5000);
     return () => clearInterval(id);
   }, [autoRefresh, hours]);
+
+  const csvHref = useMemo(() => {
+    const url = new URL(`${API_BASE}/series.csv`);
+    if (hours != null) url.searchParams.set('hours', String(hours));
+    return url.toString();
+  }, [hours]);
 
   return (
     <div style={{padding:16}}>
@@ -82,7 +102,13 @@ export default function Analytics(){
             Auto-refresh (5s)
           </label>
 
-          <button onClick={onResetDemo} disabled={loading} style={{padding:'6px 10px',border:'1px solid #ef4444',color:'#ef4444',borderRadius:8}}>
+          <a href={csvHref} target='_blank' rel='noreferrer'
+             style={{padding:'6px 10px',border:'1px solid #e5e7eb',borderRadius:8,textDecoration:'none',color:'inherit'}}>
+            Export CSV
+          </a>
+
+          <button onClick={onResetDemo} disabled={loading}
+                  style={{padding:'6px 10px',border:'1px solid #ef4444',color:'#ef4444',borderRadius:8}}>
             Reset Demo Data
           </button>
         </div>
