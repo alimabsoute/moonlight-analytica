@@ -3,6 +3,28 @@ from datetime import datetime, timedelta, timezone
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 
+def parse_hours(default=168.0):
+    """
+    Parse ?hours=… from the query string.
+    Accepts decimals (e.g. 0.167) and shorthands like 10m, 24h, 7d.
+    Falls back to `default` on bad/missing input.
+    """
+    raw = request.args.get("hours")
+    if raw is None:
+        return float(default)
+
+    v = str(raw).strip().lower()
+    try:
+        if v.endswith("m"):   # minutes, e.g. 10m
+            return float(v[:-1]) / 60.0
+        if v.endswith("h"):   # hours, e.g. 24h
+            return float(v[:-1])
+        if v.endswith("d"):   # days, e.g. 7d
+            return float(v[:-1]) * 24.0
+        return float(v)       # plain number supports decimals like 0.167
+    except (TypeError, ValueError):
+        return float(default)
+
 DB = "janus.db"
 
 app = Flask(__name__)
@@ -142,7 +164,7 @@ def record_count():
 
 @app.route("/kpis")
 def kpis():
-    hours = int(request.args.get("hours", 168))
+    hours = parse_hours(168.0)
     rows = last_hours_series(hours)
     if not rows: return jsonify({"error":"no data"}), 404
     avg_people = sum(r["avg_val"] for r in rows)/len(rows)
@@ -157,7 +179,7 @@ def kpis():
 
 @app.route("/series.csv")
 def series_csv():
-    hours = int(request.args.get("hours", 168))
+    hours = parse_hours(168.0)
     rows = last_hours_series(hours)
     if not rows: return Response("hour,avg_val,peak,throughput\n", mimetype="text/csv")
     header = "hour,avg_val,peak,throughput\n"
