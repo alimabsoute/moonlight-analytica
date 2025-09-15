@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useHashTabs } from "./useHashTabs";
 import Analytics from "./Analytics";
 import Tracker from "./Tracker";
 import "./App.css";
@@ -6,7 +7,7 @@ import "./App.css";
 const API_BASE = "http://localhost:8000";
 
 export default function App(){
-  const [tab,setTab]=useState("tracker");
+  const [tab, setTab] = useHashTabs("tracker");
   const [sessions,setSessions]=useState([]);
   const [currentSession,setCurrentSession]=useState(null);
   const [counts,setCounts]=useState([]);
@@ -47,9 +48,9 @@ export default function App(){
         <h1>🔍 Project Janus</h1>
         <p>Video tracking demo + counting + analytics</p>
         <div style={{marginTop:12}}>
-          <button onClick={()=>setTab("tracker")} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="tracker"?"#fff":"#f3f4f6"}}>Tracker</button>
-          <button onClick={()=>setTab("counter")} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="counter"?"#fff":"#f3f4f6"}}>Counter</button>
-          <button onClick={()=>setTab("analytics")} style={{padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="analytics"?"#fff":"#f3f4f6"}}>Analytics</button>
+          <button onClick={() => { location.hash = "#tracker"; }} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="tracker"?"#fff":"#f3f4f6"}} id="tab-tracker">Tracker</button>
+          <button onClick={() => { location.hash = "#counter"; }} style={{marginRight:8, padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="counter"?"#fff":"#f3f4f6"}} id="tab-counter">Counter</button>
+          <button onClick={() => { location.hash = "#analytics"; }} style={{padding:"6px 12px", borderRadius:8, border:"1px solid #e5e7eb", background: tab==="analytics"?"#fff":"#f3f4f6"}} id="tab-analytics">Analytics</button>
         </div>
       </header>
 

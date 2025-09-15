@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { DEMO_MODE } from "./config";
 
 const ZONES=[{id:"queue",x:0.55,y:0.55,w:0.4,h:0.4},{id:"entrance",x:0.05,y:0.55,w:0.25,h:0.4}];
 
