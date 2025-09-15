@@ -28,6 +28,11 @@ export async function getSeriesCsv(hours){
   return res.text();
 }
 
+export async function seedDemo(){
+  const res = await fetchWithRetry(`${API_BASE}/seed_demo`, { method: 'POST' });
+  return res.json();
+}
+
 export function parseSeries(csvText){
   const [header, ...rows] = csvText.trim().split(/\r?\n/);
   const cols = header.split(',');
