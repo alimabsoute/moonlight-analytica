@@ -1,72 +1,132 @@
-# Janus Demo
+# 🔍 Janus Backend — Quickstart, API & Smoke Test
 
-A minimal visual counting application with FastAPI backend and React frontend.
+**Open the frontend:** http://localhost:5173/#analytics
 
-## Features
+## 🎯 Production Features
+- ✅ **Flexible Time Parsing**: `10m`, `24h`, `7d`, `0.167`
+- ✅ **Modern Python**: context managers, type hints, timezone-aware
+- ✅ **Clean Schema**: simple `counts` table
+- ✅ **CORS Ready**: frontend integration enabled
+- ✅ **Production Stable**: no schema conflicts or parsing errors
 
-- Session-based counting
-- Real-time count tracking
-- SQLite database storage
-- Responsive web interface
-- Docker containerization
+**Status:** 🟢 Production Ready
 
-## Quick Start
+---
 
-### Option 1: Docker (Recommended)
-
+## Run the backend (Terminal 1)
 ```bash
-# Start both services
-docker-compose up --build
-
-# Access the application
-# Frontend: http://localhost:5173
-# Backend API: http://localhost:8000
+python janus-demo/backend/main.py
 ```
 
-### Option 2: Local Development
-
-**Backend:**
+## One-time seed + quick checks (Terminal 2)
 ```bash
-cd backend
-pip install -r requirements.txt
-python main.py
+# Seed 14 days of demo data
+curl -s -X POST http://localhost:8000/seed_demo
+
+# Health
+curl -s http://localhost:8000/health
+
+# KPIs for last 24h (JSON with avg_people, peak_people, throughput, hours)
+curl -s "http://localhost:8000/kpis?hours=24h"
+
+# KPIs for last 10 minutes (works after you add a fresh point)
+curl -s -H "Content-Type: application/json" -d "{\"count_value\":42}" http://localhost:8000/count
+curl -s "http://localhost:8000/kpis?hours=10m"
+
+# CSV for last 24h (first few lines)
+curl -s "http://localhost:8000/series.csv?hours=24h"
 ```
 
-**Frontend:**
+---
+
+## Windows: batch smoke test (optional)
+Save as `janus-demo\verify_backend.bat` and run it.
+```bat
+@echo off
+setlocal
+
+echo === 1) Seed demo data =========================
+curl -s -X POST http://localhost:8000/seed_demo
+echo.&echo.
+
+echo === 2) Health check ===========================
+curl -s http://localhost:8000/health
+echo.&echo.
+
+echo === 3) KPIs for last 24h ======================
+curl -s "http://localhost:8000/kpis?hours=24h"
+echo.&echo.
+
+echo === 4) CSV for last 24h (header only) =========
+for /f "delims=" %%A in ('curl -s "http://localhost:8000/series.csv?hours=24h"') do (
+  echo %%A
+  goto :aftercsv
+)
+:aftercsv
+echo.&echo.
+
+echo === 5) Prove sub-hour windows =================
+echo Posting a fresh count so 10m window has data...
+curl -s -H "Content-Type: application/json" -d "{\"count_value\":42}" http://localhost:8000/count
+echo.&echo.
+
+echo KPIs for last 10m:
+curl -s "http://localhost:8000/kpis?hours=10m"
+echo.&echo.
+
+echo Done.
+endlocal
+```
+
+---
+
+## Endpoints
+| Endpoint                 | Method | Description                                    | Example Response / Notes |
+|--------------------------|--------|------------------------------------------------|--------------------------|
+| `/health`                | GET    | Health probe                                   | `{"ok": true}` |
+| `/seed_demo`             | POST   | Seed 14 days of hourly demo data               | `{"ok": true, "seeded_days": 14}` |
+| `/count`                 | POST   | Append a datapoint                             | Body: `{"count_value": 42}` → `{"timestamp":"…+00:00","count_value":42}` |
+| `/kpis?hours=<window>`   | GET    | KPIs over window                               | `{"avg_people": 41.17, "peak_people": 56, "throughput": 910, "hours": 24.0}` |
+| `/series.csv?hours=<window>` | GET | CSV export                                     | Header: `timestamp,count_value,peak,throughput` |
+
+### Time Format Support
+| Format  | Example | Meaning                    |
+|---------|---------|----------------------------|
+| Minutes | `10m`   | 10 minutes                 |
+| Hours   | `24h`   | 24 hours                   |
+| Days    | `7d`    | 7 days                     |
+| Decimal | `0.167` | 10 minutes (decimal hours) |
+| Integer | `168`   | 168 hours (treated as h)   |
+
+---
+
+## Example Workflows
+**Quick Demo Setup**
 ```bash
-cd frontend
-npm install
-npm run dev
+curl -s -X POST http://localhost:8000/seed_demo
+curl -s "http://localhost:8000/kpis?hours=24h"
 ```
 
-## API Endpoints
-
-- `GET /health` - Health check
-- `GET /sessions` - List all sessions
-- `POST /sessions` - Create new session
-- `GET /sessions/{id}/counts` - Get session counts
-- `POST /sessions/{id}/counts` - Add count to session
-
-## Usage
-
-1. Create a new counting session
-2. Select the session from the list
-3. Use +1, +10, -1, -10 buttons to count
-4. View count history in real-time
-
-## Project Structure
-
+**Real-time Testing**
+```bash
+curl -s -H "Content-Type: application/json" -d '{"count_value":50}' http://localhost:8000/count
+curl -s "http://localhost:8000/kpis?hours=10m"
 ```
-janus-demo/
-├── backend/           # FastAPI server
-│   ├── main.py       # API endpoints
-│   ├── requirements.txt
-│   └── Dockerfile
-├── frontend/         # React app
-│   ├── src/
-│   │   ├── App.jsx   # Main component
-│   │   └── App.css   # Styles
-│   ├── package.json
-│   └── Dockerfile
-└── docker-compose.yml
+
+**Data Export**
+```bash
+curl -s "http://localhost:8000/series.csv?hours=7d" > analytics_data.csv
 ```
+
+---
+
+## Troubleshooting
+- `10m` returns `{"error":"no data"}`? Post a fresh datapoint first:
+  ```bash
+  curl -s -H "Content-Type: application/json" -d "{\"count_value\":42}" http://localhost:8000/count
+  ```
+- Changed schemas? Stop the server and let the app recreate `janus.db`, or delete it and reseed:
+  ```bash
+  rm -f janus-demo/backend/janus.db
+  curl -s -X POST http://localhost:8000/seed_demo
+  ```
