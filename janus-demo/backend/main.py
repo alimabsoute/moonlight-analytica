@@ -1,9 +1,63 @@
-import sqlite3, json, math, random
+# backend/main.py — drop-in replacement (single file)
+# Flask + SQLite backend for Janus demo: health, seed_demo, count, KPIs, CSV
+from __future__ import annotations
+
+import random
+import sqlite3
+from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
+
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 
-def parse_hours(default=168.0):
+DB = "janus.db"
+
+app = Flask(__name__)
+# Allow Vite on 5173/5174 (localhost & 127.0.0.1)
+CORS(
+    app,
+    origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+    ],
+)
+
+
+@contextmanager
+def db():
+    con = sqlite3.connect(DB)
+    con.row_factory = sqlite3.Row
+    try:
+        yield con
+    finally:
+        con.close()
+
+
+def ensure_schema():
+    with db() as con:
+        con.execute(
+            """
+            CREATE TABLE IF NOT EXISTS counts (
+              id           INTEGER PRIMARY KEY AUTOINCREMENT,
+              timestamp    TEXT NOT NULL,          -- ISO-8601 with timezone (+00:00)
+              count_value  INTEGER NOT NULL
+            )
+            """
+        )
+        con.commit()
+
+
+ensure_schema()
+
+
+@app.get("/health")
+def health():
+    return jsonify({"ok": True})
+
+
+def parse_hours(default: float = 168.0) -> float:
     """
     Parse ?hours=… from the query string.
     Accepts decimals (e.g. 0.167) and shorthands like 10m, 24h, 7d.
@@ -15,184 +69,150 @@ def parse_hours(default=168.0):
 
     v = str(raw).strip().lower()
     try:
-        if v.endswith("m"):   # minutes, e.g. 10m
+        if v.endswith("m"):  # minutes, e.g. 10m
             return float(v[:-1]) / 60.0
-        if v.endswith("h"):   # hours, e.g. 24h
+        if v.endswith("h"):  # hours, e.g. 24h
             return float(v[:-1])
-        if v.endswith("d"):   # days, e.g. 7d
+        if v.endswith("d"):  # days, e.g. 7d
             return float(v[:-1]) * 24.0
-        return float(v)       # plain number supports decimals like 0.167
+        return float(v)  # plain number supports decimals like 0.167
     except (TypeError, ValueError):
         return float(default)
 
-DB = "janus.db"
 
-app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173","http://127.0.0.1:5173","http://localhost:5174","http://127.0.0.1:5174"])
-
-def db():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def init_db():
-    with db() as conn:
-        cur = conn.cursor()
-        cur.executescript("""
-        PRAGMA journal_mode=WAL;
-        PRAGMA synchronous=NORMAL;
-        CREATE TABLE IF NOT EXISTS sessions(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT NOT NULL UNIQUE,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          metrics TEXT
-        );
-        CREATE TABLE IF NOT EXISTS counts(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          session_id INTEGER NOT NULL,
-          timestamp TEXT NOT NULL,
-          count_value INTEGER NOT NULL,
-          FOREIGN KEY(session_id) REFERENCES sessions(id)
-        );
-        CREATE INDEX IF NOT EXISTS idx_counts_session_ts ON counts(session_id, timestamp);
-        CREATE UNIQUE INDEX IF NOT EXISTS ux_counts_sid_ts ON counts(session_id, timestamp);
-        """)
-    return True
-
-def ensure_session(name="Demo Session"):
-    with db() as conn:
-        cur = conn.cursor()
-        cur.execute("INSERT OR IGNORE INTO sessions(name, metrics) VALUES(?,?)", (name, json.dumps({})))
-        conn.commit()
-        row = cur.execute("SELECT id FROM sessions WHERE name=?", (name,)).fetchone()
-        return row["id"]
-
-def seed_hourly(session_id: int, days: int = 14):
-    with db() as conn:
-        cur = conn.cursor()
-        now = datetime.now(tz=timezone.utc).replace(minute=0, second=0, microsecond=0)
-        start = now - timedelta(days=days)
-        def season(h):
-            base = 0.6 + 0.4*math.exp(-((h-13)/4)**2)
-            bump = 0.15*math.exp(-((h-12)/2)**2) + 0.08*math.exp(-((h-18)/3)**2)
-            return base + bump
-        rows, dt = [], start
-        random.seed(42)
-        while dt <= now:
-            f = season(dt.hour)
-            value = int(max(1, 20*f + random.uniform(-4, 4)))
-            rows.append((session_id, dt.isoformat(), value))
-            dt += timedelta(hours=1)
-        cur.executemany("INSERT OR IGNORE INTO counts(session_id, timestamp, count_value) VALUES (?,?,?)", rows)
-        conn.commit()
-
-@app.route("/health")
-def health(): return jsonify({"service":"janus-api","status":"healthy","timestamp":datetime.now().isoformat()})
-
-@app.route("/seed_demo", methods=["POST"])
+@app.post("/seed_demo")
 def seed_demo():
-    init_db()
-    sid = ensure_session("Demo Session")
-    seed_hourly(sid, days=14)
-    return jsonify({"ok": True, "session_id": sid, "seeded_days": 14})
+    """
+    Reseed demo data for the last 14 days, roughly hourly points with some noise.
+    """
+    days = 14
+    now = datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
 
-@app.route("/sessions")
-def get_sessions():
-    with db() as conn:
-        rows = conn.execute("SELECT id,name,created_at,metrics FROM sessions ORDER BY created_at DESC").fetchall()
-        return jsonify([dict(r) for r in rows])
+    with db() as con:
+        # Clear existing data to keep the demo tidy
+        con.execute("DELETE FROM counts")
 
-@app.route("/sessions", methods=["POST"])
-def create_session():
-    data = request.get_json() or {}
-    name = data.get("name")
-    if not name: return jsonify({"error":"Session name is required"}), 400
-    with db() as conn:
-        cur = conn.cursor()
-        cur.execute("INSERT INTO sessions(name, metrics) VALUES(?,?)", (name, json.dumps({})))
-        sid = cur.lastrowid; conn.commit()
-        return jsonify({"id": sid, "name": name, "created_at": datetime.now().isoformat()})
+        # Create ~24 * days rows (one per hour)
+        base = 30
+        for d in range(days, -1, -1):
+            for h in range(24):
+                ts = now - timedelta(days=d, hours=(23 - h))
+                # daytime bump so charts look alive
+                hour = ts.hour
+                wave = 15 * (1 if 9 <= hour <= 18 else 0)  # busier daytime
+                noise = random.randint(-5, 12)
+                val = max(0, base + wave + noise)
+                con.execute(
+                    "INSERT INTO counts(timestamp, count_value) VALUES (?, ?)",
+                    (ts.isoformat(timespec="seconds"), int(val)),
+                )
 
-@app.route("/sessions/<int:sid>/counts")
-def get_counts(sid: int):
-    with db() as conn:
-        rows = conn.execute("SELECT timestamp, count_value FROM counts WHERE session_id=? ORDER BY timestamp", (sid,)).fetchall()
-        return jsonify([{"timestamp": r["timestamp"], "value": r["count_value"]} for r in rows])
+        con.commit()
 
-@app.route("/sessions/<int:sid>/counts", methods=["POST"])
-def add_count(sid: int):
-    data = request.get_json() or {}
-    if "count_value" not in data: return jsonify({"error":"count_value is required"}), 400
-    with db() as conn:
-        cur = conn.cursor()
-        ok = cur.execute("SELECT id FROM sessions WHERE id=?", (sid,)).fetchone()
-        if not ok: return jsonify({"error":"Session not found"}), 404
-        cur.execute("INSERT INTO counts(session_id,timestamp,count_value) VALUES (?,?,?)",
-                    (sid, datetime.now(timezone.utc).isoformat(), int(data["count_value"])))
-        conn.commit()
-        return jsonify({"session_id": sid, "count_value": int(data["count_value"])})
+    return jsonify({"ok": True, "seeded_days": days})
 
 
-@app.route("/count", methods=["POST"])
+@app.post("/count")
 def record_count():
-    data = request.get_json()
-    if not data or "count" not in data:
-        return jsonify({"error": "Missing 'count' field"}), 400
-    
-    # Get or create default session
-    sid = ensure_session("Tracker Session")
-    
-    with db() as conn:
-        cur = conn.cursor()
-        cur.execute("INSERT INTO counts(session_id,timestamp,count_value) VALUES (?,?,?)",
-                    (sid, datetime.now(timezone.utc).isoformat(), int(data["count"])))
-        conn.commit()
-        return jsonify({"session_id": sid, "count_value": int(data["count"]), "status": "recorded"})
+    """
+    Ingest a single count point (used by tracker/counter demos).
+    Body: { "count_value": <int> }
+    """
+    data = request.get_json(silent=True) or {}
+    try:
+        count_value = int(data.get("count_value", 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "count_value must be an integer"}), 400
 
-@app.route("/kpis")
+    ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    with db() as con:
+        con.execute(
+            "INSERT INTO counts(timestamp, count_value) VALUES (?, ?)",
+            (ts, count_value),
+        )
+        con.commit()
+
+    return jsonify({"timestamp": ts, "count_value": count_value})
+
+
+@app.get("/kpis")
 def kpis():
+    """
+    Returns coarse KPIs based on the window (?hours=...).
+    Supports 0.167, 10m, 24h, 7d, 30d, etc.
+    """
     hours = parse_hours()
     since = datetime.now(timezone.utc) - timedelta(hours=hours)
 
-    with db() as conn:
-        rows = conn.execute("""
-          SELECT substr(timestamp,1,13) as hour, AVG(count_value) as avg_val, MAX(count_value) as peak, SUM(count_value) as throughput
-          FROM counts
-          WHERE timestamp > ?
-          GROUP BY substr(timestamp,1,13)
-          ORDER BY hour ASC
-        """, (since.isoformat(),)).fetchall()
+    with db() as con:
+        rows = con.execute(
+            """
+            SELECT substr(timestamp,1,13) AS hour,
+                   AVG(count_value)       AS avg_val,
+                   MAX(count_value)       AS peak,
+                   SUM(count_value)       AS throughput
+            FROM counts
+            WHERE timestamp > ?
+            GROUP BY substr(timestamp,1,13)
+            ORDER BY hour ASC
+            """,
+            (since.isoformat(timespec="seconds"),),
+        ).fetchall()
 
-    if not rows: return jsonify({"error":"no data"}), 404
-    avg_people = sum(r["avg_val"] for r in rows)/len(rows)
+    if not rows:
+        return jsonify({"error": "no data"}), 404
+
+    avg_people = sum(r["avg_val"] for r in rows) / len(rows)
     peak_people = max(r["peak"] for r in rows)
     throughput = sum(r["throughput"] for r in rows)
-    return jsonify({
-        "people_avg": round(avg_people,2),
-        "people_peak": int(peak_people),
-        "throughput_total": int(throughput),
-        "throughput_per_hr": round(throughput/len(rows),2)
-    })
 
-@app.route("/series.csv")
+    return jsonify(
+        {
+            "avg_people": round(avg_people, 2),
+            "peak_people": int(peak_people),
+            "throughput": int(throughput),
+            "hours": float(hours),
+        }
+    )
+
+
+@app.get("/series.csv")
 def series_csv():
+    """
+    Returns a CSV suitable for the frontend line chart.
+    Columns: timestamp,count_value,peak,throughput
+    - `timestamp` is the hour bucket (…:00)
+    - `count_value` is the hourly average (frontend uses dataKey='count_value')
+    """
     hours = parse_hours()
     since = datetime.now(timezone.utc) - timedelta(hours=hours)
 
-    with db() as conn:
-        rows = conn.execute("""
-          SELECT substr(timestamp,1,13) as hour, AVG(count_value) as avg_val, MAX(count_value) as peak, SUM(count_value) as throughput
-          FROM counts
-          WHERE timestamp > ?
-          GROUP BY substr(timestamp,1,13)
-          ORDER BY hour ASC
-        """, (since.isoformat(),)).fetchall()
+    with db() as con:
+        rows = con.execute(
+            """
+            SELECT substr(timestamp,1,13) AS hour,
+                   AVG(count_value)       AS avg_val,
+                   MAX(count_value)       AS peak,
+                   SUM(count_value)       AS throughput
+            FROM counts
+            WHERE timestamp > ?
+            GROUP BY substr(timestamp,1,13)
+            ORDER BY hour ASC
+            """,
+            (since.isoformat(timespec="seconds"),),
+        ).fetchall()
 
-    if not rows: return Response("hour,avg_val,peak,throughput\n", mimetype="text/csv")
-    header = "hour,avg_val,peak,throughput\n"
-    body = "\n".join([f"{r['hour']}:00,{round(r['avg_val'],2)},{int(r['peak'])},{int(r['throughput'])}" for r in rows])
-    return Response(header+body+"\n", mimetype="text/csv")
+    if not rows:
+        return Response("timestamp,count_value,peak,throughput\n", mimetype="text/csv")
+
+    header = "timestamp,count_value,peak,throughput\n"
+    body = "\n".join(
+        f"{r['hour']}:00,{round(r['avg_val'], 2)},{int(r['peak'])},{int(r['throughput'])}"
+        for r in rows
+    )
+    return Response(header + body + "\n", mimetype="text/csv")
+
 
 if __name__ == "__main__":
-    init_db()
+    # Dev server
     app.run(host="0.0.0.0", port=8000, debug=True)
