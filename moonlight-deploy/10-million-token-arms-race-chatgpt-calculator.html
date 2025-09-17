@@ -172,6 +172,56 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            font-size: 1.2rem;
+        }
+
+        .separator-line {
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+            margin: 2rem auto;
+        }
+
+        .company-logo-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .company-logo-image {
+            max-width: 200px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 191, 255, 0.2);
+        }
+
+        .article-intro {
+            background: rgba(0, 191, 255, 0.05);
+            border: 1px solid var(--border-neon);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 2rem 0;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
         
         .context-race-visual {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(0, 191, 255, 0.1));
@@ -356,7 +406,7 @@
     <div class="article-container">
         <header class="article-header">
             <h1 class="article-title">The 10-Million Token Arms Race That Will Make ChatGPT Look Like a Calculator</h1>
-            
+
             <div class="article-meta">
                 <div class="author-info">
                     <div class="author-avatar">🌙</div>
