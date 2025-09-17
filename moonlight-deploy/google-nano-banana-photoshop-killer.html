@@ -20,6 +20,54 @@
             box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
         }
         
+        /* Company Logo Styling */
+        .company-logo-section {
+            text-align: center;
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+        }
+        
+        .company-logo-image {
+            /* Multiple layer approach to force solid white background */
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            background-image: none !important;
+            
+            /* Container styling */
+            padding: 40px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            max-width: 350px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            
+            /* Additional transparency overrides */
+            mix-blend-mode: normal;
+            isolation: isolate;
+            
+            /* Create a white backdrop using pseudo element */
+            position: relative;
+        }
+        
+        .company-logo-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: -1;
+            border-radius: 12px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -513,7 +561,9 @@
 
             <!-- Company Logo Section -->
             <div class="company-logo-section">
-                <img src="1a.png" alt="Google Analysis" class="company-logo-image">
+                <div style="background: white; padding: 20px; border-radius: 8px; display: inline-block;">
+                    <img src="google-logo-final.png" alt="Google Analysis" class="company-logo-image" style="background: white !important;">
+                </div>
             </div>
 
             <!-- Introduction Paragraph -->
@@ -525,7 +575,7 @@
         <div class="article-content">
             <!-- Cost Comparison Infographic -->
             <div style="margin: 40px 0; text-align: center;">
-                <svg viewBox="0 0 800 300" style="width: 100%; max-width: 600px; height: auto;">
+                <svg viewBox="0 0 800 300" style="width: 100%; max-width: 1000px; height: auto; margin: 40px 0;">
                     <!-- Background -->
                     <defs>
                         <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
