@@ -1,0 +1,162 @@
+.reports {
+  padding: 2rem;
+  width: 100%;
+  margin: 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: #333;
+}
+
+.report-type-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.report-type-btn {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.report-type-btn:hover {
+  background: #f0f0f0;
+}
+
+.report-type-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.report-summary {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.report-summary h2 {
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem 0;
+  color: #333;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.summary-card {
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #007bff;
+}
+
+.top5-table {
+  overflow-x: auto;
+}
+
+.top5-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.top5-table th,
+.top5-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.top5-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.top5-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.rank-cell {
+  font-weight: 700;
+  color: #007bff;
+}
+
+.count-cell {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.no-data {
+  text-align: center;
+  color: #666;
+  padding: 3rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .reports {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .report-summary h2 {
+    font-size: 1.25rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .summary-value {
+    font-size: 1.5rem;
+  }
+
+  .top5-table {
+    font-size: 0.9rem;
+  }
+}

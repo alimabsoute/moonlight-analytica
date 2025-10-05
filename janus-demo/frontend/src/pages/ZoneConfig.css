@@ -1,0 +1,155 @@
+.zone-config {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header h1 {
+  margin: 0 0 10px 0;
+}
+
+.page-header p {
+  color: #666;
+  margin: 0 0 20px 0;
+}
+
+.config-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.video-connect {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.video-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 300px;
+  font-size: 14px;
+}
+
+.status-indicator {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.canvas-container {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #000;
+  display: inline-block;
+}
+
+.canvas-container canvas {
+  display: block;
+}
+
+.zone-list {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.zone-list h3 {
+  margin: 0 0 15px 0;
+}
+
+.zone-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.zone-item:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+.zone-item.selected {
+  border-color: #007bff;
+  background: #f0f8ff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.zone-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  margin-right: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.zone-info {
+  flex: 1;
+}
+
+.zone-name {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.zone-coords {
+  font-size: 12px;
+  color: #666;
+  font-family: 'Courier New', monospace;
+}
+
+.zone-type {
+  padding: 4px 10px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}

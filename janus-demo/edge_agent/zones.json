@@ -1,0 +1,40 @@
+{
+  "zones": [
+    {
+      "zone_id": 1,
+      "name": "entrance",
+      "x1": 0,
+      "y1": 0,
+      "x2": 200,
+      "y2": 480,
+      "zone_type": "entrance"
+    },
+    {
+      "zone_id": 2,
+      "name": "main_floor",
+      "x1": 200,
+      "y1": 0,
+      "x2": 440,
+      "y2": 480,
+      "zone_type": "general"
+    },
+    {
+      "zone_id": 3,
+      "name": "queue",
+      "x1": 440,
+      "y1": 240,
+      "x2": 540,
+      "y2": 480,
+      "zone_type": "queue"
+    },
+    {
+      "zone_id": 4,
+      "name": "checkout",
+      "x1": 540,
+      "y1": 0,
+      "x2": 640,
+      "y2": 480,
+      "zone_type": "checkout"
+    }
+  ]
+}

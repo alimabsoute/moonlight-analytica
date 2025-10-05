@@ -1,0 +1,232 @@
+import { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { getKpis, getSeriesCsv, parseSeries, getConversion, getDwellTime, getZones } from '../api';
+import KPIStat from '../components/KPIStat';
+import ChartCard from '../components/ChartCard';
+import ErrorBanner from '../components/ErrorBanner';
+import Loading from '../components/Loading';
+import './Analytics.css';
+
+const TIME_RANGES = [
+  { label: '1 Hour', hours: 1 },
+  { label: '24 Hours', hours: 24 },
+  { label: '7 Days', hours: 168 }
+];
+
+export default function Analytics() {
+  const [selectedRanges, setSelectedRanges] = useState([1, 24, 168]);
+  const [compareMode, setCompareMode] = useState(false);
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      setError(null);
+      setLoading(true);
+      const results = {};
+
+      for (const hours of selectedRanges) {
+        const [kpiData, csvData, convData, dwellData, zonesData] = await Promise.all([
+          getKpis(hours),
+          getSeriesCsv(hours),
+          getConversion(hours),
+          getDwellTime(hours),
+          getZones(hours)
+        ]);
+        results[hours] = {
+          kpis: kpiData,
+          series: parseSeries(csvData),
+          conversion: convData,
+          dwellTime: dwellData,
+          zones: zonesData
+        };
+      }
+
+      setData(results);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch analytics data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedRanges.join(',')]);
+
+  const toggleRange = (hours) => {
+    if (selectedRanges.includes(hours)) {
+      if (selectedRanges.length > 1) {
+        setSelectedRanges(selectedRanges.filter(h => h !== hours));
+      }
+    } else {
+      setSelectedRanges([...selectedRanges, hours].sort((a, b) => a - b));
+    }
+  };
+
+  const buildHistogram = (series) => {
+    if (!series || series.length === 0) return [];
+
+    const counts = series.map(s => s.count_value);
+    const min = Math.min(...counts);
+    const max = Math.max(...counts);
+    const binSize = Math.max(1, Math.ceil((max - min) / 10));
+
+    const bins = [];
+    for (let i = min; i <= max; i += binSize) {
+      bins.push({
+        range: `${i}-${i + binSize - 1}`,
+        count: counts.filter(c => c >= i && c < i + binSize).length
+      });
+    }
+
+    return bins;
+  };
+
+  const buildStackedData = () => {
+    if (!compareMode || selectedRanges.length < 2) return [];
+
+    const maxLen = Math.max(...selectedRanges.map(h => data[h]?.series?.length || 0));
+    const stacked = [];
+
+    for (let i = 0; i < maxLen; i++) {
+      const point = { index: i };
+      selectedRanges.forEach(hours => {
+        const rangeLabel = TIME_RANGES.find(r => r.hours === hours)?.label || `${hours}h`;
+        point[rangeLabel] = data[hours]?.series?.[i]?.count_value || 0;
+      });
+      stacked.push(point);
+    }
+
+    return stacked;
+  };
+
+  if (loading) {
+    return <Loading message="Loading analytics data..." />;
+  }
+
+  const primaryRange = selectedRanges[0];
+  const primaryData = data[primaryRange];
+
+  return (
+    <div className="analytics">
+      <div className="page-header">
+        <h1>Analytics</h1>
+        <label className="compare-toggle">
+          <input
+            type="checkbox"
+            checked={compareMode}
+            onChange={(e) => setCompareMode(e.target.checked)}
+          />
+          Compare Mode
+        </label>
+      </div>
+
+      <ErrorBanner message={error} onDismiss={() => setError(null)} />
+
+      <div className="range-selector">
+        <p>Select time ranges:</p>
+        <div className="range-buttons">
+          {TIME_RANGES.map(({ label, hours }) => (
+            <button
+              key={hours}
+              className={`range-btn ${selectedRanges.includes(hours) ? 'active' : ''}`}
+              onClick={() => toggleRange(hours)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {selectedRanges.map(hours => {
+        const rangeLabel = TIME_RANGES.find(r => r.hours === hours)?.label || `${hours}h`;
+        const rangeData = data[hours];
+
+        if (!rangeData) return null;
+
+        return (
+          <div key={hours} className="range-section">
+            <h2>{rangeLabel} Range</h2>
+            <div className="kpi-grid">
+              <KPIStat
+                label="Average"
+                value={(rangeData.kpis?.avg_count ?? 0).toFixed(1)}
+              />
+              <KPIStat
+                label="Peak"
+                value={rangeData.kpis?.peak_count ?? 0}
+              />
+              <KPIStat
+                label="Total Events"
+                value={rangeData.kpis?.total_events ?? 0}
+              />
+              <KPIStat
+                label="Throughput"
+                value={(rangeData.kpis?.throughput ?? 0).toFixed(2)}
+                unit="/hr"
+              />
+              <KPIStat
+                label="Conversion Rate"
+                value={`${rangeData.conversion?.conversion_rate?.toFixed(1) ?? 0}%`}
+              />
+              <KPIStat
+                label="Bounce Rate"
+                value={`${rangeData.conversion?.bounce_rate?.toFixed(1) ?? 0}%`}
+              />
+              <KPIStat
+                label="Engagement Rate"
+                value={`${rangeData.conversion?.engagement_rate?.toFixed(1) ?? 0}%`}
+              />
+              <KPIStat
+                label="Avg Dwell Time"
+                value={rangeData.dwellTime ? `${Math.floor(rangeData.dwellTime.avg_dwell_seconds / 60)}m` : '0m'}
+              />
+            </div>
+          </div>
+        );
+      })}
+
+      {compareMode && selectedRanges.length >= 2 && (
+        <ChartCard title="Comparison - Stacked Bar Chart">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={buildStackedData()}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="index" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {selectedRanges.map((hours, idx) => {
+                const rangeLabel = TIME_RANGES.find(r => r.hours === hours)?.label || `${hours}h`;
+                const colors = ['#007bff', '#28a745', '#ffc107'];
+                return (
+                  <Bar
+                    key={hours}
+                    dataKey={rangeLabel}
+                    fill={colors[idx % colors.length]}
+                  />
+                );
+              })}
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      )}
+
+      {primaryData && (
+        <ChartCard title="Distribution Histogram">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={buildHistogram(primaryData.series)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="range" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#17a2b8" name="Frequency" />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      )}
+    </div>
+  );
+}

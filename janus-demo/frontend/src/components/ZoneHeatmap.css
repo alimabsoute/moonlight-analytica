@@ -1,0 +1,59 @@
+.zone-heatmap-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.zone-heatmap-container h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.zone-heatmap-canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: crosshair;
+}
+
+.zone-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.zone-tooltip h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.zone-tooltip p {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .zone-heatmap-container {
+    padding: 1rem;
+  }
+
+  .zone-heatmap-container h3 {
+    font-size: 1.1rem;
+  }
+
+  .zone-heatmap-canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}

@@ -1,0 +1,62 @@
+.kpi-stat {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s;
+}
+
+.kpi-stat:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.kpi-label {
+  font-size: 0.85rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.kpi-unit {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #666;
+  margin-left: 0.25rem;
+}
+
+.kpi-trend {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.kpi-trend.positive {
+  color: #28a745;
+}
+
+.kpi-trend.negative {
+  color: #dc3545;
+}
+
+.kpi-trend.neutral {
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .kpi-stat {
+    padding: 1rem;
+  }
+
+  .kpi-value {
+    font-size: 1.5rem;
+  }
+}

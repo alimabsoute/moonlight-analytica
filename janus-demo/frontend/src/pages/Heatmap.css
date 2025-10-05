@@ -1,0 +1,150 @@
+.heatmap {
+  padding: 20px;
+}
+
+.page-header h1 {
+  margin: 0 0 10px 0;
+}
+
+.page-header p {
+  color: #666;
+  margin: 0 0 20px 0;
+}
+
+.time-range-section {
+  margin-bottom: 20px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.heatmap-card {
+  background: #f9f9f9;
+}
+
+.heatmap-canvas {
+  display: block;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: #000;
+}
+
+.stats-card {
+  background: #f9f9f9;
+}
+
+.zone-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.zone-stat-item {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.zone-stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.zone-stat-header h4 {
+  margin: 0;
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.zone-capacity {
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.zone-stat-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.dwell-summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+}
+
+.dwell-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.dwell-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.dwell-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+}
+
+@media (max-width: 1200px) {
+  .heatmap-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dwell-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .zone-stat-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .dwell-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
