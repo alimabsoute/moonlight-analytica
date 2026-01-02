@@ -169,8 +169,28 @@ export default function Insights() {
   useEffect(() => {
     setIsLoading(true)
     setTimeout(() => {
-      setInsights(generateInsight('general', [], 5))
-      setScore(generatePerformanceScore())
+      // Transform insights to match expected shape
+      const rawInsights = generateInsight('general', [], 5)
+      const transformedInsights = rawInsights.map(insight => ({
+        title: insight.text?.split(' - ')[0] || insight.text || 'Insight',
+        description: insight.text?.split(' - ')[1] || insight.text || '',
+        priority: insight.type === 'anomaly' || insight.type === 'warning' ? 'high'
+                : insight.type === 'recommendation' ? 'medium' : 'low',
+        metric: insight.type || 'General'
+      }))
+      setInsights(transformedInsights)
+
+      // Transform score breakdown from object to array
+      const rawScore = generatePerformanceScore()
+      const breakdownArray = Object.entries(rawScore.breakdown || {}).map(([name, value]) => ({
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        score: value
+      }))
+      setScore({
+        ...rawScore,
+        breakdown: breakdownArray
+      })
+
       setIsLoading(false)
     }, 800)
   }, [industry])
