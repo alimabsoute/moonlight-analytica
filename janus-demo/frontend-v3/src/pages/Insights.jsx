@@ -4,7 +4,7 @@ import {
   Brain, TrendingUp, TrendingDown, AlertTriangle, CheckCircle,
   Lightbulb, Target, Zap, Clock, Users, BarChart3, ArrowRight
 } from 'lucide-react'
-import { INDUSTRY_KPIS, getIndustryKPIs, getIndustryList } from '../../../shared/industryKPIs'
+import { getIndustryKPIs, getIndustryList, generateKPIValue } from '../../../shared/industryKPIs'
 import { generateInsight, generatePerformanceScore, generateDailySummary } from '../../../shared/insights'
 
 function InsightCard({ insight, index }) {
@@ -422,27 +422,30 @@ export default function Insights() {
               </span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)' }}>
-              {getIndustryKPIs(industry).slice(0, 6).map((kpi, index) => (
-                <motion.div
-                  key={kpi.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: 'var(--space-sm)',
-                    background: 'var(--bg-tertiary)',
-                    borderRadius: 'var(--radius-sm)'
-                  }}
-                >
-                  <span style={{ fontSize: '0.813rem', color: 'var(--text-secondary)' }}>{kpi.name}</span>
-                  <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--navy)' }}>
-                    {kpi.value}{kpi.unit}
-                  </span>
-                </motion.div>
-              ))}
+              {getIndustryKPIs(industry).all.slice(0, 6).map((kpi, index) => {
+                const value = generateKPIValue(kpi)
+                return (
+                  <motion.div
+                    key={kpi.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: 'var(--space-sm)',
+                      background: 'var(--bg-tertiary)',
+                      borderRadius: 'var(--radius-sm)'
+                    }}
+                  >
+                    <span style={{ fontSize: '0.813rem', color: 'var(--text-secondary)' }}>{kpi.label}</span>
+                    <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--navy)' }}>
+                      {value}{kpi.unit}
+                    </span>
+                  </motion.div>
+                )
+              })}
             </div>
           </motion.div>
 
