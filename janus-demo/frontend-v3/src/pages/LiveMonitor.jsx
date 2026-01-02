@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, TrendingUp, TrendingDown, Clock, AlertTriangle,
   Activity, ArrowUpRight, ArrowDownRight, Eye, Zap,
-  Monitor, Box, Cpu
+  Box, Cpu, MonitorDot
 } from 'lucide-react'
 
 // Lazy load tracking components
 const HumanoidTrackingDemo = lazy(() => import('../../../shared/HumanoidTrackingDemo'))
 const Tracking3DView = lazy(() => import('../../../shared/Tracking3DView'))
-// Original: TensorFlow.js + COCO-SSD (works reliably)
+// Standard: TensorFlow.js + COCO-SSD (works reliably)
 const RealTimeDetection = lazy(() => import('../../../shared/RealTimeDetection'))
-// NEW: Using RealTimeDetectionV2 with ByteTrack/DeepSORT tracking
-const RealTimeDetectionV2 = lazy(() => import('../../../shared/RealTimeDetectionV2'))
+// Enhanced: TensorFlow.js + COCO-SSD with ByteTrack smoothing & Kalman filter
+const RealTimeDetectionEnhanced = lazy(() => import('../../../shared/RealTimeDetectionEnhanced'))
 
 const generateLiveKPIs = () => ({
   currentOccupancy: Math.floor(Math.random() * 200) + 150,
@@ -43,16 +43,15 @@ const generateActivityFeed = () => {
 
 // View mode tabs - 3 modes for tracking visualization
 const VIEW_MODES = [
-  { id: '2d', label: '2D Simulation', icon: Monitor, description: 'Stick figure tracking' },
+  { id: '2d', label: '2D Simulation', icon: MonitorDot, description: 'Stick figure tracking' },
   { id: '3d', label: '3D Isometric', icon: Box, description: 'Floor plan view' },
   { id: 'ml', label: 'ML Detection', icon: Cpu, description: 'Real-time person detection' }
 ]
 
-// ML Pipeline versions
+// ML Pipeline versions - Standard and Enhanced only
 const PIPELINE_VERSIONS = [
   { id: 'A', label: 'Standard', description: 'TensorFlow + COCO-SSD', color: '#3b82f6' },
-  { id: 'B', label: 'Fast (40+ FPS)', description: 'MediaPipe + ByteTrack', color: '#4ecdc4' },
-  { id: 'C', label: 'Accurate (9-12 FPS)', description: 'YOLOv8 + DeepSORT', color: '#6c5ce7' }
+  { id: 'E', label: 'Enhanced', description: 'COCO-SSD + ByteTrack smoothing', color: '#10b981' }
 ]
 
 // Loading component
@@ -196,55 +195,8 @@ export default function LiveMonitor() {
   const [isLive, setIsLive] = useState(true)
   const [viewMode, setViewMode] = useState('2d')
   const [trackingMetrics, setTrackingMetrics] = useState(null)
-  const [pipelineVersion, setPipelineVersion] = useState('A') // 'A' standard, 'B' fast, 'C' accurate
+  const [pipelineVersion, setPipelineVersion] = useState('A') // 'A' standard, 'E' enhanced
   const [mlStats, setMlStats] = useState(null)
-  const [cameraError, setCameraError] = useState(null)
-  const [videoSource, setVideoSource] = useState('file') // 'file' or 'camera'
-  const [videoFile, setVideoFile] = useState(null)
-
-  // Video refs for ML detection
-  const videoRef = useRef(null)
-  const canvasRef = useRef(null)
-  const fileInputRef = useRef(null)
-
-  // Handle video file upload
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0]
-    if (file && file.type.startsWith('video/')) {
-      setVideoFile(URL.createObjectURL(file))
-      setCameraError(null)
-    }
-  }
-
-  // Start camera when camera mode is selected
-  useEffect(() => {
-    if (viewMode !== 'ml' || videoSource !== 'camera') return
-
-    let stream = null
-
-    async function startCamera() {
-      try {
-        setCameraError(null)
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 640, height: 480, facingMode: 'environment' }
-        })
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-        }
-      } catch (err) {
-        console.error('Camera access error:', err)
-        setCameraError(err.message || 'Unable to access camera')
-      }
-    }
-
-    startCamera()
-
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop())
-      }
-    }
-  }, [viewMode, videoSource])
 
   useEffect(() => {
     if (!isLive) return
@@ -514,84 +466,9 @@ export default function LiveMonitor() {
               )}
               {viewMode === 'ml' && (
                 <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '400px' }}>
-                  {/* Video Source Toggle & Upload - only for Fast/Accurate modes */}
-                  {pipelineVersion !== 'A' && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    zIndex: 10,
-                    display: 'flex',
-                    gap: '8px',
-                    alignItems: 'center'
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      background: 'rgba(0,0,0,0.7)',
-                      borderRadius: 'var(--radius-md)',
-                      padding: '4px'
-                    }}>
-                      <button
-                        onClick={() => setVideoSource('file')}
-                        style={{
-                          padding: '6px 12px',
-                          background: videoSource === 'file' ? 'var(--navy)' : 'transparent',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: 'var(--radius-sm)',
-                          cursor: 'pointer',
-                          fontSize: '0.75rem',
-                          fontWeight: '500'
-                        }}
-                      >
-                        📁 File
-                      </button>
-                      <button
-                        onClick={() => setVideoSource('camera')}
-                        style={{
-                          padding: '6px 12px',
-                          background: videoSource === 'camera' ? 'var(--navy)' : 'transparent',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: 'var(--radius-sm)',
-                          cursor: 'pointer',
-                          fontSize: '0.75rem',
-                          fontWeight: '500'
-                        }}
-                      >
-                        📷 Camera
-                      </button>
-                    </div>
-                    {videoSource === 'file' && (
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        style={{
-                          padding: '6px 12px',
-                          background: 'var(--navy)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: 'var(--radius-md)',
-                          cursor: 'pointer',
-                          fontSize: '0.75rem',
-                          fontWeight: '500'
-                        }}
-                      >
-                        Upload Video
-                      </button>
-                    )}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="video/*"
-                      onChange={handleFileUpload}
-                      style={{ display: 'none' }}
-                    />
-                  </div>
-                  )}
-
                   {/* Render appropriate tracking view based on pipeline version */}
                   {pipelineVersion === 'A' ? (
-                    /* Standard (Original) tracking - self-contained component with built-in UI */
+                    /* Standard tracking - TensorFlow.js + COCO-SSD */
                     <RealTimeDetection
                       theme="dark"
                       onMetricsUpdate={(metrics) => {
@@ -604,97 +481,20 @@ export default function LiveMonitor() {
                         setMlStats({ fps: metrics.fps, tracking: { confirmedCount: metrics.currentCount } })
                       }}
                     />
-                  ) : videoSource === 'file' && !videoFile ? (
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '100%',
-                      color: 'var(--text-muted)',
-                      gap: 'var(--space-md)',
-                      background: 'var(--bg-tertiary)',
-                      borderRadius: 'var(--radius-md)'
-                    }}>
-                      <Monitor size={64} strokeWidth={1} />
-                      <div style={{ fontSize: '1rem', fontWeight: '500' }}>Upload a Video File</div>
-                      <div style={{ fontSize: '0.813rem' }}>MP4, WebM, or other video formats</div>
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="btn btn-primary"
-                      >
-                        Choose Video File
-                      </button>
-                    </div>
-                  ) : videoSource === 'camera' && cameraError ? (
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '100%',
-                      color: 'var(--danger)',
-                      gap: 'var(--space-md)'
-                    }}>
-                      <AlertTriangle size={48} />
-                      <div style={{ fontSize: '1rem', fontWeight: '500' }}>Camera Error</div>
-                      <div style={{ fontSize: '0.813rem', color: 'var(--text-muted)' }}>{cameraError}</div>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => setVideoSource('file')}
-                      >
-                        Use Video File Instead
-                      </button>
-                    </div>
                   ) : (
-                    /* Fast (B) or Accurate (C) tracking with video */
-                    <>
-                      <video
-                        ref={videoRef}
-                        src={videoSource === 'file' ? videoFile : undefined}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        controls={videoSource === 'file'}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain',
-                          borderRadius: 'var(--radius-md)',
-                          background: '#000'
-                        }}
-                      />
-                      <canvas
-                        ref={canvasRef}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          pointerEvents: 'none'
-                        }}
-                      />
-                      <RealTimeDetectionV2
-                        version={pipelineVersion}
-                        videoRef={videoRef}
-                        canvasRef={canvasRef}
-                        enabled={isLive && (videoSource === 'camera' || videoFile)}
-                        onTrackUpdate={(tracks, detections) => {
-                          handleTrackingMetrics({
-                            currentCount: tracks.length,
-                            totalEntries: 0,
-                            totalExits: 0,
-                            peakCount: Math.max(trackingMetrics?.peakCount || 0, tracks.length)
-                          })
-                        }}
-                        onStatsUpdate={(stats) => setMlStats(stats)}
-                        showBboxes={true}
-                        showIds={true}
-                        bboxStyle="corner"
-                      />
-                    </>
+                    /* Enhanced tracking - COCO-SSD + ByteTrack smoothing + Kalman filter */
+                    <RealTimeDetectionEnhanced
+                      theme="dark"
+                      onMetricsUpdate={(metrics) => {
+                        handleTrackingMetrics({
+                          currentCount: metrics.currentCount,
+                          totalEntries: metrics.totalEntries || 0,
+                          totalExits: metrics.totalExits || 0,
+                          peakCount: Math.max(trackingMetrics?.peakCount || 0, metrics.currentCount)
+                        })
+                        setMlStats({ fps: metrics.fps, tracking: { confirmedCount: metrics.currentCount } })
+                      }}
+                    />
                   )}
                 </div>
               )}
