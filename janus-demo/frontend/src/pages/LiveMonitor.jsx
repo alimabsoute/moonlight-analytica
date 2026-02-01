@@ -1,15 +1,19 @@
-import { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { getKpis, getSeriesCsv, parseSeries, seedDemo, getDwellTime, getOccupancy, getEntriesExits, getQueue } from '../api';
+import Button from '../components/Button';
+import { HeroStatCard, StatCard } from '../components/Card';
 import TimeRangePicker from '../components/TimeRangePicker';
-import KPIStat from '../components/KPIStat';
-import ChartCard from '../components/ChartCard';
 import ErrorBanner from '../components/ErrorBanner';
 import Loading from '../components/Loading';
 import './LiveMonitor.css';
 
+// Lazy load the animated demo components
+const HumanoidTrackingDemo = lazy(() => import('../../../shared/HumanoidTrackingDemo'));
+const Tracking3DView = lazy(() => import('../../../shared/Tracking3DView'));
+
 export default function LiveMonitor() {
-  const [timeRange, setTimeRange] = useState(1); // 1 hour default
+  const [timeRange, setTimeRange] = useState(1);
   const [kpis, setKpis] = useState(null);
   const [series, setSeries] = useState([]);
   const [dwellTime, setDwellTime] = useState(null);
@@ -21,7 +25,7 @@ export default function LiveMonitor() {
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   // Video source state
-  const [videoSource, setVideoSource] = useState('demo'); // 'demo' | 'webcam' | 'procedural'
+  const [videoSource, setVideoSource] = useState('demo');
   const [uploadedVideo, setUploadedVideo] = useState(null);
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [showVideoSourceModal, setShowVideoSourceModal] = useState(false);
@@ -35,6 +39,19 @@ export default function LiveMonitor() {
   const [newVideoName, setNewVideoName] = useState('');
   const [newVideoDescription, setNewVideoDescription] = useState('');
   const [newVideoFile, setNewVideoFile] = useState(null);
+
+  // Model and tracker state
+  const [currentModel, setCurrentModel] = useState('yolov8n.pt');
+  const [currentTracker, setCurrentTracker] = useState('bytetrack.yaml');
+  const availableModels = ['yolov8n.pt', 'yolo11n.pt', 'yolo11s.pt'];
+  const availableTrackers = ['bytetrack.yaml', 'botsort.yaml'];
+
+  // Video feed error state
+  const [videoFeedError, setVideoFeedError] = useState(false);
+
+  // Procedural demo state
+  const [showProceduralDemo, setShowProceduralDemo] = useState(false);
+  const [demoMode, setDemoMode] = useState('3d');
 
   const fetchData = async () => {
     try {
@@ -65,10 +82,10 @@ export default function LiveMonitor() {
   }, [timeRange]);
 
   useEffect(() => {
-    if (!autoRefresh) return;
-    const interval = setInterval(fetchData, 2000); // Update every 2 seconds for real-time
+    if (!autoRefresh || showProceduralDemo) return;
+    const interval = setInterval(fetchData, 2000);
     return () => clearInterval(interval);
-  }, [autoRefresh, timeRange]);
+  }, [autoRefresh, timeRange, showProceduralDemo]);
 
   const handleSeedDemo = async () => {
     try {
@@ -105,19 +122,19 @@ export default function LiveMonitor() {
 
       if (source === 'demo') {
         if (uploadedVideo) {
-          // Upload MP4 file
           const formData = new FormData();
           formData.append('video', uploadedVideo);
-
           response = await fetch('http://localhost:8000/video/upload', {
             method: 'POST',
             body: formData
           });
           data = await response.json();
           if (!data.ok) throw new Error(data.error || 'Failed to upload video');
-
         } else if (youtubeUrl) {
-          // Use YouTube URL
+          const ytRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/)|youtu\.be\/)[a-zA-Z0-9_-]+/;
+          if (!ytRegex.test(youtubeUrl)) {
+            throw new Error('Invalid YouTube URL format');
+          }
           response = await fetch('http://localhost:8000/video/start', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -125,9 +142,7 @@ export default function LiveMonitor() {
           });
           data = await response.json();
           if (!data.ok) throw new Error(data.error || 'Failed to start YouTube video');
-
         } else {
-          // Use default demo.mp4
           response = await fetch('http://localhost:8000/video/start', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -144,28 +159,31 @@ export default function LiveMonitor() {
         });
         data = await response.json();
         if (!data.ok) throw new Error(data.error || 'Failed to start webcam');
-
       } else if (source === 'procedural') {
-        response = await fetch('http://localhost:8000/video/start', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ source: 'procedural' })
+        setShowProceduralDemo(true);
+        setVideoPlaying(false);
+        setVideoStreamUrl('');
+        setLoading(false);
+        setKpis({
+          current_count: 0,
+          avg_count: 0,
+          peak_count: 0,
+          total_events: 0,
+          throughput: 0
         });
-        data = await response.json();
-        if (!data.ok) throw new Error(data.error || 'Failed to start procedural demo');
+        setEntriesExits({ entries: 0, exits: 0 });
+        setOccupancy({ occupancy_rate: 0 });
+        setDwellTime({ avg_dwell_seconds: 0 });
+        setQueue({ current_queue_length: 0, avg_wait_seconds: 0 });
+        return;
       }
 
-      // Wait for video streamer to start
       await new Promise(resolve => setTimeout(resolve, 3000));
-
-      // Refresh data
       setLoading(false);
       setVideoPlaying(true);
+      setVideoFeedError(false);
       await fetchData();
-
-      // Force video feed refresh by adding timestamp
       setVideoStreamUrl(`http://localhost:8001/video_feed?t=${Date.now()}`);
-
     } catch (err) {
       setError(err.message || 'Failed to start video stream');
       setLoading(false);
@@ -174,9 +192,7 @@ export default function LiveMonitor() {
 
   const handleStopVideo = async () => {
     try {
-      const response = await fetch('http://localhost:8000/video/stop', {
-        method: 'POST'
-      });
+      const response = await fetch('http://localhost:8000/video/stop', { method: 'POST' });
       const data = await response.json();
       if (data.ok) {
         setVideoPlaying(false);
@@ -187,14 +203,14 @@ export default function LiveMonitor() {
     }
   };
 
-  const handlePauseVideo = () => {
-    // Toggle pause state (just hides video feed visually)
-    setVideoPlaying(!videoPlaying);
-  };
-
+  const handlePauseVideo = () => setVideoPlaying(!videoPlaying);
   const handleResumeVideo = () => {
     setVideoPlaying(true);
-    // Force video feed refresh
+    setVideoFeedError(false);
+    setVideoStreamUrl(`http://localhost:8001/video_feed?t=${Date.now()}`);
+  };
+  const handleRetryVideoFeed = () => {
+    setVideoFeedError(false);
     setVideoStreamUrl(`http://localhost:8001/video_feed?t=${Date.now()}`);
   };
 
@@ -213,30 +229,22 @@ export default function LiveMonitor() {
       setError('Please select a video file');
       return;
     }
-
     try {
       setUploadingToLibrary(true);
       const formData = new FormData();
       formData.append('video', newVideoFile);
       formData.append('name', newVideoName || newVideoFile.name.replace('.mp4', ''));
       formData.append('description', newVideoDescription);
-
       const response = await fetch('http://localhost:8000/video/library/upload', {
         method: 'POST',
         body: formData
       });
-
       const data = await response.json();
       if (!data.ok) throw new Error(data.error || 'Upload failed');
-
-      // Reset form
       setNewVideoFile(null);
       setNewVideoName('');
       setNewVideoDescription('');
-
-      // Refresh library
       await fetchVideoLibrary();
-
       setError(null);
     } catch (err) {
       setError(err.message || 'Failed to upload video');
@@ -248,25 +256,16 @@ export default function LiveMonitor() {
   const handlePlayFromLibrary = async (videoId) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8000/video/library/${videoId}/play`, {
-        method: 'POST'
-      });
-
+      const response = await fetch(`http://localhost:8000/video/library/${videoId}/play`, { method: 'POST' });
       const data = await response.json();
       if (!data.ok) throw new Error(data.error || 'Failed to play video');
-
-      // Wait for video streamer to start
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      // Close library and refresh
+      await new Promise(resolve => setTimeout(resolve, 500));
       setShowVideoLibrary(false);
       setLoading(false);
       setVideoPlaying(true);
+      setVideoFeedError(false);
       await fetchData();
-
-      // Force video feed refresh
       setVideoStreamUrl(`http://localhost:8001/video_feed?t=${Date.now()}`);
-
     } catch (err) {
       setError(err.message || 'Failed to play video');
       setLoading(false);
@@ -275,16 +274,10 @@ export default function LiveMonitor() {
 
   const handleDeleteFromLibrary = async (videoId) => {
     if (!confirm('Are you sure you want to delete this video?')) return;
-
     try {
-      const response = await fetch(`http://localhost:8000/video/library/${videoId}`, {
-        method: 'DELETE'
-      });
-
+      const response = await fetch(`http://localhost:8000/video/library/${videoId}`, { method: 'DELETE' });
       const data = await response.json();
       if (!data.ok) throw new Error(data.error || 'Failed to delete video');
-
-      // Refresh library
       await fetchVideoLibrary();
     } catch (err) {
       setError(err.message || 'Failed to delete video');
@@ -292,10 +285,48 @@ export default function LiveMonitor() {
   };
 
   useEffect(() => {
-    if (showVideoLibrary) {
-      fetchVideoLibrary();
-    }
+    if (showVideoLibrary) fetchVideoLibrary();
   }, [showVideoLibrary]);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/video/settings');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.model) setCurrentModel(data.model);
+          if (data.tracker) setCurrentTracker(data.tracker);
+        }
+      } catch (err) {
+        console.log('Could not fetch video settings');
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const handleSwitchModel = async (model) => {
+    try {
+      setError(null);
+      const response = await fetch(`http://localhost:8000/video/model?model=${model}`, { method: 'POST' });
+      const data = await response.json();
+      if (data.ok) setCurrentModel(model);
+      else setError(data.error || 'Failed to switch model');
+    } catch (err) {
+      setError(err.message || 'Failed to switch model');
+    }
+  };
+
+  const handleSwitchTracker = async (tracker) => {
+    try {
+      setError(null);
+      const response = await fetch(`http://localhost:8000/video/tracker?tracker=${tracker}`, { method: 'POST' });
+      const data = await response.json();
+      if (data.ok) setCurrentTracker(tracker);
+      else setError(data.error || 'Failed to switch tracker');
+    } catch (err) {
+      setError(err.message || 'Failed to switch tracker');
+    }
+  };
 
   if (loading) {
     return <Loading message="Loading live monitor data..." />;
@@ -303,392 +334,412 @@ export default function LiveMonitor() {
 
   return (
     <div className="live-monitor">
-      <div className="page-header">
-        <h1>Live Monitor</h1>
-        <div className="header-controls">
+      <ErrorBanner message={error} onDismiss={() => setError(null)} />
+
+      {/* Hero Stats Section */}
+      <section className="hero-stats-section">
+        <HeroStatCard
+          label="Current Count"
+          value={kpis?.current_count ?? 0}
+          icon="👥"
+          color="primary"
+          pulsing={autoRefresh}
+        />
+        <HeroStatCard
+          label="Peak Today"
+          value={kpis?.peak_count ?? 0}
+          icon="📈"
+          color="warning"
+        />
+        <HeroStatCard
+          label="Entries"
+          value={entriesExits?.entries ?? 0}
+          icon="🚪"
+          color="success"
+        />
+        <HeroStatCard
+          label="Exits"
+          value={entriesExits?.exits ?? 0}
+          icon="🚶"
+          color="error"
+        />
+      </section>
+
+      {/* Controls Bar */}
+      <section className="controls-bar">
+        <div className="controls-left">
+          <TimeRangePicker value={timeRange} onChange={setTimeRange} />
           <label className="auto-refresh-toggle">
             <input
               type="checkbox"
               checked={autoRefresh}
               onChange={(e) => setAutoRefresh(e.target.checked)}
             />
-            Auto-refresh (10s)
+            <span>Auto-refresh</span>
           </label>
-          <button onClick={() => setShowVideoLibrary(true)} className="btn-secondary">
-            📚 Video Library
-          </button>
-          <button onClick={fetchData} className="btn-refresh">
-            🔄 Refresh Now
-          </button>
         </div>
-      </div>
+        <div className="controls-right">
+          <Button variant="secondary" size="sm" onClick={() => setShowVideoLibrary(true)} icon="📚">
+            Library
+          </Button>
+          <Button variant="secondary" size="sm" onClick={fetchData} icon="🔄">
+            Refresh
+          </Button>
+        </div>
+      </section>
 
-      <ErrorBanner message={error} onDismiss={() => setError(null)} />
+      {/* Main Content Grid */}
+      <div className="content-grid">
+        {/* Video Feed Card */}
+        <section className="video-section">
+          <div className="section-header">
+            <h2>Live Video Feed</h2>
+            <div className="section-actions">
+              <Button variant="ghost" size="sm" onClick={() => setShowVideoSourceModal(true)} icon="📹">
+                Change Source
+              </Button>
+            </div>
+          </div>
 
-      <div className="time-range-section">
-        <TimeRangePicker value={timeRange} onChange={setTimeRange} />
-      </div>
-
-      <div className="kpi-grid">
-        <KPIStat
-          label="Current Count"
-          value={kpis?.current_count ?? 0}
-        />
-        <KPIStat
-          label="Average"
-          value={(kpis?.avg_count ?? 0).toFixed(1)}
-        />
-        <KPIStat
-          label="Peak"
-          value={kpis?.peak_count ?? 0}
-        />
-        <KPIStat
-          label="Total Events"
-          value={kpis?.total_events ?? 0}
-        />
-        <KPIStat
-          label="Occupancy %"
-          value={`${occupancy?.occupancy_rate?.toFixed(1) ?? 0}%`}
-        />
-        <KPIStat
-          label="Entries"
-          value={entriesExits?.entries ?? 0}
-        />
-        <KPIStat
-          label="Exits"
-          value={entriesExits?.exits ?? 0}
-        />
-        <KPIStat
-          label="Avg Dwell Time"
-          value={dwellTime ? `${Math.floor(dwellTime.avg_dwell_seconds / 60)}m` : '0m'}
-        />
-        <KPIStat
-          label="Queue Length"
-          value={queue?.current_queue_length ?? 0}
-        />
-        <KPIStat
-          label="Avg Wait Time"
-          value={queue ? `${Math.floor(queue.avg_wait_seconds / 60)}m` : '0m'}
-        />
-      </div>
-
-      <ChartCard
-        title="Live Video Feed"
-        className="video-feed-card"
-        actions={
-          <button onClick={() => setShowVideoSourceModal(true)} className="btn-secondary">
-            📹 Change Video Source
-          </button>
-        }
-      >
-        <div className="video-container">
-          {videoPlaying && videoStreamUrl && (
-            <>
-              <img
-                src={videoStreamUrl}
-                alt="Live tracking feed"
-                className="video-stream"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'block';
-                }}
-              />
-              <div className="video-controls">
-                <button
-                  className="control-btn"
-                  onClick={handlePauseVideo}
-                  title="Pause"
-                >
-                  ⏸️
-                </button>
-                <button
-                  className="control-btn"
-                  onClick={handleStopVideo}
-                  title="Stop"
-                >
-                  ⏹️
-                </button>
-                <button
-                  className="control-btn"
-                  onClick={() => setShowVideoSourceModal(true)}
-                  title="Change Source"
-                >
-                  ⚙️
-                </button>
-              </div>
-            </>
-          )}
-          {!videoPlaying && videoStreamUrl && (
-            <div className="video-paused">
-              <div className="paused-content">
-                <h3>⏸️ Video Paused</h3>
-                <button
-                  className="btn-primary"
-                  onClick={handleResumeVideo}
-                >
-                  ▶️ Resume
-                </button>
+          {/* Model/Tracker Selection */}
+          <div className="model-tracker-bar">
+            <div className="selector-group">
+              <label>Model:</label>
+              <div className="selector-buttons">
+                {availableModels.map((model) => (
+                  <button
+                    key={model}
+                    onClick={() => handleSwitchModel(model)}
+                    className={`selector-btn ${currentModel === model ? 'active' : ''}`}
+                  >
+                    {model.replace('.pt', '')}
+                  </button>
+                ))}
               </div>
             </div>
-          )}
-          {!videoStreamUrl && (
-            <div className="video-placeholder">
-              <div className="placeholder-content">
-                <h3>📹 No Video Feed</h3>
-                <p>Click "Change Video Source" to select a video source</p>
-                <button
-                  className="btn-primary"
-                  onClick={() => setShowVideoSourceModal(true)}
-                >
-                  📹 Select Video Source
-                </button>
+            <div className="selector-group">
+              <label>Tracker:</label>
+              <div className="selector-buttons">
+                {availableTrackers.map((tracker) => (
+                  <button
+                    key={tracker}
+                    onClick={() => handleSwitchTracker(tracker)}
+                    className={`selector-btn ${currentTracker === tracker ? 'active' : ''}`}
+                  >
+                    {tracker.replace('.yaml', '')}
+                  </button>
+                ))}
               </div>
             </div>
+          </div>
+
+          {/* Video Container */}
+          <div className="video-container">
+            {videoStreamUrl && !videoFeedError && !showProceduralDemo && (
+              <>
+                {videoPlaying ? (
+                  <img
+                    src={videoStreamUrl}
+                    alt="Live tracking feed"
+                    className="video-stream"
+                    onError={() => setVideoFeedError(true)}
+                    onLoad={() => setVideoFeedError(false)}
+                  />
+                ) : (
+                  <div className="video-paused">
+                    <div className="paused-content">
+                      <span className="paused-icon">⏸️</span>
+                      <h3>Video Paused</h3>
+                      <p>Click play to resume</p>
+                    </div>
+                  </div>
+                )}
+                <div className="video-controls-overlay">
+                  <button className="video-control-btn" onClick={videoPlaying ? handlePauseVideo : handleResumeVideo}>
+                    {videoPlaying ? '⏸️' : '▶️'}
+                  </button>
+                  <button className="video-control-btn" onClick={handleStopVideo}>⏹️</button>
+                  <button className="video-control-btn" onClick={() => setShowVideoSourceModal(true)}>⚙️</button>
+                </div>
+                <div className="video-status-badge">
+                  <span className="status-dot live" />
+                  <span>Live</span>
+                </div>
+              </>
+            )}
+            {videoFeedError && videoStreamUrl && (
+              <div className="video-error-state">
+                <span className="error-icon">⚠️</span>
+                <h3>Video Feed Error</h3>
+                <p>Could not connect to video stream</p>
+                <div className="error-actions">
+                  <Button variant="primary" size="sm" onClick={handleRetryVideoFeed}>Retry</Button>
+                  <Button variant="secondary" size="sm" onClick={() => setShowVideoLibrary(true)}>Open Library</Button>
+                </div>
+              </div>
+            )}
+            {!videoStreamUrl && !showProceduralDemo && (
+              <div className="video-empty-state">
+                <span className="empty-icon">📹</span>
+                <h3>No Video Feed</h3>
+                <p>Select a video source to start tracking</p>
+                <Button variant="primary" onClick={() => setShowVideoSourceModal(true)}>Select Source</Button>
+              </div>
+            )}
+            {showProceduralDemo && (
+              <div className="procedural-demo-wrapper">
+                <div className="demo-mode-toggle">
+                  <button
+                    onClick={() => setDemoMode('3d')}
+                    className={`demo-mode-btn ${demoMode === '3d' ? 'active' : ''}`}
+                  >
+                    🎮 3D View
+                  </button>
+                  <button
+                    onClick={() => setDemoMode('2d')}
+                    className={`demo-mode-btn ${demoMode === '2d' ? 'active' : ''}`}
+                  >
+                    📊 2D View
+                  </button>
+                </div>
+                <Suspense fallback={<div className="demo-loading">Loading demo...</div>}>
+                  {demoMode === '3d' ? (
+                    <Tracking3DView
+                      onMetricsUpdate={(metrics) => {
+                        setKpis(prev => ({
+                          ...prev,
+                          current_count: metrics.currentCount,
+                          peak_count: metrics.peakCount,
+                          total_events: metrics.totalEntries + metrics.totalExits,
+                          avg_count: metrics.currentCount,
+                          throughput: metrics.totalExits > 0 ? (metrics.totalExits / ((Date.now() - metrics.startTime) / 3600000)) : 0
+                        }));
+                        setEntriesExits({ entries: metrics.totalEntries, exits: metrics.totalExits });
+                      }}
+                      theme="dark"
+                    />
+                  ) : (
+                    <HumanoidTrackingDemo
+                      onMetricsUpdate={(metrics) => {
+                        setKpis(prev => ({
+                          ...prev,
+                          current_count: metrics.currentCount,
+                          peak_count: metrics.peakCount,
+                          total_events: metrics.totalEntries + metrics.totalExits,
+                          avg_count: metrics.currentCount,
+                          throughput: metrics.totalExits > 0 ? (metrics.totalExits / ((Date.now() - metrics.startTime) / 3600000)) : 0
+                        }));
+                        setEntriesExits({ entries: metrics.totalEntries, exits: metrics.totalExits });
+                      }}
+                    />
+                  )}
+                </Suspense>
+                <div className="demo-controls-bar">
+                  <Button variant="secondary" size="sm" onClick={() => {
+                    setShowProceduralDemo(false);
+                    setShowVideoSourceModal(true);
+                  }} icon="📹">
+                    Switch to Real Video
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Secondary Stats */}
+        <section className="secondary-stats">
+          <div className="section-header">
+            <h2>Key Metrics</h2>
+          </div>
+          <div className="stats-grid">
+            <StatCard label="Average Count" value={(kpis?.avg_count ?? 0).toFixed(1)} />
+            <StatCard label="Total Events" value={kpis?.total_events ?? 0} />
+            <StatCard label="Occupancy" value={`${occupancy?.occupancy_rate?.toFixed(1) ?? 0}%`} variant="primary" />
+            <StatCard label="Avg Dwell" value={dwellTime ? `${Math.floor(dwellTime.avg_dwell_seconds / 60)}m` : '0m'} />
+            <StatCard label="Queue Length" value={queue?.current_queue_length ?? 0} variant="warning" />
+            <StatCard label="Avg Wait" value={queue ? `${Math.floor(queue.avg_wait_seconds / 60)}m` : '0m'} />
+          </div>
+        </section>
+      </div>
+
+      {/* Chart Section */}
+      <section className="chart-section">
+        <div className="section-header">
+          <h2>Count Over Time</h2>
+          <div className="section-actions">
+            <Button variant="ghost" size="sm" onClick={handleDownloadCSV} icon="📥">Export CSV</Button>
+            <Button variant="ghost" size="sm" onClick={handleSeedDemo} icon="🎲">Seed Demo</Button>
+          </div>
+        </div>
+        <div className="chart-container">
+          {series.length === 0 ? (
+            <div className="chart-empty">No data available for selected time range</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={series}>
+                <defs>
+                  <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis
+                  dataKey="ts"
+                  tickFormatter={(ts) => new Date(ts).toLocaleTimeString()}
+                  stroke="#6b7280"
+                  fontSize={12}
+                />
+                <YAxis stroke="#6b7280" fontSize={12} />
+                <Tooltip
+                  labelFormatter={(ts) => new Date(ts).toLocaleString()}
+                  contentStyle={{
+                    backgroundColor: '#1f2937',
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                    color: '#f9fafb'
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="count_value"
+                  stroke="#3b82f6"
+                  fill="url(#colorCount)"
+                  strokeWidth={2}
+                  name="Count"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           )}
         </div>
-      </ChartCard>
+      </section>
+
+      {/* Throughput Stats */}
+      <section className="throughput-section">
+        <div className="throughput-card">
+          <span className="throughput-label">Throughput</span>
+          <span className="throughput-value">{(kpis?.throughput ?? 0).toFixed(2)}</span>
+          <span className="throughput-unit">events/hour</span>
+        </div>
+        <div className="throughput-card">
+          <span className="throughput-label">Time Range</span>
+          <span className="throughput-value">{timeRange}</span>
+          <span className="throughput-unit">hours</span>
+        </div>
+      </section>
 
       {/* Video Source Modal */}
       {showVideoSourceModal && (
         <div className="modal-overlay" onClick={() => setShowVideoSourceModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Select Video Source</h2>
               <button onClick={() => setShowVideoSourceModal(false)} className="modal-close">×</button>
             </div>
             <div className="modal-body">
-              <div className="video-source-options">
-
-                {/* Option 1: Demo Video/YouTube */}
+              <div className="source-options">
                 <div className={`source-option ${videoSource === 'demo' ? 'active' : ''}`}>
-                  <div className="source-header" onClick={() => setVideoSource('demo')}>
-                    <input
-                      type="radio"
-                      name="videoSource"
-                      value="demo"
-                      checked={videoSource === 'demo'}
-                      onChange={() => setVideoSource('demo')}
-                    />
-                    <h3>📹 Demo Video / YouTube</h3>
+                  <div className="source-option-header" onClick={() => setVideoSource('demo')}>
+                    <input type="radio" name="source" value="demo" checked={videoSource === 'demo'} onChange={() => setVideoSource('demo')} />
+                    <span className="source-icon">📹</span>
+                    <span className="source-label">Demo Video / YouTube</span>
                   </div>
                   {videoSource === 'demo' && (
                     <div className="source-config">
-                      <div className="upload-section">
-                        <label>
-                          <strong>Upload MP4 Video:</strong>
-                          <input
-                            type="file"
-                            accept="video/mp4"
-                            onChange={(e) => setUploadedVideo(e.target.files[0])}
-                          />
-                        </label>
-                        {uploadedVideo && <p className="file-name">Selected: {uploadedVideo.name}</p>}
+                      <div className="upload-field">
+                        <label>Upload MP4 Video:</label>
+                        <input type="file" accept="video/mp4" onChange={(e) => setUploadedVideo(e.target.files[0])} />
+                        {uploadedVideo && <p className="file-selected">{uploadedVideo.name}</p>}
                       </div>
-                      <div className="divider">OR</div>
-                      <div className="youtube-section">
-                        <label>
-                          <strong>YouTube URL:</strong>
-                          <input
-                            type="text"
-                            placeholder="https://www.youtube.com/watch?v=..."
-                            value={youtubeUrl}
-                            onChange={(e) => setYoutubeUrl(e.target.value)}
-                          />
-                        </label>
+                      <div className="divider"><span>OR</span></div>
+                      <div className="input-field">
+                        <label>YouTube URL:</label>
+                        <input type="text" placeholder="https://www.youtube.com/watch?v=..." value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} />
                       </div>
-                      <button className="btn-primary" onClick={() => handleStartVideoStream('demo')}>
-                        ▶️ Start Demo Video
-                      </button>
+                      <Button variant="primary" fullWidth onClick={() => handleStartVideoStream('demo')}>Start Demo</Button>
                     </div>
                   )}
                 </div>
 
-                {/* Option 2: Live Webcam */}
                 <div className={`source-option ${videoSource === 'webcam' ? 'active' : ''}`}>
-                  <div className="source-header" onClick={() => setVideoSource('webcam')}>
-                    <input
-                      type="radio"
-                      name="videoSource"
-                      value="webcam"
-                      checked={videoSource === 'webcam'}
-                      onChange={() => setVideoSource('webcam')}
-                    />
-                    <h3>📷 Live Webcam</h3>
+                  <div className="source-option-header" onClick={() => setVideoSource('webcam')}>
+                    <input type="radio" name="source" value="webcam" checked={videoSource === 'webcam'} onChange={() => setVideoSource('webcam')} />
+                    <span className="source-icon">📷</span>
+                    <span className="source-label">Live Webcam</span>
                   </div>
                   {videoSource === 'webcam' && (
                     <div className="source-config">
                       <p>Connect to your computer's webcam for live tracking</p>
-                      <button className="btn-primary" onClick={() => handleStartVideoStream('webcam')}>
-                        ▶️ Start Webcam
-                      </button>
+                      <Button variant="primary" fullWidth onClick={() => handleStartVideoStream('webcam')}>Start Webcam</Button>
                     </div>
                   )}
                 </div>
 
-                {/* Option 3: Procedural Demo */}
                 <div className={`source-option ${videoSource === 'procedural' ? 'active' : ''}`}>
-                  <div className="source-header" onClick={() => setVideoSource('procedural')}>
-                    <input
-                      type="radio"
-                      name="videoSource"
-                      value="procedural"
-                      checked={videoSource === 'procedural'}
-                      onChange={() => setVideoSource('procedural')}
-                    />
-                    <h3>🎲 Procedural Demo</h3>
+                  <div className="source-option-header" onClick={() => setVideoSource('procedural')}>
+                    <input type="radio" name="source" value="procedural" checked={videoSource === 'procedural'} onChange={() => setVideoSource('procedural')} />
+                    <span className="source-icon">🎲</span>
+                    <span className="source-label">Procedural Demo</span>
                   </div>
                   {videoSource === 'procedural' && (
                     <div className="source-config">
                       <p>Generate simulated tracking data for testing</p>
-                      <button className="btn-primary" onClick={() => handleStartVideoStream('procedural')}>
-                        ▶️ Start Procedural Demo
-                      </button>
+                      <Button variant="primary" fullWidth onClick={() => handleStartVideoStream('procedural')}>Start Demo</Button>
                     </div>
                   )}
                 </div>
-
               </div>
             </div>
           </div>
         </div>
       )}
 
-      <ChartCard
-        title="Count Over Time"
-        actions={
-          <>
-            <button onClick={handleDownloadCSV} className="btn-secondary">
-              📥 Download CSV
-            </button>
-            <button onClick={handleSeedDemo} className="btn-secondary">
-              🎲 Seed Demo
-            </button>
-          </>
-        }
-      >
-        {series.length === 0 ? (
-          <div className="no-data">No data available for selected time range</div>
-        ) : (
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={series}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="ts"
-                tickFormatter={(ts) => new Date(ts).toLocaleTimeString()}
-              />
-              <YAxis />
-              <Tooltip
-                labelFormatter={(ts) => new Date(ts).toLocaleString()}
-              />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="count_value"
-                stroke="#007bff"
-                name="Count"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        )}
-      </ChartCard>
-
-      <div className="stats-grid">
-        <ChartCard title="Throughput (Events/Hour)">
-          <div className="stat-value">{(kpis?.throughput ?? 0).toFixed(2)}</div>
-        </ChartCard>
-        <ChartCard title="Time Range">
-          <div className="stat-value">{timeRange}h</div>
-        </ChartCard>
-      </div>
-
       {/* Video Library Modal */}
       {showVideoLibrary && (
         <div className="modal-overlay" onClick={() => setShowVideoLibrary(false)}>
-          <div className="modal-content library-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>📚 Video Library</h2>
+              <h2>Video Library</h2>
               <button onClick={() => setShowVideoLibrary(false)} className="modal-close">×</button>
             </div>
-
             <div className="modal-body">
-              {/* Upload Section */}
-              <div className="library-upload-section">
+              <div className="library-upload">
                 <h3>Upload New Video</h3>
                 <div className="upload-form">
-                  <input
-                    type="file"
-                    accept="video/mp4"
-                    onChange={(e) => setNewVideoFile(e.target.files[0])}
-                    className="file-input"
-                  />
+                  <input type="file" accept="video/mp4" onChange={(e) => setNewVideoFile(e.target.files[0])} />
                   {newVideoFile && (
                     <>
-                      <input
-                        type="text"
-                        placeholder="Video name (optional)"
-                        value={newVideoName}
-                        onChange={(e) => setNewVideoName(e.target.value)}
-                        className="text-input"
-                      />
-                      <textarea
-                        placeholder="Description (optional)"
-                        value={newVideoDescription}
-                        onChange={(e) => setNewVideoDescription(e.target.value)}
-                        className="textarea-input"
-                        rows="2"
-                      />
-                      <button
-                        onClick={handleUploadToLibrary}
-                        disabled={uploadingToLibrary}
-                        className="btn-primary"
-                      >
-                        {uploadingToLibrary ? '⏳ Uploading...' : '📤 Upload to Library'}
-                      </button>
+                      <input type="text" placeholder="Video name" value={newVideoName} onChange={(e) => setNewVideoName(e.target.value)} />
+                      <textarea placeholder="Description" value={newVideoDescription} onChange={(e) => setNewVideoDescription(e.target.value)} rows="2" />
+                      <Button variant="primary" onClick={handleUploadToLibrary} loading={uploadingToLibrary}>
+                        {uploadingToLibrary ? 'Uploading...' : 'Upload'}
+                      </Button>
                     </>
                   )}
                 </div>
               </div>
 
-              {/* Video Library List */}
-              <div className="library-list-section">
+              <div className="library-list">
                 <h3>Saved Videos ({videoLibrary.length})</h3>
                 {videoLibrary.length === 0 ? (
-                  <div className="empty-library">
-                    <p>No videos in library yet. Upload your first video above!</p>
-                  </div>
+                  <div className="library-empty">No videos in library</div>
                 ) : (
                   <div className="video-grid">
                     {videoLibrary.map((video) => (
-                      <div key={video.id} className="video-card">
+                      <div key={video.id} className="library-video-card">
                         <div className="video-card-header">
                           <h4>{video.name}</h4>
-                          <button
-                            onClick={() => handleDeleteFromLibrary(video.id)}
-                            className="delete-btn"
-                            title="Delete video"
-                          >
-                            🗑️
-                          </button>
+                          <button onClick={() => handleDeleteFromLibrary(video.id)} className="delete-btn">🗑️</button>
                         </div>
-                        {video.description && (
-                          <p className="video-description">{video.description}</p>
-                        )}
+                        {video.description && <p className="video-description">{video.description}</p>}
                         <div className="video-meta">
-                          <span className="video-size">
-                            {(video.file_size / 1024 / 1024).toFixed(2)} MB
-                          </span>
-                          <span className="video-date">
-                            {new Date(video.uploaded_at).toLocaleDateString()}
-                          </span>
+                          <span>{(video.file_size / 1024 / 1024).toFixed(2)} MB</span>
+                          <span>{new Date(video.uploaded_at).toLocaleDateString()}</span>
                         </div>
-                        <button
-                          onClick={() => handlePlayFromLibrary(video.id)}
-                          className="btn-primary play-btn"
-                        >
-                          ▶️ Play & Track
-                        </button>
+                        <Button variant="primary" size="sm" fullWidth onClick={() => handlePlayFromLibrary(video.id)}>
+                          Play & Track
+                        </Button>
                       </div>
                     ))}
                   </div>

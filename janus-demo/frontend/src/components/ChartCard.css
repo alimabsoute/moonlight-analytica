@@ -1,35 +1,39 @@
+/* ============================================
+   CHART CARD COMPONENT - DARK THEME
+   ============================================ */
+
 .chart-card {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: box-shadow 0.2s;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  transition: all var(--transition-base);
 }
 
 .chart-card:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-lg);
 }
 
 .chart-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .chart-card-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .chart-card-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .chart-card-content {
@@ -39,15 +43,29 @@
   justify-content: center;
 }
 
+/* Chart Card Variants */
+.chart-card.compact {
+  padding: var(--space-4);
+}
+
+.chart-card.compact .chart-card-content {
+  min-height: 200px;
+}
+
+.chart-card.tall .chart-card-content {
+  min-height: 400px;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .chart-card {
-    padding: 1rem;
+    padding: var(--space-4);
   }
 
   .chart-card-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: var(--space-3);
   }
 
   .chart-card-content {

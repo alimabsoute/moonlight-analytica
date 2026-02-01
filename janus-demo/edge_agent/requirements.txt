@@ -1,5 +1,49 @@
-# Minimal CPU-friendly stack (GPU optional)
-ultralytics==8.3.27
-opencv-python-headless==4.10.0.84
-numpy==1.26.4
-requests==2.32.3
+# Janus Edge Agent Dependencies
+# Updated February 2025 - Enhanced Tracking with Re-ID Support
+
+# Core ML/CV
+ultralytics>=8.3.0          # YOLOv8/v11 support (8.3+ has YOLO11)
+opencv-python>=4.10.0       # OpenCV 4.13 compatible (4.10+ for latest features)
+numpy>=1.24.0
+
+# Video streaming
+yt-dlp>=2024.12.0           # YouTube stream extraction (updated)
+
+# Web server
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# HTTP requests
+requests>=2.31.0
+
+# ============================================
+# OPTIONAL: Advanced Tracking & Re-ID
+# Uncomment the packages below for enhanced tracking capabilities
+# ============================================
+
+# Re-ID & Advanced Trackers (RECOMMENDED)
+# Provides: BoT-SORT, DeepOCSORT, StrongSORT with Re-ID support
+# boxmot>=10.0.0            # Advanced multi-object tracking
+
+# Alternative Re-ID backend (if boxmot not working)
+# torchreid>=0.2.5          # Person re-identification library
+
+# Linear assignment optimization (improves tracking performance)
+# lap>=0.4.0                # Hungarian algorithm for tracking
+
+# GPU Acceleration (for faster inference)
+# torch>=2.0.0              # PyTorch - required for GPU support
+# torchvision>=0.15.0       # Vision utilities
+
+# ============================================
+# INSTALLATION INSTRUCTIONS
+# ============================================
+# Basic install (CPU only):
+#   pip install -r requirements.txt
+#
+# With Re-ID support:
+#   pip install -r requirements.txt boxmot
+#
+# With GPU acceleration:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+#   pip install -r requirements.txt boxmot

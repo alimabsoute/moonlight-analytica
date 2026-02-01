@@ -1,0 +1,39 @@
+# Janus Demo - Tuned BoT-SORT Configuration
+# Camera motion compensation + appearance matching for robust tracking
+# Based on: https://github.com/NirAharon/BoT-SORT
+
+tracker_type: botsort
+
+# Association thresholds (tuned for better track persistence)
+track_high_thresh: 0.5      # Higher confidence for primary association
+track_low_thresh: 0.1       # Keep low for ghost track recovery
+new_track_thresh: 0.5       # Higher threshold to reduce false new tracks
+
+# Track buffer - 3 seconds at 30fps
+track_buffer: 90            # Increased from 30 to 90 frames
+
+# Matching threshold
+match_thresh: 0.8           # Standard IOU matching threshold
+
+# Fuse detection confidence with IOU
+fuse_score: True
+
+# Minimum box area
+min_box_area: 100           # Ignore very small detections
+
+# ========================================
+# BoT-SORT Specific Settings
+# ========================================
+
+# Camera Motion Compensation (CMC) - handles camera shake/movement
+# Options: sparseOptFlow, ecc, orb, sift, none
+gmc_method: sparseOptFlow   # Optical flow for motion compensation
+
+# Re-ID settings (appearance-based matching)
+# Note: Requires reid_weights model file
+proximity_thresh: 0.5       # IoU threshold for proximity matching
+appearance_thresh: 0.25     # Cosine similarity threshold for appearance matching
+with_reid: False            # Set to True when reid_weights are available
+
+# Re-ID model weights (uncomment when available)
+# reid_weights: osnet_x0_25_market1501.pt

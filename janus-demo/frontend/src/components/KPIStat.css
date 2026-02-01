@@ -1,62 +1,91 @@
+/* ============================================
+   KPI STAT COMPONENT - DARK THEME
+   ============================================ */
+
 .kpi-stat {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
 }
 
 .kpi-stat:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: var(--color-border);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .kpi-label {
-  font-size: 0.85rem;
-  color: #666;
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 0.5rem;
 }
 
 .kpi-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 0.25rem;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .kpi-unit {
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: #666;
-  margin-left: 0.25rem;
+  font-size: 0.5em;
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  margin-left: var(--space-1);
 }
 
 .kpi-trend {
-  font-size: 0.9rem;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
 }
 
 .kpi-trend.positive {
-  color: #28a745;
+  color: var(--color-success);
 }
 
 .kpi-trend.negative {
-  color: #dc3545;
+  color: var(--color-error);
 }
 
 .kpi-trend.neutral {
-  color: #6c757d;
+  color: var(--color-text-muted);
 }
 
+/* Size Variants */
+.kpi-stat.kpi-sm {
+  padding: var(--space-3);
+}
+
+.kpi-stat.kpi-sm .kpi-value {
+  font-size: var(--text-xl);
+}
+
+.kpi-stat.kpi-lg {
+  padding: var(--space-5);
+}
+
+.kpi-stat.kpi-lg .kpi-value {
+  font-size: var(--text-4xl);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .kpi-stat {
-    padding: 1rem;
+    padding: var(--space-3);
   }
 
   .kpi-value {
-    font-size: 1.5rem;
+    font-size: var(--text-xl);
   }
 }

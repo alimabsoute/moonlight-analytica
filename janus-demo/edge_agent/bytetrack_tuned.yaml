@@ -1,0 +1,23 @@
+# Janus Demo - Tuned ByteTrack Configuration
+# Optimized for persistent person tracking in retail environments
+# Based on: https://github.com/ifzhang/ByteTrack
+
+tracker_type: bytetrack
+
+# Association thresholds (tuned for better track persistence)
+track_high_thresh: 0.5      # Higher confidence for primary association (was 0.25)
+track_low_thresh: 0.1       # Keep low for ghost track recovery
+new_track_thresh: 0.5       # Higher threshold to reduce false new tracks (was 0.25)
+
+# Track buffer - CRITICAL for occlusion handling
+# At 30fps, 90 frames = 3 seconds of lost track tolerance
+track_buffer: 90            # Increased from 30 (1s) to 90 (3s)
+
+# Matching threshold
+match_thresh: 0.8           # Standard IOU matching threshold
+
+# Fuse detection confidence with IOU for better matching
+fuse_score: True
+
+# Minimum box area (prevents tracking small noise)
+min_box_area: 100           # Ignore very small detections
