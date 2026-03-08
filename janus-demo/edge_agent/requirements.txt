@@ -2,9 +2,12 @@
 # Updated February 2025 - Enhanced Tracking with Re-ID Support
 
 # Core ML/CV
-ultralytics>=8.3.0          # YOLOv8/v11 support (8.3+ has YOLO11)
 opencv-python>=4.10.0       # OpenCV 4.13 compatible (4.10+ for latest features)
 numpy>=1.24.0
+supervision>=0.24.0         # ByteTrack tracking (replaces ultralytics tracker)
+
+# Note: ultralytics is NO LONGER needed here — detection runs on inference-server
+# ultralytics>=8.3.0        # Moved to inference-server/requirements.txt
 
 # Video streaming
 yt-dlp>=2024.12.0           # YouTube stream extraction (updated)

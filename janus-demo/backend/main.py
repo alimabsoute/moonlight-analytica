@@ -2,15 +2,18 @@
 # Flask + SQLite backend for Janus demo: health, seed_demo, count, KPIs, CSV
 from __future__ import annotations
 
+import os
 import random
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
+from typing import Tuple
 
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 
 DB = "janus.db"
+INFERENCE_URL = os.environ.get("INFERENCE_URL", "http://localhost:8002")
 
 app = Flask(__name__)
 # Allow Vite on 5173/5174 (localhost & 127.0.0.1)
@@ -38,6 +41,9 @@ def db():
 
 def ensure_schema():
     with db() as con:
+        # Enable WAL mode for concurrent read (Flask) + write (batch processor)
+        con.execute("PRAGMA journal_mode=WAL")
+
         # Legacy counts table (preserved for compatibility)
         con.execute(
             """
@@ -92,6 +98,50 @@ def ensure_schema():
             """
         )
 
+        # Batch processing jobs table
+        con.execute(
+            """
+            CREATE TABLE IF NOT EXISTS batch_jobs (
+              id               INTEGER PRIMARY KEY AUTOINCREMENT,
+              video_id         TEXT NOT NULL,
+              video_name       TEXT,
+              video_path       TEXT,
+              model            TEXT DEFAULT 'yolo11l.pt',
+              tracker          TEXT DEFAULT 'botsort_tuned.yaml',
+              status           TEXT DEFAULT 'pending',
+              total_frames     INTEGER DEFAULT 0,
+              processed_frames INTEGER DEFAULT 0,
+              total_events     INTEGER DEFAULT 0,
+              total_sessions   INTEGER DEFAULT 0,
+              fps              REAL DEFAULT 0,
+              started_at       TEXT,
+              completed_at     TEXT,
+              error_message    TEXT
+            )
+            """
+        )
+
+        # Add source and video_id columns to events/sessions (idempotent)
+        for alter in [
+            "ALTER TABLE events ADD COLUMN source TEXT DEFAULT 'live'",
+            "ALTER TABLE events ADD COLUMN video_id TEXT",
+            "ALTER TABLE sessions ADD COLUMN source TEXT DEFAULT 'live'",
+            "ALTER TABLE sessions ADD COLUMN video_id TEXT",
+        ]:
+            try:
+                con.execute(alter)
+            except sqlite3.OperationalError:
+                pass  # Column already exists
+
+        # Create indexes for source filtering
+        for idx in [
+            "CREATE INDEX IF NOT EXISTS idx_events_source ON events(source)",
+            "CREATE INDEX IF NOT EXISTS idx_events_video_id ON events(video_id)",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_source ON sessions(source)",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_video_id ON sessions(video_id)",
+        ]:
+            con.execute(idx)
+
         # Insert default zones if empty
         con.execute("INSERT OR IGNORE INTO zones (zone_name, capacity, zone_type) VALUES ('entrance', 50, 'entrance')")
         con.execute("INSERT OR IGNORE INTO zones (zone_name, capacity, zone_type) VALUES ('checkout', 20, 'checkout')")
@@ -107,6 +157,21 @@ ensure_schema()
 @app.get("/health")
 def health():
     return jsonify({"ok": True})
+
+
+def parse_source() -> str:
+    """Parse ?source=live|batch|all from query string. Default 'all'."""
+    s = (request.args.get("source") or "all").strip().lower()
+    return s if s in ("live", "batch", "all") else "all"
+
+
+def source_filter(table: str = "") -> Tuple[str, list]:
+    """Return (SQL fragment, params) for source filtering."""
+    src = parse_source()
+    prefix = f"{table}." if table else ""
+    if src == "all":
+        return "", []
+    return f" AND {prefix}source = ?", [src]
 
 
 def parse_hours(default: float = 168.0) -> float:
@@ -372,15 +437,16 @@ def dwell_time():
     """
     hours = parse_hours()
     since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
 
     with db() as con:
         sessions_data = con.execute(
-            """
+            f"""
             SELECT dwell_seconds
             FROM sessions
-            WHERE entry_time > ? AND exit_time IS NOT NULL
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
             """,
-            (since.isoformat(timespec="seconds"),),
+            [since.isoformat(timespec="seconds")] + src_params,
         ).fetchall()
 
     if not sessions_data:
@@ -468,17 +534,18 @@ def entries_exits():
     """
     hours = parse_hours()
     since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
 
     with db() as con:
         stats = con.execute(
-            """
+            f"""
             SELECT
                 SUM(CASE WHEN event_type = 'entry' THEN 1 ELSE 0 END) as entries,
                 SUM(CASE WHEN event_type = 'exit' THEN 1 ELSE 0 END) as exits
             FROM events
-            WHERE timestamp > ?
+            WHERE timestamp > ?{src_sql}
             """,
-            (since.isoformat(timespec="seconds"),),
+            [since.isoformat(timespec="seconds")] + src_params,
         ).fetchone()
 
     entries = stats["entries"] or 0
@@ -500,19 +567,20 @@ def conversion():
     """
     hours = parse_hours()
     since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
 
     with db() as con:
         stats = con.execute(
-            """
+            f"""
             SELECT
                 COUNT(*) as total_sessions,
                 SUM(converted) as conversions,
                 SUM(CASE WHEN dwell_seconds < 60 THEN 1 ELSE 0 END) as bounced,
                 SUM(CASE WHEN dwell_seconds >= 300 THEN 1 ELSE 0 END) as engaged
             FROM sessions
-            WHERE entry_time > ? AND exit_time IS NOT NULL
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
             """,
-            (since.isoformat(timespec="seconds"),),
+            [since.isoformat(timespec="seconds")] + src_params,
         ).fetchone()
 
     total = stats["total_sessions"] or 0
@@ -540,21 +608,22 @@ def zones_analytics():
     """
     hours = parse_hours()
     since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter("e")
 
     with db() as con:
         zone_stats = con.execute(
-            """
+            f"""
             SELECT
                 z.zone_name,
                 z.capacity,
                 COUNT(e.id) as total_events,
                 COUNT(DISTINCT e.person_id) as unique_visitors
             FROM zones z
-            LEFT JOIN events e ON z.id = e.zone_id AND e.timestamp > ?
+            LEFT JOIN events e ON z.id = e.zone_id AND e.timestamp > ?{src_sql}
             GROUP BY z.id, z.zone_name, z.capacity
             ORDER BY total_events DESC
             """,
-            (since.isoformat(timespec="seconds"),),
+            [since.isoformat(timespec="seconds")] + src_params,
         ).fetchall()
 
     zones_data = [
@@ -599,13 +668,14 @@ def queue_analytics():
         ).fetchone()["queue_length"]
 
         # Average queue metrics
+        src_sql, src_params = source_filter()
         queue_sessions = con.execute(
-            """
+            f"""
             SELECT dwell_seconds
             FROM sessions
-            WHERE zone_path LIKE ? AND entry_time > ?
+            WHERE zone_path LIKE ? AND entry_time > ?{src_sql}
             """,
-            (f'%"queue"%', since.isoformat(timespec="seconds")),
+            [f'%"queue"%', since.isoformat(timespec="seconds")] + src_params,
         ).fetchall()
 
     wait_times = [row["dwell_seconds"] for row in queue_sessions if row["dwell_seconds"]]
@@ -676,54 +746,115 @@ def post_session():
     return jsonify({"ok": True, "person_id": person_id, "dwell_seconds": dwell_seconds})
 
 
+def _kill_streamer_on_port(port=8001):
+    """Kill any process listening on the given port."""
+    import subprocess, time
+    try:
+        result = subprocess.run(
+            ["netstat", "-ano"],
+            capture_output=True, text=True, shell=True
+        )
+        for line in result.stdout.splitlines():
+            if f":{port}" in line and "LISTENING" in line:
+                pid = line.strip().split()[-1]
+                if pid.isdigit():
+                    subprocess.run(["taskkill", "/F", "/PID", pid],
+                                   capture_output=True, shell=True)
+        time.sleep(1)
+    except Exception:
+        pass
+
+
 @app.post("/video/start")
 def start_video_stream():
-    """Start video streamer with specified source"""
+    """Start video streamer with specified source.
+
+    For demo videos, this endpoint tries to use the existing video_streamer's
+    /switch endpoint first. If the streamer isn't running, it falls back to
+    subprocess spawning.
+    """
     import subprocess
     import os
+    import requests as req  # Use alias to avoid conflict with Flask request
 
     body = request.get_json() or {}
     source = body.get("source")  # 'demo', 'webcam', 'procedural', 'youtube'
     url = body.get("url")  # YouTube URL if source == 'youtube'
-
-    # Kill any existing video_streamer processes
-    try:
-        subprocess.run(["taskkill", "/F", "/IM", "python.exe", "/FI", "WINDOWTITLE eq video_streamer*"],
-                      capture_output=True, shell=True)
-    except:
-        pass
 
     edge_agent_dir = os.path.join(os.path.dirname(__file__), "..", "edge_agent")
     venv_python = os.path.join(edge_agent_dir, ".venv", "Scripts", "python.exe")
 
     try:
         if source == 'demo':
-            # Use default demo.mp4
-            demo_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "public", "demo.mp4")
+            # Try using the demo.mp4 from frontend public folder
+            demo_path = os.path.normpath(os.path.join(
+                os.path.dirname(__file__), "..", "frontend", "public", "demo.mp4"
+            ))
+
+            # If demo.mp4 doesn't exist, try the first video in the library
+            if not os.path.exists(demo_path):
+                library_dir = os.path.join(os.path.dirname(__file__), "..", "edge_agent", "video_library")
+                metadata_file = os.path.join(library_dir, "metadata.json")
+                if os.path.exists(metadata_file):
+                    import json
+                    with open(metadata_file, 'r') as f:
+                        metadata = json.load(f)
+                    videos = metadata.get("videos", [])
+                    if videos:
+                        demo_path = os.path.normpath(videos[0]["path"])
+
+            if not os.path.exists(demo_path):
+                return jsonify({"error": "No demo video found. Upload a video to the library first."}), 404
+
+            # Try to use the switch endpoint on running video_streamer first
+            try:
+                resp = req.post(
+                    "http://localhost:8001/switch",
+                    params={"source": demo_path},
+                    timeout=5
+                )
+                if resp.ok:
+                    return jsonify({"ok": True, "source": source, "video_path": demo_path, "method": "switch"})
+            except req.exceptions.ConnectionError:
+                # Video streamer not running, fall back to subprocess
+                pass
+
+            # Fall back to starting new subprocess
             subprocess.Popen(
                 [venv_python, "video_streamer.py", "--source", demo_path, "--port", "8001"],
                 cwd=edge_agent_dir,
                 creationflags=subprocess.CREATE_NEW_CONSOLE
             )
+            return jsonify({"ok": True, "source": source, "video_path": demo_path, "method": "subprocess"})
+
         elif source == 'youtube' and url:
+            # YouTube requires subprocess since it needs yt-dlp extraction
+            # Kill any existing video streamer on port 8001 first
+            _kill_streamer_on_port(8001)
+
             subprocess.Popen(
                 [venv_python, "video_streamer.py", "--youtube", url, "--port", "8001"],
                 cwd=edge_agent_dir,
                 creationflags=subprocess.CREATE_NEW_CONSOLE
             )
+            return jsonify({"ok": True, "source": source})
+
         elif source == 'webcam':
+            # Webcam requires subprocess to start fresh
             subprocess.Popen(
                 [venv_python, "video_streamer.py", "--source", "0", "--port", "8001"],
                 cwd=edge_agent_dir,
                 creationflags=subprocess.CREATE_NEW_CONSOLE
             )
+            return jsonify({"ok": True, "source": source})
+
         elif source == 'procedural':
             # For procedural, we don't start video streamer - just use seed_demo endpoint
             return jsonify({"ok": True, "message": "Procedural mode - use seed_demo endpoint for data"})
+
         else:
             return jsonify({"error": "Invalid source or missing URL"}), 400
 
-        return jsonify({"ok": True, "source": source})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -770,15 +901,8 @@ def upload_video():
 @app.post("/video/stop")
 def stop_video():
     """Stop video streamer"""
-    import subprocess
-
     try:
-        # Kill video_streamer processes
-        subprocess.run(
-            ["taskkill", "/F", "/IM", "python.exe", "/FI", "WINDOWTITLE eq *video_streamer*"],
-            capture_output=True,
-            shell=True
-        )
+        _kill_streamer_on_port(8001)
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -846,7 +970,7 @@ def upload_to_library():
     else:
         metadata = {"videos": []}
 
-    # Add new video metadata
+    # Add new video metadata (normalize path for consistent comparisons)
     video_metadata = {
         "id": video_id,
         "name": video_name,
@@ -855,7 +979,7 @@ def upload_to_library():
         "original_filename": file.filename,
         "file_size": file_size,
         "uploaded_at": datetime.now().isoformat(),
-        "path": video_path
+        "path": os.path.normpath(os.path.abspath(video_path))
     }
     metadata["videos"].append(video_metadata)
 
@@ -932,31 +1056,190 @@ def play_library_video(video_id):
     if not video:
         return jsonify({"error": "Video not found"}), 404
 
-    # Kill any existing video_streamer processes
-    try:
-        subprocess.run(
-            ["taskkill", "/F", "/IM", "python.exe", "/FI", "WINDOWTITLE eq *video_streamer*"],
-            capture_output=True,
-            shell=True
-        )
-    except:
-        pass
+    # Normalize video path (handles both relative and absolute paths in metadata)
+    video_path = os.path.normpath(os.path.abspath(video["path"]))
 
-    # Start video streamer
+    # Verify video exists
+    if not os.path.exists(video_path):
+        return jsonify({"error": f"Video file not found: {video_path}"}), 404
+
+    # Call the video_streamer's switch endpoint to change video
+    # If streamer isn't running, auto-start it with this video
+    import requests as req
     edge_agent_dir = os.path.join(os.path.dirname(__file__), "..", "edge_agent")
     venv_python = os.path.join(edge_agent_dir, ".venv", "Scripts", "python.exe")
 
     try:
-        subprocess.Popen(
-            [venv_python, "video_streamer.py", "--source", video["path"], "--port", "8001"],
-            cwd=edge_agent_dir,
-            creationflags=subprocess.CREATE_NEW_CONSOLE
+        resp = req.post(
+            "http://localhost:8001/switch",
+            params={"source": video_path},
+            timeout=5
         )
-        return jsonify({"ok": True, "video": video})
+        if resp.ok:
+            return jsonify({"ok": True, "video": video, "switch_result": resp.json()})
+        else:
+            return jsonify({"error": f"Video streamer error: {resp.text}"}), resp.status_code
+    except req.exceptions.ConnectionError:
+        # Streamer not running — auto-start it with this video
+        if not os.path.exists(venv_python):
+            return jsonify({"error": f"Python venv not found at {venv_python}. Run setup first."}), 500
+        try:
+            subprocess.Popen(
+                [venv_python, "video_streamer.py", "--source", video_path, "--port", "8001"],
+                cwd=os.path.normpath(edge_agent_dir),
+                creationflags=subprocess.CREATE_NEW_CONSOLE
+            )
+            # Return immediately — YOLO model loading can take 10-20s
+            # Frontend will show the feed once the streamer is ready
+            return jsonify({"ok": True, "video": video, "method": "subprocess_start"})
+        except Exception as e:
+            return jsonify({"error": f"Failed to start video streamer: {e}"}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
+@app.get("/video/settings")
+def get_video_settings():
+    """Get current video streamer settings"""
+    import requests
+    try:
+        resp = requests.get("http://localhost:8001/settings", timeout=5)
+        if resp.ok:
+            return jsonify(resp.json())
+        else:
+            return jsonify({"error": "Video streamer error"}), resp.status_code
+    except requests.exceptions.ConnectionError:
+        return jsonify({"error": "Video streamer not running"}), 503
+
+
+@app.post("/video/model")
+def set_video_model():
+    """Switch YOLO model — proxies to inference server directly"""
+    import requests as req
+    model = request.args.get('model') or (request.json.get('model') if request.is_json else None)
+    if not model:
+        return jsonify({"error": "Missing 'model' parameter"}), 400
+    # Try inference server first (new architecture), fall back to video streamer
+    try:
+        resp = req.post(f"{INFERENCE_URL}/model", json={"model": model}, timeout=30)
+        return jsonify(resp.json()), resp.status_code
+    except req.exceptions.ConnectionError:
+        pass
+    try:
+        resp = req.post("http://localhost:8001/model", params={"model": model}, timeout=10)
+        return jsonify(resp.json()), resp.status_code
+    except req.exceptions.ConnectionError:
+        return jsonify({"error": "Neither inference server nor video streamer running"}), 503
+
+
+@app.get("/inference/health")
+def inference_health():
+    """Check inference server health"""
+    import requests as req
+    try:
+        resp = req.get(f"{INFERENCE_URL}/health", timeout=5)
+        return jsonify(resp.json()), resp.status_code
+    except req.exceptions.ConnectionError:
+        return jsonify({"status": "offline", "url": INFERENCE_URL}), 503
+
+
+@app.get("/inference/info")
+def inference_info():
+    """Get inference server info"""
+    import requests as req
+    try:
+        resp = req.get(f"{INFERENCE_URL}/info", timeout=5)
+        return jsonify(resp.json()), resp.status_code
+    except req.exceptions.ConnectionError:
+        return jsonify({"error": "Inference server not running"}), 503
+
+
+@app.post("/video/tracker")
+def set_video_tracker():
+    """Switch tracker algorithm"""
+    import requests
+    tracker = request.args.get('tracker') or (request.json.get('tracker') if request.is_json else None)
+    if not tracker:
+        return jsonify({"error": "Missing 'tracker' parameter"}), 400
+    try:
+        resp = requests.post("http://localhost:8001/tracker", params={"tracker": tracker}, timeout=10)
+        return jsonify(resp.json()), resp.status_code
+    except requests.exceptions.ConnectionError:
+        return jsonify({"error": "Video streamer not running"}), 503
+
+
+# ── Batch Processing Endpoints ───────────────────────────────────────────
+
+@app.get("/api/batch/jobs")
+def batch_jobs_list():
+    """List all batch processing jobs."""
+    with db() as con:
+        rows = con.execute("SELECT * FROM batch_jobs ORDER BY id DESC").fetchall()
+    return jsonify({"jobs": [dict(r) for r in rows]})
+
+
+@app.get("/api/batch/jobs/<int:job_id>")
+def batch_job_detail(job_id):
+    """Get details for a single batch job."""
+    with db() as con:
+        row = con.execute("SELECT * FROM batch_jobs WHERE id=?", (job_id,)).fetchone()
+    if not row:
+        return jsonify({"error": "Job not found"}), 404
+    return jsonify(dict(row))
+
+
+@app.post("/api/batch/start")
+def batch_start():
+    """Trigger batch processing for a video via subprocess."""
+    import subprocess
+    import os
+
+    body = request.get_json() or {}
+    video_id = body.get("video_id")
+    model = body.get("model", "yolo11l.pt")
+    tracker = body.get("tracker", "botsort_tuned.yaml")
+
+    if not video_id:
+        return jsonify({"error": "video_id required"}), 400
+
+    edge_agent_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "edge_agent")
+    )
+    venv_python = os.path.join(edge_agent_dir, ".venv", "Scripts", "python.exe")
+    batch_script = os.path.join(edge_agent_dir, "batch_processor.py")
+
+    if not os.path.exists(batch_script):
+        return jsonify({"error": "batch_processor.py not found"}), 500
+
+    # Use venv python if available, otherwise system python
+    python_exe = venv_python if os.path.exists(venv_python) else sys.executable
+
+    try:
+        proc = subprocess.Popen(
+            [python_exe, batch_script, "process",
+             "--video-id", video_id,
+             "--model", model,
+             "--tracker", tracker],
+            cwd=edge_agent_dir,
+            creationflags=subprocess.CREATE_NEW_CONSOLE,
+        )
+        return jsonify({"ok": True, "video_id": video_id, "pid": proc.pid})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.delete("/api/batch/results/<video_id>")
+def batch_clear_results(video_id):
+    """Clear batch data for a specific video."""
+    with db() as con:
+        con.execute("DELETE FROM events WHERE source='batch' AND video_id=?", (video_id,))
+        con.execute("DELETE FROM sessions WHERE source='batch' AND video_id=?", (video_id,))
+        con.execute("DELETE FROM batch_jobs WHERE video_id=?", (video_id,))
+        con.commit()
+    return jsonify({"ok": True, "video_id": video_id})
+
+
 if __name__ == "__main__":
     # Dev server
+    import sys
     app.run(host="0.0.0.0", port=8000, debug=True)

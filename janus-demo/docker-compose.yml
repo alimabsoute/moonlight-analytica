@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  inference:
+    build: ./inference-server
+    ports:
+      - "8002:8002"
+    environment:
+      - PYTHONPATH=/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
   backend:
     build: ./backend
     ports:
