@@ -24,6 +24,7 @@ Usage:
 """
 
 import argparse
+import base64
 import json
 import os
 import sys
@@ -40,13 +41,30 @@ from flask_cors import CORS
 from path_utils import normalize_video_path, paths_equal
 from reid_manager import ReIDManager
 
+# Load .env file if present (no extra dependency)
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+if os.path.exists(_env_path):
+    with open(_env_path) as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _v = _line.split("=", 1)
+                os.environ.setdefault(_k.strip(), _v.strip())
+
 app = Flask(__name__)
 CORS(app)
 
 # ── Configuration ─────────────────────────────────────────────────────
 
+# Inference mode: "cloud" (Roboflow API) or "local" (inference server on :8002)
+INFERENCE_MODE = os.environ.get("INFERENCE_MODE", "cloud")
 INFERENCE_URL = os.environ.get("INFERENCE_URL", "http://localhost:8002")
 BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
+
+# Roboflow cloud settings
+ROBOFLOW_API_KEY = os.environ.get("ROBOFLOW_API_KEY", "")
+ROBOFLOW_MODEL = os.environ.get("ROBOFLOW_MODEL", "people-detection-o4rdr/4")
+
 DETECTION_CONF = 0.30           # Lower than before (was 0.35) to catch more people
 EXIT_TIMEOUT_S = 30             # Seconds before a lost track becomes an exit (was 300s)
 REID_SIMILARITY = 0.5           # Re-ID cosine similarity threshold
@@ -291,10 +309,58 @@ class SessionManager:
         }
 
 
-# ── Detection via Inference Server (Phase 2) ─────────────────────────
+# ── Detection (Cloud or Local) ────────────────────────────────────────
+
+def detect_via_roboflow(frame: np.ndarray) -> List[dict]:
+    """Send frame to Roboflow cloud API for person detection.
+
+    Returns list of {bbox: [x1,y1,x2,y2], confidence: float}.
+    """
+    _, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+    img_b64 = base64.b64encode(buffer.tobytes()).decode("utf-8")
+
+    conf_pct = int(DETECTION_CONF * 100)  # Roboflow expects 0-100
+    url = f"https://detect.roboflow.com/{ROBOFLOW_MODEL}"
+    params = {
+        "api_key": ROBOFLOW_API_KEY,
+        "confidence": conf_pct,
+        "overlap": 50,
+    }
+
+    try:
+        resp = requests.post(
+            url, params=params, data=img_b64,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=10,
+        )
+        if resp.status_code != 200:
+            print(f"[WARN] Roboflow API error {resp.status_code}: {resp.text[:200]}")
+            return []
+
+        data = resp.json()
+        detections = []
+        for pred in data.get("predictions", []):
+            # Filter for person class (Roboflow returns class name)
+            cls = pred.get("class", "").lower()
+            if cls not in ("person", "people", "human", "pedestrian"):
+                continue
+            # Convert center+size to x1,y1,x2,y2
+            cx, cy = pred["x"], pred["y"]
+            w, h = pred["width"], pred["height"]
+            detections.append({
+                "bbox": [int(cx - w / 2), int(cy - h / 2),
+                         int(cx + w / 2), int(cy + h / 2)],
+                "confidence": round(float(pred["confidence"]), 4),
+            })
+        return detections
+
+    except Exception as e:
+        print(f"[WARN] Roboflow API error: {e}")
+        return []
+
 
 def detect_via_server(frame: np.ndarray) -> List[dict]:
-    """Send frame to inference server and get detections.
+    """Send frame to local inference server and get detections.
 
     Returns list of {bbox: [x1,y1,x2,y2], confidence: float}.
     """
@@ -313,22 +379,45 @@ def detect_via_server(frame: np.ndarray) -> List[dict]:
     return []
 
 
-def wait_for_inference_server(timeout: float = 120):
-    """Wait for the inference server to become ready."""
-    print(f"[INFO] Waiting for inference server at {INFERENCE_URL}...")
-    start = time.time()
-    while time.time() - start < timeout:
+def detect(frame: np.ndarray) -> List[dict]:
+    """Run detection using configured mode (cloud or local)."""
+    if INFERENCE_MODE == "cloud":
+        return detect_via_roboflow(frame)
+    else:
+        return detect_via_server(frame)
+
+
+def wait_for_detection_ready(timeout: float = 30):
+    """Verify detection is working (cloud or local)."""
+    if INFERENCE_MODE == "cloud":
+        if not ROBOFLOW_API_KEY:
+            print("[ERROR] ROBOFLOW_API_KEY not set. Add it to .env file.")
+            return False
+        print(f"[INFO] Using Roboflow cloud inference (model: {ROBOFLOW_MODEL})")
+        # Quick test with a small dummy image
+        dummy = np.zeros((100, 100, 3), dtype=np.uint8)
         try:
-            r = requests.get(f"{INFERENCE_URL}/health", timeout=3)
-            if r.status_code == 200 and r.json().get("status") == "ready":
-                model = r.json().get("model", "unknown")
-                print(f"[INFO] Inference server ready (model: {model})")
-                return True
-        except Exception:
-            pass
-        time.sleep(2)
-    print(f"[ERROR] Inference server not ready after {timeout}s")
-    return False
+            detect_via_roboflow(dummy)
+            print("[INFO] Roboflow API connection verified")
+            return True
+        except Exception as e:
+            print(f"[ERROR] Roboflow API test failed: {e}")
+            return False
+    else:
+        print(f"[INFO] Using local inference server at {INFERENCE_URL}")
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                r = requests.get(f"{INFERENCE_URL}/health", timeout=3)
+                if r.status_code == 200 and r.json().get("status") == "ready":
+                    model = r.json().get("model", "unknown")
+                    print(f"[INFO] Inference server ready (model: {model})")
+                    return True
+            except Exception:
+                pass
+            time.sleep(2)
+        print(f"[ERROR] Inference server not ready after {timeout}s")
+        return False
 
 
 # ── YouTube helper ────────────────────────────────────────────────────
@@ -622,9 +711,9 @@ def run_tracking(source, conf=0.30, backend_url="http://localhost:8000"):
     global current_frame, tracked_boxes, zones, current_source, new_source
     global current_model, new_model, session_stats
 
-    # Wait for inference server
-    if not wait_for_inference_server(timeout=120):
-        print("[ERROR] Cannot start without inference server. Exiting.")
+    # Wait for detection to be ready (cloud or local)
+    if not wait_for_detection_ready(timeout=30):
+        print("[ERROR] Detection not available. Check .env or inference server.")
         return
 
     # Initialize ByteTrack (Phase 2)
@@ -721,7 +810,7 @@ def run_tracking(source, conf=0.30, backend_url="http://localhost:8000"):
         frame_h, frame_w = frame.shape[:2]
 
         # ── Phase 2: Detect via inference server ──────────────────
-        raw_detections = detect_via_server(frame)
+        raw_detections = detect(frame)
 
         if not raw_detections:
             # No detections — check exits and continue
@@ -810,16 +899,20 @@ def main():
     p.add_argument("--port", type=int, default=8001, help="HTTP server port")
     p.add_argument("--config", default="zones.json", help="Zone configuration file")
     p.add_argument("--conf", type=float, default=0.30, help="Detection confidence")
+    p.add_argument("--mode", choices=["cloud", "local"], default=None,
+                    help="Detection mode: cloud (Roboflow) or local (inference server)")
     p.add_argument("--inference-url", default="http://localhost:8002",
-                    help="Inference server URL")
+                    help="Local inference server URL (only used in local mode)")
     p.add_argument("--backend-url", default="http://localhost:8000",
                     help="Backend API URL")
     p.add_argument("--exit-timeout", type=float, default=30.0,
                     help="Seconds before lost track counts as exit")
     args = p.parse_args()
 
-    # Set globals from args
-    global INFERENCE_URL, BACKEND_URL, DETECTION_CONF, EXIT_TIMEOUT_S
+    # Set globals from args (CLI args override .env)
+    global INFERENCE_MODE, INFERENCE_URL, BACKEND_URL, DETECTION_CONF, EXIT_TIMEOUT_S
+    if args.mode:
+        INFERENCE_MODE = args.mode
     INFERENCE_URL = args.inference_url
     BACKEND_URL = args.backend_url
     DETECTION_CONF = args.conf
