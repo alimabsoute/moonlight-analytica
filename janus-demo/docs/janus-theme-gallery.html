@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Janus Theme Gallery - 7 Design Variants</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0a0a0f;
+      color: #fff;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 40px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .theme-card {
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .theme-preview {
+      height: 320px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-info {
+      background: #1a1a2e;
+      padding: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .theme-info h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .theme-info .subtitle {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .color-palette {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .color-swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .theme-info .description {
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    /* Mini Dashboard Preview Components */
+    .mini-sidebar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 60px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mini-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .mini-nav-item {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      opacity: 0.6;
+    }
+
+    .mini-nav-item.active {
+      opacity: 1;
+    }
+
+    .mini-content {
+      position: absolute;
+      left: 70px;
+      top: 12px;
+      right: 12px;
+      bottom: 12px;
+    }
+
+    .mini-header {
+      height: 24px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      width: 40%;
+    }
+
+    .mini-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .mini-kpi {
+      height: 50px;
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .mini-kpi-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .mini-kpi-label {
+      font-size: 0.5rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    .mini-chart {
+      height: 120px;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-chart-line {
+      position: absolute;
+      bottom: 20px;
+      left: 10px;
+      right: 10px;
+      height: 60px;
+    }
+
+    /* Theme 1: Original Purple Gradient */
+    .theme-original .theme-preview {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .theme-original .mini-sidebar { background: #f5f7fa; }
+    .theme-original .mini-logo { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .theme-original .mini-nav-item { background: #e2e8f0; }
+    .theme-original .mini-nav-item.active { background: #667eea; }
+    .theme-original .mini-content { background: #f5f7fa; border-radius: 8px; padding: 12px; }
+    .theme-original .mini-header { background: #667eea; }
+    .theme-original .mini-kpi { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .theme-original .mini-kpi-value { color: #667eea; }
+    .theme-original .mini-kpi-label { color: #64748b; }
+    .theme-original .mini-chart { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    /* Theme 2: V1 Refined Dark */
+    .theme-v1 .theme-preview {
+      background: linear-gradient(135deg, #0a0f1a 0%, #1e293b 100%);
+    }
+    .theme-v1 .mini-sidebar { background: #0f172a; border-right: 1px solid rgba(6,182,212,0.2); }
+    .theme-v1 .mini-logo { background: linear-gradient(135deg, #06b6d4, #8b5cf6); }
+    .theme-v1 .mini-nav-item { background: #1e293b; }
+    .theme-v1 .mini-nav-item.active { background: linear-gradient(135deg, #06b6d4, #8b5cf6); box-shadow: 0 0 20px rgba(6,182,212,0.3); }
+    .theme-v1 .mini-content { background: transparent; padding: 12px; }
+    .theme-v1 .mini-header { background: linear-gradient(90deg, #06b6d4, #8b5cf6); }
+    .theme-v1 .mini-kpi { background: rgba(30,41,59,0.8); border: 1px solid rgba(6,182,212,0.2); backdrop-filter: blur(8px); }
+    .theme-v1 .mini-kpi-value { color: #06b6d4; }
+    .theme-v1 .mini-kpi-label { color: #94a3b8; }
+    .theme-v1 .mini-chart { background: rgba(30,41,59,0.8); border: 1px solid rgba(139,92,246,0.2); }
+
+    /* Theme 3: V2 Warm Atelier */
+    .theme-v2 .theme-preview {
+      background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+    }
+    .theme-v2 .mini-sidebar { background: #ebe5db; }
+    .theme-v2 .mini-logo { background: linear-gradient(135deg, #c4654a, #d4a84b); }
+    .theme-v2 .mini-nav-item { background: #d4cfc5; }
+    .theme-v2 .mini-nav-item.active { background: #c4654a; }
+    .theme-v2 .mini-content { background: transparent; padding: 12px; }
+    .theme-v2 .mini-header { background: linear-gradient(90deg, #c4654a, #a67c5b); }
+    .theme-v2 .mini-kpi { background: #fff; border: 1px solid #e5dfd5; }
+    .theme-v2 .mini-kpi-value { color: #c4654a; }
+    .theme-v2 .mini-kpi-label { color: #8a6f52; }
+    .theme-v2 .mini-chart { background: #fff; border: 1px solid #e5dfd5; }
+
+    /* Theme 4: V3 Corporate Navy & Gold */
+    .theme-v3 .theme-preview {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+    }
+    .theme-v3 .mini-sidebar { background: #162d4d; border-right: 1px solid rgba(201,162,39,0.3); }
+    .theme-v3 .mini-logo { background: linear-gradient(135deg, #c9a227, #e8c547); }
+    .theme-v3 .mini-nav-item { background: #1e3a5f; }
+    .theme-v3 .mini-nav-item.active { background: #c9a227; }
+    .theme-v3 .mini-content { background: transparent; padding: 12px; }
+    .theme-v3 .mini-header { background: #c9a227; }
+    .theme-v3 .mini-kpi { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,162,39,0.2); }
+    .theme-v3 .mini-kpi-value { color: #c9a227; }
+    .theme-v3 .mini-kpi-label { color: #94a3b8; }
+    .theme-v3 .mini-chart { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,162,39,0.2); }
+
+    /* Theme 5: V4 Neon Pulse */
+    .theme-v4 .theme-preview {
+      background: #0a0a0f;
+      position: relative;
+    }
+    .theme-v4 .theme-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(0,245,255,0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(188,19,254,0.15) 0%, transparent 40%);
+    }
+    .theme-v4 .mini-sidebar { background: #12121f; border-right: 1px solid rgba(0,245,255,0.3); position: relative; z-index: 1; }
+    .theme-v4 .mini-logo { background: linear-gradient(135deg, #00f5ff, #bc13fe); box-shadow: 0 0 20px rgba(0,245,255,0.5); }
+    .theme-v4 .mini-nav-item { background: #1a1a2e; border: 1px solid rgba(0,245,255,0.2); }
+    .theme-v4 .mini-nav-item.active { background: transparent; border: 1px solid #00f5ff; box-shadow: 0 0 15px rgba(0,245,255,0.5), inset 0 0 15px rgba(0,245,255,0.1); }
+    .theme-v4 .mini-content { background: transparent; padding: 12px; position: relative; z-index: 1; }
+    .theme-v4 .mini-header { background: linear-gradient(90deg, #00f5ff, #bc13fe); box-shadow: 0 0 20px rgba(0,245,255,0.3); }
+    .theme-v4 .mini-kpi { background: rgba(26,26,46,0.8); border: 1px solid rgba(0,245,255,0.3); box-shadow: 0 0 10px rgba(0,245,255,0.1); }
+    .theme-v4 .mini-kpi-value { color: #00f5ff; text-shadow: 0 0 10px rgba(0,245,255,0.5); }
+    .theme-v4 .mini-kpi-label { color: #bc13fe; }
+    .theme-v4 .mini-chart { background: rgba(26,26,46,0.8); border: 1px solid rgba(188,19,254,0.3); }
+
+    /* Theme 6: V5 Nature Zen */
+    .theme-v5 .theme-preview {
+      background: linear-gradient(135deg, #faf8f5 0%, #f0ebe3 100%);
+    }
+    .theme-v5 .mini-sidebar { background: #e8e3da; }
+    .theme-v5 .mini-logo { background: linear-gradient(135deg, #2d5a45, #4a8f6d); }
+    .theme-v5 .mini-nav-item { background: #d4cfc5; }
+    .theme-v5 .mini-nav-item.active { background: #2d5a45; }
+    .theme-v5 .mini-content { background: transparent; padding: 12px; }
+    .theme-v5 .mini-header { background: linear-gradient(90deg, #2d5a45, #4a8f6d); }
+    .theme-v5 .mini-kpi { background: #fff; border: 1px solid #d4e5dc; }
+    .theme-v5 .mini-kpi-value { color: #2d5a45; }
+    .theme-v5 .mini-kpi-label { color: #6b5b4f; }
+    .theme-v5 .mini-chart { background: #fff; border: 1px solid #d4e5dc; }
+
+    /* Theme 7: V6 Retro Terminal */
+    .theme-v6 .theme-preview {
+      background: #0a0a0a;
+      position: relative;
+    }
+    .theme-v6 .theme-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,255,0,0.03) 0px,
+        rgba(0,255,0,0.03) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+    }
+    .theme-v6 .mini-sidebar { background: #0d0d0d; border-right: 1px solid #00ff00; position: relative; z-index: 1; }
+    .theme-v6 .mini-logo { background: #00ff00; box-shadow: 0 0 20px rgba(0,255,0,0.5); }
+    .theme-v6 .mini-nav-item { background: transparent; border: 1px solid #009900; }
+    .theme-v6 .mini-nav-item.active { background: transparent; border: 1px solid #00ff00; box-shadow: 0 0 10px rgba(0,255,0,0.3); }
+    .theme-v6 .mini-content { background: transparent; padding: 12px; position: relative; z-index: 1; }
+    .theme-v6 .mini-header { background: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.4); }
+    .theme-v6 .mini-kpi { background: #0d0d0d; border: 1px solid #00cc00; }
+    .theme-v6 .mini-kpi-value { color: #00ff00; text-shadow: 0 0 10px rgba(0,255,0,0.5); font-family: 'JetBrains Mono', monospace; }
+    .theme-v6 .mini-kpi-label { color: #009900; font-family: 'JetBrains Mono', monospace; }
+    .theme-v6 .mini-chart { background: #0d0d0d; border: 1px solid #00cc00; }
+
+    .version-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .badge-current {
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      color: white;
+    }
+
+    .badge-original {
+      background: #667eea;
+      color: white;
+    }
+
+    @media (max-width: 500px) {
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+      .header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Janus Theme Gallery</h1>
+    <p>7 distinct design variants for your people counting dashboard</p>
+  </div>
+
+  <div class="gallery">
+    <!-- Theme 1: Original -->
+    <div class="theme-card theme-original">
+      <div class="theme-preview">
+        <div class="mini-sidebar">
+          <div class="mini-logo"></div>
+          <div class="mini-nav-item active"></div>
+          <div class="mini-nav-item"></div>
+          <div class="mini-nav-item"></div>
+        </div>
+        <div class="mini-content">
+          <div class="mini-header"></div>
+          <div class="mini-kpi-grid">
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">247</div>
+              <div class="mini-kpi-label">Current</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">1,842</div>
+              <div class="mini-kpi-label">Today</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">94%</div>
+              <div class="mini-kpi-label">Capacity</div>
+            </div>
+          </div>
+          <div class="mini-chart"></div>
+        </div>
+      </div>
+      <div class="theme-info">
+        <h3>Purple Gradient <span class="version-badge badge-original">Original</span></h3>
+        <div class="subtitle">Modern SaaS Dashboard</div>
+        <div class="color-palette">
+          <div class="color-swatch" style="background: #667eea;"></div>
+          <div class="color-swatch" style="background: #764ba2;"></div>
+          <div class="color-swatch" style="background: #48bb78;"></div>
+          <div class="color-swatch" style="background: #f56565;"></div>
+          <div class="color-swatch" style="background: #f5f7fa;"></div>
+        </div>
+        <div class="description">Clean, professional design with purple gradient accents. Light background with rounded cards and subtle shadows. Great for general business use.</div>
+      </div>
+    </div>
+
+    <!-- Theme 2: V1 Refined Dark -->
+    <div class="theme-card theme-v1">
+      <div class="theme-preview">
+        <div class="mini-sidebar">
+          <div class="mini-logo"></div>
+          <div class="mini-nav-item active"></div>
+          <div class="mini-nav-item"></div>
+          <div class="mini-nav-item"></div>
+        </div>
+        <div class="mini-content">
+          <div class="mini-header"></div>
+          <div class="mini-kpi-grid">
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">247</div>
+              <div class="mini-kpi-label">Current</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">1,842</div>
+              <div class="mini-kpi-label">Today</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">94%</div>
+              <div class="mini-kpi-label">Capacity</div>
+            </div>
+          </div>
+          <div class="mini-chart"></div>
+        </div>
+      </div>
+      <div class="theme-info">
+        <h3>Refined Dark <span class="version-badge" style="background: #06b6d4; color: #000;">V1</span></h3>
+        <div class="subtitle">Linear / Vercel Inspired</div>
+        <div class="color-palette">
+          <div class="color-swatch" style="background: #06b6d4;"></div>
+          <div class="color-swatch" style="background: #8b5cf6;"></div>
+          <div class="color-swatch" style="background: #10b981;"></div>
+          <div class="color-swatch" style="background: #0a0f1a;"></div>
+          <div class="color-swatch" style="background: #1e293b;"></div>
+        </div>
+        <div class="description">Developer-focused dark theme with cyan and violet accents. Glassmorphism cards with backdrop blur. Inspired by Linear and Vercel dashboards.</div>
+      </div>
+    </div>
+
+    <!-- Theme 3: V2 Warm Atelier -->
+    <div class="theme-card theme-v2">
+      <div class="theme-preview">
+        <div class="mini-sidebar">
+          <div class="mini-logo"></div>
+          <div class="mini-nav-item active"></div>
+          <div class="mini-nav-item"></div>
+          <div class="mini-nav-item"></div>
+        </div>
+        <div class="mini-content">
+          <div class="mini-header"></div>
+          <div class="mini-kpi-grid">
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">247</div>
+              <div class="mini-kpi-label">Current</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">1,842</div>
+              <div class="mini-kpi-label">Today</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">94%</div>
+              <div class="mini-kpi-label">Capacity</div>
+            </div>
+          </div>
+          <div class="mini-chart"></div>
+        </div>
+      </div>
+      <div class="theme-info">
+        <h3>Warm Atelier <span class="version-badge" style="background: #c4654a; color: #fff;">V2</span></h3>
+        <div class="subtitle">Handcrafted & Organic</div>
+        <div class="color-palette">
+          <div class="color-swatch" style="background: #c4654a;"></div>
+          <div class="color-swatch" style="background: #7d9a78;"></div>
+          <div class="color-swatch" style="background: #d4a84b;"></div>
+          <div class="color-swatch" style="background: #faf8f5;"></div>
+          <div class="color-swatch" style="background: #8a6f52;"></div>
+        </div>
+        <div class="description">Warm, organic aesthetic with terracotta, sage, and ochre tones. Cream backgrounds with earth-toned accents. Cozy, intimate feel perfect for boutique retail.</div>
+      </div>
+    </div>
+
+    <!-- Theme 4: V3 Corporate -->
+    <div class="theme-card theme-v3">
+      <div class="theme-preview">
+        <div class="mini-sidebar">
+          <div class="mini-logo"></div>
+          <div class="mini-nav-item active"></div>
+          <div class="mini-nav-item"></div>
+          <div class="mini-nav-item"></div>
+        </div>
+        <div class="mini-content">
+          <div class="mini-header"></div>
+          <div class="mini-kpi-grid">
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">247</div>
+              <div class="mini-kpi-label">Current</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">1,842</div>
+              <div class="mini-kpi-label">Today</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">94%</div>
+              <div class="mini-kpi-label">Capacity</div>
+            </div>
+          </div>
+          <div class="mini-chart"></div>
+        </div>
+      </div>
+      <div class="theme-info">
+        <h3>Corporate Navy & Gold <span class="version-badge badge-current">V3 Current</span></h3>
+        <div class="subtitle">Enterprise Professional</div>
+        <div class="color-palette">
+          <div class="color-swatch" style="background: #1e3a5f;"></div>
+          <div class="color-swatch" style="background: #c9a227;"></div>
+          <div class="color-swatch" style="background: #38a169;"></div>
+          <div class="color-swatch" style="background: #e53e3e;"></div>
+          <div class="color-swatch" style="background: #e2e8f0;"></div>
+        </div>
+        <div class="description">Classic corporate look with navy blue and gold accents. Professional, authoritative aesthetic ideal for enterprise deployments and formal presentations.</div>
+      </div>
+    </div>
+
+    <!-- Theme 5: V4 Neon Pulse -->
+    <div class="theme-card theme-v4">
+      <div class="theme-preview">
+        <div class="mini-sidebar">
+          <div class="mini-logo"></div>
+          <div class="mini-nav-item active"></div>
+          <div class="mini-nav-item"></div>
+          <div class="mini-nav-item"></div>
+        </div>
+        <div class="mini-content">
+          <div class="mini-header"></div>
+          <div class="mini-kpi-grid">
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">247</div>
+              <div class="mini-kpi-label">Current</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">1,842</div>
+              <div class="mini-kpi-label">Today</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">94%</div>
+              <div class="mini-kpi-label">Capacity</div>
+            </div>
+          </div>
+          <div class="mini-chart"></div>
+        </div>
+      </div>
+      <div class="theme-info">
+        <h3>Neon Pulse <span class="version-badge" style="background: linear-gradient(90deg, #00f5ff, #bc13fe); color: #000;">V4</span></h3>
+        <div class="subtitle">Cyberpunk Aesthetic</div>
+        <div class="color-palette">
+          <div class="color-swatch" style="background: #00f5ff; box-shadow: 0 0 10px #00f5ff;"></div>
+          <div class="color-swatch" style="background: #bc13fe; box-shadow: 0 0 10px #bc13fe;"></div>
+          <div class="color-swatch" style="background: #ff006e; box-shadow: 0 0 10px #ff006e;"></div>
+          <div class="color-swatch" style="background: #39ff14; box-shadow: 0 0 10px #39ff14;"></div>
+          <div class="color-swatch" style="background: #0a0a0f;"></div>
+        </div>
+        <div class="description">Bold cyberpunk design with intense neon glowing effects. Cyan, purple, and pink on void black. High-energy aesthetic for tech-forward venues and gaming spaces.</div>
+      </div>
+    </div>
+
+    <!-- Theme 6: V5 Nature Zen -->
+    <div class="theme-card theme-v5">
+      <div class="theme-preview">
+        <div class="mini-sidebar">
+          <div class="mini-logo"></div>
+          <div class="mini-nav-item active"></div>
+          <div class="mini-nav-item"></div>
+          <div class="mini-nav-item"></div>
+        </div>
+        <div class="mini-content">
+          <div class="mini-header"></div>
+          <div class="mini-kpi-grid">
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">247</div>
+              <div class="mini-kpi-label">Current</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">1,842</div>
+              <div class="mini-kpi-label">Today</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">94%</div>
+              <div class="mini-kpi-label">Capacity</div>
+            </div>
+          </div>
+          <div class="mini-chart"></div>
+        </div>
+      </div>
+      <div class="theme-info">
+        <h3>Nature Zen <span class="version-badge" style="background: #2d5a45; color: #fff;">V5</span></h3>
+        <div class="subtitle">Biophilic Design</div>
+        <div class="color-palette">
+          <div class="color-swatch" style="background: #2d5a45;"></div>
+          <div class="color-swatch" style="background: #4a8f6d;"></div>
+          <div class="color-swatch" style="background: #c4785c;"></div>
+          <div class="color-swatch" style="background: #faf8f5;"></div>
+          <div class="color-swatch" style="background: #6b5b4f;"></div>
+        </div>
+        <div class="description">Nature-inspired calming aesthetic with forest greens and earth tones. Peaceful, zen-like design perfect for wellness centers, spas, and eco-friendly venues.</div>
+      </div>
+    </div>
+
+    <!-- Theme 7: V6 Retro Terminal -->
+    <div class="theme-card theme-v6">
+      <div class="theme-preview">
+        <div class="mini-sidebar">
+          <div class="mini-logo"></div>
+          <div class="mini-nav-item active"></div>
+          <div class="mini-nav-item"></div>
+          <div class="mini-nav-item"></div>
+        </div>
+        <div class="mini-content">
+          <div class="mini-header"></div>
+          <div class="mini-kpi-grid">
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">247</div>
+              <div class="mini-kpi-label">Current</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">1,842</div>
+              <div class="mini-kpi-label">Today</div>
+            </div>
+            <div class="mini-kpi">
+              <div class="mini-kpi-value">94%</div>
+              <div class="mini-kpi-label">Capacity</div>
+            </div>
+          </div>
+          <div class="mini-chart"></div>
+        </div>
+      </div>
+      <div class="theme-info">
+        <h3>Retro Terminal <span class="version-badge" style="background: #00ff00; color: #000;">V6</span></h3>
+        <div class="subtitle">CRT / DOS Aesthetic</div>
+        <div class="color-palette">
+          <div class="color-swatch" style="background: #00ff00; box-shadow: 0 0 10px #00ff00;"></div>
+          <div class="color-swatch" style="background: #00cc00;"></div>
+          <div class="color-swatch" style="background: #ffb000;"></div>
+          <div class="color-swatch" style="background: #ff3333;"></div>
+          <div class="color-swatch" style="background: #0a0a0a;"></div>
+        </div>
+        <div class="description">Nostalgic CRT terminal aesthetic with phosphor green on black. Scan-line effects and monospace typography. Fun retro vibe for tech-themed venues.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

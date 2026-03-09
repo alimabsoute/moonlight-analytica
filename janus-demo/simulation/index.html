@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janus AI — Retail Store Simulation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0a1a;color:#e0e0e0;overflow:hidden;height:100vh}
+#app{display:flex;height:100vh;width:100vw}
+
+/* ─── Dashboard Sidebar ─── */
+#dashboard{width:320px;min-width:320px;background:linear-gradient(180deg,#0d1117 0%,#161b22 100%);
+  border-right:1px solid #21262d;display:flex;flex-direction:column;overflow-y:auto;z-index:10}
+#dashboard::-webkit-scrollbar{width:6px}
+#dashboard::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+.dash-header{padding:16px 20px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:12px}
+.dash-header h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,#00bfff,#00ff88);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.dash-header .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00bfff,#00ff88);
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#0a0a1a}
+.dash-section{padding:16px 20px;border-bottom:1px solid #21262d}
+.dash-section h2{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#8b949e;margin-bottom:12px;font-weight:600}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat-card{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:12px;text-align:center;transition:border-color .2s}
+.stat-card:hover{border-color:#00bfff44}
+.stat-card .value{font-size:28px;font-weight:700;line-height:1.2}
+.stat-card .label{font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat-card.total .value{color:#00bfff}
+.stat-card.shopping .value{color:#00ff88}
+.stat-card.inline .value{color:#ffaa00}
+.stat-card.sitting .value{color:#4488ff}
+.stat-card.leaving .value{color:#ff4466}
+
+/* Zone bars */
+.zone-bar{margin-bottom:8px}
+.zone-bar .zone-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.zone-bar .zone-label span:first-child{color:#c9d1d9}
+.zone-bar .zone-label span:last-child{color:#8b949e}
+.zone-bar .bar-bg{height:6px;background:#21262d;border-radius:3px;overflow:hidden}
+.zone-bar .bar-fill{height:100%;border-radius:3px;transition:width .3s ease}
+
+/* Activity log */
+#activity-log{max-height:180px;overflow-y:auto;font-size:11px;font-family:'Cascadia Code','Fira Code',monospace}
+#activity-log::-webkit-scrollbar{width:4px}
+#activity-log::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
+.log-entry{padding:4px 0;border-bottom:1px solid #21262d11;color:#8b949e;display:flex;gap:8px}
+.log-entry .log-time{color:#484f58;min-width:50px}
+.log-entry.enter .log-msg{color:#00ff88}
+.log-entry.exit .log-msg{color:#ff4466}
+.log-entry.action .log-msg{color:#ffaa00}
+
+/* ─── Main Viewport ─── */
+#viewport-area{flex:1;display:flex;flex-direction:column;position:relative}
+#toolbar{height:56px;background:#0d1117ee;border-bottom:1px solid #21262d;display:flex;
+  align-items:center;padding:0 20px;gap:12px;z-index:5;backdrop-filter:blur(12px)}
+.tool-group{display:flex;align-items:center;gap:8px;padding:0 8px}
+.tool-group.bordered{border-left:1px solid #21262d;border-right:1px solid #21262d}
+.tool-btn{padding:8px 16px;border-radius:8px;border:1px solid #30363d;background:#161b22;color:#c9d1d9;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.tool-btn:hover{border-color:#00bfff88;background:#1c2333}
+.tool-btn.active{border-color:#00bfff;background:#00bfff22;color:#00bfff}
+.tool-btn.primary{border-color:#00bfff;background:linear-gradient(135deg,#00bfff22,#00ff8822);color:#00ff88}
+.tool-btn.primary:hover{background:linear-gradient(135deg,#00bfff33,#00ff8833)}
+.tool-btn.danger{border-color:#ff446644;color:#ff4466}
+.tool-btn.danger:hover{border-color:#ff4466;background:#ff446622}
+select.tool-select{padding:8px 12px;border-radius:8px;border:1px solid #30363d;background:#161b22;
+  color:#c9d1d9;font-size:12px;cursor:pointer;outline:none}
+select.tool-select:focus{border-color:#00bfff}
+.speed-display{font-size:13px;font-weight:700;color:#00bfff;min-width:35px;text-align:center}
+.separator{width:1px;height:28px;background:#21262d}
+
+#viewport{flex:1;position:relative;cursor:crosshair}
+#viewport canvas{display:block}
+
+/* ─── Person Detail Panel ─── */
+#person-panel{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#0d1117ee;border:1px solid #21262d;border-radius:14px;padding:16px 24px;
+  backdrop-filter:blur(16px);display:none;z-index:10;min-width:480px}
+#person-panel.show{display:flex;align-items:center;gap:20px}
+.pp-info{flex:1}
+.pp-id{font-size:11px;color:#8b949e;font-family:monospace}
+.pp-state{font-size:16px;font-weight:700;margin:4px 0}
+.pp-meta{font-size:11px;color:#8b949e}
+.pp-actions{display:flex;gap:8px}
+.pp-actions .action-btn{padding:8px 14px;border-radius:8px;border:1px solid #30363d;background:#161b22;
+  color:#c9d1d9;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.pp-actions .action-btn:hover{border-color:#00bfff;color:#00bfff}
+.pp-actions .action-btn.active-action{border-color:#00ff88;color:#00ff88;background:#00ff8818}
+
+/* ─── Heatmap legend ─── */
+#heatmap-legend{position:absolute;bottom:20px;right:20px;background:#0d1117dd;border:1px solid #21262d;
+  border-radius:10px;padding:12px;display:none;z-index:10;backdrop-filter:blur(8px)}
+#heatmap-legend.show{display:block}
+#heatmap-legend h3{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#8b949e;margin-bottom:8px}
+.legend-bar{width:120px;height:12px;border-radius:6px;
+  background:linear-gradient(90deg,#000033,#0000ff,#00ff00,#ffff00,#ff0000)}
+.legend-labels{display:flex;justify-content:space-between;font-size:9px;color:#8b949e;margin-top:4px}
+
+/* Sim clock */
+.sim-clock{font-family:'Cascadia Code',monospace;font-size:13px;color:#8b949e}
+.sim-clock span{color:#00bfff;font-weight:600}
+
+/* Canvas info overlay */
+#info-overlay{position:absolute;top:68px;right:16px;font-size:11px;color:#484f58;text-align:right;
+  pointer-events:none;z-index:4;font-family:monospace}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Dashboard Sidebar -->
+  <aside id="dashboard">
+    <div class="dash-header">
+      <div class="logo">J</div>
+      <div><h1>Janus AI Simulation</h1><div style="font-size:10px;color:#8b949e">Retail Store Tracker</div></div>
+    </div>
+
+    <div class="dash-section">
+      <h2>Live Population</h2>
+      <div class="stat-grid">
+        <div class="stat-card total"><div class="value" id="s-total">0</div><div class="label">Total</div></div>
+        <div class="stat-card shopping"><div class="value" id="s-shopping">0</div><div class="label">Shopping</div></div>
+        <div class="stat-card inline"><div class="value" id="s-inline">0</div><div class="label">In Line</div></div>
+        <div class="stat-card sitting"><div class="value" id="s-sitting">0</div><div class="label">Sitting</div></div>
+        <div class="stat-card leaving"><div class="value" id="s-leaving">0</div><div class="label">Leaving</div></div>
+        <div class="stat-card" style="grid-column:span 1"><div class="value" id="s-entered" style="color:#58a6ff">0</div><div class="label">Entered</div></div>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <h2>Zone Occupancy</h2>
+      <div id="zone-bars"></div>
+    </div>
+
+    <div class="dash-section">
+      <h2>Average Dwell Time</h2>
+      <div style="font-size:24px;font-weight:700;color:#00bfff" id="s-dwell">0:00</div>
+      <div style="font-size:10px;color:#8b949e;margin-top:4px">seconds in store</div>
+    </div>
+
+    <div class="dash-section" style="flex:1">
+      <h2>Activity Log</h2>
+      <div id="activity-log"></div>
+    </div>
+  </aside>
+
+  <!-- Main Viewport -->
+  <div id="viewport-area">
+    <div id="toolbar">
+      <div class="tool-group">
+        <button class="tool-btn primary" id="btn-add" title="Add person">+ Add Person</button>
+        <select class="tool-select" id="spawn-zone">
+          <option value="entrance">At Entrance</option>
+          <option value="aisle">In Aisles</option>
+          <option value="checkout">At Checkout</option>
+          <option value="seating">In Seating</option>
+        </select>
+        <select class="tool-select" id="spawn-action">
+          <option value="SHOPPING">Shopping</option>
+          <option value="IN_LINE">In Line</option>
+          <option value="SITTING">Sitting</option>
+          <option value="LEAVING">Leaving</option>
+        </select>
+      </div>
+      <div class="separator"></div>
+      <div class="tool-group">
+        <button class="tool-btn" id="btn-add5" title="Add 5 random people">+5 Random</button>
+        <button class="tool-btn" id="btn-add20" title="Add 20 random people">+20 Rush</button>
+      </div>
+      <div class="separator"></div>
+      <div class="tool-group bordered">
+        <button class="tool-btn active" id="btn-play">Play</button>
+        <button class="tool-btn" id="btn-pause">Pause</button>
+        <button class="tool-btn" id="btn-speed-down">-</button>
+        <div class="speed-display" id="speed-val">1x</div>
+        <button class="tool-btn" id="btn-speed-up">+</button>
+      </div>
+      <div class="separator"></div>
+      <div class="tool-group">
+        <button class="tool-btn" id="btn-heatmap">Heatmap</button>
+        <button class="tool-btn" id="btn-topview">Top View</button>
+        <button class="tool-btn danger" id="btn-clear">Clear All</button>
+      </div>
+      <div style="flex:1"></div>
+      <div class="sim-clock">SIM <span id="sim-time">00:00</span></div>
+    </div>
+
+    <div id="viewport"></div>
+    <div id="info-overlay">
+      <div>Scroll to zoom / Drag to orbit</div>
+      <div>Click person to select</div>
+    </div>
+
+    <div id="person-panel">
+      <div class="pp-info">
+        <div class="pp-id" id="pp-id">-</div>
+        <div class="pp-state" id="pp-state">-</div>
+        <div class="pp-meta" id="pp-meta">-</div>
+      </div>
+      <div class="pp-actions">
+        <button class="action-btn" data-action="SHOPPING">Shop</button>
+        <button class="action-btn" data-action="IN_LINE">Line</button>
+        <button class="action-btn" data-action="SITTING">Sit</button>
+        <button class="action-btn" data-action="LEAVING">Leave</button>
+      </div>
+    </div>
+    <div id="heatmap-legend">
+      <h3>Traffic Density</h3>
+      <div class="legend-bar"></div>
+      <div class="legend-labels"><span>Low</span><span>Medium</span><span>High</span></div>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════
+const COLORS = {
+  SHOPPING: 0x00ff88,
+  IN_LINE:  0xffaa00,
+  SITTING:  0x4488ff,
+  LEAVING:  0xff4466,
+  ENTERING: 0xcccccc
+};
+const STATE_NAMES = { SHOPPING:'Shopping', IN_LINE:'In Line', SITTING:'Sitting', LEAVING:'Leaving', ENTERING:'Entering' };
+
+const STORE_W = 44, STORE_D = 32;
+const SHELF_ROWS = [-15, -9, -3, 3, 9, 15];
+const SHELF_Z_START = -12, SHELF_Z_END = -2, SHELF_HEIGHT = 2.2;
+const CHECKOUT_X = [3, 8, 13], CHECKOUT_Z = 6;
+const SEAT_POSITIONS = [
+  {x:-15, z:5}, {x:-13, z:5}, {x:-15, z:7.5}, {x:-13, z:7.5},
+  {x:-15, z:10}, {x:-13, z:10}, {x:-11, z:5}, {x:-11, z:7.5}
+];
+const ENTRANCE_Z = STORE_D / 2 - 1;
+const CORRIDOR_Z = 0;
+
+const ZONES = {
+  entrance: { label:'Entrance', color:'#58a6ff', xMin:-4, xMax:4, zMin:12, zMax:16 },
+  aisles:   { label:'Shopping Aisles', color:'#00ff88', xMin:-18, xMax:18, zMin:-13, zMax:-1 },
+  checkout: { label:'Checkout', color:'#ffaa00', xMin:0, xMax:16, zMin:4, zMax:12 },
+  seating:  { label:'Seating Area', color:'#4488ff', xMin:-18, xMax:-8, zMin:4, zMax:12 },
+  corridor: { label:'Main Corridor', color:'#8b949e', xMin:-18, xMax:18, zMin:-1, zMax:4 }
+};
+
+// ════════════════════════════════════════════
+// THREE.JS SETUP
+// ════════════════════════════════════════════
+const viewport = document.getElementById('viewport');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0a1a);
+scene.fog = new THREE.FogExp2(0x0a0a1a, 0.012);
+
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200);
+camera.position.set(0, 35, 35);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+viewport.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxPolarAngle = Math.PI / 2.15;
+controls.minDistance = 8;
+controls.maxDistance = 80;
+controls.target.set(0, 0, 0);
+
+// Lighting
+const ambientLight = new THREE.AmbientLight(0x334466, 0.6);
+scene.add(ambientLight);
+
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+dirLight.position.set(15, 30, 10);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.set(2048, 2048);
+dirLight.shadow.camera.left = -25; dirLight.shadow.camera.right = 25;
+dirLight.shadow.camera.top = 20; dirLight.shadow.camera.bottom = -20;
+scene.add(dirLight);
+
+const fillLight = new THREE.DirectionalLight(0x4488ff, 0.3);
+fillLight.position.set(-10, 15, -10);
+scene.add(fillLight);
+
+const rimLight1 = new THREE.PointLight(0x00bfff, 0.5, 50);
+rimLight1.position.set(-20, 8, -15);
+scene.add(rimLight1);
+const rimLight2 = new THREE.PointLight(0x00ff88, 0.3, 50);
+rimLight2.position.set(20, 8, 15);
+scene.add(rimLight2);
+
+// ════════════════════════════════════════════
+// BUILD STORE
+// ════════════════════════════════════════════
+function buildStore() {
+  // Floor
+  const floorGeo = new THREE.PlaneGeometry(STORE_W, STORE_D);
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, roughness: 0.8 });
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  floor.name = 'floor';
+  scene.add(floor);
+
+  // Floor grid
+  const gridHelper = new THREE.GridHelper(STORE_W, 44, 0x222244, 0x15152a);
+  gridHelper.position.y = 0.01;
+  scene.add(gridHelper);
+
+  // Walls
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0x16213e, roughness: 0.6 });
+  const wallH = 3.5, wallT = 0.3;
+  addBox(0, wallH/2, -STORE_D/2, STORE_W, wallH, wallT, wallMat);
+  addBox(STORE_W/2, wallH/2, 0, wallT, wallH, STORE_D, wallMat);
+  addBox(-STORE_W/2, wallH/2, 0, wallT, wallH, STORE_D, wallMat);
+  addBox(-STORE_W/4 - 2, wallH/2, STORE_D/2, STORE_W/2 - 4, wallH, wallT, wallMat);
+  addBox(STORE_W/4 + 2, wallH/2, STORE_D/2, STORE_W/2 - 4, wallH, wallT, wallMat);
+
+  // Entrance markers
+  const entranceMat = new THREE.MeshStandardMaterial({ color: 0x00bfff, emissive: 0x00bfff, emissiveIntensity: 0.3 });
+  addBox(-4, 0.05, STORE_D/2 - 0.5, 0.3, 0.1, 2, entranceMat);
+  addBox(4, 0.05, STORE_D/2 - 0.5, 0.3, 0.1, 2, entranceMat);
+  const stripMat = new THREE.MeshStandardMaterial({ color: 0x00bfff, emissive: 0x00bfff, emissiveIntensity: 0.15, transparent: true, opacity: 0.4 });
+  addBox(0, 0.02, STORE_D/2 - 0.5, 7.5, 0.04, 2, stripMat);
+
+  // Shelving units
+  const shelfMat = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.5 });
+  const shelfTopMat = new THREE.MeshStandardMaterial({ color: 0x636e72, roughness: 0.4 });
+  for (const sx of SHELF_ROWS) {
+    for (let seg = 0; seg < 2; seg++) {
+      const sz = SHELF_Z_START + seg * 5.5 + 2.25;
+      const shelfLen = 4.5;
+      addBox(sx, SHELF_HEIGHT / 2, sz, 1.2, SHELF_HEIGHT, shelfLen, shelfMat);
+      addBox(sx, SHELF_HEIGHT + 0.05, sz, 1.4, 0.1, shelfLen + 0.2, shelfTopMat);
+      for (let i = 0; i < 3; i++) {
+        const itemColor = [0x00bfff, 0xff6b6b, 0xffd93d, 0x6bcb77, 0xc084fc][Math.floor(Math.random()*5)];
+        const itemMat = new THREE.MeshStandardMaterial({ color: itemColor, roughness: 0.3 });
+        const ix = sx + (Math.random() - 0.5) * 0.4;
+        const iz = sz + (Math.random() - 0.5) * 3;
+        addBox(ix, SHELF_HEIGHT + 0.25, iz, 0.3, 0.4, 0.3, itemMat);
+      }
+    }
+  }
+
+  // Checkout counters
+  const counterMat = new THREE.MeshStandardMaterial({ color: 0x3d3d5c, roughness: 0.4 });
+  const registerMat = new THREE.MeshStandardMaterial({ color: 0x00bfff, emissive: 0x00bfff, emissiveIntensity: 0.4 });
+  for (let i = 0; i < CHECKOUT_X.length; i++) {
+    addBox(CHECKOUT_X[i], 0.5, CHECKOUT_Z, 3, 1, 1, counterMat);
+    addBox(CHECKOUT_X[i], 1.1, CHECKOUT_Z, 0.6, 0.3, 0.4, registerMat);
+    const laneMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, transparent: true, opacity: 0.15 });
+    addBox(CHECKOUT_X[i], 0.02, CHECKOUT_Z + 3.5, 2.5, 0.04, 6, laneMat);
+  }
+
+  // Seating area
+  const benchMat = new THREE.MeshStandardMaterial({ color: 0x4a69bd, roughness: 0.4 });
+  const tableMat = new THREE.MeshStandardMaterial({ color: 0x3d3d5c, roughness: 0.5 });
+  for (const sp of SEAT_POSITIONS) {
+    addBox(sp.x, 0.35, sp.z, 1.2, 0.7, 0.8, benchMat);
+  }
+  addBox(-14, 0.45, 6.25, 0.8, 0.9, 0.8, tableMat);
+  addBox(-12, 0.45, 6.25, 0.8, 0.9, 0.8, tableMat);
+
+  // Seating sign
+  const signMat = new THREE.MeshStandardMaterial({ color: 0x4488ff, emissive: 0x4488ff, emissiveIntensity: 0.3 });
+  addBox(-14, 2.8, 4, 5, 0.4, 0.1, signMat);
+
+  // Zone floor indicators
+  for (const [key, z] of Object.entries(ZONES)) {
+    const w = z.xMax - z.xMin, d = z.zMax - z.zMin;
+    const cx = (z.xMin + z.xMax) / 2, cz = (z.zMin + z.zMax) / 2;
+    const zoneMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(z.color), transparent: true, opacity: 0.05, side: THREE.DoubleSide
+    });
+    const zonePlane = new THREE.Mesh(new THREE.PlaneGeometry(w, d), zoneMat);
+    zonePlane.rotation.x = -Math.PI / 2;
+    zonePlane.position.set(cx, 0.03, cz);
+    zonePlane.name = 'zone_' + key;
+    scene.add(zonePlane);
+  }
+
+  // Ceiling light strips
+  const lightStripMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.6, transparent: true, opacity: 0.3 });
+  for (let lz = -12; lz <= 10; lz += 5.5) {
+    addBox(0, 3.4, lz, STORE_W - 4, 0.05, 0.3, lightStripMat);
+  }
+}
+
+function addBox(x, y, z, w, h, d, mat) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+  return mesh;
+}
+
+buildStore();
+
+// ════════════════════════════════════════════
+// HEATMAP
+// ════════════════════════════════════════════
+const HEAT_RES = 88;
+const heatData = new Float32Array(HEAT_RES * HEAT_RES);
+const heatCanvas = document.createElement('canvas');
+heatCanvas.width = HEAT_RES; heatCanvas.height = HEAT_RES;
+const heatCtx = heatCanvas.getContext('2d');
+const heatTexture = new THREE.CanvasTexture(heatCanvas);
+heatTexture.minFilter = THREE.LinearFilter;
+const heatPlane = new THREE.Mesh(
+  new THREE.PlaneGeometry(STORE_W, STORE_D),
+  new THREE.MeshBasicMaterial({ map: heatTexture, transparent: true, opacity: 0.6, depthWrite: false })
+);
+heatPlane.rotation.x = -Math.PI / 2;
+heatPlane.position.y = 0.06;
+heatPlane.visible = false;
+scene.add(heatPlane);
+let heatmapEnabled = false;
+
+function updateHeatmap(people) {
+  for (const p of people) {
+    const gx = Math.floor(((p.pos.x + STORE_W/2) / STORE_W) * HEAT_RES);
+    const gz = Math.floor(((p.pos.z + STORE_D/2) / STORE_D) * HEAT_RES);
+    if (gx >= 0 && gx < HEAT_RES && gz >= 0 && gz < HEAT_RES) {
+      heatData[gz * HEAT_RES + gx] += 0.15;
+    }
+  }
+  for (let i = 0; i < heatData.length; i++) heatData[i] *= 0.997;
+  const imgData = heatCtx.createImageData(HEAT_RES, HEAT_RES);
+  let maxVal = 0;
+  for (let i = 0; i < heatData.length; i++) if (heatData[i] > maxVal) maxVal = heatData[i];
+  if (maxVal < 1) maxVal = 1;
+  for (let i = 0; i < heatData.length; i++) {
+    const v = Math.min(heatData[i] / maxVal, 1);
+    const [r, g, b] = heatColor(v);
+    imgData.data[i * 4] = r;
+    imgData.data[i * 4 + 1] = g;
+    imgData.data[i * 4 + 2] = b;
+    imgData.data[i * 4 + 3] = v > 0.02 ? Math.floor(v * 200) : 0;
+  }
+  heatCtx.putImageData(imgData, 0, 0);
+  heatTexture.needsUpdate = true;
+}
+
+function heatColor(t) {
+  if (t < 0.25) return [0, 0, Math.floor(t * 4 * 255)];
+  if (t < 0.5) return [0, Math.floor((t - 0.25) * 4 * 255), 255];
+  if (t < 0.75) return [Math.floor((t - 0.5) * 4 * 255), 255, Math.floor((1 - (t - 0.5) * 4) * 255)];
+  return [255, Math.floor((1 - (t - 0.75) * 4) * 255), 0];
+}
+
+// ════════════════════════════════════════════
+// PERSON CLASS
+// ════════════════════════════════════════════
+let nextId = 1;
+
+class Person {
+  constructor(x, z, state) {
+    this.id = nextId++;
+    this.pos = { x, z };
+    this.state = state || 'ENTERING';
+    this.prevState = null;
+    this.target = null;
+    this.path = [];
+    this.speed = 1.8 + Math.random() * 0.8;
+    this.spawnTime = simClock;
+    this.waitTimer = 0;
+    this.browseTimer = 0;
+    this.removed = false;
+    this.checkoutId = -1;
+    this.seatId = -1;
+
+    // 3D mesh
+    const bodyGeo = new THREE.CylinderGeometry(0.25, 0.3, 1.0, 8);
+    const headGeo = new THREE.SphereGeometry(0.22, 8, 6);
+    const mat = new THREE.MeshStandardMaterial({ color: COLORS[this.state] || 0xcccccc, roughness: 0.4, metalness: 0.1 });
+    this.bodyMat = mat;
+
+    this.mesh = new THREE.Group();
+    const body = new THREE.Mesh(bodyGeo, mat);
+    body.position.y = 0.5;
+    body.castShadow = true;
+    const head = new THREE.Mesh(headGeo, mat);
+    head.position.y = 1.15;
+    head.castShadow = true;
+    this.mesh.add(body, head);
+
+    // Selection ring
+    const ringGeo = new THREE.RingGeometry(0.45, 0.55, 24);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x00bfff, transparent: true, opacity: 0, side: THREE.DoubleSide });
+    this.ring = new THREE.Mesh(ringGeo, ringMat);
+    this.ring.rotation.x = -Math.PI / 2;
+    this.ring.position.y = 0.05;
+    this.mesh.add(this.ring);
+    this.ringMat = ringMat;
+
+    // ID dot on top
+    const dotGeo = new THREE.SphereGeometry(0.08, 6, 4);
+    const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const dot = new THREE.Mesh(dotGeo, dotMat);
+    dot.position.y = 1.45;
+    this.mesh.add(dot);
+
+    this.mesh.position.set(x, 0, z);
+    this.mesh.userData = { personId: this.id };
+    scene.add(this.mesh);
+
+    this.setState(this.state);
+  }
+
+  setState(newState) {
+    this.prevState = this.state;
+    this.state = newState;
+    this.bodyMat.color.setHex(COLORS[newState] || 0xcccccc);
+    this.bodyMat.emissive = new THREE.Color(COLORS[newState] || 0xcccccc);
+    this.bodyMat.emissiveIntensity = 0.15;
+    this.path = [];
+    this.waitTimer = 0;
+    this.browseTimer = 0;
+
+    switch (newState) {
+      case 'ENTERING':
+        this.pathTo(0 + (Math.random()-0.5)*6, CORRIDOR_Z + Math.random()*2);
+        break;
+      case 'SHOPPING':
+        this.pickShoppingTarget();
+        break;
+      case 'IN_LINE':
+        this.pickCheckoutTarget();
+        break;
+      case 'SITTING':
+        this.pickSeatTarget();
+        break;
+      case 'LEAVING':
+        this.pathTo((Math.random()-0.5)*4, ENTRANCE_Z + 1);
+        break;
+    }
+  }
+
+  pickShoppingTarget() {
+    const row = SHELF_ROWS[Math.floor(Math.random() * SHELF_ROWS.length)];
+    const side = Math.random() > 0.5 ? 1.2 : -1.2;
+    const tz = SHELF_Z_START + Math.random() * (SHELF_Z_END - SHELF_Z_START);
+    this.pathTo(row + side, tz);
+  }
+
+  pickCheckoutTarget() {
+    let bestIdx = 0, bestCount = Infinity;
+    for (let i = 0; i < CHECKOUT_X.length; i++) {
+      const count = sim.people.filter(p => p.checkoutId === i && p.state === 'IN_LINE').length;
+      if (count < bestCount) { bestCount = count; bestIdx = i; }
+    }
+    this.checkoutId = bestIdx;
+    const queuePos = CHECKOUT_Z + 2 + bestCount * 1.2;
+    this.pathTo(CHECKOUT_X[bestIdx] + (Math.random()-0.5)*0.5, queuePos);
+  }
+
+  pickSeatTarget() {
+    const taken = new Set(sim.people.filter(p => p.state === 'SITTING' && p.id !== this.id).map(p => p.seatId));
+    let chosen = -1;
+    for (let i = 0; i < SEAT_POSITIONS.length; i++) {
+      if (!taken.has(i)) { chosen = i; break; }
+    }
+    if (chosen === -1) chosen = Math.floor(Math.random() * SEAT_POSITIONS.length);
+    this.seatId = chosen;
+    const sp = SEAT_POSITIONS[chosen];
+    this.pathTo(sp.x, sp.z);
+  }
+
+  pathTo(tx, tz) {
+    this.target = { x: tx, z: tz };
+    this.path = [];
+    const fromInAisle = this.pos.z < CORRIDOR_Z - 1;
+    const toInAisle = tz < CORRIDOR_Z - 1;
+    const fromInBack = this.pos.z > CORRIDOR_Z + 2;
+    const toInBack = tz > CORRIDOR_Z + 2;
+
+    if ((fromInAisle && toInBack) || (fromInBack && toInAisle) || (fromInAisle && toInAisle && Math.abs(this.pos.x - tx) > 4)) {
+      this.path.push({ x: this.pos.x, z: CORRIDOR_Z });
+      this.path.push({ x: tx, z: CORRIDOR_Z });
+    }
+    this.path.push({ x: tx, z: tz });
+  }
+
+  update(dt) {
+    if (this.removed) return;
+
+    // Bob animation
+    this.mesh.position.y = Math.sin(simClock * 4 + this.id) * 0.03;
+
+    if (this.path.length > 0) {
+      const tgt = this.path[0];
+      const dx = tgt.x - this.pos.x;
+      const dz = tgt.z - this.pos.z;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+      if (dist < 0.3) {
+        this.pos.x = tgt.x; this.pos.z = tgt.z;
+        this.path.shift();
+      } else {
+        const step = this.speed * dt;
+        this.pos.x += (dx / dist) * Math.min(step, dist);
+        this.pos.z += (dz / dist) * Math.min(step, dist);
+        this.mesh.rotation.y = Math.atan2(dx, dz);
+      }
+    } else {
+      this.onArrived(dt);
+    }
+
+    this.mesh.position.x = this.pos.x;
+    this.mesh.position.z = this.pos.z;
+  }
+
+  onArrived(dt) {
+    switch (this.state) {
+      case 'ENTERING':
+        this.setState('SHOPPING');
+        addLog('enter', 'Person #' + this.id + ' entered store');
+        break;
+      case 'SHOPPING':
+        this.browseTimer += dt;
+        if (this.browseTimer > 2 + Math.random() * 4) {
+          this.browseTimer = 0;
+          const r = Math.random();
+          if (r < 0.10) this.setState('IN_LINE');
+          else if (r < 0.15) this.setState('SITTING');
+          else if (r < 0.18) this.setState('LEAVING');
+          else this.pickShoppingTarget();
+        }
+        break;
+      case 'IN_LINE':
+        this.waitTimer += dt;
+        if (this.waitTimer > 8 + Math.random() * 12) {
+          this.setState('LEAVING');
+          addLog('action', 'Person #' + this.id + ' checked out');
+        }
+        break;
+      case 'SITTING':
+        this.waitTimer += dt;
+        if (this.waitTimer > 15 + Math.random() * 30) {
+          const r = Math.random();
+          if (r < 0.6) this.setState('SHOPPING');
+          else this.setState('LEAVING');
+        }
+        break;
+      case 'LEAVING':
+        if (this.pos.z > ENTRANCE_Z) {
+          this.removed = true;
+          scene.remove(this.mesh);
+          addLog('exit', 'Person #' + this.id + ' left store (' + formatTime(simClock - this.spawnTime) + ')');
+          totalExited++;
+          totalDwellTime += simClock - this.spawnTime;
+          if (selectedPerson === this) deselectPerson();
+        }
+        break;
+    }
+  }
+
+  select() { this.ringMat.opacity = 0.8; }
+  deselect() { this.ringMat.opacity = 0; }
+  dispose() { scene.remove(this.mesh); }
+}
+
+// ════════════════════════════════════════════
+// SIMULATION
+// ════════════════════════════════════════════
+let simClock = 0;
+let simSpeed = 1;
+let paused = false;
+let totalEntered = 0;
+let totalExited = 0;
+let totalDwellTime = 0;
+let selectedPerson = null;
+
+const sim = {
+  people: [],
+
+  addPerson(zone, action) {
+    zone = zone || 'entrance';
+    action = action || 'SHOPPING';
+    let x, z, state;
+    switch (zone) {
+      case 'entrance':
+        x = (Math.random() - 0.5) * 6;
+        z = ENTRANCE_Z + 1;
+        state = 'ENTERING';
+        break;
+      case 'aisle':
+        x = SHELF_ROWS[Math.floor(Math.random() * SHELF_ROWS.length)] + (Math.random() > 0.5 ? 1.2 : -1.2);
+        z = SHELF_Z_START + Math.random() * (SHELF_Z_END - SHELF_Z_START);
+        state = action;
+        break;
+      case 'checkout':
+        x = CHECKOUT_X[Math.floor(Math.random() * CHECKOUT_X.length)];
+        z = CHECKOUT_Z + 3 + Math.random() * 4;
+        state = 'IN_LINE';
+        break;
+      case 'seating':
+        { const sp = SEAT_POSITIONS[Math.floor(Math.random() * SEAT_POSITIONS.length)];
+        x = sp.x; z = sp.z; }
+        state = 'SITTING';
+        break;
+      default:
+        x = (Math.random()-0.5) * 20;
+        z = (Math.random()-0.5) * 10;
+        state = action;
+    }
+    const p = new Person(x, z, state);
+    this.people.push(p);
+    totalEntered++;
+    return p;
+  },
+
+  addRandom(n) {
+    const zones = ['entrance','entrance','entrance','aisle','aisle','checkout','seating'];
+    const actions = ['SHOPPING','SHOPPING','SHOPPING','IN_LINE','SITTING'];
+    for (let i = 0; i < n; i++) {
+      const z = zones[Math.floor(Math.random()*zones.length)];
+      const a = actions[Math.floor(Math.random()*actions.length)];
+      this.addPerson(z, a);
+    }
+  },
+
+  update(dt) {
+    for (const p of this.people) p.update(dt);
+    this.people = this.people.filter(p => !p.removed);
+  },
+
+  clear() {
+    for (const p of this.people) p.dispose();
+    this.people = [];
+    deselectPerson();
+  },
+
+  getStats() {
+    const counts = { total: this.people.length, SHOPPING: 0, IN_LINE: 0, SITTING: 0, LEAVING: 0, ENTERING: 0 };
+    const zoneCounts = { entrance: 0, aisles: 0, checkout: 0, seating: 0, corridor: 0 };
+    for (const p of this.people) {
+      counts[p.state] = (counts[p.state] || 0) + 1;
+      for (const [key, z] of Object.entries(ZONES)) {
+        if (p.pos.x >= z.xMin && p.pos.x <= z.xMax && p.pos.z >= z.zMin && p.pos.z <= z.zMax) {
+          zoneCounts[key]++;
+          break;
+        }
+      }
+    }
+    return { counts, zoneCounts };
+  }
+};
+
+// ════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════
+const el = (id) => document.getElementById(id);
+
+function initZoneBars() {
+  const container = el('zone-bars');
+  while (container.firstChild) container.removeChild(container.firstChild);
+  for (const [key, z] of Object.entries(ZONES)) {
+    const bar = document.createElement('div');
+    bar.className = 'zone-bar';
+
+    const labelRow = document.createElement('div');
+    labelRow.className = 'zone-label';
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = z.label;
+    const countSpan = document.createElement('span');
+    countSpan.id = 'zb-' + key;
+    countSpan.textContent = '0';
+    labelRow.appendChild(nameSpan);
+    labelRow.appendChild(countSpan);
+
+    const barBg = document.createElement('div');
+    barBg.className = 'bar-bg';
+    const barFill = document.createElement('div');
+    barFill.className = 'bar-fill';
+    barFill.id = 'zbf-' + key;
+    barFill.style.width = '0%';
+    barFill.style.background = z.color;
+    barBg.appendChild(barFill);
+
+    bar.appendChild(labelRow);
+    bar.appendChild(barBg);
+    container.appendChild(bar);
+  }
+}
+initZoneBars();
+
+function updateDashboard() {
+  const { counts, zoneCounts } = sim.getStats();
+  el('s-total').textContent = counts.total;
+  el('s-shopping').textContent = counts.SHOPPING || 0;
+  el('s-inline').textContent = counts.IN_LINE || 0;
+  el('s-sitting').textContent = counts.SITTING || 0;
+  el('s-leaving').textContent = (counts.LEAVING || 0) + (counts.ENTERING || 0);
+  el('s-entered').textContent = totalEntered;
+
+  const maxZone = Math.max(1, ...Object.values(zoneCounts));
+  for (const [key, count] of Object.entries(zoneCounts)) {
+    el('zb-' + key).textContent = count;
+    el('zbf-' + key).style.width = (count / maxZone * 100) + '%';
+  }
+
+  const avgDwell = totalExited > 0 ? totalDwellTime / totalExited : 0;
+  el('s-dwell').textContent = formatTime(avgDwell);
+  el('sim-time').textContent = formatTime(simClock);
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + sec.toString().padStart(2, '0');
+}
+
+const logContainer = el('activity-log');
+function addLog(type, msg) {
+  const t = formatTime(simClock);
+  const div = document.createElement('div');
+  div.className = 'log-entry ' + type;
+
+  const timeSpan = document.createElement('span');
+  timeSpan.className = 'log-time';
+  timeSpan.textContent = t;
+
+  const msgSpan = document.createElement('span');
+  msgSpan.className = 'log-msg';
+  msgSpan.textContent = msg;
+
+  div.appendChild(timeSpan);
+  div.appendChild(msgSpan);
+  logContainer.prepend(div);
+  while (logContainer.children.length > 60) logContainer.removeChild(logContainer.lastChild);
+}
+
+// ════════════════════════════════════════════
+// SELECTION & PERSON PANEL
+// ════════════════════════════════════════════
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const personPanel = el('person-panel');
+
+function selectPerson(p) {
+  if (selectedPerson) selectedPerson.deselect();
+  selectedPerson = p;
+  p.select();
+  personPanel.classList.add('show');
+  updatePersonPanel();
+}
+function deselectPerson() {
+  if (selectedPerson) selectedPerson.deselect();
+  selectedPerson = null;
+  personPanel.classList.remove('show');
+}
+function updatePersonPanel() {
+  if (!selectedPerson) return;
+  const p = selectedPerson;
+  el('pp-id').textContent = 'PERSON #' + p.id;
+  const stateEl = el('pp-state');
+  stateEl.textContent = STATE_NAMES[p.state] || p.state;
+  stateEl.style.color = '#' + (COLORS[p.state] || 0xcccccc).toString(16).padStart(6, '0');
+  const dwell = simClock - p.spawnTime;
+  el('pp-meta').textContent = 'In store: ' + formatTime(dwell) + ' | Speed: ' + p.speed.toFixed(1) + ' m/s | Pos: (' + p.pos.x.toFixed(1) + ', ' + p.pos.z.toFixed(1) + ')';
+  for (const btn of personPanel.querySelectorAll('.action-btn')) {
+    btn.classList.toggle('active-action', btn.dataset.action === p.state);
+  }
+}
+
+viewport.addEventListener('click', (e) => {
+  const rect = viewport.getBoundingClientRect();
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+
+  const personMeshes = sim.people.map(p => p.mesh.children).flat();
+  const intersects = raycaster.intersectObjects(personMeshes, false);
+  if (intersects.length > 0) {
+    let obj = intersects[0].object;
+    while (obj.parent && !obj.userData.personId) obj = obj.parent;
+    const person = sim.people.find(p => p.id === obj.userData.personId);
+    if (person) { selectPerson(person); return; }
+  }
+  deselectPerson();
+});
+
+for (const btn of personPanel.querySelectorAll('.action-btn')) {
+  btn.addEventListener('click', () => {
+    if (!selectedPerson) return;
+    const action = btn.dataset.action;
+    addLog('action', 'Person #' + selectedPerson.id + ': ' + STATE_NAMES[selectedPerson.state] + ' -> ' + STATE_NAMES[action]);
+    selectedPerson.setState(action);
+    updatePersonPanel();
+  });
+}
+
+// ════════════════════════════════════════════
+// TOOLBAR HANDLERS
+// ════════════════════════════════════════════
+el('btn-add').addEventListener('click', () => {
+  const zone = el('spawn-zone').value;
+  const action = el('spawn-action').value;
+  sim.addPerson(zone, action);
+  addLog('enter', 'Spawned person in ' + zone);
+});
+
+el('btn-add5').addEventListener('click', () => { sim.addRandom(5); addLog('enter', 'Spawned 5 random people'); });
+el('btn-add20').addEventListener('click', () => { sim.addRandom(20); addLog('enter', 'Rush! 20 people entering'); });
+
+el('btn-play').addEventListener('click', () => {
+  paused = false;
+  el('btn-play').classList.add('active');
+  el('btn-pause').classList.remove('active');
+});
+el('btn-pause').addEventListener('click', () => {
+  paused = true;
+  el('btn-pause').classList.add('active');
+  el('btn-play').classList.remove('active');
+});
+
+const speeds = [0.25, 0.5, 1, 2, 5, 10];
+let speedIdx = 2;
+function updateSpeedDisplay() {
+  simSpeed = speeds[speedIdx];
+  el('speed-val').textContent = simSpeed + 'x';
+}
+el('btn-speed-down').addEventListener('click', () => { speedIdx = Math.max(0, speedIdx - 1); updateSpeedDisplay(); });
+el('btn-speed-up').addEventListener('click', () => { speedIdx = Math.min(speeds.length - 1, speedIdx + 1); updateSpeedDisplay(); });
+
+el('btn-heatmap').addEventListener('click', () => {
+  heatmapEnabled = !heatmapEnabled;
+  heatPlane.visible = heatmapEnabled;
+  el('btn-heatmap').classList.toggle('active', heatmapEnabled);
+  document.getElementById('heatmap-legend').classList.toggle('show', heatmapEnabled);
+});
+
+el('btn-topview').addEventListener('click', () => {
+  camera.position.set(0, 50, 0.1);
+  controls.target.set(0, 0, 0);
+  controls.update();
+});
+
+el('btn-clear').addEventListener('click', () => {
+  sim.clear();
+  totalEntered = 0; totalExited = 0; totalDwellTime = 0;
+  heatData.fill(0);
+  addLog('action', 'Cleared all people');
+});
+
+// ════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ') { e.preventDefault(); paused ? el('btn-play').click() : el('btn-pause').click(); }
+  if (e.key === 'a' || e.key === 'A') el('btn-add').click();
+  if (e.key === 'Escape') deselectPerson();
+  if (e.key === 'h' || e.key === 'H') el('btn-heatmap').click();
+  if (e.key === 't' || e.key === 'T') el('btn-topview').click();
+  if (e.key === '+' || e.key === '=') el('btn-speed-up').click();
+  if (e.key === '-' || e.key === '_') el('btn-speed-down').click();
+  if (selectedPerson) {
+    if (e.key === '1') { selectedPerson.setState('SHOPPING'); updatePersonPanel(); }
+    if (e.key === '2') { selectedPerson.setState('IN_LINE'); updatePersonPanel(); }
+    if (e.key === '3') { selectedPerson.setState('SITTING'); updatePersonPanel(); }
+    if (e.key === '4') { selectedPerson.setState('LEAVING'); updatePersonPanel(); }
+  }
+});
+
+// ════════════════════════════════════════════
+// RESIZE
+// ════════════════════════════════════════════
+function onResize() {
+  const w = viewport.clientWidth, h = viewport.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', onResize);
+new ResizeObserver(onResize).observe(viewport);
+onResize();
+
+// ════════════════════════════════════════════
+// ANIMATION LOOP
+// ════════════════════════════════════════════
+const clock = new THREE.Clock();
+let frameCount = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  const rawDt = clock.getDelta();
+  const dt = paused ? 0 : Math.min(rawDt, 0.1) * simSpeed;
+  if (!paused) simClock += dt;
+  frameCount++;
+
+  sim.update(dt);
+
+  if (heatmapEnabled && frameCount % 3 === 0) updateHeatmap(sim.people);
+
+  if (frameCount % 10 === 0) {
+    updateDashboard();
+    if (selectedPerson && !selectedPerson.removed) updatePersonPanel();
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// ════════════════════════════════════════════
+// STARTUP
+// ════════════════════════════════════════════
+sim.addRandom(8);
+addLog('enter', 'Simulation started with 8 customers');
+animate();
+</script>
+</body>
+</html>

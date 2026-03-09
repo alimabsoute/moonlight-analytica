@@ -1,0 +1,4874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Janus - Product Requirements Document v1.4</title>
+    <style>
+        /* Print-optimized styles */
+        @media print {
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+
+            body {
+                font-size: 10pt;
+            }
+
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+
+            table, pre, .code-block {
+                page-break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* Screen and print styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            background: #fff;
+        }
+
+        /* Header styles */
+        h1 {
+            color: #1a1a2e;
+            font-size: 26pt;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 12px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        h1:first-of-type {
+            margin-top: 0;
+            font-size: 32pt;
+            text-align: center;
+            border-bottom: none;
+            color: #007bff;
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 18pt;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 14pt;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            color: #5a6c7d;
+            font-size: 12pt;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Paragraph and text */
+        p {
+            margin: 12px 0;
+            text-align: justify;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        em {
+            color: #555;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 9.5pt;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            font-weight: 600;
+            color: #2c3e50;
+            white-space: nowrap;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        tr:hover {
+            background: #f0f7ff;
+        }
+
+        /* Code */
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 9pt;
+            color: #c7254e;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 9pt;
+            line-height: 1.5;
+            margin: 15px 0;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 12px 0;
+            padding-left: 28px;
+        }
+
+        li {
+            margin: 6px 0;
+        }
+
+        li > ul, li > ol {
+            margin: 4px 0;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid #007bff;
+            padding: 10px 20px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            color: #555;
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 2px solid #e0e0e0;
+            margin: 35px 0;
+        }
+
+        /* Links */
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Cover info */
+        .cover-info {
+            text-align: center;
+            margin: 30px 0 50px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .cover-info p {
+            text-align: center;
+            margin: 5px 0;
+            color: #666;
+        }
+
+        /* Print button */
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(145deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            z-index: 1000;
+        }
+
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #888;
+            font-size: 10pt;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">
+        Print / Save as PDF
+    </button>
+
+    <div class="cover-info no-print">
+        <p><strong>Project Janus</strong> - People Tracking Analytics Platform</p>
+        <p>Product Requirements Document v1.4</p>
+        <p>December 2024</p>
+    </div>
+
+    <h1 id="project-janus-product-requirements-document">Project Janus - Product Requirements Document</h1>
+
+<p><strong>Version</strong>: 1.0
+<strong>Last Updated</strong>: December 2024
+<strong>Status</strong>: Production-ready with ongoing development</p>
+
+<hr />
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+<li><a href="#1-executive-summary">Executive Summary</a></li>
+<li><a href="#2-product-vision">Product Vision</a></li>
+<li><a href="#3-user-personas">User Personas</a></li>
+<li><a href="#4-system-architecture">System Architecture</a></li>
+<li><a href="#5-page-specifications">Page Specifications</a>
+<ul>
+<li>5.1 <a href="#51-live-monitor">Live Monitor</a></li>
+<li>5.2 <a href="#52-analytics">Analytics</a></li>
+<li>5.3 <a href="#53-reports">Reports</a></li>
+<li>5.4 <a href="#54-heatmap">Heatmap</a></li>
+<li>5.5 <a href="#55-zone-config">Zone Config</a></li>
+<li>5.6 <a href="#56-settings">Settings</a></li>
+</ul></li>
+<li><a href="#6-api-specification">API Specification</a></li>
+<li><a href="#7-database-schema">Database Schema</a></li>
+<li><a href="#8-future-roadmap">Future Roadmap</a></li>
+<li><a href="#9-advanced-kpi-research">Advanced KPI Research</a></li>
+</ol>
+
+<hr />
+
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+
+<h3 id="product-overview">Product Overview</h3>
+
+<p><strong>Janus</strong> is a real-time people tracking and analytics platform designed for retail stores, venues, and any physical space where understanding visitor behavior is critical. Named after the Roman god of doorways and transitions, Janus monitors entries, exits, dwell times, and zone-specific activity to provide actionable insights.</p>
+
+<h3 id="key-value-propositions">Key Value Propositions</h3>
+
+<ol>
+<li><strong>Real-Time Visibility</strong> - See exactly how many people are in your space right now</li>
+<li><strong>Zone Intelligence</strong> - Understand which areas get the most traffic</li>
+<li><strong>Behavioral Analytics</strong> - Track dwell times, conversion funnels, and engagement</li>
+<li><strong>Operational Insights</strong> - Optimize staffing, identify bottlenecks, reduce wait times</li>
+<li><strong>Visual Verification</strong> - Live video feed with AI-powered person tracking</li>
+</ol>
+
+<h3 id="technology-stack">Technology Stack</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Frontend</td>
+  <td>React + Vite + Recharts</td>
+</tr>
+<tr>
+  <td>Backend</td>
+  <td>Flask + SQLite</td>
+</tr>
+<tr>
+  <td>Edge Agent</td>
+  <td>Python + YOLO v8 + ByteTrack</td>
+</tr>
+<tr>
+  <td>Video Processing</td>
+  <td>OpenCV + yt-dlp</td>
+</tr>
+<tr>
+  <td>Streaming</td>
+  <td>MJPEG over HTTP</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="2-product-vision">2. Product Vision</h2>
+
+<h3 id="mission-statement">Mission Statement</h3>
+
+<p>Empower physical space operators with the same level of visitor analytics that e-commerce platforms enjoy online.</p>
+
+<h3 id="core-principles">Core Principles</h3>
+
+<ol>
+<li><strong>Privacy-First</strong> - No facial recognition, only silhouette tracking</li>
+<li><strong>Real-Time</strong> - Sub-second latency for live monitoring</li>
+<li><strong>Actionable</strong> - Every metric should drive a decision</li>
+<li><strong>Accessible</strong> - Simple setup, no specialized hardware required</li>
+</ol>
+
+<h3 id="target-use-cases">Target Use Cases</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Use Case</th>
+  <th>Primary Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Retail Store</td>
+  <td>Optimize layout, reduce checkout wait times</td>
+</tr>
+<tr>
+  <td>Restaurant</td>
+  <td>Manage table turnover, queue length</td>
+</tr>
+<tr>
+  <td>Event Venue</td>
+  <td>Monitor capacity, emergency planning</td>
+</tr>
+<tr>
+  <td>Office Space</td>
+  <td>Meeting room utilization, workspace planning</td>
+</tr>
+<tr>
+  <td>Museum/Gallery</td>
+  <td>Popular exhibit identification, crowd flow</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="3-user-personas">3. User Personas</h2>
+
+<h3 id="persona-1-store-manager-sarah">Persona 1: Store Manager (Sarah)</h3>
+
+<p><strong>Role</strong>: Retail Store Manager
+<strong>Goals</strong>:
+- Understand peak hours to schedule staff
+- Identify which departments attract most visitors
+- Reduce checkout queue wait times</p>
+
+<p><strong>Pain Points</strong>:
+- Currently guesses busy periods from sales data
+- No visibility into visitor paths before purchase
+- Can't quantify "browse but don't buy" behavior</p>
+
+<p><strong>Key Features Used</strong>: Live Monitor, Analytics, Reports</p>
+
+<hr />
+
+<h3 id="persona-2-loss-prevention-analyst-mike">Persona 2: Loss Prevention Analyst (Mike)</h3>
+
+<p><strong>Role</strong>: Loss Prevention / Security
+<strong>Goals</strong>:
+- Monitor real-time occupancy for safety compliance
+- Identify unusual traffic patterns
+- Track zone activity for incident correlation</p>
+
+<p><strong>Pain Points</strong>:
+- Manual headcounts are inaccurate and labor-intensive
+- No historical data for incident investigation
+- Can't prove occupancy compliance to auditors</p>
+
+<p><strong>Key Features Used</strong>: Live Monitor, Heatmap, Zone Config</p>
+
+<hr />
+
+<h3 id="persona-3-operations-director-lisa">Persona 3: Operations Director (Lisa)</h3>
+
+<p><strong>Role</strong>: Multi-Location Operations
+<strong>Goals</strong>:
+- Compare performance across locations
+- Generate executive reports
+- Plan staffing based on traffic predictions</p>
+
+<p><strong>Pain Points</strong>:
+- Data from different locations isn't standardized
+- Report generation is manual and time-consuming
+- No predictive capability for planning</p>
+
+<p><strong>Key Features Used</strong>: Analytics, Reports, (Future) Historical Trends</p>
+
+<hr />
+
+<h2 id="4-system-architecture">4. System Architecture</h2>
+
+<h3 id="high-level-architecture">High-Level Architecture</h3>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                         USER BROWSER                                │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                    REACT FRONTEND                            │   │
+│  │  ┌──────────┐ ┌───────────┐ ┌─────────┐ ┌─────────┐        │   │
+│  │  │   Live   │ │ Analytics │ │ Reports │ │ Heatmap │  ...   │   │
+│  │  │  Monitor │ │           │ │         │ │         │        │   │
+│  │  └────┬─────┘ └─────┬─────┘ └────┬────┘ └────┬────┘        │   │
+│  └───────┼─────────────┼────────────┼───────────┼─────────────┘   │
+└──────────┼─────────────┼────────────┼───────────┼─────────────────┘
+           │             │            │           │
+           ▼             ▼            ▼           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                    FLASK BACKEND (Port 8000)                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐               │
+│  │   /kpis     │  │  /api/*     │  │  /video/*   │               │
+│  │   /count    │  │  Analytics  │  │  Management │               │
+│  │   /series   │  │  Endpoints  │  │  Endpoints  │               │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘               │
+│         │                │                │                       │
+│         └────────────────┴────────────────┘                       │
+│                          │                                        │
+│                    ┌─────┴─────┐                                  │
+│                    │  SQLite   │                                  │
+│                    │  Database │                                  │
+│                    └───────────┘                                  │
+└──────────────────────────────────────────────────────────────────┘
+           │
+           │ Control Commands
+           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                EDGE AGENT (Port 8001)                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐                │
+│  │   video_streamer.py │  │   edge_agent.py     │                │
+│  │   - YOLO v8 detect  │  │   - Count events    │                │
+│  │   - ByteTrack track │  │   - Zone tracking   │                │
+│  │   - Zone overlay    │  │   - POST to backend │                │
+│  │   - MJPEG stream    │  │                     │                │
+│  └─────────────────────┘  └─────────────────────┘                │
+│           │                                                       │
+│           │ Video Sources                                         │
+│           ├─────────────────────────────────────┐                │
+│           ▼                                     ▼                │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐      │
+│  │   Webcam    │  │  MP4 File   │  │  YouTube (yt-dlp)   │      │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘      │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h3 id="port-configuration">Port Configuration</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Service</th>
+  <th>Port</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Frontend</td>
+  <td>5173</td>
+  <td>Vite dev server</td>
+</tr>
+<tr>
+  <td>Backend</td>
+  <td>8000</td>
+  <td>Flask API</td>
+</tr>
+<tr>
+  <td>Edge Agent</td>
+  <td>8001</td>
+  <td>MJPEG video stream</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="data-flow">Data Flow</h3>
+
+<ol>
+<li><strong>Video Input</strong> → Edge Agent captures frames</li>
+<li><strong>Detection</strong> → YOLO v8 identifies persons in frame</li>
+<li><strong>Tracking</strong> → ByteTrack assigns persistent IDs</li>
+<li><strong>Zone Check</strong> → Each person checked against zone boundaries</li>
+<li><strong>Event Post</strong> → Count/event data POSTed to backend</li>
+<li><strong>Storage</strong> → Backend stores in SQLite</li>
+<li><strong>Query</strong> → Frontend fetches aggregated KPIs</li>
+<li><strong>Display</strong> → React renders charts and metrics</li>
+</ol>
+
+<hr />
+
+<h2 id="5-page-specifications">5. Page Specifications</h2>
+
+<h3 id="51-live-monitor">5.1 Live Monitor</h3>
+
+<p><strong>Route</strong>: <code>#live</code>
+<strong>File</strong>: <code>frontend/src/pages/LiveMonitor.jsx</code>
+<strong>Purpose</strong>: Real-time operational dashboard for monitoring current traffic</p>
+
+<h4 id="wireframe">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER BAR                                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Live Monitor          [✓ Auto-refresh 10s]  [📚 Library] [🔄]   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TIME RANGE PICKER                                                      │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  [10min] [30min] [1 hour] [24 hours] [7 days]                   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  KPI CARDS (Row 1)                                                      │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐               │
+│  │Current │ │Average │ │ Peak   │ │ Total  │ │Occupancy│              │
+│  │ Count  │ │        │ │        │ │ Events │ │   %    │               │
+│  │   12   │ │  8.5   │ │   24   │ │  1,847 │ │  45%   │               │
+│  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘               │
+│                                                                         │
+│  KPI CARDS (Row 2)                                                      │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐               │
+│  │Entries │ │ Exits  │ │Avg Dwell│ │ Queue  │ │Avg Wait│              │
+│  │        │ │        │ │  Time  │ │ Length │ │  Time  │               │
+│  │  156   │ │  142   │ │  8m    │ │   4    │ │  3m    │               │
+│  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘               │
+├─────────────────────────────────────────────────────────────────────────┤
+│  VIDEO FEED CARD                                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Live Video Feed                    [📹 Change Video Source]      │   │
+│  │ ┌───────────────────────────────────────────────────────────┐   │   │
+│  │ │                                                           │   │   │
+│  │ │              ┌─────┐    ┌─────┐                           │   │   │
+│  │ │              │ ID:1│    │ ID:2│   ← Bounding boxes       │   │   │
+│  │ │              └─────┘    └─────┘     with track IDs       │   │   │
+│  │ │                                                           │   │   │
+│  │ │   [ENTRANCE]      [MAIN FLOOR]      [CHECKOUT]           │   │   │
+│  │ │      Green            Blue              Red              │   │   │
+│  │ │                                                           │   │   │
+│  │ └───────────────────────────────────────────────────────────┘   │   │
+│  │            [⏸️ Pause]    [⏹️ Stop]    [⚙️ Source]              │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  COUNT OVER TIME CHART                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Count Over Time                [📥 Download CSV] [🎲 Seed Demo] │   │
+│  │ ┌───────────────────────────────────────────────────────────┐   │   │
+│  │ │     ^                                                     │   │   │
+│  │ │  20 │        ╱╲                                           │   │   │
+│  │ │     │   ╱╲  ╱  ╲    ╱╲                                    │   │   │
+│  │ │  10 │  ╱  ╲╱    ╲  ╱  ╲                                   │   │   │
+│  │ │     │ ╱          ╲╱    ╲                                  │   │   │
+│  │ │   0 └─────────────────────────────────────────&gt; Time      │   │   │
+│  │ │      9:00   9:15   9:30   9:45   10:00                    │   │   │
+│  │ └───────────────────────────────────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  STATS GRID                                                             │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐             │
+│  │ Throughput (Events/hr)  │  │ Time Range              │             │
+│  │         245.6           │  │         1h              │             │
+│  └─────────────────────────┘  └─────────────────────────┘             │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="component-breakdown">Component Breakdown</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Purpose</th>
+  <th>Data Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Header Bar</td>
+  <td>Page title + controls</td>
+  <td>Local state</td>
+</tr>
+<tr>
+  <td>Time Range Picker</td>
+  <td>Filter data window</td>
+  <td><code>timeRange</code> state</td>
+</tr>
+<tr>
+  <td>KPI Grid (10 cards)</td>
+  <td>Key metrics display</td>
+  <td><code>/kpis</code>, <code>/api/*</code> endpoints</td>
+</tr>
+<tr>
+  <td>Video Feed Card</td>
+  <td>Live MJPEG stream</td>
+  <td><code>localhost:8001/video_feed</code></td>
+</tr>
+<tr>
+  <td>Count Chart</td>
+  <td>Historical line chart</td>
+  <td><code>/series.csv</code></td>
+</tr>
+<tr>
+  <td>Stats Grid</td>
+  <td>Summary metrics</td>
+  <td><code>/kpis</code></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="kpi-cards-detail">KPI Cards Detail</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Endpoint</th>
+  <th>Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Current Count</td>
+  <td>People in space now</td>
+  <td><code>/kpis</code> → <code>current_count</code></td>
+  <td>Integer</td>
+</tr>
+<tr>
+  <td>Average</td>
+  <td>Avg count in time range</td>
+  <td><code>/kpis</code> → <code>avg_count</code></td>
+  <td>Decimal (1 place)</td>
+</tr>
+<tr>
+  <td>Peak</td>
+  <td>Highest count</td>
+  <td><code>/kpis</code> → <code>peak_count</code></td>
+  <td>Integer</td>
+</tr>
+<tr>
+  <td>Total Events</td>
+  <td>Count records logged</td>
+  <td><code>/kpis</code> → <code>total_events</code></td>
+  <td>Integer</td>
+</tr>
+<tr>
+  <td>Occupancy %</td>
+  <td>Current/Capacity</td>
+  <td><code>/api/occupancy</code> → <code>occupancy_rate</code></td>
+  <td>Percentage</td>
+</tr>
+<tr>
+  <td>Entries</td>
+  <td>People who entered</td>
+  <td><code>/api/entries-exits</code> → <code>entries</code></td>
+  <td>Integer</td>
+</tr>
+<tr>
+  <td>Exits</td>
+  <td>People who exited</td>
+  <td><code>/api/entries-exits</code> → <code>exits</code></td>
+  <td>Integer</td>
+</tr>
+<tr>
+  <td>Avg Dwell Time</td>
+  <td>Avg time in space</td>
+  <td><code>/api/dwell-time</code> → <code>avg_dwell_seconds</code></td>
+  <td>Minutes</td>
+</tr>
+<tr>
+  <td>Queue Length</td>
+  <td>People in queue zone</td>
+  <td><code>/api/queue</code> → <code>current_queue_length</code></td>
+  <td>Integer</td>
+</tr>
+<tr>
+  <td>Avg Wait Time</td>
+  <td>Avg queue wait</td>
+  <td><code>/api/queue</code> → <code>avg_wait_seconds</code></td>
+  <td>Minutes</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="modal-1-video-source-selection">Modal 1: Video Source Selection</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│  Select Video Source                                    [X] │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ◉ 📹 Demo Video / YouTube                                  │
+│    ┌─────────────────────────────────────────────────────┐ │
+│    │ Upload MP4 Video:                                   │ │
+│    │ [Choose File] demo_retail_store.mp4                 │ │
+│    │                                                     │ │
+│    │ ─────────────── OR ───────────────                  │ │
+│    │                                                     │ │
+│    │ YouTube URL:                                        │ │
+│    │ [https://youtube.com/watch?v=...                  ] │ │
+│    │                                                     │ │
+│    │                    [▶️ Start Demo Video]             │ │
+│    └─────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ○ 📷 Live Webcam                                          │
+│    Connect to your computer's webcam for live tracking     │
+│                                                             │
+│  ○ 🎲 Procedural Demo                                       │
+│    Generate simulated tracking data for testing            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="modal-2-video-library">Modal 2: Video Library</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│  📚 Video Library                                           [X] │
+├─────────────────────────────────────────────────────────────────┤
+│  Upload New Video                                               │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ [Choose File]  retail_morning_rush.mp4                    │ │
+│  │ Name: [                                                 ] │ │
+│  │ Description: [                                          ] │ │
+│  │                                [📤 Upload to Library]     │ │
+│  └───────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│  Saved Videos (3)                                               │
+│  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐   │
+│  │ Morning Rush    │ │ Afternoon Peak  │ │ Weekend Demo    │   │
+│  │ 45.2 MB         │ │ 62.1 MB         │ │ 38.5 MB         │   │
+│  │ 12/15/2024      │ │ 12/14/2024      │ │ 12/10/2024      │   │
+│  │ [▶️ Play] [🗑️]  │ │ [▶️ Play] [🗑️]  │ │ [▶️ Play] [🗑️]  │   │
+│  └─────────────────┘ └─────────────────┘ └─────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="user-interactions">User Interactions</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Action</th>
+  <th>Trigger</th>
+  <th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Change time range</td>
+  <td>Click time button</td>
+  <td>Refetch all data for new window</td>
+</tr>
+<tr>
+  <td>Toggle auto-refresh</td>
+  <td>Click checkbox</td>
+  <td>Enable/disable 2s polling</td>
+</tr>
+<tr>
+  <td>Open Video Library</td>
+  <td>Click 📚 button</td>
+  <td>Show video library modal</td>
+</tr>
+<tr>
+  <td>Refresh Now</td>
+  <td>Click 🔄 button</td>
+  <td>Immediate data refresh</td>
+</tr>
+<tr>
+  <td>Change Video Source</td>
+  <td>Click 📹 button</td>
+  <td>Show source selection modal</td>
+</tr>
+<tr>
+  <td>Play/Pause video</td>
+  <td>Click ⏸️/▶️</td>
+  <td>Toggle video display</td>
+</tr>
+<tr>
+  <td>Stop video</td>
+  <td>Click ⏹️</td>
+  <td>Stop stream, show placeholder</td>
+</tr>
+<tr>
+  <td>Download CSV</td>
+  <td>Click 📥</td>
+  <td>Download time series data</td>
+</tr>
+<tr>
+  <td>Seed Demo</td>
+  <td>Click 🎲</td>
+  <td>Generate 14 days test data</td>
+</tr>
+<tr>
+  <td>Upload video</td>
+  <td>Select file + click Upload</td>
+  <td>Upload to library</td>
+</tr>
+<tr>
+  <td>Play from library</td>
+  <td>Click ▶️ on card</td>
+  <td>Start tracking that video</td>
+</tr>
+<tr>
+  <td>Delete from library</td>
+  <td>Click 🗑️</td>
+  <td>Remove video (with confirm)</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="state-management">State Management</h4>
+
+<pre><code>// Core state
+const [timeRange, setTimeRange] = useState(1);      // Hours: 1, 6, 24, 168
+const [kpis, setKpis] = useState(null);             // KPI data object
+const [series, setSeries] = useState([]);           // Chart data array
+const [dwellTime, setDwellTime] = useState(null);   // Dwell analytics
+const [occupancy, setOccupancy] = useState(null);   // Occupancy data
+const [entriesExits, setEntriesExits] = useState(null); // Entry/exit counts
+const [queue, setQueue] = useState(null);           // Queue metrics
+const [loading, setLoading] = useState(true);       // Loading state
+const [error, setError] = useState(null);           // Error message
+const [autoRefresh, setAutoRefresh] = useState(true); // Auto-refresh toggle
+
+// Video state
+const [videoSource, setVideoSource] = useState('demo');
+const [uploadedVideo, setUploadedVideo] = useState(null);
+const [youtubeUrl, setYoutubeUrl] = useState('');
+const [showVideoSourceModal, setShowVideoSourceModal] = useState(false);
+const [videoPlaying, setVideoPlaying] = useState(true);
+const [videoStreamUrl, setVideoStreamUrl] = useState(`http://localhost:8001/video_feed?t=${Date.now()}`);
+
+// Library state
+const [showVideoLibrary, setShowVideoLibrary] = useState(false);
+const [videoLibrary, setVideoLibrary] = useState([]);
+const [uploadingToLibrary, setUploadingToLibrary] = useState(false);
+const [newVideoName, setNewVideoName] = useState('');
+const [newVideoDescription, setNewVideoDescription] = useState('');
+const [newVideoFile, setNewVideoFile] = useState(null);
+</code></pre>
+
+<h4 id="data-fetch-pattern">Data Fetch Pattern</h4>
+
+<pre><code>// Fetch all data on mount and time range change
+useEffect(() =&gt; {
+  fetchData();
+}, [timeRange]);
+
+// Auto-refresh every 2 seconds when enabled
+useEffect(() =&gt; {
+  if (!autoRefresh) return;
+  const interval = setInterval(fetchData, 2000);
+  return () =&gt; clearInterval(interval);
+}, [autoRefresh, timeRange]);
+
+// Parallel fetch for performance
+const fetchData = async () =&gt; {
+  const [kpiData, csvData, dwellData, occData, eeData, qData] = await Promise.all([
+    getKpis(timeRange),
+    getSeriesCsv(timeRange),
+    getDwellTime(timeRange),
+    getOccupancy(),
+    getEntriesExits(timeRange),
+    getQueue(timeRange)
+  ]);
+  // Set all state...
+};
+</code></pre>
+
+<h4 id="edge-cases">Edge Cases</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Scenario</th>
+  <th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>No data in time range</td>
+  <td>Show "No data available" message</td>
+</tr>
+<tr>
+  <td>Video stream disconnected</td>
+  <td>Show placeholder with reconnect option</td>
+</tr>
+<tr>
+  <td>API error</td>
+  <td>Display ErrorBanner with message</td>
+</tr>
+<tr>
+  <td>YouTube URL invalid</td>
+  <td>Show error toast, keep modal open</td>
+</tr>
+<tr>
+  <td>Upload file too large</td>
+  <td>Backend returns error, display to user</td>
+</tr>
+<tr>
+  <td>Library empty</td>
+  <td>Show "No videos yet" message</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="performance-considerations">Performance Considerations</h4>
+
+<ul>
+<li>Auto-refresh interval: 2 seconds (configurable)</li>
+<li>Parallel API calls reduce load time</li>
+<li>Video stream uses MJPEG (efficient, browser-native)</li>
+<li>Time range buttons prevent excessive queries</li>
+<li>CSV parsing done client-side</li>
+</ul>
+
+<hr />
+
+<h3 id="52-analytics">5.2 Analytics</h3>
+
+<p><strong>Route</strong>: <code>#analytics</code>
+<strong>File</strong>: <code>frontend/src/pages/Analytics.jsx</code>
+<strong>Purpose</strong>: Comprehensive analytics dashboard with 26+ KPIs and visualizations</p>
+
+<h4 id="current-implementation-26-kpis-dense-layout">Current Implementation (26 KPIs, Dense Layout)</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER BAR                                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ 📊 Advanced Analytics Dashboard      [✓ Auto-refresh 30s]       │   │
+│  │ "Comprehensive real-time visitor analytics with 26+ KPIs"       │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TIME RANGE SELECTOR                                                    │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Primary:  [1hr] [6hr] [24hr] [7d] [30d]                         │   │
+│  │ Compare:  [None] [1hr] [6hr] [24hr] [7d] [30d]                   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  🎯 KEY PERFORMANCE INDICATORS (26 KPIs in 5-column grid)              │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                         │
+│  │Entries│ │Exits │ │Net   │ │Total │ │Total │  ← Traffic Row          │
+│  │  156  │ │ 142  │ │+14   │ │ 298  │ │Sessions│                       │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘                         │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                         │
+│  │Current│ │Total │ │Occ % │ │Avail │ │Util %│  ← Occupancy Row        │
+│  │Occ: 12│ │Cap:200│ │ 45% │ │Space │ │  6%  │                         │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘                         │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                         │
+│  │Avg   │ │Median│ │Max   │ │Min   │ │Samples│ ← Dwell Time Row        │
+│  │Dwell │ │Dwell │ │Dwell │ │Dwell │ │  847  │                         │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘                         │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                         │
+│  │Conv  │ │Conv %│ │Bounce│ │Engage│ │Non-  │  ← Conversion Row        │
+│  │ 127  │ │ 42%  │ │ 15%  │ │ 68%  │ │Conv  │                         │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘                         │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                         │
+│  │Queue │ │Wait  │ │Total │ │Avg   │ │Peak  │  ← Queue/Perf Row        │
+│  │Len: 4│ │ 3.2m │ │Queued│ │Traffic│ │Traffic│                        │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘                         │
+│  ┌──────┐                                                              │
+│  │Thru- │                                                              │
+│  │put/hr│                                                              │
+│  └──────┘                                                              │
+├─────────────────────────────────────────────────────────────────────────┤
+│  🏢 ZONE PERFORMANCE ANALYSIS                                          │
+│  ┌─────────────────────────────┐ ┌─────────────────────────────┐      │
+│  │ Zone Traffic Bar Chart      │ │ Zone Utilization Radar      │      │
+│  │ [entrance] [main] [queue]   │ │      entrance               │      │
+│  │     ████████                │ │     ╱    ╲                  │      │
+│  │     █████████████           │ │   ╱        ╲                │      │
+│  │     ████                    │ │ queue ──── main             │      │
+│  │     ████████████            │ │   ╲        ╱                │      │
+│  └─────────────────────────────┘ └─────────────────────────────┘      │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ⏱️ DWELL TIME DISTRIBUTION                                            │
+│  ┌─────────────────────────────┐ ┌─────────────────────────────┐      │
+│  │ Pie Chart                   │ │ Bar Chart                   │      │
+│  │    ┌────┐                   │ │ &lt;1m  ████                   │      │
+│  │   ╱ Deep ╲                  │ │ 1-5m ████████████           │      │
+│  │  │ Shop ╲ Quick │           │ │ 5-15m████████████████       │      │
+│  │   ╲  Browse  ╱              │ │ 15-30█████████              │      │
+│  │    └────────┘               │ │ 30m+ ████                   │      │
+│  └─────────────────────────────┘ └─────────────────────────────┘      │
+├─────────────────────────────────────────────────────────────────────────┤
+│  🔄 CONVERSION FUNNEL                                                   │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Visitors (298) ████████████████████████████████████████ 100%    │   │
+│  │ Engaged (203)  ███████████████████████████░░░░░░░░░░░░░  68%    │   │
+│  │ Converted (127)████████████████░░░░░░░░░░░░░░░░░░░░░░░░  42%    │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  📈 TRAFFIC TRENDS (Area Chart or Comparison Line Chart)               │
+├─────────────────────────────────────────────────────────────────────────┤
+│  🌊 TRAFFIC FLOW SUMMARY                                               │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  Entries → Total Sessions → Conversions (42%) → Exits           │   │
+│  │    156   →      298       →     127          →   142            │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  💡 AUTOMATED INSIGHTS (Conditional Cards)                             │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐       │
+│  │ ⚠️ High Bounce   │ │ ✅ Strong Engage │ │ 📊 Net Positive │       │
+│  │ Rate: 41%       │ │ Rate: 68%        │ │ Traffic: +14    │       │
+│  └──────────────────┘ └──────────────────┘ └──────────────────┘       │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="proposed-redesign-simplified-details-view">Proposed Redesign: Simplified + Details View</h4>
+
+<p>The redesigned layout shows <strong>Top 10 essential KPIs</strong> prominently with a "See All 26 KPIs" expandable section.</p>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER BAR                                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ 📊 Analytics Dashboard    [Auto-refresh] [📥 Export]            │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TIME SELECTOR: [1h] [6h] [24h] [7d] [30d] [Custom]                    │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TOP 10 KPIs (Large Cards, 2 Rows x 5 Columns)                          │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐          │
+│  │ Current │ │  Total  │ │  Peak   │ │ Conv    │ │  Avg    │          │
+│  │ Occupancy│ │ Visitors│ │ Traffic │ │ Rate %  │ │  Dwell  │          │
+│  │   12    │ │   298   │ │   24    │ │  42%    │ │  8.5m   │          │
+│  │  ↑ +3   │ │  ↑ +12% │ │  ↓ -2   │ │  ↑ +5%  │ │  → 0%   │          │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘          │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐          │
+│  │ Bounce  │ │  Queue  │ │ Engage  │ │   Net   │ │ Capacity│          │
+│  │ Rate %  │ │ Length  │ │ Rate %  │ │ Traffic │ │  Util % │          │
+│  │  15%    │ │    4    │ │  68%    │ │   +14   │ │   45%   │          │
+│  │  ↓ -3%  │ │  ↑ +2   │ │  ↑ +8%  │ │  ↑ +6   │ │  ↑ +10% │          │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘          │
+│                                              [See All 26 KPIs →]       │
+├─────────────────────────────────────────────────────────────────────────┤
+│  QUICK INSIGHTS (Collapsible, AI-generated)                            │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ ⚠️ Queue above average (4 people)  •  ✅ Strong engagement today │   │
+│  │ 📈 Traffic up 12% vs yesterday                                  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  PRIMARY CHART: Traffic Over Time (Area Chart)                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │     ^                                                           │   │
+│  │  20 │        ╱╲        ╱╲                                       │   │
+│  │     │   ╱╲  ╱  ╲  ╱╲  ╱  ╲                                      │   │
+│  │  10 │  ╱  ╲╱    ╲╱  ╲╱    ╲                                     │   │
+│  │     │ ╱                    ╲                                    │   │
+│  │   0 └───────────────────────────────────────&gt; Time              │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  SECONDARY CHARTS (Collapsible Sections)                               │
+│  [▼ Zone Performance]                                                   │
+│     Zone Traffic + Zone Utilization Radar (side by side)               │
+│                                                                         │
+│  [▼ Dwell Distribution]                                                 │
+│     Pie Chart + Bar Chart (side by side)                               │
+│                                                                         │
+│  [▼ Conversion Funnel]                                                  │
+│     Horizontal bar funnel: Visitors → Engaged → Converted              │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="component-breakdown-2">Component Breakdown</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Section</th>
+  <th>Components</th>
+  <th>Data Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Top 10 KPIs</td>
+  <td>10 large KPIStat cards</td>
+  <td>Multiple APIs</td>
+</tr>
+<tr>
+  <td>Quick Insights</td>
+  <td>Conditional alert badges</td>
+  <td>Calculated from KPIs</td>
+</tr>
+<tr>
+  <td>Traffic Chart</td>
+  <td>AreaChart (Recharts)</td>
+  <td><code>/series.csv</code></td>
+</tr>
+<tr>
+  <td>Zone Performance</td>
+  <td>BarChart + RadarChart</td>
+  <td><code>/api/zones</code></td>
+</tr>
+<tr>
+  <td>Dwell Distribution</td>
+  <td>PieChart + BarChart</td>
+  <td><code>/api/dwell-time</code></td>
+</tr>
+<tr>
+  <td>Conversion Funnel</td>
+  <td>Horizontal BarChart</td>
+  <td><code>/api/conversion</code></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="top-10-essential-kpis">Top 10 Essential KPIs</h4>
+
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>KPI</th>
+  <th>Source</th>
+  <th>Why Essential</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>Current Occupancy</td>
+  <td><code>/api/occupancy</code></td>
+  <td>Real-time capacity awareness</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Total Visitors</td>
+  <td><code>/api/entries-exits</code></td>
+  <td>Volume indicator</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Peak Traffic</td>
+  <td><code>/kpis</code></td>
+  <td>Staffing benchmark</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Conversion Rate</td>
+  <td><code>/api/conversion</code></td>
+  <td>Business outcome</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Avg Dwell Time</td>
+  <td><code>/api/dwell-time</code></td>
+  <td>Engagement quality</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Bounce Rate</td>
+  <td><code>/api/conversion</code></td>
+  <td>Experience friction</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>Queue Length</td>
+  <td><code>/api/queue</code></td>
+  <td>Operational bottleneck</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>Engagement Rate</td>
+  <td><code>/api/conversion</code></td>
+  <td>Visitor quality</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>Net Traffic</td>
+  <td><code>/api/entries-exits</code></td>
+  <td>Flow balance</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>Capacity Util %</td>
+  <td><code>/api/occupancy</code></td>
+  <td>Space efficiency</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="full-26-kpis-expandable-section">Full 26 KPIs (Expandable Section)</h4>
+
+<p><strong>Traffic Metrics (5)</strong>
+- Total Entries, Total Exits, Net Traffic, Total Sessions, Total Traffic</p>
+
+<p><strong>Occupancy Metrics (5)</strong>
+- Current Occupancy, Total Capacity, Occupancy Rate, Available Space, Utilization %</p>
+
+<p><strong>Dwell Time Metrics (5)</strong>
+- Avg Dwell, Median Dwell, Max Dwell, Min Dwell, Sample Count</p>
+
+<p><strong>Conversion Metrics (5)</strong>
+- Conversions, Conversion Rate, Bounce Rate, Engagement Rate, Non-Converters</p>
+
+<p><strong>Queue/Performance Metrics (6)</strong>
+- Queue Length, Avg Wait Time, Total Queued, Avg Traffic, Peak Traffic, Throughput/hr</p>
+
+<h4 id="insight-rules-engine">Insight Rules Engine</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Condition</th>
+  <th>Insight Type</th>
+  <th>Message Template</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>bounceRate &gt; 40%</code></td>
+  <td>Warning</td>
+  <td>"High Bounce Rate: {rate}% - Consider improving entrance"</td>
+</tr>
+<tr>
+  <td><code>conversionRate &lt; 20%</code></td>
+  <td>Alert</td>
+  <td>"Low Conversion: {rate}% - Review zone engagement"</td>
+</tr>
+<tr>
+  <td><code>queueLength &gt; 10</code></td>
+  <td>Warning</td>
+  <td>"Queue building: {count} people, {wait}m avg wait"</td>
+</tr>
+<tr>
+  <td><code>occupancyRate &gt; 80%</code></td>
+  <td>Alert</td>
+  <td>"High Occupancy: {rate}% - Manage traffic flow"</td>
+</tr>
+<tr>
+  <td><code>engagementRate &gt; 60%</code></td>
+  <td>Success</td>
+  <td>"Strong Engagement: {rate}% - Great experience!"</td>
+</tr>
+<tr>
+  <td><code>netTraffic &gt; 20</code></td>
+  <td>Info</td>
+  <td>"Net Positive: +{count} visitors accumulating"</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="state-management-2">State Management</h4>
+
+<pre><code>const [selectedRange, setSelectedRange] = useState(24);      // Hours
+const [compareRange, setCompareRange] = useState(null);      // Comparison period
+const [data, setData] = useState({});                        // All fetched data
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+const [autoRefresh, setAutoRefresh] = useState(true);        // 30s interval
+const [expandedSections, setExpandedSections] = useState({   // Collapsible state
+  zones: true,
+  dwell: false,
+  funnel: false,
+  allKpis: false
+});
+</code></pre>
+
+<h4 id="data-fetch-pattern-2">Data Fetch Pattern</h4>
+
+<pre><code>// Fetch all analytics data in parallel
+const fetchData = async (hours) =&gt; {
+  const [kpis, csv, conv, dwell, zones, entries, occ, queue] = await Promise.all([
+    getKpis(hours),
+    getSeriesCsv(hours),
+    getConversion(hours),
+    getDwellTime(hours),
+    getZones(hours),
+    getEntriesExits(hours),
+    getOccupancy(),
+    getQueue(hours)
+  ]);
+  return { kpis, series: parseSeries(csv), conversion: conv, ... };
+};
+</code></pre>
+
+<h4 id="chart-configuration">Chart Configuration</h4>
+
+<p><strong>Traffic Area Chart</strong></p>
+
+<pre><code>&lt;AreaChart data={series}&gt;
+  &lt;Area type="monotone" dataKey="count_value" stroke="#8884d8" fill="#8884d8" /&gt;
+  &lt;Area type="monotone" dataKey="peak" stroke="#82ca9d" fill="#82ca9d" /&gt;
+&lt;/AreaChart&gt;
+</code></pre>
+
+<p><strong>Zone Bar Chart</strong></p>
+
+<pre><code>&lt;BarChart data={zonePerformance}&gt;
+  &lt;Bar dataKey="visitors" fill="#0088FE" name="Unique Visitors" /&gt;
+  &lt;Bar dataKey="events" fill="#00C49F" name="Total Events" /&gt;
+&lt;/BarChart&gt;
+</code></pre>
+
+<p><strong>Zone Radar Chart</strong></p>
+
+<pre><code>&lt;RadarChart data={zonePerformance}&gt;
+  &lt;Radar dataKey="utilization" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} /&gt;
+&lt;/RadarChart&gt;
+</code></pre>
+
+<h4 id="user-interactions-2">User Interactions</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Action</th>
+  <th>Trigger</th>
+  <th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Select time range</td>
+  <td>Click range button</td>
+  <td>Refetch all data</td>
+</tr>
+<tr>
+  <td>Toggle comparison</td>
+  <td>Click compare button</td>
+  <td>Overlay comparison data</td>
+</tr>
+<tr>
+  <td>Toggle auto-refresh</td>
+  <td>Click checkbox</td>
+  <td>Start/stop 30s polling</td>
+</tr>
+<tr>
+  <td>Expand section</td>
+  <td>Click section header</td>
+  <td>Show/hide charts</td>
+</tr>
+<tr>
+  <td>See All KPIs</td>
+  <td>Click link</td>
+  <td>Expand full KPI grid</td>
+</tr>
+<tr>
+  <td>Export data</td>
+  <td>Click 📥 button</td>
+  <td>Download CSV (future)</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="mobile-responsiveness">Mobile Responsiveness</h4>
+
+<ul>
+<li>KPI grid: 5 cols → 3 cols → 2 cols</li>
+<li>Charts: Side-by-side → Stacked</li>
+<li>Insights: Horizontal → Vertical stack</li>
+<li>Time range: Horizontal buttons → Dropdown</li>
+</ul>
+
+<hr />
+
+<h3 id="53-reports">5.3 Reports</h3>
+
+<p><strong>Route</strong>: <code>#reports</code>
+<strong>File</strong>: <code>frontend/src/pages/Reports.jsx</code>
+<strong>Purpose</strong>: Generate daily and weekly summary reports with key metrics and insights</p>
+
+<h4 id="wireframe-2">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER BAR                                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ 📄 Reports                          [Daily] [Weekly]            │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  DAILY VIEW (when Daily selected)                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Daily Summary (Last 24 Hours)                                    │   │
+│  │ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐        │   │
+│  │ │ Total     │ │ Average   │ │ Peak      │ │ Throughput │        │   │
+│  │ │ Events    │ │ Count     │ │ Count     │ │            │        │   │
+│  │ │   1,847   │ │   8.5     │ │    24     │ │  45.2/hr   │        │   │
+│  │ └───────────┘ └───────────┘ └───────────┘ └───────────┘        │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  WEEKLY VIEW (when Weekly selected)                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Weekly Summary (Last 7 Days)                                     │   │
+│  │ ┌───────────────────────────────────────────────────────────┐   │   │
+│  │ │     ^                                                     │   │   │
+│  │ │  25 │   ■        ■                                        │   │   │
+│  │ │     │   █        █    ■                                   │   │   │
+│  │ │  15 │   █  ■     █    █         ■                         │   │   │
+│  │ │     │   █  █  ■  █    █    ■    █                         │   │   │
+│  │ │   5 │   █  █  █  █    █    █    █    ■    ■              │   │   │
+│  │ │     │   █  █  █  █    █    █    █    █    █              │   │   │
+│  │ │   0 └───────────────────────────────────────────&gt;        │   │   │
+│  │ │      Mon  Tue  Wed  Thu  Fri  Sat  Sun                   │   │   │
+│  │ │                                                           │   │   │
+│  │ │      █ Average    ■ Peak                                  │   │   │
+│  │ └───────────────────────────────────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TOP 5 BUSIEST HOURS                                                    │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Top 5 Busiest Hours (Last 24h / Last 7d)                        │   │
+│  │ ┌──────┬─────────────────────────────────┬─────────────┐        │   │
+│  │ │ Rank │ Time                            │ Count       │        │   │
+│  │ ├──────┼─────────────────────────────────┼─────────────┤        │   │
+│  │ │ #1   │ 12/15/2024, 2:30:00 PM          │    24       │        │   │
+│  │ │ #2   │ 12/15/2024, 12:15:00 PM         │    22       │        │   │
+│  │ │ #3   │ 12/15/2024, 3:45:00 PM          │    21       │        │   │
+│  │ │ #4   │ 12/14/2024, 1:00:00 PM          │    19       │        │   │
+│  │ │ #5   │ 12/15/2024, 11:30:00 AM         │    18       │        │   │
+│  │ └──────┴─────────────────────────────────┴─────────────┘        │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="component-breakdown-3">Component Breakdown</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Purpose</th>
+  <th>Data Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Report Type Selector</td>
+  <td>Toggle between Daily/Weekly</td>
+  <td><code>reportType</code> state</td>
+</tr>
+<tr>
+  <td>Daily Summary Cards</td>
+  <td>4 KPI metrics (24h window)</td>
+  <td><code>/kpis?hours=24</code></td>
+</tr>
+<tr>
+  <td>Weekly Bar Chart</td>
+  <td>7-day average vs peak</td>
+  <td><code>/series.csv?hours=168</code></td>
+</tr>
+<tr>
+  <td>Top 5 Table</td>
+  <td>Busiest periods ranked</td>
+  <td>Computed from series data</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="daily-summary-metrics">Daily Summary Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Metric</th>
+  <th>Description</th>
+  <th>Calculation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Total Events</td>
+  <td>Count records in 24h</td>
+  <td><code>kpis.total_events</code></td>
+</tr>
+<tr>
+  <td>Average Count</td>
+  <td>Mean occupancy</td>
+  <td><code>kpis.avg_count</code> (1 decimal)</td>
+</tr>
+<tr>
+  <td>Peak Count</td>
+  <td>Maximum occupancy</td>
+  <td><code>kpis.peak_count</code></td>
+</tr>
+<tr>
+  <td>Throughput</td>
+  <td>Events per hour</td>
+  <td><code>kpis.throughput</code> (/hr format)</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="weekly-summary-data">Weekly Summary Data</h4>
+
+<p>The weekly view aggregates data by day:</p>
+
+<pre><code>// Group time series by day
+const days = {};
+data.series.forEach(item =&gt; {
+  const date = new Date(item.ts).toLocaleDateString();
+  if (!days[date]) {
+    days[date] = { total: 0, count: 0, peak: 0 };
+  }
+  days[date].total += item.count_value;
+  days[date].count += 1;
+  days[date].peak = Math.max(days[date].peak, item.count_value);
+});
+
+// Return chart-ready data
+return Object.entries(days).map(([date, stats]) =&gt; ({
+  date,
+  average: (stats.total / stats.count).toFixed(1),
+  peak: stats.peak,
+  events: stats.count
+}));
+</code></pre>
+
+<h4 id="top-5-busiest-hours-algorithm">Top 5 Busiest Hours Algorithm</h4>
+
+<pre><code>const getTop5BusiestHours = () =&gt; {
+  // Sort all data points by count (descending)
+  const sorted = [...data.series].sort((a, b) =&gt; b.count_value - a.count_value);
+
+  // Take top 5 and format for display
+  return sorted.slice(0, 5).map(item =&gt; ({
+    time: new Date(item.ts).toLocaleString(),
+    count: item.count_value
+  }));
+};
+</code></pre>
+
+<h4 id="state-management-3">State Management</h4>
+
+<pre><code>const [reportType, setReportType] = useState('daily');  // 'daily' or 'weekly'
+const [data, setData] = useState(null);                 // { kpis, series }
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+</code></pre>
+
+<h4 id="data-fetch-pattern-3">Data Fetch Pattern</h4>
+
+<pre><code>const fetchData = async () =&gt; {
+  const hours = reportType === 'daily' ? 24 : 168;  // 24h or 7 days
+
+  const [kpiData, csvData] = await Promise.all([
+    getKpis(hours),
+    getSeriesCsv(hours)
+  ]);
+
+  const series = parseSeries(csvData);
+  setData({ kpis: kpiData, series });
+};
+
+// Refetch when report type changes
+useEffect(() =&gt; {
+  fetchData();
+}, [reportType]);
+</code></pre>
+
+<h4 id="user-interactions-3">User Interactions</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Action</th>
+  <th>Trigger</th>
+  <th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Switch to Daily</td>
+  <td>Click "Daily" button</td>
+  <td>Fetch 24h data, show summary cards</td>
+</tr>
+<tr>
+  <td>Switch to Weekly</td>
+  <td>Click "Weekly" button</td>
+  <td>Fetch 7d data, show bar chart</td>
+</tr>
+<tr>
+  <td>Dismiss error</td>
+  <td>Click dismiss on ErrorBanner</td>
+  <td>Clear error state</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="chart-configuration-weekly">Chart Configuration (Weekly)</h4>
+
+<pre><code>&lt;BarChart data={weeklyData}&gt;
+  &lt;CartesianGrid strokeDasharray="3 3" /&gt;
+  &lt;XAxis dataKey="date" /&gt;
+  &lt;YAxis /&gt;
+  &lt;Tooltip /&gt;
+  &lt;Legend /&gt;
+  &lt;Bar dataKey="average" fill="#007bff" name="Average" /&gt;
+  &lt;Bar dataKey="peak" fill="#dc3545" name="Peak" /&gt;
+&lt;/BarChart&gt;
+</code></pre>
+
+<h4 id="edge-cases-2">Edge Cases</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Scenario</th>
+  <th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>No data available</td>
+  <td>Show "No data available" in table</td>
+</tr>
+<tr>
+  <td>API error</td>
+  <td>Display ErrorBanner with message</td>
+</tr>
+<tr>
+  <td>Loading state</td>
+  <td>Show Loading spinner with "Generating report..."</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="proposed-enhancements">Proposed Enhancements</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Enhancement</th>
+  <th>Priority</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Date picker</td>
+  <td>Medium</td>
+  <td>Custom date range selection</td>
+</tr>
+<tr>
+  <td>PDF export</td>
+  <td>High</td>
+  <td>Download report as PDF</td>
+</tr>
+<tr>
+  <td>Email scheduling</td>
+  <td>Medium</td>
+  <td>Auto-send reports at configured times</td>
+</tr>
+<tr>
+  <td>Comparison mode</td>
+  <td>Low</td>
+  <td>Compare current vs previous period</td>
+</tr>
+<tr>
+  <td>Zone breakdown</td>
+  <td>Medium</td>
+  <td>Per-zone reporting</td>
+</tr>
+<tr>
+  <td>Custom metrics</td>
+  <td>Low</td>
+  <td>User-configurable KPIs in report</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h3 id="54-heatmap">5.4 Heatmap</h3>
+
+<p><strong>Route</strong>: <code>#heatmap</code>
+<strong>File</strong>: <code>frontend/src/pages/Heatmap.jsx</code>
+<strong>Purpose</strong>: Visual traffic heatmap and dwell time analysis across zones</p>
+
+<h4 id="wireframe-3">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER BAR                                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Zone Heatmap &amp; Dwell Analysis                                    │   │
+│  │ "Visual representation of traffic patterns and visitor behavior" │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TIME RANGE PICKER                                                      │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  [10min] [30min] [1 hour] [24 hours] [7 days*]                  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  MAIN CONTENT GRID (2 columns)                                          │
+│  ┌─────────────────────────────┐  ┌─────────────────────────────┐      │
+│  │ Traffic Heatmap (Canvas)    │  │ Zone Statistics             │      │
+│  │ ┌───────────────────────┐   │  │ ┌─────────────────────────┐ │      │
+│  │ │░░░░░░░│▓▓▓▓▓▓▓▓▓▓▓│   │   │  │ │ entrance               │ │      │
+│  │ │ ENTR- │   MAIN      │QUE│   │  │ │ Capacity: 50           │ │      │
+│  │ │ ANCE  │   FLOOR     │UE │   │  │ │ Visitors: 156          │ │      │
+│  │ │ Blue  │   Yellow    │Ora│   │  │ │ Events: 324            │ │      │
+│  │ │  23%  │    67%      │nge│   │  │ │ Avg/Visitor: 2.1       │ │      │
+│  │ │       │             │45%│   │  │ └─────────────────────────┘ │      │
+│  │ │       │             │   │   │  │ ┌─────────────────────────┐ │      │
+│  │ │       │             │CHK│   │  │ │ main_floor             │ │      │
+│  │ │       │             │OUT│   │  │ │ Capacity: 200          │ │      │
+│  │ │       │             │Red│   │  │ │ Visitors: 287          │ │      │
+│  │ │       │             │100│   │  │ │ Events: 512            │ │      │
+│  │ └───────────────────────┘   │  │ └─────────────────────────┘ │      │
+│  │ ┌───────────────────────┐   │  │         ...                 │      │
+│  │ │ Traffic Intensity     │   │  │                             │      │
+│  │ │ Low [▓▓▓▓▓▓▓▓▓▓] High │   │  │                             │      │
+│  │ └───────────────────────┘   │  │                             │      │
+│  └─────────────────────────────┘  └─────────────────────────────┘      │
+├─────────────────────────────────────────────────────────────────────────┤
+│  DWELL TIME DISTRIBUTION                                                │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Summary Stats Row                                                │   │
+│  │ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐         │   │
+│  │ │ Avg    │ │ Median │ │  Min   │ │  Max   │ │Sessions│         │   │
+│  │ │ 8m 32s │ │  6m    │ │  12s   │ │  45m   │ │  847   │         │   │
+│  │ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘         │   │
+│  │                                                                  │   │
+│  │ Histogram Chart                                                  │   │
+│  │ ┌───────────────────────────────────────────────────────────┐   │   │
+│  │ │     ^                                                     │   │   │
+│  │ │ 150 │                    ████                             │   │   │
+│  │ │     │           ████     █  █                             │   │   │
+│  │ │ 100 │           █  █     █  █     ████                    │   │   │
+│  │ │     │    ████   █  █     █  █     █  █                    │   │   │
+│  │ │  50 │    █  █   █  █     █  █     █  █     ████           │   │   │
+│  │ │     │    █  █   █  █     █  █     █  █     █  █           │   │   │
+│  │ │   0 └────────────────────────────────────────────&gt;        │   │   │
+│  │ │      &lt; 1min  1-5min  5-15min  15-30min  &gt; 30min          │   │   │
+│  │ └───────────────────────────────────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="component-breakdown-4">Component Breakdown</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Purpose</th>
+  <th>Data Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Time Range Picker</td>
+  <td>Filter data window</td>
+  <td><code>timeRange</code> state</td>
+</tr>
+<tr>
+  <td>Canvas Heatmap</td>
+  <td>Visual zone traffic</td>
+  <td><code>/api/zones</code> (rendered on canvas)</td>
+</tr>
+<tr>
+  <td>Zone Statistics</td>
+  <td>Per-zone metrics</td>
+  <td><code>/api/zones</code></td>
+</tr>
+<tr>
+  <td>Dwell Summary</td>
+  <td>Avg/Median/Min/Max</td>
+  <td><code>/api/dwell-time</code></td>
+</tr>
+<tr>
+  <td>Dwell Histogram</td>
+  <td>Time distribution chart</td>
+  <td><code>/api/dwell-time</code> distribution</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="canvas-rendering-details">Canvas Rendering Details</h4>
+
+<p>The heatmap is rendered on a 640x480 canvas with the following process:</p>
+
+<pre><code>// Zone positions (matching zones.json)
+const zonePositions = {
+  'entrance': { x1: 0, y1: 0, x2: 200, y2: 480 },
+  'main_floor': { x1: 200, y1: 0, x2: 440, y2: 480 },
+  'queue': { x1: 440, y1: 240, x2: 540, y2: 480 },
+  'checkout': { x1: 540, y1: 0, x2: 640, y2: 480 }
+};
+
+// Heat color algorithm
+const intensity = visitors / maxTraffic;  // 0.0 to 1.0
+
+if (intensity &lt; 0.5) {
+  // Blue → Yellow (low traffic)
+  r = intensity * 2 * 255;
+  g = intensity * 2 * 255;
+  b = 255 - intensity * 2 * 255;
+} else {
+  // Yellow → Red (high traffic)
+  r = 255;
+  g = 255 - (intensity - 0.5) * 2 * 255;
+  b = 0;
+}
+</code></pre>
+
+<h4 id="heat-color-scale">Heat Color Scale</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Intensity</th>
+  <th>Color</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>0%</td>
+  <td>Blue <code>rgb(0, 0, 255)</code></td>
+  <td>Very low traffic</td>
+</tr>
+<tr>
+  <td>25%</td>
+  <td>Cyan <code>rgb(127, 127, 127)</code></td>
+  <td>Below average</td>
+</tr>
+<tr>
+  <td>50%</td>
+  <td>Yellow <code>rgb(255, 255, 0)</code></td>
+  <td>Moderate traffic</td>
+</tr>
+<tr>
+  <td>75%</td>
+  <td>Orange <code>rgb(255, 127, 0)</code></td>
+  <td>Above average</td>
+</tr>
+<tr>
+  <td>100%</td>
+  <td>Red <code>rgb(255, 0, 0)</code></td>
+  <td>Highest traffic</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="zone-statistics-card">Zone Statistics Card</h4>
+
+<p>For each zone, displays:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Metric</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Capacity</td>
+  <td>Configured zone capacity</td>
+</tr>
+<tr>
+  <td>Unique Visitors</td>
+  <td>Distinct people detected</td>
+</tr>
+<tr>
+  <td>Total Events</td>
+  <td>Count records in zone</td>
+</tr>
+<tr>
+  <td>Avg per Visitor</td>
+  <td>Events / Visitors ratio</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="dwell-time-distribution">Dwell Time Distribution</h4>
+
+<p>Histogram buckets:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Range</th>
+  <th>Color</th>
+  <th>Label</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>&lt; 1 minute</td>
+  <td><code>#F44336</code> Red</td>
+  <td>Quick pass-through</td>
+</tr>
+<tr>
+  <td>1-5 minutes</td>
+  <td><code>#FF9800</code> Orange</td>
+  <td>Brief stop</td>
+</tr>
+<tr>
+  <td>5-15 minutes</td>
+  <td><code>#FFC107</code> Yellow</td>
+  <td>Moderate engagement</td>
+</tr>
+<tr>
+  <td>15-30 minutes</td>
+  <td><code>#4CAF50</code> Green</td>
+  <td>Good engagement</td>
+</tr>
+<tr>
+  <td>&gt; 30 minutes</td>
+  <td><code>#2196F3</code> Blue</td>
+  <td>Deep engagement</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="state-management-4">State Management</h4>
+
+<pre><code>const [timeRange, setTimeRange] = useState(168);      // 7 days default
+const [zonesData, setZonesData] = useState(null);     // Zone traffic data
+const [dwellData, setDwellData] = useState(null);     // Dwell time analytics
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+const canvasRef = useRef(null);                       // Canvas DOM reference
+</code></pre>
+
+<h4 id="data-fetch-pattern-4">Data Fetch Pattern</h4>
+
+<pre><code>const fetchData = async () =&gt; {
+  const [zones, dwell] = await Promise.all([
+    getZones(timeRange),
+    getDwellTime(timeRange)
+  ]);
+  setZonesData(zones);
+  setDwellData(dwell);
+};
+
+// Refetch when time range changes
+useEffect(() =&gt; {
+  fetchData();
+}, [timeRange]);
+
+// Redraw canvas when data changes
+useEffect(() =&gt; {
+  if (!zonesData || !canvasRef.current) return;
+  // Canvas drawing logic...
+}, [zonesData]);
+</code></pre>
+
+<h4 id="api-response-shapes">API Response Shapes</h4>
+
+<p><strong><code>/api/zones</code> Response:</strong></p>
+
+<pre><code>{
+  zones: [
+    {
+      zone: "entrance",
+      capacity: 50,
+      unique_visitors: 156,
+      total_events: 324
+    },
+    // ... more zones
+  ]
+}
+</code></pre>
+
+<p><strong><code>/api/dwell-time</code> Response:</strong></p>
+
+<pre><code>{
+  avg_dwell_seconds: 512,
+  median_dwell_seconds: 360,
+  min_dwell_seconds: 12,
+  max_dwell_seconds: 2700,
+  total_sessions: 847,
+  distribution: {
+    under_1min: 45,
+    "1_to_5min": 89,
+    "5_to_15min": 156,
+    "15_to_30min": 98,
+    over_30min: 32
+  }
+}
+</code></pre>
+
+<h4 id="user-interactions-4">User Interactions</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Action</th>
+  <th>Trigger</th>
+  <th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Change time range</td>
+  <td>Click time button</td>
+  <td>Refetch zone &amp; dwell data, redraw canvas</td>
+</tr>
+<tr>
+  <td>Hover zone (future)</td>
+  <td>Mouse over canvas</td>
+  <td>Show zone tooltip</td>
+</tr>
+<tr>
+  <td>Click zone (future)</td>
+  <td>Click on canvas</td>
+  <td>Drill down to zone detail</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="canvas-drawing-flow">Canvas Drawing Flow</h4>
+
+<ol>
+<li>Clear canvas with dark background (<code>#1a1a1a</code>)</li>
+<li>Draw grid lines every 40px</li>
+<li>Calculate max traffic for normalization</li>
+<li>For each zone:
+<ul>
+<li>Calculate intensity (0-1)</li>
+<li>Compute heat color (blue→yellow→red)</li>
+<li>Draw filled rectangle with alpha 0.4</li>
+<li>Draw border with full color</li>
+<li>Render zone label and stats</li>
+<li>Show intensity percentage at center</li>
+</ul></li>
+<li>Draw legend bar at bottom</li>
+</ol>
+
+<h4 id="edge-cases-3">Edge Cases</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Scenario</th>
+  <th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>No zone data</td>
+  <td>Canvas shows empty grid</td>
+</tr>
+<tr>
+  <td>No dwell distribution</td>
+  <td>Histogram shows empty bars</td>
+</tr>
+<tr>
+  <td>API error</td>
+  <td>Display ErrorBanner</td>
+</tr>
+<tr>
+  <td>Loading state</td>
+  <td>Show Loading spinner</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="proposed-enhancements-2">Proposed Enhancements</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Enhancement</th>
+  <th>Priority</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Interactive zones</td>
+  <td>High</td>
+  <td>Click zones to see detailed breakdown</td>
+</tr>
+<tr>
+  <td>Time animation</td>
+  <td>Medium</td>
+  <td>Animate heatmap over time</td>
+</tr>
+<tr>
+  <td>Export heatmap</td>
+  <td>Medium</td>
+  <td>Save as PNG/SVG</td>
+</tr>
+<tr>
+  <td>Zone comparison</td>
+  <td>Low</td>
+  <td>Compare two time periods</td>
+</tr>
+<tr>
+  <td>Path flow</td>
+  <td>High</td>
+  <td>Show visitor flow between zones</td>
+</tr>
+<tr>
+  <td>Real-time mode</td>
+  <td>Medium</td>
+  <td>Live heatmap updates</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h3 id="55-zone-config">5.5 Zone Config</h3>
+
+<p><strong>Route</strong>: <code>#zone-config</code>
+<strong>File</strong>: <code>frontend/src/pages/ZoneConfig.jsx</code>
+<strong>Purpose</strong>: Visual zone editor for configuring tracking regions</p>
+
+<h4 id="wireframe-4">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER BAR                                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Zone Configuration                                               │   │
+│  │ "Click and drag zones to reposition. Click handles to resize."  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  CONFIG CONTROLS                                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ [Video stream URL (optional)             ] [📹 Connect Video]    │   │
+│  │                                                                   │   │
+│  │ [💾 Save Config] [🔄 Reset to Default]                ● Connected │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  CANVAS EDITOR (640 x 480)                                              │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ ┌───────────────┬─────────────────────────┬──────┬──────────┐   │   │
+│  │ │               │                         │      │          │   │   │
+│  │ │   entrance    │       main_floor        │      │ checkout │   │   │
+│  │ │   (green)     │       (blue)            │ queue│  (red)   │   │   │
+│  │ │               │                         │(orng)│          │   │   │
+│  │ │  [■]──────[■] │  [■]───────────────[■]  │[■]───[■]────[■] │   │   │
+│  │ │   │         │ │   │                  │  │ │      │      │ │   │   │
+│  │ │   │         │ │   │                  │  │ │      │      │ │   │   │
+│  │ │  [■]──────[■] │  [■]───────────────[■]  │[■]───[■]────[■] │   │   │
+│  │ └───────────────┴─────────────────────────┴──────┴──────────┘   │   │
+│  │                         [■] = Resize handle                      │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ZONE LIST                                                              │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Zones                                                            │   │
+│  │ ┌─────────────────────────────────────────────────────────────┐ │   │
+│  │ │ ● entrance    (0, 0) → (200, 480)              entrance     │ │   │
+│  │ └─────────────────────────────────────────────────────────────┘ │   │
+│  │ ┌─────────────────────────────────────────────────────────────┐ │   │
+│  │ │ ● main_floor  (200, 0) → (440, 480)            general      │ │   │
+│  │ └─────────────────────────────────────────────────────────────┘ │   │
+│  │ ┌─────────────────────────────────────────────────────────────┐ │   │
+│  │ │ ● queue       (440, 240) → (540, 480)          queue        │ │   │
+│  │ └─────────────────────────────────────────────────────────────┘ │   │
+│  │ ┌─────────────────────────────────────────────────────────────┐ │   │
+│  │ │ ● checkout    (540, 0) → (640, 480)            checkout     │ │   │
+│  │ └─────────────────────────────────────────────────────────────┘ │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="component-breakdown-5">Component Breakdown</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Purpose</th>
+  <th>Data Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Video URL Input</td>
+  <td>Connect video stream for overlay</td>
+  <td>User input</td>
+</tr>
+<tr>
+  <td>Save Button</td>
+  <td>Export zones.json configuration</td>
+  <td>Local state</td>
+</tr>
+<tr>
+  <td>Reset Button</td>
+  <td>Restore default zones</td>
+  <td><code>DEFAULT_ZONES</code> constant</td>
+</tr>
+<tr>
+  <td>Canvas Editor</td>
+  <td>Visual zone drag/resize</td>
+  <td><code>zones</code> state</td>
+</tr>
+<tr>
+  <td>Zone List</td>
+  <td>Clickable zone selector</td>
+  <td><code>zones</code> state</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="default-zone-configuration">Default Zone Configuration</h4>
+
+<pre><code>const DEFAULT_ZONES = [
+  { zone_id: 1, name: 'entrance',    x1: 0,   y1: 0,   x2: 200, y2: 480, zone_type: 'entrance', color: '#4CAF50' },
+  { zone_id: 2, name: 'main_floor',  x1: 200, y1: 0,   x2: 440, y2: 480, zone_type: 'general',  color: '#2196F3' },
+  { zone_id: 3, name: 'queue',       x1: 440, y1: 240, x2: 540, y2: 480, zone_type: 'queue',    color: '#FF9800' },
+  { zone_id: 4, name: 'checkout',    x1: 540, y1: 0,   x2: 640, y2: 480, zone_type: 'checkout', color: '#F44336' }
+];
+</code></pre>
+
+<h4 id="zone-types">Zone Types</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Type</th>
+  <th>Purpose</th>
+  <th>Color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>entrance</td>
+  <td>Entry/exit points</td>
+  <td>Green <code>#4CAF50</code></td>
+</tr>
+<tr>
+  <td>general</td>
+  <td>Main floor areas</td>
+  <td>Blue <code>#2196F3</code></td>
+</tr>
+<tr>
+  <td>queue</td>
+  <td>Queue/waiting areas</td>
+  <td>Orange <code>#FF9800</code></td>
+</tr>
+<tr>
+  <td>checkout</td>
+  <td>Point of sale</td>
+  <td>Red <code>#F44336</code></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="state-management-5">State Management</h4>
+
+<pre><code>const [zones, setZones] = useState(DEFAULT_ZONES);
+const [selectedZone, setSelectedZone] = useState(null);      // Selected zone ID
+const [dragging, setDragging] = useState(null);              // { zoneId, handle }
+const [videoUrl, setVideoUrl] = useState('');
+const [videoConnected, setVideoConnected] = useState(false);
+const canvasRef = useRef(null);
+const videoRef = useRef(null);
+</code></pre>
+
+<h4 id="interaction-model">Interaction Model</h4>
+
+<p><strong>Selection:</strong>
+1. Click inside zone → Select that zone
+2. Click outside all zones → Deselect
+3. Click zone in list → Select that zone</p>
+
+<p><strong>Moving:</strong>
+1. Select zone
+2. Mouse down inside zone (not on handle)
+3. Drag to new position
+4. Mouse up to confirm</p>
+
+<p><strong>Resizing:</strong>
+1. Select zone
+2. Mouse down on corner handle (tl, tr, bl, br)
+3. Drag handle
+4. Minimum zone size: 50x50 pixels</p>
+
+<h4 id="canvas-drawing-flow-2">Canvas Drawing Flow</h4>
+
+<ol>
+<li>Clear canvas</li>
+<li>Draw grid background (if no video)</li>
+<li>For each zone:
+<ul>
+<li>Fill rectangle with color + 20% alpha</li>
+<li>Stroke rectangle (thicker if selected)</li>
+<li>Draw zone name label</li>
+<li>If selected: Draw 4 corner handles</li>
+</ul></li>
+</ol>
+
+<h4 id="user-interactions-5">User Interactions</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Action</th>
+  <th>Trigger</th>
+  <th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Select zone</td>
+  <td>Click zone on canvas or list</td>
+  <td>Zone highlighted, handles shown</td>
+</tr>
+<tr>
+  <td>Move zone</td>
+  <td>Drag selected zone</td>
+  <td>Zone position updates</td>
+</tr>
+<tr>
+  <td>Resize zone</td>
+  <td>Drag corner handle</td>
+  <td>Zone bounds change</td>
+</tr>
+<tr>
+  <td>Connect video</td>
+  <td>Enter URL + click Connect</td>
+  <td>Video overlays canvas</td>
+</tr>
+<tr>
+  <td>Save config</td>
+  <td>Click Save</td>
+  <td>Download zones.json</td>
+</tr>
+<tr>
+  <td>Reset zones</td>
+  <td>Click Reset</td>
+  <td>Restore defaults</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="export-format-zonesjson">Export Format (zones.json)</h4>
+
+<pre><code>{
+  "zones": [
+    {
+      "zone_id": 1,
+      "name": "entrance",
+      "x1": 0,
+      "y1": 0,
+      "x2": 200,
+      "y2": 480,
+      "zone_type": "entrance"
+    },
+    ...
+  ]
+}
+</code></pre>
+
+<h4 id="edge-cases-4">Edge Cases</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Scenario</th>
+  <th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Zone too small</td>
+  <td>Minimum 50x50 enforced</td>
+</tr>
+<tr>
+  <td>Zone outside canvas</td>
+  <td>Bounded to canvas edges</td>
+</tr>
+<tr>
+  <td>Video connection fails</td>
+  <td>Show alert, keep canvas</td>
+</tr>
+<tr>
+  <td>Overlapping zones</td>
+  <td>Top zone wins for selection</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="proposed-enhancements-3">Proposed Enhancements</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Enhancement</th>
+  <th>Priority</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Add new zone</td>
+  <td>High</td>
+  <td>Button to create new zones</td>
+</tr>
+<tr>
+  <td>Delete zone</td>
+  <td>High</td>
+  <td>Remove selected zone</td>
+</tr>
+<tr>
+  <td>Zone properties</td>
+  <td>Medium</td>
+  <td>Edit name, type, capacity inline</td>
+</tr>
+<tr>
+  <td>Undo/redo</td>
+  <td>Medium</td>
+  <td>Track zone changes</td>
+</tr>
+<tr>
+  <td>Import config</td>
+  <td>Low</td>
+  <td>Load existing zones.json</td>
+</tr>
+<tr>
+  <td>Snap to grid</td>
+  <td>Low</td>
+  <td>Align zones to grid</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h3 id="56-settings">5.6 Settings</h3>
+
+<p><strong>Route</strong>: <code>#settings</code>
+<strong>File</strong>: <code>frontend/src/pages/Settings.jsx</code>
+<strong>Purpose</strong>: User preferences, system health, and test utilities</p>
+
+<h4 id="wireframe-5">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER BAR                                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Settings                                                         │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  SUCCESS BANNER (conditional)                                           │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ ✓ Preferences saved!                                             │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  USER PREFERENCES CARD                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ User Preferences                                                 │   │
+│  │ ┌─────────────────────────────────────────────────────────────┐ │   │
+│  │ │ [✓] Enable Auto-Refresh                                     │ │   │
+│  │ │                                                             │ │   │
+│  │ │ Refresh Interval (seconds):                                 │ │   │
+│  │ │ [  10  ▼]                                                   │ │   │
+│  │ │                                                             │ │   │
+│  │ │ Default Time Range (hours):                                 │ │   │
+│  │ │ [ 1 hour ▼]                                                 │ │   │
+│  │ │                                                             │ │   │
+│  │ │ [Reset to Defaults]                                         │ │   │
+│  │ └─────────────────────────────────────────────────────────────┘ │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  SYSTEM HEALTH CARD                                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ System Health                                                    │   │
+│  │ ┌─────────────────────────────────────────────────────────────┐ │   │
+│  │ │ [Check Health]                                               │ │   │
+│  │ │                                                             │ │   │
+│  │ │ Status:     ●  healthy                                      │ │   │
+│  │ │ Database:   ●  Connected                                    │ │   │
+│  │ │ Timestamp:  2024-12-15T14:30:00Z                           │ │   │
+│  │ └─────────────────────────────────────────────────────────────┘ │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TEST UTILITIES CARD                                                    │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Test Utilities                                                   │   │
+│  │ ┌─────────────────────────────────────────────────────────────┐ │   │
+│  │ │ Post Test Count:                                             │ │   │
+│  │ │ [Enter count value          ] [Post Count]                   │ │   │
+│  │ │                                                             │ │   │
+│  │ │ Use this to manually post a count value for testing.        │ │   │
+│  │ └─────────────────────────────────────────────────────────────┘ │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="component-breakdown-6">Component Breakdown</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Section</th>
+  <th>Purpose</th>
+  <th>Storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>User Preferences</td>
+  <td>Dashboard behavior settings</td>
+  <td>localStorage</td>
+</tr>
+<tr>
+  <td>System Health</td>
+  <td>Backend connectivity check</td>
+  <td>API response</td>
+</tr>
+<tr>
+  <td>Test Utilities</td>
+  <td>Manual data posting</td>
+  <td>API call</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="user-preferences">User Preferences</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Preference</th>
+  <th>Type</th>
+  <th>Default</th>
+  <th>Range</th>
+  <th>localStorage Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Auto-Refresh</td>
+  <td>Boolean</td>
+  <td><code>true</code></td>
+  <td>-</td>
+  <td><code>autoRefresh</code></td>
+</tr>
+<tr>
+  <td>Refresh Interval</td>
+  <td>Integer</td>
+  <td><code>10</code></td>
+  <td>5-60 seconds</td>
+  <td><code>refreshInterval</code></td>
+</tr>
+<tr>
+  <td>Default Time Range</td>
+  <td>Float</td>
+  <td><code>1</code></td>
+  <td>hours</td>
+  <td><code>defaultTimeRange</code></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="time-range-options">Time Range Options</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Label</th>
+  <th>Value (hours)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>10 minutes</td>
+  <td><code>0.167</code></td>
+</tr>
+<tr>
+  <td>30 minutes</td>
+  <td><code>0.5</code></td>
+</tr>
+<tr>
+  <td>1 hour</td>
+  <td><code>1</code></td>
+</tr>
+<tr>
+  <td>24 hours</td>
+  <td><code>24</code></td>
+</tr>
+<tr>
+  <td>7 days</td>
+  <td><code>168</code></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="state-management-6">State Management</h4>
+
+<pre><code>const [preferences, setPreferences] = useState({
+  autoRefresh: localStorage.getItem('autoRefresh') !== 'false',
+  refreshInterval: parseInt(localStorage.getItem('refreshInterval') || '10'),
+  defaultTimeRange: parseFloat(localStorage.getItem('defaultTimeRange') || '1')
+});
+const [healthStatus, setHealthStatus] = useState(null);
+const [testCount, setTestCount] = useState('');
+const [error, setError] = useState(null);
+const [success, setSuccess] = useState(null);
+</code></pre>
+
+<h4 id="api-calls">API Calls</h4>
+
+<p><strong>Health Check:</strong></p>
+
+<pre><code>const checkHealth = async () =&gt; {
+  const status = await health();  // GET /health
+  setHealthStatus(status);
+};
+
+// Response:
+{
+  status: "healthy",
+  database: true,
+  timestamp: "2024-12-15T14:30:00Z"
+}
+</code></pre>
+
+<p><strong>Post Test Count:</strong></p>
+
+<pre><code>const handleTestCount = async (value) =&gt; {
+  await postCount(value);  // POST /count { count: value }
+};
+</code></pre>
+
+<h4 id="user-interactions-6">User Interactions</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Action</th>
+  <th>Trigger</th>
+  <th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Toggle auto-refresh</td>
+  <td>Click checkbox</td>
+  <td>Save to localStorage, show success</td>
+</tr>
+<tr>
+  <td>Change interval</td>
+  <td>Input number</td>
+  <td>Save to localStorage</td>
+</tr>
+<tr>
+  <td>Change time range</td>
+  <td>Select dropdown</td>
+  <td>Save to localStorage</td>
+</tr>
+<tr>
+  <td>Reset preferences</td>
+  <td>Click Reset</td>
+  <td>Restore defaults to localStorage</td>
+</tr>
+<tr>
+  <td>Check health</td>
+  <td>Click button</td>
+  <td>Call /health API, display status</td>
+</tr>
+<tr>
+  <td>Post test count</td>
+  <td>Enter value + click Post</td>
+  <td>Call /count API</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="successerror-feedback">Success/Error Feedback</h4>
+
+<ul>
+<li>Success messages auto-dismiss after 3 seconds</li>
+<li>Error messages persist until dismissed</li>
+<li>Health status persists until next check</li>
+</ul>
+
+<h4 id="edge-cases-5">Edge Cases</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Scenario</th>
+  <th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Backend offline</td>
+  <td>Health check fails, show error</td>
+</tr>
+<tr>
+  <td>Invalid count value</td>
+  <td>Show error "Please enter valid number"</td>
+</tr>
+<tr>
+  <td>localStorage unavailable</td>
+  <td>Use default values</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="proposed-enhancements-4">Proposed Enhancements</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Enhancement</th>
+  <th>Priority</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Theme selection</td>
+  <td>Medium</td>
+  <td>Dark/light mode toggle</td>
+</tr>
+<tr>
+  <td>Export all data</td>
+  <td>Low</td>
+  <td>Download full database</td>
+</tr>
+<tr>
+  <td>Clear all data</td>
+  <td>Medium</td>
+  <td>Wipe database (with confirm)</td>
+</tr>
+<tr>
+  <td>Notification settings</td>
+  <td>Medium</td>
+  <td>Configure alert thresholds</td>
+</tr>
+<tr>
+  <td>API key management</td>
+  <td>Low</td>
+  <td>Manage external integrations</td>
+</tr>
+<tr>
+  <td>User profiles</td>
+  <td>Low</td>
+  <td>Multi-user support</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="6-api-specification">6. API Specification</h2>
+
+<h3 id="core-endpoints">Core Endpoints</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Method</th>
+  <th>Purpose</th>
+  <th>Request</th>
+  <th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/health</code></td>
+  <td>GET</td>
+  <td>Health check</td>
+  <td>-</td>
+  <td><code>{status, db, timestamp}</code></td>
+</tr>
+<tr>
+  <td><code>/seed_demo</code></td>
+  <td>POST</td>
+  <td>Generate demo data</td>
+  <td>-</td>
+  <td><code>{ok, message}</code></td>
+</tr>
+<tr>
+  <td><code>/count</code></td>
+  <td>POST</td>
+  <td>Record count</td>
+  <td><code>{count, zone}</code></td>
+  <td><code>{ok}</code></td>
+</tr>
+<tr>
+  <td><code>/kpis</code></td>
+  <td>GET</td>
+  <td>Aggregated KPIs</td>
+  <td><code>?hours=N</code></td>
+  <td><code>{current_count, avg_count, peak_count, total_events, throughput}</code></td>
+</tr>
+<tr>
+  <td><code>/series.csv</code></td>
+  <td>GET</td>
+  <td>Time series</td>
+  <td><code>?hours=N</code></td>
+  <td>CSV data</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="analytics-endpoints">Analytics Endpoints</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Method</th>
+  <th>Purpose</th>
+  <th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/api/dwell-time</code></td>
+  <td>GET</td>
+  <td>Dwell analytics</td>
+  <td><code>{avg_dwell_seconds, median_dwell_seconds, max_dwell_seconds, min_dwell_seconds, session_count}</code></td>
+</tr>
+<tr>
+  <td><code>/api/occupancy</code></td>
+  <td>GET</td>
+  <td>Occupancy</td>
+  <td><code>{current_occupancy, capacity, occupancy_rate, available_capacity, utilization_percentage}</code></td>
+</tr>
+<tr>
+  <td><code>/api/entries-exits</code></td>
+  <td>GET</td>
+  <td>Entry/exit</td>
+  <td><code>{entries, exits, net_traffic}</code></td>
+</tr>
+<tr>
+  <td><code>/api/conversion</code></td>
+  <td>GET</td>
+  <td>Conversion</td>
+  <td><code>{total_sessions, conversions, conversion_rate, bounce_rate, engagement_rate, non_conversions}</code></td>
+</tr>
+<tr>
+  <td><code>/api/zones</code></td>
+  <td>GET</td>
+  <td>Zone data</td>
+  <td><code>{zone_traffic[], zone_utilization[]}</code></td>
+</tr>
+<tr>
+  <td><code>/api/queue</code></td>
+  <td>GET</td>
+  <td>Queue metrics</td>
+  <td><code>{current_queue_length, avg_wait_seconds, total_queued}</code></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="video-management-endpoints">Video Management Endpoints</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Method</th>
+  <th>Purpose</th>
+  <th>Request</th>
+  <th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/video/start</code></td>
+  <td>POST</td>
+  <td>Start stream</td>
+  <td><code>{source, url?}</code></td>
+  <td><code>{ok, message}</code></td>
+</tr>
+<tr>
+  <td><code>/video/upload</code></td>
+  <td>POST</td>
+  <td>Upload MP4</td>
+  <td>FormData(video)</td>
+  <td><code>{ok, message}</code></td>
+</tr>
+<tr>
+  <td><code>/video/stop</code></td>
+  <td>POST</td>
+  <td>Stop stream</td>
+  <td>-</td>
+  <td><code>{ok}</code></td>
+</tr>
+<tr>
+  <td><code>/video/library</code></td>
+  <td>GET</td>
+  <td>List videos</td>
+  <td>-</td>
+  <td><code>{videos[]}</code></td>
+</tr>
+<tr>
+  <td><code>/video/library/upload</code></td>
+  <td>POST</td>
+  <td>Add to library</td>
+  <td>FormData</td>
+  <td><code>{ok, video}</code></td>
+</tr>
+<tr>
+  <td><code>/video/library/&lt;id&gt;/play</code></td>
+  <td>POST</td>
+  <td>Play from library</td>
+  <td>-</td>
+  <td><code>{ok}</code></td>
+</tr>
+<tr>
+  <td><code>/video/library/&lt;id&gt;</code></td>
+  <td>DELETE</td>
+  <td>Remove from library</td>
+  <td>-</td>
+  <td><code>{ok}</code></td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="7-database-schema">7. Database Schema</h2>
+
+<h3 id="tables">Tables</h3>
+
+<h4 id="counts"><code>counts</code></h4>
+
+<pre><code>CREATE TABLE counts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    count_value INTEGER NOT NULL,
+    zone TEXT DEFAULT 'main'
+);
+</code></pre>
+
+<h4 id="zones"><code>zones</code></h4>
+
+<pre><code>CREATE TABLE zones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    x1 INTEGER, y1 INTEGER,
+    x2 INTEGER, y2 INTEGER,
+    zone_type TEXT DEFAULT 'general',
+    capacity INTEGER DEFAULT 50
+);
+</code></pre>
+
+<h4 id="events"><code>events</code></h4>
+
+<pre><code>CREATE TABLE events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    event_type TEXT NOT NULL,  -- 'entry', 'exit', 'zone_enter', 'zone_exit'
+    zone TEXT,
+    track_id INTEGER,
+    metadata TEXT  -- JSON blob for extra data
+);
+</code></pre>
+
+<h4 id="sessions"><code>sessions</code></h4>
+
+<pre><code>CREATE TABLE sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    track_id INTEGER NOT NULL,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
+    duration_seconds INTEGER,
+    zones_visited TEXT,  -- JSON array
+    converted BOOLEAN DEFAULT FALSE
+);
+</code></pre>
+
+<hr />
+
+<h2 id="8-future-roadmap">8. Future Roadmap</h2>
+
+<h3 id="phase-1-current-state-completed">Phase 1: Current State (Completed)</h3>
+
+<ul>
+<li>6 core pages implemented</li>
+<li>26+ KPIs across all analytics</li>
+<li>Video library system</li>
+<li>Zone-based tracking</li>
+</ul>
+
+<hr />
+
+<h3 id="phase-2-alerts-notifications-planned">Phase 2: Alerts &amp; Notifications (Planned)</h3>
+
+<p><strong>Route</strong>: <code>#alerts</code>
+<strong>Purpose</strong>: Real-time threshold monitoring and notification management</p>
+
+<h4 id="wireframe-6">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Alerts &amp; Notifications       [+ New Alert Rule]  [🔔 3 Active]   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ACTIVE ALERTS BANNER (when triggered)                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ ⚠️ High Occupancy Alert: 95% capacity reached (2 min ago) [ACK] │   │
+│  │ 🚨 Queue Critical: 15 people waiting &gt; 10 min (5 min ago) [ACK] │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ALERT RULES                                                            │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Rule Name           │ Condition              │ Severity │ Status │   │
+│  ├─────────────────────┼────────────────────────┼──────────┼────────┤   │
+│  │ High Occupancy      │ occupancy &gt; 80%        │ Warning  │ ● ON   │   │
+│  │ Critical Occupancy  │ occupancy &gt; 95%        │ Critical │ ● ON   │   │
+│  │ Long Queue          │ queue_length &gt; 10      │ Warning  │ ● ON   │   │
+│  │ No Activity         │ count = 0 for 30min    │ Info     │ ○ OFF  │   │
+│  │ Conversion Drop     │ conversion &lt; 20%       │ Warning  │ ● ON   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ALERT HISTORY                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Time       │ Alert            │ Value   │ Status    │ Action    │   │
+│  ├────────────┼──────────────────┼─────────┼───────────┼───────────┤   │
+│  │ 2:30 PM    │ High Occupancy   │ 95%     │ Resolved  │ View      │   │
+│  │ 1:15 PM    │ Long Queue       │ 12      │ Ack'd     │ View      │   │
+│  │ 11:00 AM   │ Critical Occ.    │ 98%     │ Resolved  │ View      │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  NOTIFICATION SETTINGS                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Email Notifications: [✓] enabled    alerts@company.com          │   │
+│  │ SMS Notifications:   [✓] enabled    +1 555-123-4567             │   │
+│  │ Slack Webhook:       [✓] enabled    #janus-alerts               │   │
+│  │ In-App Sound:        [✓] enabled                                │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="alert-rule-configuration">Alert Rule Configuration</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Type</th>
+  <th>Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Name</td>
+  <td>String</td>
+  <td>User-defined</td>
+</tr>
+<tr>
+  <td>Metric</td>
+  <td>Select</td>
+  <td>Occupancy, Queue Length, Conversion, Dwell Time, Entries, Exits</td>
+</tr>
+<tr>
+  <td>Operator</td>
+  <td>Select</td>
+  <td>&gt;, &lt;, =, &gt;=, &lt;=, change%</td>
+</tr>
+<tr>
+  <td>Threshold</td>
+  <td>Number</td>
+  <td>Metric-specific</td>
+</tr>
+<tr>
+  <td>Duration</td>
+  <td>Number</td>
+  <td>Minutes before triggering</td>
+</tr>
+<tr>
+  <td>Severity</td>
+  <td>Select</td>
+  <td>Info, Warning, Critical</td>
+</tr>
+<tr>
+  <td>Cooldown</td>
+  <td>Number</td>
+  <td>Minutes between repeated alerts</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="new-api-endpoints-required">New API Endpoints Required</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Method</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/api/alerts/rules</code></td>
+  <td>GET, POST</td>
+  <td>List/create alert rules</td>
+</tr>
+<tr>
+  <td><code>/api/alerts/rules/&lt;id&gt;</code></td>
+  <td>PUT, DELETE</td>
+  <td>Update/delete rule</td>
+</tr>
+<tr>
+  <td><code>/api/alerts/history</code></td>
+  <td>GET</td>
+  <td>Alert event history</td>
+</tr>
+<tr>
+  <td><code>/api/alerts/acknowledge/&lt;id&gt;</code></td>
+  <td>POST</td>
+  <td>Acknowledge alert</td>
+</tr>
+<tr>
+  <td><code>/api/alerts/settings</code></td>
+  <td>GET, PUT</td>
+  <td>Notification config</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h3 id="phase-3-historical-trends-planned">Phase 3: Historical Trends (Planned)</h3>
+
+<p><strong>Route</strong>: <code>#trends</code>
+<strong>Purpose</strong>: Long-term trend analysis and pattern detection</p>
+
+<h4 id="wireframe-7">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Historical Trends                    [30d] [90d] [1y] [Custom]   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  TREND SUMMARY CARDS                                                    │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐      │
+│  │ Visitors    │ │ Conversion  │ │ Avg Dwell   │ │ Peak Hours  │      │
+│  │ ↑ +12%      │ │ ↓ -3%       │ │ ↑ +8%       │ │ 2-4 PM      │      │
+│  │ vs last mo. │ │ vs last mo. │ │ vs last mo. │ │ consistent  │      │
+│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘      │
+├─────────────────────────────────────────────────────────────────────────┤
+│  MULTI-LINE TREND CHART                                                 │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │     ^                                                           │   │
+│  │ 500 │                                    ╱╲                     │   │
+│  │     │         ╱╲          ╱╲            ╱  ╲                    │   │
+│  │ 300 │   ╱╲   ╱  ╲   ╱╲   ╱  ╲     ╱╲   ╱    ╲                   │   │
+│  │     │  ╱  ╲ ╱    ╲ ╱  ╲ ╱    ╲   ╱  ╲ ╱                         │   │
+│  │ 100 │ ╱    ╲      ╲    ╲      ╲ ╱    ╲                          │   │
+│  │     └───────────────────────────────────────────────&gt; Days      │   │
+│  │      Week1   Week2   Week3   Week4   Week5   Week6              │   │
+│  │      ── This Period    ─ ─ Last Period                          │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  DAY-OF-WEEK PATTERN                     HOUR-OF-DAY PATTERN           │
+│  ┌─────────────────────────────┐  ┌─────────────────────────────┐     │
+│  │ M  T  W  T  F  S  S         │  │ Traffic by Hour             │     │
+│  │ ██ ██ ██ ██ ██ ▓▓ ▓▓        │  │    ╱╲                       │     │
+│  │ 85 92 88 94 98 65 45        │  │   ╱  ╲  ╱╲                  │     │
+│  │ Busiest: Friday             │  │ ─╱    ╲╱  ╲─                │     │
+│  │ Quietest: Sunday            │  │ 9am  12pm  3pm  6pm        │     │
+│  └─────────────────────────────┘  └─────────────────────────────┘     │
+├─────────────────────────────────────────────────────────────────────────┤
+│  SEASONAL INSIGHTS (AI-generated)                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ 📈 Traffic increasing steadily (+3% week-over-week)             │   │
+│  │ 📅 Friday peak: 18% higher than weekday average                 │   │
+│  │ ⏰ Lunch rush (12-1 PM) accounts for 22% of daily traffic       │   │
+│  │ 📉 Weekend traffic 35% lower than weekdays                      │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="trend-calculations">Trend Calculations</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Metric</th>
+  <th>Calculation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Period-over-Period Change</td>
+  <td><code>((current - previous) / previous) * 100</code></td>
+</tr>
+<tr>
+  <td>Day-of-Week Index</td>
+  <td>Average by day across all weeks</td>
+</tr>
+<tr>
+  <td>Hour-of-Day Index</td>
+  <td>Average by hour across all days</td>
+</tr>
+<tr>
+  <td>Seasonal Trend</td>
+  <td>Linear regression slope</td>
+</tr>
+<tr>
+  <td>Anomaly Detection</td>
+  <td>Standard deviation from mean</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="new-api-endpoints-required-2">New API Endpoints Required</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Method</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/api/trends/summary</code></td>
+  <td>GET</td>
+  <td>Period comparison stats</td>
+</tr>
+<tr>
+  <td><code>/api/trends/series</code></td>
+  <td>GET</td>
+  <td>Long-term time series</td>
+</tr>
+<tr>
+  <td><code>/api/trends/patterns/dow</code></td>
+  <td>GET</td>
+  <td>Day-of-week patterns</td>
+</tr>
+<tr>
+  <td><code>/api/trends/patterns/hod</code></td>
+  <td>GET</td>
+  <td>Hour-of-day patterns</td>
+</tr>
+<tr>
+  <td><code>/api/trends/insights</code></td>
+  <td>GET</td>
+  <td>AI-generated insights</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h3 id="phase-4-export-center-planned">Phase 4: Export Center (Planned)</h3>
+
+<p><strong>Route</strong>: <code>#export</code>
+<strong>Purpose</strong>: Report generation and scheduled exports</p>
+
+<h4 id="wireframe-8">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Export Center                           [+ Schedule Report]      │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  QUICK EXPORT                                                           │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Report Type: [Daily Summary ▼]                                   │   │
+│  │ Date Range:  [12/01/2024] to [12/15/2024]                       │   │
+│  │ Format:      [PDF ▼]   Include Charts: [✓]                      │   │
+│  │                                                                   │   │
+│  │              [📥 Generate &amp; Download]                            │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  REPORT TEMPLATES                                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Template       │ Contents                        │ Actions       │   │
+│  ├────────────────┼─────────────────────────────────┼───────────────┤   │
+│  │ Daily Summary  │ KPIs, Traffic Chart, Top Hours  │ [Use] [Edit]  │   │
+│  │ Weekly Report  │ Trends, Zone Analysis, Funnel   │ [Use] [Edit]  │   │
+│  │ Monthly Review │ Full Analytics, Comparisons     │ [Use] [Edit]  │   │
+│  │ Executive      │ Key Metrics, Insights Only      │ [Use] [Edit]  │   │
+│  │ Custom         │ User-defined sections           │ [Use] [Edit]  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  SCHEDULED EXPORTS                                                      │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Schedule    │ Report         │ Recipients       │ Next Run      │   │
+│  ├─────────────┼────────────────┼──────────────────┼───────────────┤   │
+│  │ Daily 8am   │ Daily Summary  │ team@co.com      │ Tomorrow 8am  │   │
+│  │ Mon 9am     │ Weekly Report  │ manager@co.com   │ Mon 12/18     │   │
+│  │ 1st of Mo.  │ Monthly Review │ exec@co.com      │ Jan 1, 2025   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  EXPORT HISTORY                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Date        │ Report         │ Format │ Size    │ Download      │   │
+│  ├─────────────┼────────────────┼────────┼─────────┼───────────────┤   │
+│  │ Dec 14      │ Daily Summary  │ PDF    │ 2.4 MB  │ [📥]          │   │
+│  │ Dec 13      │ Daily Summary  │ PDF    │ 2.1 MB  │ [📥]          │   │
+│  │ Dec 11      │ Weekly Report  │ Excel  │ 4.8 MB  │ [📥]          │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="export-formats">Export Formats</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Format</th>
+  <th>Contents</th>
+  <th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>PDF</td>
+  <td>Charts + Tables + Branding</td>
+  <td>Executive sharing</td>
+</tr>
+<tr>
+  <td>Excel (.xlsx)</td>
+  <td>Raw data + Pivot tables</td>
+  <td>Data analysis</td>
+</tr>
+<tr>
+  <td>CSV</td>
+  <td>Raw data only</td>
+  <td>System integration</td>
+</tr>
+<tr>
+  <td>JSON</td>
+  <td>API-style data</td>
+  <td>Developer use</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="report-template-sections">Report Template Sections</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Section</th>
+  <th>Description</th>
+  <th>Data Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KPI Summary</td>
+  <td>Top 10 metrics with trends</td>
+  <td><code>/kpis</code></td>
+</tr>
+<tr>
+  <td>Traffic Chart</td>
+  <td>Line/area chart of counts</td>
+  <td><code>/series.csv</code></td>
+</tr>
+<tr>
+  <td>Zone Analysis</td>
+  <td>Heat colors + stats</td>
+  <td><code>/api/zones</code></td>
+</tr>
+<tr>
+  <td>Dwell Analysis</td>
+  <td>Distribution + averages</td>
+  <td><code>/api/dwell-time</code></td>
+</tr>
+<tr>
+  <td>Conversion Funnel</td>
+  <td>Entry → Engage → Convert</td>
+  <td><code>/api/conversion</code></td>
+</tr>
+<tr>
+  <td>Top Hours</td>
+  <td>Busiest periods ranked</td>
+  <td>Computed</td>
+</tr>
+<tr>
+  <td>Insights</td>
+  <td>AI-generated observations</td>
+  <td>Rule-based</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="new-api-endpoints-required-3">New API Endpoints Required</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Method</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/api/export/generate</code></td>
+  <td>POST</td>
+  <td>Generate report</td>
+</tr>
+<tr>
+  <td><code>/api/export/templates</code></td>
+  <td>GET, POST</td>
+  <td>Manage templates</td>
+</tr>
+<tr>
+  <td><code>/api/export/schedules</code></td>
+  <td>GET, POST, DELETE</td>
+  <td>Scheduled exports</td>
+</tr>
+<tr>
+  <td><code>/api/export/history</code></td>
+  <td>GET</td>
+  <td>Past exports</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h3 id="phase-5-camerasource-manager-planned">Phase 5: Camera/Source Manager (Planned)</h3>
+
+<p><strong>Route</strong>: <code>#cameras</code>
+<strong>Purpose</strong>: Multi-camera configuration and health monitoring</p>
+
+<h4 id="wireframe-9">Wireframe</h4>
+
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│  HEADER                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Camera/Source Manager         [+ Add Camera]  [🔄 Refresh All]   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  CAMERA GRID                                                            │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐             │
+│  │ Camera 1: Entrance      │  │ Camera 2: Main Floor    │             │
+│  │ ┌─────────────────────┐ │  │ ┌─────────────────────┐ │             │
+│  │ │     [Live Feed]     │ │  │ │     [Live Feed]     │ │             │
+│  │ │    Thumbnail        │ │  │ │    Thumbnail        │ │             │
+│  │ └─────────────────────┘ │  │ └─────────────────────┘ │             │
+│  │ Status: ● Online        │  │ Status: ● Online        │             │
+│  │ FPS: 24  | Latency: 45ms│  │ FPS: 30  | Latency: 32ms│             │
+│  │ [Configure] [Disable]   │  │ [Configure] [Disable]   │             │
+│  └─────────────────────────┘  └─────────────────────────┘             │
+│                                                                         │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐             │
+│  │ Camera 3: Checkout      │  │ Camera 4: Back Office   │             │
+│  │ ┌─────────────────────┐ │  │ ┌─────────────────────┐ │             │
+│  │ │     [Live Feed]     │ │  │ │   ⚠️ OFFLINE       │ │             │
+│  │ │    Thumbnail        │ │  │ │   Last seen: 2h ago │ │             │
+│  │ └─────────────────────┘ │  │ └─────────────────────┘ │             │
+│  │ Status: ● Online        │  │ Status: ○ Offline       │             │
+│  │ FPS: 28  | Latency: 38ms│  │ [Reconnect] [Remove]    │             │
+│  │ [Configure] [Disable]   │  │                         │             │
+│  └─────────────────────────┘  └─────────────────────────┘             │
+├─────────────────────────────────────────────────────────────────────────┤
+│  SYSTEM STATUS                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Total Cameras: 4    │  Online: 3  │  Offline: 1  │  Uptime: 99.2% │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│  CAMERA CONFIGURATION (Modal when Configure clicked)                    │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ Name:       [Entrance Camera                                   ] │   │
+│  │ Source:     ○ RTSP  ○ HTTP  ○ File  ○ YouTube                   │   │
+│  │ URL:        [rtsp://192.168.1.100:554/stream1                 ] │   │
+│  │ Resolution: [1280x720 ▼]                                        │   │
+│  │ Zone Map:   [entrance ▼]    ← Which zone this camera covers     │   │
+│  │ Failover:   [Camera 2 ▼]    ← Backup if this camera goes down   │   │
+│  │ Recording:  [✓] Save to disk    Retention: [7 days ▼]           │   │
+│  │                                                                   │   │
+│  │                        [Save]  [Cancel]                          │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h4 id="camera-source-types">Camera Source Types</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Type</th>
+  <th>URL Format</th>
+  <th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>RTSP</td>
+  <td><code>rtsp://ip:port/path</code></td>
+  <td>IP cameras</td>
+</tr>
+<tr>
+  <td>HTTP</td>
+  <td><code>http://ip:port/stream</code></td>
+  <td>Web cameras</td>
+</tr>
+<tr>
+  <td>File</td>
+  <td>Local path</td>
+  <td>Demo/testing</td>
+</tr>
+<tr>
+  <td>YouTube</td>
+  <td>YouTube URL</td>
+  <td>Remote demos</td>
+</tr>
+<tr>
+  <td>USB</td>
+  <td>Device index (0, 1, 2)</td>
+  <td>Webcams</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="camera-health-metrics">Camera Health Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Metric</th>
+  <th>Description</th>
+  <th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Status</td>
+  <td>Online/Offline</td>
+  <td>Binary</td>
+</tr>
+<tr>
+  <td>FPS</td>
+  <td>Frames per second</td>
+  <td>&lt; 15 = warning</td>
+</tr>
+<tr>
+  <td>Latency</td>
+  <td>Stream delay</td>
+  <td>&gt; 100ms = warning</td>
+</tr>
+<tr>
+  <td>Packet Loss</td>
+  <td>% dropped frames</td>
+  <td>&gt; 5% = warning</td>
+</tr>
+<tr>
+  <td>Last Seen</td>
+  <td>Time since last frame</td>
+  <td>&gt; 30s = offline</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="new-api-endpoints-required-4">New API Endpoints Required</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Method</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/api/cameras</code></td>
+  <td>GET, POST</td>
+  <td>List/add cameras</td>
+</tr>
+<tr>
+  <td><code>/api/cameras/&lt;id&gt;</code></td>
+  <td>GET, PUT, DELETE</td>
+  <td>Manage camera</td>
+</tr>
+<tr>
+  <td><code>/api/cameras/&lt;id&gt;/health</code></td>
+  <td>GET</td>
+  <td>Camera health stats</td>
+</tr>
+<tr>
+  <td><code>/api/cameras/&lt;id&gt;/reconnect</code></td>
+  <td>POST</td>
+  <td>Force reconnect</td>
+</tr>
+<tr>
+  <td><code>/api/cameras/&lt;id&gt;/stream</code></td>
+  <td>GET</td>
+  <td>Live stream URL</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="failover-logic">Failover Logic</h4>
+
+<pre><code>1. Primary camera goes offline (no frames for 30s)
+2. System logs alert
+3. If failover configured:
+   - Switch tracking to backup camera
+   - Notify via alerts system
+4. When primary comes back:
+   - Optional: Auto-switch back
+   - Or: Keep using backup until manual switch
+</code></pre>
+
+<hr />
+
+<h2 id="9-advanced-kpi-research">9. Advanced KPI Research</h2>
+
+<p>This section provides a comprehensive catalog of all possible KPIs for people tracking analytics, organized by category with implementation complexity ratings and data requirements.</p>
+
+<h3 id="91-traffic-kpis">9.1 Traffic KPIs</h3>
+
+<h4 id="primary-traffic-metrics">Primary Traffic Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Total Visitors</strong></td>
+  <td>Unique people detected in time period</td>
+  <td><code>COUNT(DISTINCT track_id)</code></td>
+  <td>Low</td>
+  <td>Detection events</td>
+</tr>
+<tr>
+  <td><strong>Hourly Footfall</strong></td>
+  <td>People count per hour</td>
+  <td><code>COUNT(*) GROUP BY hour</code></td>
+  <td>Low</td>
+  <td>Detection events</td>
+</tr>
+<tr>
+  <td><strong>Daily Footfall</strong></td>
+  <td>People count per day</td>
+  <td><code>COUNT(*) GROUP BY date</code></td>
+  <td>Low</td>
+  <td>Detection events</td>
+</tr>
+<tr>
+  <td><strong>Peak Hour</strong></td>
+  <td>Hour with highest traffic</td>
+  <td><code>MAX(hourly_count)</code></td>
+  <td>Low</td>
+  <td>Hourly aggregates</td>
+</tr>
+<tr>
+  <td><strong>Entry Rate</strong></td>
+  <td>People entering per minute</td>
+  <td><code>entrance_count / minutes</code></td>
+  <td>Low</td>
+  <td>Zone events</td>
+</tr>
+<tr>
+  <td><strong>Exit Rate</strong></td>
+  <td>People exiting per minute</td>
+  <td><code>exit_count / minutes</code></td>
+  <td>Low</td>
+  <td>Zone events</td>
+</tr>
+<tr>
+  <td><strong>Net Flow</strong></td>
+  <td>Entries minus exits</td>
+  <td><code>entries - exits</code></td>
+  <td>Low</td>
+  <td>Zone events</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="advanced-traffic-metrics">Advanced Traffic Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Traffic Velocity</strong></td>
+  <td>Speed of traffic flow change</td>
+  <td><code>Δcount / Δtime</code></td>
+  <td>Medium</td>
+  <td>Time-series counts</td>
+</tr>
+<tr>
+  <td><strong>Arrival Pattern</strong></td>
+  <td>Distribution of arrival times</td>
+  <td>Statistical distribution</td>
+  <td>Medium</td>
+  <td>Entry timestamps</td>
+</tr>
+<tr>
+  <td><strong>Traffic Correlation</strong></td>
+  <td>Zone-to-zone traffic relationship</td>
+  <td>Pearson correlation</td>
+  <td>High</td>
+  <td>Multi-zone counts</td>
+</tr>
+<tr>
+  <td><strong>Seasonality Index</strong></td>
+  <td>Day-of-week/hour patterns</td>
+  <td>Time series decomposition</td>
+  <td>High</td>
+  <td>Historical data</td>
+</tr>
+<tr>
+  <td><strong>Anomaly Score</strong></td>
+  <td>Deviation from expected traffic</td>
+  <td><code>(actual - expected) / σ</code></td>
+  <td>High</td>
+  <td>ML model</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="92-occupancy-kpis">9.2 Occupancy KPIs</h3>
+
+<h4 id="real-time-occupancy">Real-Time Occupancy</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Current Occupancy</strong></td>
+  <td>People currently in space</td>
+  <td><code>entries - exits</code></td>
+  <td>Low</td>
+  <td>Zone tracking</td>
+</tr>
+<tr>
+  <td><strong>Occupancy Rate</strong></td>
+  <td>Percentage of capacity used</td>
+  <td><code>current / capacity × 100</code></td>
+  <td>Low</td>
+  <td>Capacity config</td>
+</tr>
+<tr>
+  <td><strong>Zone Occupancy</strong></td>
+  <td>People per zone</td>
+  <td><code>COUNT(*) per zone</code></td>
+  <td>Low</td>
+  <td>Zone events</td>
+</tr>
+<tr>
+  <td><strong>Occupancy Trend</strong></td>
+  <td>Direction of occupancy change</td>
+  <td><code>slope(occupancy, time)</code></td>
+  <td>Medium</td>
+  <td>Time-series</td>
+</tr>
+<tr>
+  <td><strong>Max Occupancy</strong></td>
+  <td>Peak occupancy in period</td>
+  <td><code>MAX(occupancy)</code></td>
+  <td>Low</td>
+  <td>Occupancy history</td>
+</tr>
+<tr>
+  <td><strong>Min Occupancy</strong></td>
+  <td>Lowest occupancy in period</td>
+  <td><code>MIN(occupancy)</code></td>
+  <td>Low</td>
+  <td>Occupancy history</td>
+</tr>
+<tr>
+  <td><strong>Avg Occupancy</strong></td>
+  <td>Average occupancy in period</td>
+  <td><code>AVG(occupancy)</code></td>
+  <td>Low</td>
+  <td>Occupancy history</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="capacity-management">Capacity Management</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Capacity Utilization</strong></td>
+  <td>How much capacity is used over time</td>
+  <td><code>AVG(occupancy_rate)</code></td>
+  <td>Medium</td>
+  <td>Continuous tracking</td>
+</tr>
+<tr>
+  <td><strong>Time Over Threshold</strong></td>
+  <td>Minutes above target occupancy</td>
+  <td><code>SUM(minutes WHERE occ &gt; threshold)</code></td>
+  <td>Medium</td>
+  <td>Threshold config</td>
+</tr>
+<tr>
+  <td><strong>Capacity Breach Count</strong></td>
+  <td>Times capacity exceeded</td>
+  <td><code>COUNT(events WHERE occ &gt; capacity)</code></td>
+  <td>Medium</td>
+  <td>Capacity config</td>
+</tr>
+<tr>
+  <td><strong>Safety Margin</strong></td>
+  <td>Buffer to capacity</td>
+  <td><code>capacity - current</code></td>
+  <td>Low</td>
+  <td>Capacity config</td>
+</tr>
+<tr>
+  <td><strong>Projected Peak</strong></td>
+  <td>Predicted max occupancy</td>
+  <td>ML regression</td>
+  <td>High</td>
+  <td>Historical patterns</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="93-dwell-time-kpis">9.3 Dwell Time KPIs</h3>
+
+<h4 id="basic-dwell-metrics">Basic Dwell Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Avg Dwell Time</strong></td>
+  <td>Average time spent in zone</td>
+  <td><code>AVG(exit_time - entry_time)</code></td>
+  <td>Medium</td>
+  <td>Entry/exit events</td>
+</tr>
+<tr>
+  <td><strong>Max Dwell Time</strong></td>
+  <td>Longest time in zone</td>
+  <td><code>MAX(dwell_time)</code></td>
+  <td>Medium</td>
+  <td>Dwell calculations</td>
+</tr>
+<tr>
+  <td><strong>Min Dwell Time</strong></td>
+  <td>Shortest time in zone</td>
+  <td><code>MIN(dwell_time)</code></td>
+  <td>Medium</td>
+  <td>Dwell calculations</td>
+</tr>
+<tr>
+  <td><strong>Dwell Distribution</strong></td>
+  <td>Histogram of dwell times</td>
+  <td>Bucketed counts</td>
+  <td>Medium</td>
+  <td>Dwell calculations</td>
+</tr>
+<tr>
+  <td><strong>Total Dwell Hours</strong></td>
+  <td>Sum of all dwell time</td>
+  <td><code>SUM(dwell_time)</code></td>
+  <td>Medium</td>
+  <td>Dwell calculations</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="engagement-metrics">Engagement Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Engagement Score</strong></td>
+  <td>Weighted dwell × zone importance</td>
+  <td><code>dwell × zone_weight</code></td>
+  <td>Medium</td>
+  <td>Zone config</td>
+</tr>
+<tr>
+  <td><strong>Bounce Rate</strong></td>
+  <td>% with dwell &lt; threshold</td>
+  <td><code>short_dwells / total × 100</code></td>
+  <td>Medium</td>
+  <td>Threshold config</td>
+</tr>
+<tr>
+  <td><strong>Deep Engagement</strong></td>
+  <td>% with dwell &gt; long threshold</td>
+  <td><code>long_dwells / total × 100</code></td>
+  <td>Medium</td>
+  <td>Threshold config</td>
+</tr>
+<tr>
+  <td><strong>Dwell Velocity</strong></td>
+  <td>Rate of dwell time change</td>
+  <td><code>Δavg_dwell / Δtime</code></td>
+  <td>High</td>
+  <td>Time-series</td>
+</tr>
+<tr>
+  <td><strong>Engagement Funnel</strong></td>
+  <td>Dwell time by journey stage</td>
+  <td>Multi-zone analysis</td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="94-conversion-journey-kpis">9.4 Conversion &amp; Journey KPIs</h3>
+
+<h4 id="conversion-metrics">Conversion Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Zone Conversion</strong></td>
+  <td>% entering checkout from entrance</td>
+  <td><code>checkout_visitors / entrance_visitors × 100</code></td>
+  <td>Medium</td>
+  <td>Zone tracking</td>
+</tr>
+<tr>
+  <td><strong>Funnel Completion</strong></td>
+  <td>% completing full path</td>
+  <td><code>full_path_visitors / total × 100</code></td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+<tr>
+  <td><strong>Drop-off Rate</strong></td>
+  <td>% not reaching next zone</td>
+  <td><code>(zone1 - zone2) / zone1 × 100</code></td>
+  <td>Medium</td>
+  <td>Zone sequence</td>
+</tr>
+<tr>
+  <td><strong>Conversion Time</strong></td>
+  <td>Avg time from entry to conversion</td>
+  <td><code>AVG(conversion_time - entry_time)</code></td>
+  <td>Medium</td>
+  <td>Event timestamps</td>
+</tr>
+<tr>
+  <td><strong>Assisted Conversion</strong></td>
+  <td>Conversions with queue visit</td>
+  <td>Multi-zone path analysis</td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="journey-analytics">Journey Analytics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Path Frequency</strong></td>
+  <td>Most common zone sequences</td>
+  <td><code>COUNT(*) GROUP BY path</code></td>
+  <td>High</td>
+  <td>Path reconstruction</td>
+</tr>
+<tr>
+  <td><strong>Journey Length</strong></td>
+  <td>Avg zones visited per person</td>
+  <td><code>AVG(zones_visited)</code></td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+<tr>
+  <td><strong>Loop Detection</strong></td>
+  <td>People revisiting zones</td>
+  <td>Zone re-entry count</td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+<tr>
+  <td><strong>Exit Point Analysis</strong></td>
+  <td>Where people leave from</td>
+  <td><code>COUNT(*) GROUP BY last_zone</code></td>
+  <td>Medium</td>
+  <td>Exit zone tracking</td>
+</tr>
+<tr>
+  <td><strong>Journey Duration</strong></td>
+  <td>Total time in premises</td>
+  <td><code>exit_time - entry_time</code></td>
+  <td>Medium</td>
+  <td>First/last detection</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="95-queue-kpis">9.5 Queue KPIs</h3>
+
+<h4 id="queue-metrics">Queue Metrics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Current Queue Length</strong></td>
+  <td>People in queue zone</td>
+  <td>Zone occupancy</td>
+  <td>Low</td>
+  <td>Zone tracking</td>
+</tr>
+<tr>
+  <td><strong>Avg Queue Time</strong></td>
+  <td>Average wait in queue</td>
+  <td><code>AVG(queue_dwell)</code></td>
+  <td>Medium</td>
+  <td>Queue zone dwell</td>
+</tr>
+<tr>
+  <td><strong>Max Queue Time</strong></td>
+  <td>Longest wait recorded</td>
+  <td><code>MAX(queue_dwell)</code></td>
+  <td>Medium</td>
+  <td>Queue zone dwell</td>
+</tr>
+<tr>
+  <td><strong>Queue Abandonment</strong></td>
+  <td>% leaving queue without checkout</td>
+  <td><code>(queue_entries - checkouts) / queue_entries × 100</code></td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+<tr>
+  <td><strong>Service Rate</strong></td>
+  <td>People processed per hour</td>
+  <td><code>checkouts / hours</code></td>
+  <td>Medium</td>
+  <td>Checkout events</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="queue-performance">Queue Performance</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Queue Efficiency</strong></td>
+  <td>Service rate vs queue length</td>
+  <td><code>service_rate / avg_queue</code></td>
+  <td>Medium</td>
+  <td>Combined metrics</td>
+</tr>
+<tr>
+  <td><strong>Wait Time SLA</strong></td>
+  <td>% within target wait time</td>
+  <td><code>within_target / total × 100</code></td>
+  <td>Medium</td>
+  <td>SLA config</td>
+</tr>
+<tr>
+  <td><strong>Peak Queue Length</strong></td>
+  <td>Maximum queue size</td>
+  <td><code>MAX(queue_occupancy)</code></td>
+  <td>Low</td>
+  <td>Queue tracking</td>
+</tr>
+<tr>
+  <td><strong>Queue Build Rate</strong></td>
+  <td>How fast queue grows</td>
+  <td><code>Δqueue_length / Δtime</code></td>
+  <td>Medium</td>
+  <td>Time-series</td>
+</tr>
+<tr>
+  <td><strong>Estimated Wait</strong></td>
+  <td>Predicted wait for new arrival</td>
+  <td><code>queue_length / service_rate</code></td>
+  <td>Medium</td>
+  <td>Real-time calc</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="96-zone-performance-kpis">9.6 Zone Performance KPIs</h3>
+
+<h4 id="zone-utilization">Zone Utilization</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Zone Popularity</strong></td>
+  <td>Ranking by visitor count</td>
+  <td>Ranked visitor counts</td>
+  <td>Low</td>
+  <td>Zone events</td>
+</tr>
+<tr>
+  <td><strong>Zone Utilization</strong></td>
+  <td>% of time zone is occupied</td>
+  <td><code>occupied_minutes / total_minutes × 100</code></td>
+  <td>Medium</td>
+  <td>Continuous tracking</td>
+</tr>
+<tr>
+  <td><strong>Density Index</strong></td>
+  <td>People per square meter</td>
+  <td><code>occupancy / zone_area</code></td>
+  <td>Low</td>
+  <td>Zone config</td>
+</tr>
+<tr>
+  <td><strong>Hotspot Score</strong></td>
+  <td>Heat intensity ranking</td>
+  <td>Weighted occupancy × dwell</td>
+  <td>Medium</td>
+  <td>Combined metrics</td>
+</tr>
+<tr>
+  <td><strong>Dead Zone Detection</strong></td>
+  <td>Zones with low traffic</td>
+  <td>Below threshold detection</td>
+  <td>Medium</td>
+  <td>Traffic baseline</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="zone-comparison">Zone Comparison</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Zone Performance Index</strong></td>
+  <td>Composite zone score</td>
+  <td>Weighted multi-KPI</td>
+  <td>High</td>
+  <td>Multiple metrics</td>
+</tr>
+<tr>
+  <td><strong>Cross-Zone Flow</strong></td>
+  <td>Movement between zones</td>
+  <td>Transition matrix</td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+<tr>
+  <td><strong>Zone Affinity</strong></td>
+  <td>Zones visited together</td>
+  <td>Co-occurrence analysis</td>
+  <td>High</td>
+  <td>Path tracking</td>
+</tr>
+<tr>
+  <td><strong>Relative Performance</strong></td>
+  <td>Zone vs average</td>
+  <td><code>zone_metric / avg_metric</code></td>
+  <td>Medium</td>
+  <td>Baseline calc</td>
+</tr>
+<tr>
+  <td><strong>Zone ROI</strong></td>
+  <td>Value per square meter</td>
+  <td>Business metric / area</td>
+  <td>High</td>
+  <td>External data</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="97-trend-predictive-kpis">9.7 Trend &amp; Predictive KPIs</h3>
+
+<h4 id="historical-trends">Historical Trends</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Week-over-Week Growth</strong></td>
+  <td>% change from last week</td>
+  <td><code>(this_week - last_week) / last_week × 100</code></td>
+  <td>Low</td>
+  <td>Weekly aggregates</td>
+</tr>
+<tr>
+  <td><strong>Month-over-Month Growth</strong></td>
+  <td>% change from last month</td>
+  <td><code>(this_month - last_month) / last_month × 100</code></td>
+  <td>Low</td>
+  <td>Monthly aggregates</td>
+</tr>
+<tr>
+  <td><strong>Year-over-Year Growth</strong></td>
+  <td>% change from last year</td>
+  <td><code>(this_year - last_year) / last_year × 100</code></td>
+  <td>Low</td>
+  <td>Yearly aggregates</td>
+</tr>
+<tr>
+  <td><strong>Moving Average</strong></td>
+  <td>Smoothed trend line</td>
+  <td><code>AVG(last_N_periods)</code></td>
+  <td>Low</td>
+  <td>Historical data</td>
+</tr>
+<tr>
+  <td><strong>Trend Direction</strong></td>
+  <td>Up/down/stable</td>
+  <td>Slope analysis</td>
+  <td>Medium</td>
+  <td>Time-series</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="predictive-analytics">Predictive Analytics</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Traffic Forecast</strong></td>
+  <td>Predicted traffic next hour/day</td>
+  <td>ML time-series</td>
+  <td>High</td>
+  <td>Historical patterns</td>
+</tr>
+<tr>
+  <td><strong>Peak Prediction</strong></td>
+  <td>When next peak will occur</td>
+  <td>Pattern recognition</td>
+  <td>High</td>
+  <td>Historical patterns</td>
+</tr>
+<tr>
+  <td><strong>Capacity Warning</strong></td>
+  <td>Time until capacity breach</td>
+  <td>Extrapolation</td>
+  <td>High</td>
+  <td>Real-time + forecast</td>
+</tr>
+<tr>
+  <td><strong>Staffing Recommendation</strong></td>
+  <td>Suggested staff levels</td>
+  <td>Traffic forecast × ratio</td>
+  <td>High</td>
+  <td>Staffing model</td>
+</tr>
+<tr>
+  <td><strong>Revenue Correlation</strong></td>
+  <td>Traffic to revenue relationship</td>
+  <td>Correlation analysis</td>
+  <td>High</td>
+  <td>External data</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="98-operational-kpis">9.8 Operational KPIs</h3>
+
+<h4 id="system-health">System Health</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Detection Confidence</strong></td>
+  <td>Avg YOLO confidence score</td>
+  <td><code>AVG(confidence)</code></td>
+  <td>Low</td>
+  <td>Detection metadata</td>
+</tr>
+<tr>
+  <td><strong>Tracking Accuracy</strong></td>
+  <td>Track continuity score</td>
+  <td>Lost tracks / total</td>
+  <td>Medium</td>
+  <td>Track lifecycle</td>
+</tr>
+<tr>
+  <td><strong>Frame Rate</strong></td>
+  <td>Processing FPS</td>
+  <td><code>frames / seconds</code></td>
+  <td>Low</td>
+  <td>System metrics</td>
+</tr>
+<tr>
+  <td><strong>Latency</strong></td>
+  <td>Detection to display time</td>
+  <td><code>display_time - frame_time</code></td>
+  <td>Low</td>
+  <td>System metrics</td>
+</tr>
+<tr>
+  <td><strong>Uptime</strong></td>
+  <td>System availability</td>
+  <td><code>running_time / total_time × 100</code></td>
+  <td>Low</td>
+  <td>Health checks</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="data-quality">Data Quality</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Description</th>
+  <th>Formula</th>
+  <th>Complexity</th>
+  <th>Data Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Data Completeness</strong></td>
+  <td>% of expected data received</td>
+  <td><code>actual / expected × 100</code></td>
+  <td>Medium</td>
+  <td>Expected counts</td>
+</tr>
+<tr>
+  <td><strong>Anomaly Rate</strong></td>
+  <td>% of outlier readings</td>
+  <td>Outlier detection</td>
+  <td>Medium</td>
+  <td>Statistical analysis</td>
+</tr>
+<tr>
+  <td><strong>Gap Detection</strong></td>
+  <td>Missing data periods</td>
+  <td>Gap analysis</td>
+  <td>Medium</td>
+  <td>Timestamp analysis</td>
+</tr>
+<tr>
+  <td><strong>Calibration Score</strong></td>
+  <td>Zone accuracy rating</td>
+  <td>Manual validation</td>
+  <td>High</td>
+  <td>Ground truth</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="99-kpi-implementation-priority-matrix">9.9 KPI Implementation Priority Matrix</h3>
+
+<h4 id="phase-1-core-implemented">Phase 1 - Core (Implemented)</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Priority</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Current Count</td>
+  <td>Critical</td>
+  <td>✅ Done</td>
+  <td>Real-time display</td>
+</tr>
+<tr>
+  <td>Total Visitors</td>
+  <td>Critical</td>
+  <td>✅ Done</td>
+  <td>Daily/hourly aggregates</td>
+</tr>
+<tr>
+  <td>Zone Occupancy</td>
+  <td>Critical</td>
+  <td>✅ Done</td>
+  <td>Per-zone tracking</td>
+</tr>
+<tr>
+  <td>Avg Dwell Time</td>
+  <td>High</td>
+  <td>✅ Done</td>
+  <td>Basic calculation</td>
+</tr>
+<tr>
+  <td>Peak Hour</td>
+  <td>High</td>
+  <td>✅ Done</td>
+  <td>Reports page</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="phase-2-enhanced-planned">Phase 2 - Enhanced (Planned)</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Priority</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Conversion Rate</td>
+  <td>High</td>
+  <td>📋 Planned</td>
+  <td>Requires path tracking</td>
+</tr>
+<tr>
+  <td>Queue Time</td>
+  <td>High</td>
+  <td>📋 Planned</td>
+  <td>Queue zone config</td>
+</tr>
+<tr>
+  <td>Traffic Forecast</td>
+  <td>Medium</td>
+  <td>📋 Planned</td>
+  <td>ML model needed</td>
+</tr>
+<tr>
+  <td>Journey Analysis</td>
+  <td>Medium</td>
+  <td>📋 Planned</td>
+  <td>Path reconstruction</td>
+</tr>
+<tr>
+  <td>Trend Analysis</td>
+  <td>Medium</td>
+  <td>📋 Planned</td>
+  <td>Historical comparison</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="phase-3-advanced-future">Phase 3 - Advanced (Future)</h4>
+
+<table>
+<thead>
+<tr>
+  <th>KPI</th>
+  <th>Priority</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Anomaly Detection</td>
+  <td>Medium</td>
+  <td>🔮 Future</td>
+  <td>ML model</td>
+</tr>
+<tr>
+  <td>Predictive Staffing</td>
+  <td>Low</td>
+  <td>🔮 Future</td>
+  <td>External integration</td>
+</tr>
+<tr>
+  <td>Revenue Correlation</td>
+  <td>Low</td>
+  <td>🔮 Future</td>
+  <td>POS integration</td>
+</tr>
+<tr>
+  <td>Behavior Clustering</td>
+  <td>Low</td>
+  <td>🔮 Future</td>
+  <td>Advanced ML</td>
+</tr>
+<tr>
+  <td>A/B Testing Support</td>
+  <td>Low</td>
+  <td>🔮 Future</td>
+  <td>Experiment framework</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="910-kpi-data-requirements-summary">9.10 KPI Data Requirements Summary</h3>
+
+<h4 id="database-schema-extensions">Database Schema Extensions</h4>
+
+<pre><code>-- Additional tables for advanced KPIs
+
+-- Path tracking
+CREATE TABLE paths (
+    path_id INTEGER PRIMARY KEY,
+    track_id INTEGER,
+    zone_sequence TEXT,  -- JSON array of zone_ids
+    entry_time TIMESTAMP,
+    exit_time TIMESTAMP,
+    total_dwell REAL
+);
+
+-- Predictions cache
+CREATE TABLE predictions (
+    prediction_id INTEGER PRIMARY KEY,
+    metric_type TEXT,
+    predicted_time TIMESTAMP,
+    predicted_value REAL,
+    confidence REAL,
+    created_at TIMESTAMP
+);
+
+-- Anomalies log
+CREATE TABLE anomalies (
+    anomaly_id INTEGER PRIMARY KEY,
+    metric_type TEXT,
+    detected_at TIMESTAMP,
+    expected_value REAL,
+    actual_value REAL,
+    severity TEXT
+);
+</code></pre>
+
+<h4 id="api-endpoint-requirements">API Endpoint Requirements</h4>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>KPIs Served</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/api/counts</code></td>
+  <td>Current count, Total visitors</td>
+  <td>✅ Exists</td>
+</tr>
+<tr>
+  <td><code>/api/zones</code></td>
+  <td>Zone occupancy, Density</td>
+  <td>✅ Exists</td>
+</tr>
+<tr>
+  <td><code>/api/history</code></td>
+  <td>Trends, Aggregates</td>
+  <td>✅ Exists</td>
+</tr>
+<tr>
+  <td><code>/api/dwell</code></td>
+  <td>Dwell metrics</td>
+  <td>✅ Exists</td>
+</tr>
+<tr>
+  <td><code>/api/paths</code></td>
+  <td>Journey KPIs</td>
+  <td>📋 Planned</td>
+</tr>
+<tr>
+  <td><code>/api/predictions</code></td>
+  <td>Forecast KPIs</td>
+  <td>📋 Planned</td>
+</tr>
+<tr>
+  <td><code>/api/anomalies</code></td>
+  <td>Anomaly KPIs</td>
+  <td>🔮 Future</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="appendices">Appendices</h2>
+
+<h3 id="a-mockup-files">A. Mockup Files</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Page</th>
+  <th>File</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Live Monitor</td>
+  <td><code>mockups/live-monitor.html</code></td>
+  <td>Complete</td>
+</tr>
+<tr>
+  <td>Analytics</td>
+  <td><code>mockups/analytics.html</code></td>
+  <td>Complete</td>
+</tr>
+<tr>
+  <td>Reports</td>
+  <td><code>mockups/reports.html</code></td>
+  <td>Complete</td>
+</tr>
+<tr>
+  <td>Heatmap</td>
+  <td><code>mockups/heatmap.html</code></td>
+  <td>Complete</td>
+</tr>
+<tr>
+  <td>Zone Config</td>
+  <td><code>mockups/zone-config.html</code></td>
+  <td>Complete</td>
+</tr>
+<tr>
+  <td>Settings</td>
+  <td><code>mockups/settings.html</code></td>
+  <td>Complete</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="b-version-history">B. Version History</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Version</th>
+  <th>Date</th>
+  <th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1.0</td>
+  <td>Dec 2024</td>
+  <td>Initial PRD with Live Monitor documentation</td>
+</tr>
+<tr>
+  <td>1.1</td>
+  <td>Dec 2024</td>
+  <td>Added Analytics page documentation</td>
+</tr>
+<tr>
+  <td>1.2</td>
+  <td>Dec 2024</td>
+  <td>Added Reports, Heatmap, Zone Config, Settings documentation</td>
+</tr>
+<tr>
+  <td>1.3</td>
+  <td>Dec 2024</td>
+  <td>Added Future Pages specifications (Alerts, Trends, Export, Cameras)</td>
+</tr>
+<tr>
+  <td>1.4</td>
+  <td>Dec 2024</td>
+  <td>Added comprehensive KPI research catalog</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="c-glossary">C. Glossary</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Term</th>
+  <th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Dwell Time</strong></td>
+  <td>Duration a person spends in a specific zone</td>
+</tr>
+<tr>
+  <td><strong>Footfall</strong></td>
+  <td>Total count of people entering a space</td>
+</tr>
+<tr>
+  <td><strong>Heatmap</strong></td>
+  <td>Visual representation of zone intensity based on occupancy</td>
+</tr>
+<tr>
+  <td><strong>Track ID</strong></td>
+  <td>Unique identifier assigned to a detected person by ByteTrack</td>
+</tr>
+<tr>
+  <td><strong>Zone</strong></td>
+  <td>Defined area within the camera view for analytics segmentation</td>
+</tr>
+<tr>
+  <td><strong>Conversion</strong></td>
+  <td>A person completing a desired action (e.g., reaching checkout)</td>
+</tr>
+<tr>
+  <td><strong>Bounce Rate</strong></td>
+  <td>Percentage of visitors with very short dwell times</td>
+</tr>
+<tr>
+  <td><strong>Path</strong></td>
+  <td>Sequence of zones visited by a single person</td>
+</tr>
+<tr>
+  <td><strong>SLA</strong></td>
+  <td>Service Level Agreement - target performance metrics</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<p><em>Generated by Claude Code for Project Janus</em></p>
+
+
+    <div class="footer">
+        <p>Project Janus PRD v1.4 | Generated by Claude Code | December 2024</p>
+    </div>
+</body>
+</html>

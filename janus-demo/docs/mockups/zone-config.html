@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janus - Zone Config Page Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        /* Config Controls */
+        .config-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #1a1a2e;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .video-connect {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .video-input {
+            padding: 10px 16px;
+            background: #12121f;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            width: 280px;
+        }
+
+        .video-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            background: linear-gradient(145deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid #555;
+            border-radius: 6px;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            color: #4CAF50;
+            font-size: 0.9rem;
+        }
+
+        /* Canvas Container */
+        .canvas-container {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .zone-canvas {
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Zone List */
+        .zone-list {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .zone-list h3 {
+            color: #fff;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .zone-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 16px;
+            background: #12121f;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .zone-item:hover {
+            background: #1e1e35;
+        }
+
+        .zone-item.selected {
+            border-color: #007bff;
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .zone-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .zone-info {
+            flex: 1;
+        }
+
+        .zone-name {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .zone-coords {
+            font-size: 0.85rem;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .zone-type {
+            padding: 4px 10px;
+            background: #2a2a3a;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* Instructions */
+        .instructions {
+            margin-top: 20px;
+            padding: 16px;
+            background: #12121f;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .instructions h4 {
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .instructions li::before {
+            content: "→";
+            margin-right: 8px;
+            color: #007bff;
+        }
+
+        @media (max-width: 768px) {
+            .config-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .video-connect {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .video-input {
+                width: 100%;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .action-buttons button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Zone Configuration</h1>
+            <p>Click and drag zones to reposition. Click handles to resize.</p>
+        </div>
+
+        <!-- Config Controls -->
+        <div class="config-controls">
+            <div class="video-connect">
+                <input type="text" class="video-input" placeholder="Video stream URL (optional)">
+                <button class="btn-primary">Connect Video</button>
+                <span class="status-indicator" style="display: none;"> Connected</span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-primary">Save Config</button>
+                <button class="btn-secondary">Reset to Default</button>
+            </div>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-container">
+            <canvas id="zoneCanvas" class="zone-canvas" width="640" height="480"></canvas>
+        </div>
+
+        <!-- Zone List -->
+        <div class="zone-list">
+            <h3>Zones</h3>
+            <div class="zone-item selected" data-zone="1">
+                <div class="zone-color" style="background-color: #4CAF50;"></div>
+                <div class="zone-info">
+                    <div class="zone-name">entrance</div>
+                    <div class="zone-coords">(0, 0) → (200, 480)</div>
+                </div>
+                <div class="zone-type">entrance</div>
+            </div>
+            <div class="zone-item" data-zone="2">
+                <div class="zone-color" style="background-color: #2196F3;"></div>
+                <div class="zone-info">
+                    <div class="zone-name">main_floor</div>
+                    <div class="zone-coords">(200, 0) → (440, 480)</div>
+                </div>
+                <div class="zone-type">general</div>
+            </div>
+            <div class="zone-item" data-zone="3">
+                <div class="zone-color" style="background-color: #FF9800;"></div>
+                <div class="zone-info">
+                    <div class="zone-name">queue</div>
+                    <div class="zone-coords">(440, 240) → (540, 480)</div>
+                </div>
+                <div class="zone-type">queue</div>
+            </div>
+            <div class="zone-item" data-zone="4">
+                <div class="zone-color" style="background-color: #F44336;"></div>
+                <div class="zone-info">
+                    <div class="zone-name">checkout</div>
+                    <div class="zone-coords">(540, 0) → (640, 480)</div>
+                </div>
+                <div class="zone-type">checkout</div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h4>Instructions</h4>
+            <ul>
+                <li>Click on a zone to select it (shown with blue border)</li>
+                <li>Drag the zone to move it to a new position</li>
+                <li>Drag corner handles to resize the zone</li>
+                <li>Connect a video stream to overlay zones on live feed</li>
+                <li>Click "Save Config" to download zones.json for the edge agent</li>
+            </ul>
+        </div>
+
+        <!-- Mockup Legend -->
+        <div style="margin-top: 40px; padding: 20px; background: #12121f; border-radius: 8px; border: 1px dashed #333;">
+            <h3 style="color: #666; margin-bottom: 12px;">Mockup Notes</h3>
+            <ul style="color: #555; font-size: 0.9rem; line-height: 1.8;">
+                <li><strong>Canvas:</strong> 640x480 zone editor with drag/resize functionality</li>
+                <li><strong>Zones:</strong> Color-coded by type (entrance=green, general=blue, queue=orange, checkout=red)</li>
+                <li><strong>Handles:</strong> Corner resize handles shown on selected zone</li>
+                <li><strong>Export:</strong> Saves to zones.json for edge agent configuration</li>
+                <li><strong>Future:</strong> Add/delete zones, snap to grid, undo/redo</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Zone definitions
+        const zones = [
+            { id: 1, name: 'entrance', x1: 0, y1: 0, x2: 200, y2: 480, type: 'entrance', color: '#4CAF50' },
+            { id: 2, name: 'main_floor', x1: 200, y1: 0, x2: 440, y2: 480, type: 'general', color: '#2196F3' },
+            { id: 3, name: 'queue', x1: 440, y1: 240, x2: 540, y2: 480, type: 'queue', color: '#FF9800' },
+            { id: 4, name: 'checkout', x1: 540, y1: 0, x2: 640, y2: 480, type: 'checkout', color: '#F44336' }
+        ];
+
+        let selectedZone = 1;
+
+        const canvas = document.getElementById('zoneCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawZones() {
+            // Clear canvas
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Draw zones
+            zones.forEach(zone => {
+                const isSelected = zone.id === selectedZone;
+
+                // Fill
+                ctx.fillStyle = zone.color + '30';
+                ctx.fillRect(zone.x1, zone.y1, zone.x2 - zone.x1, zone.y2 - zone.y1);
+
+                // Border
+                ctx.strokeStyle = zone.color;
+                ctx.lineWidth = isSelected ? 3 : 2;
+                ctx.strokeRect(zone.x1, zone.y1, zone.x2 - zone.x1, zone.y2 - zone.y1);
+
+                // Label
+                ctx.fillStyle = zone.color;
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(zone.name, zone.x1 + 8, zone.y1 + 22);
+
+                // Handles for selected zone
+                if (isSelected) {
+                    const handles = [
+                        [zone.x1, zone.y1],
+                        [zone.x2, zone.y1],
+                        [zone.x1, zone.y2],
+                        [zone.x2, zone.y2]
+                    ];
+
+                    ctx.fillStyle = zone.color;
+                    handles.forEach(([x, y]) => {
+                        ctx.fillRect(x - 5, y - 5, 10, 10);
+                    });
+                }
+            });
+        }
+
+        // Zone list click handler
+        document.querySelectorAll('.zone-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.zone-item').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                selectedZone = parseInt(item.dataset.zone);
+                drawZones();
+            });
+        });
+
+        // Canvas click handler
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Check which zone was clicked (reverse order for top zone)
+            for (let i = zones.length - 1; i >= 0; i--) {
+                const zone = zones[i];
+                if (x >= zone.x1 && x <= zone.x2 && y >= zone.y1 && y <= zone.y2) {
+                    selectedZone = zone.id;
+
+                    // Update list selection
+                    document.querySelectorAll('.zone-item').forEach(item => {
+                        item.classList.toggle('selected', parseInt(item.dataset.zone) === zone.id);
+                    });
+
+                    drawZones();
+                    return;
+                }
+            }
+        });
+
+        // Initial draw
+        drawZones();
+    </script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janus - Heatmap Page Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        /* Time Range Picker */
+        .time-range-section {
+            margin-bottom: 24px;
+        }
+
+        .time-range-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .time-btn {
+            padding: 8px 16px;
+            border: 1px solid #333;
+            background: #1a1a2e;
+            color: #888;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .time-btn:hover {
+            border-color: #007bff;
+            color: #fff;
+        }
+
+        .time-btn.active {
+            background: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+
+        /* Card Styles */
+        .card {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16162a 100%);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Main Grid Layout */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Canvas Container */
+        .canvas-container {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .heatmap-canvas {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            aspect-ratio: 640 / 480;
+            border-radius: 4px;
+        }
+
+        /* Zone Stats List */
+        .zone-stats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .zone-stat-item {
+            background: #12121f;
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 4px solid #007bff;
+        }
+
+        .zone-stat-item.entrance { border-left-color: #4CAF50; }
+        .zone-stat-item.main_floor { border-left-color: #FFC107; }
+        .zone-stat-item.queue { border-left-color: #FF9800; }
+        .zone-stat-item.checkout { border-left-color: #F44336; }
+
+        .zone-stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .zone-stat-header h4 {
+            font-size: 1rem;
+            color: #fff;
+            text-transform: capitalize;
+        }
+
+        .zone-capacity {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .zone-stat-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Dwell Time Section */
+        .dwell-summary {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .dwell-stat {
+            flex: 1;
+            min-width: 100px;
+            background: #12121f;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .dwell-label {
+            display: block;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .dwell-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Histogram */
+        .histogram-container {
+            height: 300px;
+            background: #12121f;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            position: relative;
+        }
+
+        .histogram-y-axis {
+            position: absolute;
+            left: 16px;
+            top: 20px;
+            bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .histogram-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            flex: 1;
+            padding-left: 50px;
+            height: calc(100% - 40px);
+        }
+
+        .histogram-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .histogram-bar {
+            width: 60px;
+            border-radius: 4px 4px 0 0;
+            transition: opacity 0.2s ease;
+            position: relative;
+        }
+
+        .histogram-bar:hover {
+            opacity: 0.8;
+        }
+
+        .histogram-bar:hover::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .histogram-bar.red { background: linear-gradient(180deg, #F44336 0%, #B71C1C 100%); }
+        .histogram-bar.orange { background: linear-gradient(180deg, #FF9800 0%, #E65100 100%); }
+        .histogram-bar.yellow { background: linear-gradient(180deg, #FFC107 0%, #F57F17 100%); }
+        .histogram-bar.green { background: linear-gradient(180deg, #4CAF50 0%, #2E7D32 100%); }
+        .histogram-bar.blue { background: linear-gradient(180deg, #2196F3 0%, #1565C0 100%); }
+
+        .histogram-label {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Legend */
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #2a2a3a;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        /* Gradient Bar (Heatmap Legend) */
+        .heat-legend {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .heat-legend-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .heat-gradient-bar {
+            width: 200px;
+            height: 16px;
+            background: linear-gradient(to right, #0000FF, #FFFF00, #FF0000);
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+
+        .heat-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+            margin-top: 4px;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 900px) {
+            .heatmap-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dwell-summary {
+                flex-direction: column;
+            }
+
+            .histogram-bars {
+                gap: 12px;
+            }
+
+            .histogram-bar {
+                width: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Zone Heatmap & Dwell Analysis</h1>
+            <p>Visual representation of traffic patterns and visitor behavior</p>
+        </div>
+
+        <!-- Time Range Picker -->
+        <div class="time-range-section">
+            <div class="time-range-picker">
+                <button class="time-btn">10 min</button>
+                <button class="time-btn">30 min</button>
+                <button class="time-btn">1 hour</button>
+                <button class="time-btn">24 hours</button>
+                <button class="time-btn active">7 days</button>
+            </div>
+        </div>
+
+        <!-- Main Grid: Heatmap + Zone Stats -->
+        <div class="heatmap-grid">
+            <!-- Heatmap Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Traffic Heatmap</span>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="heatmapCanvas" class="heatmap-canvas" width="640" height="480"></canvas>
+                </div>
+                <div class="heat-legend">
+                    <span class="heat-legend-label">Traffic Intensity</span>
+                    <div class="heat-gradient-bar"></div>
+                    <div class="heat-labels">
+                        <span>Low</span>
+                        <span>Medium</span>
+                        <span>High</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone Statistics Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Zone Statistics</span>
+                </div>
+                <div class="zone-stats-list">
+                    <div class="zone-stat-item entrance">
+                        <div class="zone-stat-header">
+                            <h4>Entrance</h4>
+                            <span class="zone-capacity">Capacity: 50</span>
+                        </div>
+                        <div class="zone-stat-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Visitors</span>
+                                <span class="metric-value">156</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Events</span>
+                                <span class="metric-value">324</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Avg/Visitor</span>
+                                <span class="metric-value">2.1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="zone-stat-item main_floor">
+                        <div class="zone-stat-header">
+                            <h4>Main Floor</h4>
+                            <span class="zone-capacity">Capacity: 200</span>
+                        </div>
+                        <div class="zone-stat-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Visitors</span>
+                                <span class="metric-value">287</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Events</span>
+                                <span class="metric-value">512</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Avg/Visitor</span>
+                                <span class="metric-value">1.8</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="zone-stat-item queue">
+                        <div class="zone-stat-header">
+                            <h4>Queue</h4>
+                            <span class="zone-capacity">Capacity: 30</span>
+                        </div>
+                        <div class="zone-stat-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Visitors</span>
+                                <span class="metric-value">98</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Events</span>
+                                <span class="metric-value">156</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Avg/Visitor</span>
+                                <span class="metric-value">1.6</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="zone-stat-item checkout">
+                        <div class="zone-stat-header">
+                            <h4>Checkout</h4>
+                            <span class="zone-capacity">Capacity: 40</span>
+                        </div>
+                        <div class="zone-stat-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Visitors</span>
+                                <span class="metric-value">127</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Events</span>
+                                <span class="metric-value">254</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Avg/Visitor</span>
+                                <span class="metric-value">2.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dwell Time Distribution -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Dwell Time Distribution</span>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="dwell-summary">
+                <div class="dwell-stat">
+                    <span class="dwell-label">Average Dwell Time</span>
+                    <span class="dwell-value">8m 32s</span>
+                </div>
+                <div class="dwell-stat">
+                    <span class="dwell-label">Median</span>
+                    <span class="dwell-value">6m 0s</span>
+                </div>
+                <div class="dwell-stat">
+                    <span class="dwell-label">Min</span>
+                    <span class="dwell-value">12s</span>
+                </div>
+                <div class="dwell-stat">
+                    <span class="dwell-label">Max</span>
+                    <span class="dwell-value">45m 0s</span>
+                </div>
+                <div class="dwell-stat">
+                    <span class="dwell-label">Total Sessions</span>
+                    <span class="dwell-value">847</span>
+                </div>
+            </div>
+
+            <!-- Histogram -->
+            <div class="histogram-container">
+                <div class="histogram-y-axis">
+                    <span>200</span>
+                    <span>150</span>
+                    <span>100</span>
+                    <span>50</span>
+                    <span>0</span>
+                </div>
+                <div class="histogram-bars">
+                    <div class="histogram-bar-group">
+                        <div class="histogram-bar red" style="height: 22%;" data-count="45"></div>
+                        <span class="histogram-label">< 1 min</span>
+                    </div>
+                    <div class="histogram-bar-group">
+                        <div class="histogram-bar orange" style="height: 44%;" data-count="89"></div>
+                        <span class="histogram-label">1-5 min</span>
+                    </div>
+                    <div class="histogram-bar-group">
+                        <div class="histogram-bar yellow" style="height: 78%;" data-count="156"></div>
+                        <span class="histogram-label">5-15 min</span>
+                    </div>
+                    <div class="histogram-bar-group">
+                        <div class="histogram-bar green" style="height: 49%;" data-count="98"></div>
+                        <span class="histogram-label">15-30 min</span>
+                    </div>
+                    <div class="histogram-bar-group">
+                        <div class="histogram-bar blue" style="height: 16%;" data-count="32"></div>
+                        <span class="histogram-label">> 30 min</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend-container">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #F44336;"></div>
+                    <span>Quick pass-through</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FF9800;"></div>
+                    <span>Brief stop</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FFC107;"></div>
+                    <span>Moderate engagement</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4CAF50;"></div>
+                    <span>Good engagement</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2196F3;"></div>
+                    <span>Deep engagement</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mockup Legend -->
+        <div style="margin-top: 40px; padding: 20px; background: #12121f; border-radius: 8px; border: 1px dashed #333;">
+            <h3 style="color: #666; margin-bottom: 12px;">Mockup Notes</h3>
+            <ul style="color: #555; font-size: 0.9rem; line-height: 1.8;">
+                <li><strong>Canvas Heatmap:</strong> 640x480 canvas with zones colored by traffic intensity</li>
+                <li><strong>Heat Colors:</strong> Blue (low) → Yellow (medium) → Red (high) based on visitor count</li>
+                <li><strong>Zone Stats:</strong> Per-zone metrics with color-coded borders</li>
+                <li><strong>Dwell Histogram:</strong> 5 time buckets showing visitor engagement distribution</li>
+                <li><strong>Future:</strong> Interactive zones (click to drill down), time animation, export as image</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Draw heatmap on canvas
+        const canvas = document.getElementById('heatmapCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Zone definitions
+        const zones = [
+            { name: 'ENTRANCE', x1: 0, y1: 0, x2: 200, y2: 480, intensity: 0.23, visitors: 156, events: 324 },
+            { name: 'MAIN FLOOR', x1: 200, y1: 0, x2: 440, y2: 480, intensity: 0.67, visitors: 287, events: 512 },
+            { name: 'QUEUE', x1: 440, y1: 240, x2: 540, y2: 480, intensity: 0.45, visitors: 98, events: 156 },
+            { name: 'CHECKOUT', x1: 540, y1: 0, x2: 640, y2: 480, intensity: 1.0, visitors: 127, events: 254 }
+        ];
+
+        // Clear canvas
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw grid
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < canvas.width; x += 40) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+        for (let y = 0; y < canvas.height; y += 40) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+
+        // Draw zones
+        zones.forEach(zone => {
+            const intensity = zone.intensity;
+            let r, g, b;
+
+            if (intensity < 0.5) {
+                r = Math.floor(intensity * 2 * 255);
+                g = Math.floor(intensity * 2 * 255);
+                b = 255 - Math.floor(intensity * 2 * 255);
+            } else {
+                r = 255;
+                g = 255 - Math.floor((intensity - 0.5) * 2 * 255);
+                b = 0;
+            }
+
+            // Fill zone
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.4)`;
+            ctx.fillRect(zone.x1, zone.y1, zone.x2 - zone.x1, zone.y2 - zone.y1);
+
+            // Border
+            ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(zone.x1, zone.y1, zone.x2 - zone.x1, zone.y2 - zone.y1);
+
+            // Zone name
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText(zone.name, zone.x1 + 10, zone.y1 + 25);
+
+            // Stats
+            ctx.font = '12px Arial';
+            ctx.fillText(`Visitors: ${zone.visitors}`, zone.x1 + 10, zone.y1 + 45);
+            ctx.fillText(`Events: ${zone.events}`, zone.x1 + 10, zone.y1 + 62);
+
+            // Intensity percentage in center
+            ctx.font = 'bold 20px Arial';
+            const centerX = (zone.x1 + zone.x2) / 2;
+            const centerY = (zone.y1 + zone.y2) / 2;
+            ctx.fillText(`${Math.round(intensity * 100)}%`, centerX - 25, centerY);
+        });
+
+        // Legend
+        const legendY = canvas.height - 50;
+        const legendWidth = 200;
+        const legendX = (canvas.width - legendWidth) / 2;
+
+        ctx.font = 'bold 12px Arial';
+        ctx.fillStyle = '#fff';
+        ctx.fillText('Traffic Intensity', legendX + 45, legendY - 8);
+
+        const gradient = ctx.createLinearGradient(legendX, 0, legendX + legendWidth, 0);
+        gradient.addColorStop(0, 'rgb(0, 0, 255)');
+        gradient.addColorStop(0.5, 'rgb(255, 255, 0)');
+        gradient.addColorStop(1, 'rgb(255, 0, 0)');
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(legendX, legendY, legendWidth, 16);
+
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(legendX, legendY, legendWidth, 16);
+
+        ctx.font = '10px Arial';
+        ctx.fillStyle = '#fff';
+        ctx.fillText('Low', legendX - 25, legendY + 12);
+        ctx.fillText('High', legendX + legendWidth + 5, legendY + 12);
+    </script>
+</body>
+</html>

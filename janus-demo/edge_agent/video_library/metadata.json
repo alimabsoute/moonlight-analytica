@@ -1,0 +1,204 @@
+{
+  "videos": [
+    {
+      "id": "42fe320e-1a37-41e2-9f56-23ea429c5561",
+      "name": "People 1",
+      "description": "",
+      "filename": "42fe320e-1a37-41e2-9f56-23ea429c5561.mp4",
+      "original_filename": "people1.mp4",
+      "file_size": 778808548,
+      "uploaded_at": "2025-10-04T18:51:03.586205",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\42fe320e-1a37-41e2-9f56-23ea429c5561.mp4"
+    },
+    {
+      "id": "223a1eb3-2355-48b5-9b8f-2e08e5746a6b",
+      "name": "YT Download",
+      "description": "",
+      "filename": "223a1eb3-2355-48b5-9b8f-2e08e5746a6b.mp4",
+      "original_filename": "people4.mp4",
+      "file_size": 1836385,
+      "uploaded_at": "2025-10-04T20:55:19.715575",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\223a1eb3-2355-48b5-9b8f-2e08e5746a6b.mp4"
+    },
+    {
+      "id": "49d85cf9-40f8-4772-9338-73f533887886",
+      "name": "People Walking - Scene 4",
+      "description": "Busy pedestrian crossing with multiple people",
+      "filename": "49d85cf9-40f8-4772-9338-73f533887886.mp4",
+      "original_filename": "people4.mp4",
+      "file_size": 1836385,
+      "uploaded_at": "2025-10-04T21:09:05.370901",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\49d85cf9-40f8-4772-9338-73f533887886.mp4"
+    },
+    {
+      "id": "57bf97a9-0d8f-4b5c-9f88-90b0062fea92",
+      "name": "Mall Escalator",
+      "description": "Retail foot traffic on escalator",
+      "filename": "57bf97a9-0d8f-4b5c-9f88-90b0062fea92.mp4",
+      "original_filename": "mall_escalator_1.mp4",
+      "file_size": 4209864,
+      "uploaded_at": "2026-01-29T23:26:06.790204",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\57bf97a9-0d8f-4b5c-9f88-90b0062fea92.mp4"
+    },
+    {
+      "id": "e9c1bc46-312a-450a-a708-2c4b3a5258de",
+      "name": "Shoppers Walking",
+      "description": "Retail shoppers walking in mall",
+      "filename": "e9c1bc46-312a-450a-a708-2c4b3a5258de.mp4",
+      "original_filename": "shoppers_walking_1.mp4",
+      "file_size": 2634752,
+      "uploaded_at": "2026-01-29T23:26:06.793715",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\e9c1bc46-312a-450a-a708-2c4b3a5258de.mp4"
+    },
+    {
+      "id": "995eef85-56a2-4ceb-8923-6c2f04ee61bc",
+      "name": "Street Crossing Japan",
+      "description": "Busy street crossing with pedestrians",
+      "filename": "995eef85-56a2-4ceb-8923-6c2f04ee61bc.mp4",
+      "original_filename": "street_crossing_japan_1.mp4",
+      "file_size": 7660779,
+      "uploaded_at": "2026-01-29T23:26:06.801175",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\995eef85-56a2-4ceb-8923-6c2f04ee61bc.mp4"
+    },
+    {
+      "id": "d22001db-6ea7-4cf8-8388-6c8857431fc2",
+      "name": "Subway Entrance",
+      "description": "People entering/exiting subway",
+      "filename": "d22001db-6ea7-4cf8-8388-6c8857431fc2.mp4",
+      "original_filename": "subway_entrance_1.mp4",
+      "file_size": 2522058,
+      "uploaded_at": "2026-01-29T23:26:06.806158",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\d22001db-6ea7-4cf8-8388-6c8857431fc2.mp4"
+    },
+    {
+      "id": "5ac2222d-5bce-4165-8b6d-a68711d86b76",
+      "name": "Train Station",
+      "description": "Train station foot traffic",
+      "filename": "5ac2222d-5bce-4165-8b6d-a68711d86b76.mp4",
+      "original_filename": "train_station_1.mp4",
+      "file_size": 2128639,
+      "uploaded_at": "2026-01-29T23:26:06.809781",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\5ac2222d-5bce-4165-8b6d-a68711d86b76.mp4"
+    },
+    {
+      "id": "d65ec1e1-55ba-4dcb-86e2-eebe0ef3b951",
+      "name": "Japan Street Crowd",
+      "description": "Dense street crowd in Japan",
+      "filename": "d65ec1e1-55ba-4dcb-86e2-eebe0ef3b951.mp4",
+      "original_filename": "japan_street_crowd_1.mp4",
+      "file_size": 12656300,
+      "uploaded_at": "2026-01-29T23:26:06.818832",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\d65ec1e1-55ba-4dcb-86e2-eebe0ef3b951.mp4"
+    },
+    {
+      "id": "fd6ee9bd-4ecb-469b-8584-5ae4505bed98",
+      "name": "Cafe Customer",
+      "description": "Customer at cafe counter",
+      "filename": "fd6ee9bd-4ecb-469b-8584-5ae4505bed98.mp4",
+      "original_filename": "cafe_customer_1.mp4",
+      "file_size": 3076378,
+      "uploaded_at": "2026-01-29T23:26:06.824337",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\fd6ee9bd-4ecb-469b-8584-5ae4505bed98.mp4"
+    },
+    {
+      "id": "bd3845ed-fe6b-4fe0-b5dc-53d610f81e2c",
+      "name": "Cafe Counter Chat",
+      "description": "Staff and customer interaction",
+      "filename": "bd3845ed-fe6b-4fe0-b5dc-53d610f81e2c.mp4",
+      "original_filename": "cafe_counter_chat_1.mp4",
+      "file_size": 3730488,
+      "uploaded_at": "2026-01-29T23:26:06.830467",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\bd3845ed-fe6b-4fe0-b5dc-53d610f81e2c.mp4"
+    },
+    {
+      "id": "bfe3e6a5-f63f-488d-832e-6142b6abe25e",
+      "name": "Outdoor Seating",
+      "description": "Outdoor cafe seating area",
+      "filename": "bfe3e6a5-f63f-488d-832e-6142b6abe25e.mp4",
+      "original_filename": "outdoor_seating_1.mp4",
+      "file_size": 3499334,
+      "uploaded_at": "2026-01-29T23:26:06.835759",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\bfe3e6a5-f63f-488d-832e-6142b6abe25e.mp4"
+    },
+    {
+      "id": "bb007441-b65e-4dba-bbc8-1881cff56de6",
+      "name": "Waiter Serving",
+      "description": "Waiter serving customers",
+      "filename": "bb007441-b65e-4dba-bbc8-1881cff56de6.mp4",
+      "original_filename": "waiter_serving_1.mp4",
+      "file_size": 5273888,
+      "uploaded_at": "2026-01-29T23:26:06.842398",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\bb007441-b65e-4dba-bbc8-1881cff56de6.mp4"
+    },
+    {
+      "id": "21468a47-27d4-4542-b041-d76a28e5453b",
+      "name": "Open Office",
+      "description": "Open office workspace",
+      "filename": "21468a47-27d4-4542-b041-d76a28e5453b.mp4",
+      "original_filename": "open_office_1.mp4",
+      "file_size": 6415890,
+      "uploaded_at": "2026-01-29T23:26:06.849267",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\21468a47-27d4-4542-b041-d76a28e5453b.mp4"
+    },
+    {
+      "id": "7484eb8f-d97d-4123-b65b-3b43dde65a49",
+      "name": "Busy Office",
+      "description": "Active office environment",
+      "filename": "7484eb8f-d97d-4123-b65b-3b43dde65a49.mp4",
+      "original_filename": "busy_office_1.mp4",
+      "file_size": 3476459,
+      "uploaded_at": "2026-01-29T23:26:06.855205",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\7484eb8f-d97d-4123-b65b-3b43dde65a49.mp4"
+    },
+    {
+      "id": "f5364392-b07e-4acd-be02-2e6910ee630d",
+      "name": "new people",
+      "description": "",
+      "filename": "f5364392-b07e-4acd-be02-2e6910ee630d.mp4",
+      "original_filename": "607606_Cities_City_3840x2160.mp4",
+      "file_size": 84681739,
+      "uploaded_at": "2026-01-31T14:34:24.044283",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\f5364392-b07e-4acd-be02-2e6910ee630d.mp4"
+    },
+    {
+      "id": "5df68c01-f9a4-4f74-8165-576f6b8f1ffc",
+      "name": "4932701_Person_People_3840x2160",
+      "description": "",
+      "filename": "5df68c01-f9a4-4f74-8165-576f6b8f1ffc.mp4",
+      "original_filename": "4932701_Person_People_3840x2160.mp4",
+      "file_size": 26778030,
+      "uploaded_at": "2026-01-31T14:56:14.414850",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\5df68c01-f9a4-4f74-8165-576f6b8f1ffc.mp4"
+    },
+    {
+      "id": "7bef76d4-a69b-4488-9217-748aa69c6524",
+      "name": "4932677_Person_People_3840x2160",
+      "description": "",
+      "filename": "7bef76d4-a69b-4488-9217-748aa69c6524.mp4",
+      "original_filename": "4932677_Person_People_3840x2160.mp4",
+      "file_size": 51288966,
+      "uploaded_at": "2026-01-31T14:57:24.722397",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\7bef76d4-a69b-4488-9217-748aa69c6524.mp4"
+    },
+    {
+      "id": "b89b7915-e9a3-4f21-b24a-7e40c64aeb1d",
+      "name": "21117-315137086_small",
+      "description": "",
+      "filename": "b89b7915-e9a3-4f21-b24a-7e40c64aeb1d.mp4",
+      "original_filename": "21117-315137086_small.mp4",
+      "file_size": 1852816,
+      "uploaded_at": "2026-01-31T14:58:15.850277",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\b89b7915-e9a3-4f21-b24a-7e40c64aeb1d.mp4"
+    },
+    {
+      "id": "9a840521-91be-4bae-b75b-a584e15fcfa3",
+      "name": "people1",
+      "description": "",
+      "filename": "9a840521-91be-4bae-b75b-a584e15fcfa3.mp4",
+      "original_filename": "people1.mp4",
+      "file_size": 778808548,
+      "uploaded_at": "2026-02-21T11:27:32.951382",
+      "path": "C:\\Users\\alima\\janus-demo\\edge_agent\\video_library\\9a840521-91be-4bae-b75b-a584e15fcfa3.mp4"
+    }
+  ]
+}

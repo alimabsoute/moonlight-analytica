@@ -1,0 +1,12 @@
+{
+  "scenarios": [
+    {
+      "scenario": "retail",
+      "successful": 0,
+      "failed": 3,
+      "videos": []
+    }
+  ],
+  "total_successful": 0,
+  "total_failed": 3
+}

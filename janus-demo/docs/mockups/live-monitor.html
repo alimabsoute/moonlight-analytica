@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Janus - Live Monitor Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0f1419;
+            color: #e7e9ea;
+            min-height: 100vh;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: #16202a;
+            border-bottom: 1px solid #38444d;
+            padding: 0 20px;
+        }
+
+        .nav-tab {
+            padding: 16px 24px;
+            color: #8899a6;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            color: #e7e9ea;
+            background: #1d2d3a;
+        }
+
+        .nav-tab.active {
+            color: #1da1f2;
+            border-bottom-color: #1da1f2;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .auto-refresh-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8899a6;
+            font-size: 14px;
+        }
+
+        .auto-refresh-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1da1f2;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: #253341;
+            color: #e7e9ea;
+            border: 1px solid #38444d;
+        }
+
+        .btn-secondary:hover {
+            background: #2d4052;
+        }
+
+        .btn-primary {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1a91da;
+        }
+
+        /* Time Range Picker */
+        .time-range-section {
+            margin-bottom: 24px;
+        }
+
+        .time-range-picker {
+            display: flex;
+            gap: 8px;
+        }
+
+        .time-btn {
+            padding: 8px 16px;
+            background: #253341;
+            border: 1px solid #38444d;
+            color: #8899a6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-btn:hover {
+            background: #2d4052;
+            color: #e7e9ea;
+        }
+
+        .time-btn.active {
+            background: #1da1f2;
+            color: white;
+            border-color: #1da1f2;
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: #16202a;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: #8899a6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e7e9ea;
+        }
+
+        .kpi-value.highlight {
+            color: #1da1f2;
+        }
+
+        .kpi-value.warning {
+            color: #ffad1f;
+        }
+
+        .kpi-value.success {
+            color: #17bf63;
+        }
+
+        /* Cards */
+        .card {
+            background: #16202a;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #38444d;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Video Feed */
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            max-height: 400px;
+        }
+
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        /* Zone overlays */
+        .zone {
+            position: absolute;
+            border: 2px solid;
+            opacity: 0.3;
+        }
+
+        .zone-entrance {
+            left: 0;
+            top: 0;
+            width: 25%;
+            height: 100%;
+            background: rgba(23, 191, 99, 0.2);
+            border-color: #17bf63;
+        }
+
+        .zone-main {
+            left: 25%;
+            top: 0;
+            width: 40%;
+            height: 100%;
+            background: rgba(29, 161, 242, 0.2);
+            border-color: #1da1f2;
+        }
+
+        .zone-queue {
+            left: 65%;
+            top: 50%;
+            width: 15%;
+            height: 50%;
+            background: rgba(255, 173, 31, 0.2);
+            border-color: #ffad1f;
+        }
+
+        .zone-checkout {
+            right: 0;
+            top: 0;
+            width: 20%;
+            height: 100%;
+            background: rgba(224, 36, 94, 0.2);
+            border-color: #e0245e;
+        }
+
+        .zone-label {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Person boxes */
+        .person-box {
+            position: absolute;
+            border: 2px solid;
+            border-radius: 4px;
+        }
+
+        .person-box .id-label {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .person-1 {
+            left: 30%;
+            top: 40%;
+            width: 40px;
+            height: 80px;
+            border-color: #ff6b6b;
+        }
+        .person-1 .id-label { background: #ff6b6b; }
+
+        .person-2 {
+            left: 45%;
+            top: 35%;
+            width: 38px;
+            height: 75px;
+            border-color: #4ecdc4;
+        }
+        .person-2 .id-label { background: #4ecdc4; }
+
+        .person-3 {
+            left: 70%;
+            top: 60%;
+            width: 42px;
+            height: 82px;
+            border-color: #ffe66d;
+        }
+        .person-3 .id-label { background: #ffe66d; color: #000; }
+
+        /* Video controls */
+        .video-controls {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.7);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: rgba(0,0,0,0.9);
+            transform: scale(1.1);
+        }
+
+        /* Stats overlay */
+        .stats-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.8);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .stats-overlay .stat-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .stats-overlay .stat-label {
+            color: #8899a6;
+        }
+
+        .stats-overlay .stat-value {
+            color: #17bf63;
+            font-weight: 600;
+        }
+
+        /* Chart Area */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chart-area {
+            flex: 1;
+            position: relative;
+            border-left: 1px solid #38444d;
+            border-bottom: 1px solid #38444d;
+            margin: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Y-axis labels */
+        .y-axis {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            bottom: 40px;
+            width: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .y-label {
+            font-size: 11px;
+            color: #8899a6;
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        /* X-axis labels */
+        .x-axis {
+            position: absolute;
+            bottom: 0;
+            left: 60px;
+            right: 20px;
+            height: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .x-label {
+            font-size: 11px;
+            color: #8899a6;
+        }
+
+        /* Chart line (SVG would be better, but this is a mockup) */
+        .chart-line {
+            position: absolute;
+            top: 20px;
+            left: 60px;
+            right: 20px;
+            bottom: 40px;
+            background: linear-gradient(to bottom, rgba(29, 161, 242, 0.1), transparent);
+        }
+
+        .line-path {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 150' preserveAspectRatio='none'%3E%3Cpath d='M0,120 L50,100 L100,80 L150,90 L200,50 L250,70 L300,40 L350,60 L400,30' stroke='%231da1f2' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat;
+            background-size: 100% 100%;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: #16202a;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-card-title {
+            font-size: 14px;
+            color: #8899a6;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1da1f2;
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-backdrop.hidden {
+            display: none;
+        }
+
+        .modal {
+            background: #16202a;
+            border: 1px solid #38444d;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #38444d;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #253341;
+            border: none;
+            color: #8899a6;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #e0245e;
+            color: white;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Video Source Options */
+        .source-option {
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .source-option.active {
+            border-color: #1da1f2;
+        }
+
+        .source-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .source-header:hover {
+            background: #1d2d3a;
+        }
+
+        .source-header input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #1da1f2;
+        }
+
+        .source-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .source-config {
+            padding: 16px;
+            background: #1d2d3a;
+            border-top: 1px solid #38444d;
+        }
+
+        .source-config label {
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .source-config strong {
+            display: block;
+            font-size: 13px;
+            color: #8899a6;
+            margin-bottom: 8px;
+        }
+
+        .source-config input[type="text"],
+        .source-config input[type="file"] {
+            width: 100%;
+            padding: 10px 12px;
+            background: #253341;
+            border: 1px solid #38444d;
+            border-radius: 8px;
+            color: #e7e9ea;
+            font-size: 14px;
+        }
+
+        .source-config input[type="text"]:focus {
+            outline: none;
+            border-color: #1da1f2;
+        }
+
+        .divider {
+            text-align: center;
+            color: #8899a6;
+            font-size: 13px;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #38444d;
+        }
+
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        .source-config p {
+            color: #8899a6;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        /* Annotation Layer */
+        .annotation {
+            position: fixed;
+            background: #ffad1f;
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .annotation::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+        }
+
+        .annotation.right::after {
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right-color: #ffad1f;
+        }
+
+        .annotation.bottom::after {
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: #ffad1f;
+        }
+
+        /* Legend */
+        .legend {
+            margin-top: 20px;
+            padding: 16px;
+            background: #1d2d3a;
+            border-radius: 8px;
+        }
+
+        .legend-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #8899a6;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .legend-color.entrance { background: #17bf63; }
+        .legend-color.main { background: #1da1f2; }
+        .legend-color.queue { background: #ffad1f; }
+        .legend-color.checkout { background: #e0245e; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .kpi-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .header-controls {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Toggle Buttons */
+        .toggle-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #1d2d3a;
+            border-radius: 12px;
+        }
+
+        .toggle-section h3 {
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .toggle-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background: #253341;
+            border: 1px solid #38444d;
+            color: #8899a6;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .toggle-btn:hover {
+            background: #2d4052;
+            color: #e7e9ea;
+        }
+
+        .toggle-btn.active {
+            background: #1da1f2;
+            border-color: #1da1f2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <a href="#live" class="nav-tab active">Live Monitor</a>
+        <a href="#analytics" class="nav-tab">Analytics</a>
+        <a href="#reports" class="nav-tab">Reports</a>
+        <a href="#heatmap" class="nav-tab">Heatmap</a>
+        <a href="#zones" class="nav-tab">Zone Config</a>
+        <a href="#settings" class="nav-tab">Settings</a>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1>Live Monitor</h1>
+            <div class="header-controls">
+                <label class="auto-refresh-toggle">
+                    <input type="checkbox" checked>
+                    Auto-refresh (10s)
+                </label>
+                <button class="btn btn-secondary" onclick="toggleModal('library-modal')">
+                    <span>&#128218;</span> Video Library
+                </button>
+                <button class="btn btn-secondary">
+                    <span>&#128260;</span> Refresh Now
+                </button>
+            </div>
+        </header>
+
+        <!-- Time Range Picker -->
+        <section class="time-range-section">
+            <div class="time-range-picker">
+                <button class="time-btn">10 min</button>
+                <button class="time-btn">30 min</button>
+                <button class="time-btn active">1 hour</button>
+                <button class="time-btn">24 hours</button>
+                <button class="time-btn">7 days</button>
+            </div>
+        </section>
+
+        <!-- KPI Grid -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Current Count</div>
+                <div class="kpi-value highlight">12</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Average</div>
+                <div class="kpi-value">8.5</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Peak</div>
+                <div class="kpi-value warning">24</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Total Events</div>
+                <div class="kpi-value">1,847</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Occupancy %</div>
+                <div class="kpi-value">45%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Entries</div>
+                <div class="kpi-value success">156</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Exits</div>
+                <div class="kpi-value">142</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Dwell Time</div>
+                <div class="kpi-value">8m</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Queue Length</div>
+                <div class="kpi-value warning">4</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Wait Time</div>
+                <div class="kpi-value">3m</div>
+            </div>
+        </section>
+
+        <!-- Video Feed Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Live Video Feed</span>
+                <div class="card-actions">
+                    <button class="btn btn-secondary" onclick="toggleModal('source-modal')">
+                        <span>&#128249;</span> Change Video Source
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="video-container">
+                    <!-- Simulated video with zones -->
+                    <div class="video-feed" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);"></div>
+
+                    <!-- Zone overlays -->
+                    <div class="video-overlay">
+                        <div class="zone zone-entrance">
+                            <span class="zone-label">ENTRANCE</span>
+                        </div>
+                        <div class="zone zone-main">
+                            <span class="zone-label">MAIN FLOOR</span>
+                        </div>
+                        <div class="zone zone-queue">
+                            <span class="zone-label">QUEUE</span>
+                        </div>
+                        <div class="zone zone-checkout">
+                            <span class="zone-label">CHECKOUT</span>
+                        </div>
+
+                        <!-- Person bounding boxes -->
+                        <div class="person-box person-1">
+                            <span class="id-label">ID:1 | MAIN</span>
+                        </div>
+                        <div class="person-box person-2">
+                            <span class="id-label">ID:2 | MAIN</span>
+                        </div>
+                        <div class="person-box person-3">
+                            <span class="id-label">ID:3 | QUEUE</span>
+                        </div>
+
+                        <!-- Stats overlay -->
+                        <div class="stats-overlay">
+                            <div class="stat-row">
+                                <span class="stat-label">PEOPLE:</span>
+                                <span class="stat-value">3</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">MAIN:</span>
+                                <span class="stat-value">2</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">QUEUE:</span>
+                                <span class="stat-value">1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video controls -->
+                    <div class="video-controls">
+                        <button class="control-btn" title="Pause">&#9208;</button>
+                        <button class="control-btn" title="Stop">&#9209;</button>
+                        <button class="control-btn" title="Settings">&#9881;</button>
+                    </div>
+                </div>
+
+                <!-- Zone Legend -->
+                <div class="legend">
+                    <div class="legend-title">Zone Legend</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color entrance"></div>
+                            <span>Entrance</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color main"></div>
+                            <span>Main Floor</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color queue"></div>
+                            <span>Queue Area</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color checkout"></div>
+                            <span>Checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Count Over Time Chart -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Count Over Time</span>
+                <div class="card-actions">
+                    <button class="btn btn-secondary">
+                        <span>&#128229;</span> Download CSV
+                    </button>
+                    <button class="btn btn-secondary">
+                        <span>&#127922;</span> Seed Demo
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div class="chart-placeholder">
+                        <div class="y-axis">
+                            <span class="y-label">25</span>
+                            <span class="y-label">20</span>
+                            <span class="y-label">15</span>
+                            <span class="y-label">10</span>
+                            <span class="y-label">5</span>
+                            <span class="y-label">0</span>
+                        </div>
+                        <div class="chart-area">
+                            <div class="chart-line">
+                                <div class="line-path"></div>
+                            </div>
+                        </div>
+                        <div class="x-axis">
+                            <span class="x-label">9:00</span>
+                            <span class="x-label">9:15</span>
+                            <span class="x-label">9:30</span>
+                            <span class="x-label">9:45</span>
+                            <span class="x-label">10:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-title">Throughput (Events/Hour)</div>
+                <div class="stat-card-value">245.6</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-title">Time Range</div>
+                <div class="stat-card-value">1h</div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo Section -->
+        <div class="toggle-section">
+            <h3>Interactive Demo: Toggle Elements</h3>
+            <div class="toggle-btns">
+                <button class="toggle-btn active" onclick="toggleModal('source-modal')">Show Video Source Modal</button>
+                <button class="toggle-btn" onclick="toggleModal('library-modal')">Show Video Library Modal</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Source Modal -->
+    <div id="source-modal" class="modal-backdrop hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Select Video Source</span>
+                <button class="modal-close" onclick="toggleModal('source-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Demo Video / YouTube Option -->
+                <div class="source-option active">
+                    <div class="source-header">
+                        <input type="radio" name="source" checked>
+                        <h3>&#128249; Demo Video / YouTube</h3>
+                    </div>
+                    <div class="source-config">
+                        <label>
+                            <strong>Upload MP4 Video:</strong>
+                            <input type="file" accept="video/mp4">
+                        </label>
+                        <div class="divider">OR</div>
+                        <label>
+                            <strong>YouTube URL:</strong>
+                            <input type="text" placeholder="https://www.youtube.com/watch?v=...">
+                        </label>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+                            &#9654; Start Demo Video
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Webcam Option -->
+                <div class="source-option">
+                    <div class="source-header">
+                        <input type="radio" name="source">
+                        <h3>&#128247; Live Webcam</h3>
+                    </div>
+                </div>
+
+                <!-- Procedural Demo Option -->
+                <div class="source-option">
+                    <div class="source-header">
+                        <input type="radio" name="source">
+                        <h3>&#127922; Procedural Demo</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Library Modal -->
+    <div id="library-modal" class="modal-backdrop hidden">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <span class="modal-title">&#128218; Video Library</span>
+                <button class="modal-close" onclick="toggleModal('library-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Upload Section -->
+                <div style="background: #1d2d3a; padding: 20px; border-radius: 12px; margin-bottom: 24px;">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">Upload New Video</h3>
+                    <input type="file" accept="video/mp4" style="margin-bottom: 12px; width: 100%; padding: 10px; background: #253341; border: 1px solid #38444d; border-radius: 8px; color: #e7e9ea;">
+                    <input type="text" placeholder="Video name (optional)" style="margin-bottom: 12px; width: 100%; padding: 10px; background: #253341; border: 1px solid #38444d; border-radius: 8px; color: #e7e9ea;">
+                    <textarea placeholder="Description (optional)" rows="2" style="margin-bottom: 12px; width: 100%; padding: 10px; background: #253341; border: 1px solid #38444d; border-radius: 8px; color: #e7e9ea; resize: none;"></textarea>
+                    <button class="btn btn-primary" style="width: 100%;">&#128228; Upload to Library</button>
+                </div>
+
+                <!-- Saved Videos -->
+                <h3 style="margin-bottom: 16px; font-size: 16px;">Saved Videos (3)</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <!-- Video Card 1 -->
+                    <div style="background: #253341; border-radius: 12px; padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="font-size: 14px;">Morning Rush</h4>
+                            <button style="background: none; border: none; cursor: pointer; font-size: 16px;">&#128465;</button>
+                        </div>
+                        <p style="color: #8899a6; font-size: 12px; margin-bottom: 8px;">Peak morning traffic capture</p>
+                        <div style="display: flex; justify-content: space-between; color: #8899a6; font-size: 11px; margin-bottom: 12px;">
+                            <span>45.2 MB</span>
+                            <span>12/15/2024</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; font-size: 13px;">&#9654; Play & Track</button>
+                    </div>
+
+                    <!-- Video Card 2 -->
+                    <div style="background: #253341; border-radius: 12px; padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="font-size: 14px;">Afternoon Peak</h4>
+                            <button style="background: none; border: none; cursor: pointer; font-size: 16px;">&#128465;</button>
+                        </div>
+                        <p style="color: #8899a6; font-size: 12px; margin-bottom: 8px;">Lunch hour traffic</p>
+                        <div style="display: flex; justify-content: space-between; color: #8899a6; font-size: 11px; margin-bottom: 12px;">
+                            <span>62.1 MB</span>
+                            <span>12/14/2024</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; font-size: 13px;">&#9654; Play & Track</button>
+                    </div>
+
+                    <!-- Video Card 3 -->
+                    <div style="background: #253341; border-radius: 12px; padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="font-size: 14px;">Weekend Demo</h4>
+                            <button style="background: none; border: none; cursor: pointer; font-size: 16px;">&#128465;</button>
+                        </div>
+                        <p style="color: #8899a6; font-size: 12px; margin-bottom: 8px;">Saturday shopping</p>
+                        <div style="display: flex; justify-content: space-between; color: #8899a6; font-size: 11px; margin-bottom: 12px;">
+                            <span>38.5 MB</span>
+                            <span>12/10/2024</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; font-size: 13px;">&#9654; Play & Track</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.toggle('hidden');
+        }
+
+        // Close modal on backdrop click
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.addEventListener('click', (e) => {
+                if (e.target === backdrop) {
+                    backdrop.classList.add('hidden');
+                }
+            });
+        });
+
+        // Time range button click
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Source option selection
+        document.querySelectorAll('.source-option').forEach(option => {
+            option.querySelector('.source-header').addEventListener('click', () => {
+                document.querySelectorAll('.source-option').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                option.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+    </script>
+</body>
+</html>

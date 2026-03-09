@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janus - Reports Page Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-type-selector {
+            display: flex;
+            gap: 0;
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .report-type-btn {
+            padding: 10px 24px;
+            border: none;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .report-type-btn:hover {
+            color: #fff;
+        }
+
+        .report-type-btn.active {
+            background: #007bff;
+            color: #fff;
+        }
+
+        /* Card Styles */
+        .card {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16162a 100%);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Summary Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .summary-card {
+            background: linear-gradient(145deg, #252540 0%, #1e1e35 100%);
+            border: 1px solid #3a3a5a;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
+            border-color: #007bff;
+        }
+
+        .summary-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .summary-value.blue { color: #007bff; }
+        .summary-value.green { color: #28a745; }
+        .summary-value.red { color: #dc3545; }
+        .summary-value.yellow { color: #ffc107; }
+
+        /* Chart Container */
+        .chart-container {
+            height: 300px;
+            background: #12121f;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            position: relative;
+        }
+
+        .chart-y-axis {
+            position: absolute;
+            left: 10px;
+            top: 20px;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            flex: 1;
+            padding-left: 40px;
+            height: calc(100% - 40px);
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .bars {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            height: 200px;
+        }
+
+        .bar {
+            width: 24px;
+            border-radius: 4px 4px 0 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar.average {
+            background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
+        }
+
+        .bar.peak {
+            background: linear-gradient(180deg, #dc3545 0%, #a71d2a 100%);
+        }
+
+        .bar-label {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .legend-color.average { background: #007bff; }
+        .legend-color.peak { background: #dc3545; }
+
+        /* Table Styles */
+        .top5-table {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .top5-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .top5-table th {
+            text-align: left;
+            padding: 12px 16px;
+            background: #12121f;
+            color: #888;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .top5-table td {
+            padding: 16px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .top5-table tr:hover td {
+            background: rgba(0, 123, 255, 0.05);
+        }
+
+        .rank-cell {
+            font-weight: 700;
+            color: #007bff;
+            font-size: 1.1rem;
+        }
+
+        .rank-cell.gold { color: #ffd700; }
+        .rank-cell.silver { color: #c0c0c0; }
+        .rank-cell.bronze { color: #cd7f32; }
+
+        .count-cell {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .time-cell {
+            color: #aaa;
+        }
+
+        /* Tab Content Animation */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bars {
+                height: 150px;
+            }
+
+            .bar {
+                width: 18px;
+            }
+
+            .top5-table th,
+            .top5-table td {
+                padding: 10px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-value {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Enhanced Export Button (for future) */
+        .export-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(145deg, #28a745, #218838);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+        }
+
+        .export-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Reports</h1>
+            <div class="report-type-selector">
+                <button class="report-type-btn active" onclick="showTab('daily', this)">Daily</button>
+                <button class="report-type-btn" onclick="showTab('weekly', this)">Weekly</button>
+            </div>
+        </div>
+
+        <!-- Optional Actions Row (Future Enhancement) -->
+        <div class="actions-row" style="display: none;">
+            <button class="export-btn">
+                <span>PDF</span>
+            </button>
+            <button class="export-btn" style="background: linear-gradient(145deg, #007bff, #0056b3);">
+                <span>Excel</span>
+            </button>
+        </div>
+
+        <!-- Daily View -->
+        <div id="daily-tab" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Daily Summary (Last 24 Hours)</span>
+                </div>
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Events</div>
+                        <div class="summary-value blue">1,847</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Average Count</div>
+                        <div class="summary-value green">8.5</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Peak Count</div>
+                        <div class="summary-value red">24</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Throughput</div>
+                        <div class="summary-value yellow">45.2/hr</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly View -->
+        <div id="weekly-tab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Weekly Summary (Last 7 Days)</span>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-y-axis">
+                        <span>25</span>
+                        <span>20</span>
+                        <span>15</span>
+                        <span>10</span>
+                        <span>5</span>
+                        <span>0</span>
+                    </div>
+                    <div class="chart-bars">
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar average" style="height: 60%;"></div>
+                                <div class="bar peak" style="height: 88%;"></div>
+                            </div>
+                            <span class="bar-label">Mon</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar average" style="height: 52%;"></div>
+                                <div class="bar peak" style="height: 76%;"></div>
+                            </div>
+                            <span class="bar-label">Tue</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar average" style="height: 68%;"></div>
+                                <div class="bar peak" style="height: 96%;"></div>
+                            </div>
+                            <span class="bar-label">Wed</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar average" style="height: 72%;"></div>
+                                <div class="bar peak" style="height: 92%;"></div>
+                            </div>
+                            <span class="bar-label">Thu</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar average" style="height: 80%;"></div>
+                                <div class="bar peak" style="height: 100%;"></div>
+                            </div>
+                            <span class="bar-label">Fri</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar average" style="height: 44%;"></div>
+                                <div class="bar peak" style="height: 64%;"></div>
+                            </div>
+                            <span class="bar-label">Sat</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bars">
+                                <div class="bar average" style="height: 36%;"></div>
+                                <div class="bar peak" style="height: 52%;"></div>
+                            </div>
+                            <span class="bar-label">Sun</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color average"></div>
+                        <span>Average</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color peak"></div>
+                        <span>Peak</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top 5 Busiest Hours (shown in both views) -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title" id="top5-title">Top 5 Busiest Hours (Last 24h)</span>
+            </div>
+            <div class="top5-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Time</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank-cell gold">#1</td>
+                            <td class="time-cell">12/15/2024, 2:30:00 PM</td>
+                            <td class="count-cell">24</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-cell silver">#2</td>
+                            <td class="time-cell">12/15/2024, 12:15:00 PM</td>
+                            <td class="count-cell">22</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-cell bronze">#3</td>
+                            <td class="time-cell">12/15/2024, 3:45:00 PM</td>
+                            <td class="count-cell">21</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-cell">#4</td>
+                            <td class="time-cell">12/14/2024, 1:00:00 PM</td>
+                            <td class="count-cell">19</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-cell">#5</td>
+                            <td class="time-cell">12/15/2024, 11:30:00 AM</td>
+                            <td class="count-cell">18</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mockup Legend -->
+        <div style="margin-top: 40px; padding: 20px; background: #12121f; border-radius: 8px; border: 1px dashed #333;">
+            <h3 style="color: #666; margin-bottom: 12px;">Mockup Notes</h3>
+            <ul style="color: #555; font-size: 0.9rem; line-height: 1.8;">
+                <li><strong>Daily View:</strong> Shows 4 summary cards with key metrics from the last 24 hours</li>
+                <li><strong>Weekly View:</strong> Bar chart comparing daily averages vs peak counts over 7 days</li>
+                <li><strong>Top 5 Table:</strong> Displays busiest time periods with medal colors for top 3</li>
+                <li><strong>Future:</strong> PDF/Excel export buttons, custom date range picker, email scheduling</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName, button) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from all buttons
+            document.querySelectorAll('.report-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            button.classList.add('active');
+
+            // Update Top 5 title
+            const title = document.getElementById('top5-title');
+            title.textContent = tabName === 'daily'
+                ? 'Top 5 Busiest Hours (Last 24h)'
+                : 'Top 5 Busiest Hours (Last 7d)';
+        }
+    </script>
+</body>
+</html>

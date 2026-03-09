@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janus - Settings Page Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        /* Success Banner */
+        .success-banner {
+            background: linear-gradient(145deg, #1a3a1a, #0d2a0d);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-banner span {
+            font-size: 1.2rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16162a 100%);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Preferences Form */
+        .preferences-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preference-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .preference-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .preference-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #007bff;
+        }
+
+        .preference-input,
+        .preference-select {
+            padding: 10px 14px;
+            background: #12121f;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.95rem;
+            width: 200px;
+        }
+
+        .preference-input:focus,
+        .preference-select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            padding: 10px 20px;
+            background: linear-gradient(145deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid #555;
+            border-radius: 6px;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: fit-content;
+        }
+
+        .btn-secondary:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        /* Health Section */
+        .health-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .health-status {
+            background: #12121f;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .health-item {
+            display: flex;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .health-item:last-child {
+            border-bottom: none;
+        }
+
+        .health-label {
+            color: #888;
+            min-width: 100px;
+        }
+
+        .health-value {
+            color: #fff;
+        }
+
+        .health-value.healthy {
+            color: #4CAF50;
+        }
+
+        .health-value.healthy::before {
+            content: "●";
+            margin-right: 6px;
+        }
+
+        .health-value.unhealthy {
+            color: #F44336;
+        }
+
+        /* Test Form */
+        .test-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .test-label {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .test-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .test-input {
+            flex: 1;
+            padding: 10px 14px;
+            background: #12121f;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .test-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .test-help {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        /* About Section */
+        .about-section {
+            background: #12121f;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .about-item {
+            display: flex;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .about-item:last-child {
+            border-bottom: none;
+        }
+
+        .about-label {
+            color: #888;
+            min-width: 100px;
+        }
+
+        .about-value {
+            color: #fff;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .preference-input,
+            .preference-select {
+                width: 100%;
+            }
+
+            .test-input-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Settings</h1>
+        </div>
+
+        <!-- Success Banner (Demo) -->
+        <div class="success-banner" id="successBanner">
+            <span></span> Preferences saved!
+        </div>
+
+        <!-- User Preferences Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">User Preferences</span>
+            </div>
+            <div class="preferences-form">
+                <div class="preference-item">
+                    <label class="preference-label">
+                        <input type="checkbox" checked id="autoRefresh">
+                        Enable Auto-Refresh
+                    </label>
+                </div>
+
+                <div class="preference-item">
+                    <label class="preference-label">Refresh Interval (seconds):</label>
+                    <input type="number" class="preference-input" value="10" min="5" max="60" id="refreshInterval">
+                </div>
+
+                <div class="preference-item">
+                    <label class="preference-label">Default Time Range:</label>
+                    <select class="preference-select" id="timeRange">
+                        <option value="0.167">10 minutes</option>
+                        <option value="0.5">30 minutes</option>
+                        <option value="1" selected>1 hour</option>
+                        <option value="24">24 hours</option>
+                        <option value="168">7 days</option>
+                    </select>
+                </div>
+
+                <button class="btn-secondary" onclick="resetPreferences()">Reset to Defaults</button>
+            </div>
+        </div>
+
+        <!-- System Health Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">System Health</span>
+            </div>
+            <div class="health-section">
+                <button class="btn-primary" onclick="checkHealth()">Check Health</button>
+
+                <div class="health-status" id="healthStatus">
+                    <div class="health-item">
+                        <span class="health-label">Status:</span>
+                        <span class="health-value healthy">healthy</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Database:</span>
+                        <span class="health-value healthy">Connected</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Timestamp:</span>
+                        <span class="health-value" id="timestamp">2024-12-15T14:30:00Z</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Utilities Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Test Utilities</span>
+            </div>
+            <form class="test-form" onsubmit="postTestCount(event)">
+                <label class="test-label">Post Test Count:</label>
+                <div class="test-input-group">
+                    <input type="number" class="test-input" placeholder="Enter count value" min="0" id="testCount">
+                    <button type="submit" class="btn-primary">Post Count</button>
+                </div>
+                <p class="test-help">Use this to manually post a count value for testing purposes.</p>
+            </form>
+        </div>
+
+        <!-- System Info Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">System Information</span>
+            </div>
+            <div class="about-section">
+                <div class="about-item">
+                    <span class="about-label">Version:</span>
+                    <span class="about-value">1.0.0</span>
+                </div>
+                <div class="about-item">
+                    <span class="about-label">Backend:</span>
+                    <span class="about-value">localhost:8000</span>
+                </div>
+                <div class="about-item">
+                    <span class="about-label">Edge Agent:</span>
+                    <span class="about-value">localhost:8001</span>
+                </div>
+                <div class="about-item">
+                    <span class="about-label">Frontend:</span>
+                    <span class="about-value">React + Vite</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mockup Legend -->
+        <div style="margin-top: 40px; padding: 20px; background: #12121f; border-radius: 8px; border: 1px dashed #333;">
+            <h3 style="color: #666; margin-bottom: 12px;">Mockup Notes</h3>
+            <ul style="color: #555; font-size: 0.9rem; line-height: 1.8;">
+                <li><strong>User Preferences:</strong> Stored in localStorage, persists across sessions</li>
+                <li><strong>Health Check:</strong> Verifies backend and database connectivity</li>
+                <li><strong>Test Count:</strong> Manually posts count values for testing/debugging</li>
+                <li><strong>Future:</strong> Theme toggle, notification settings, data export/clear, API keys</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Demo functions
+        function resetPreferences() {
+            document.getElementById('autoRefresh').checked = true;
+            document.getElementById('refreshInterval').value = '10';
+            document.getElementById('timeRange').value = '1';
+            showSuccess('Preferences reset to defaults!');
+        }
+
+        function checkHealth() {
+            document.getElementById('timestamp').textContent = new Date().toISOString();
+            showSuccess('Health check successful!');
+        }
+
+        function postTestCount(e) {
+            e.preventDefault();
+            const value = document.getElementById('testCount').value;
+            if (value && parseInt(value) >= 0) {
+                showSuccess(`Test count ${value} posted successfully!`);
+                document.getElementById('testCount').value = '';
+            }
+        }
+
+        function showSuccess(message) {
+            const banner = document.getElementById('successBanner');
+            banner.innerHTML = '<span></span> ' + message;
+            banner.style.display = 'flex';
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 3000);
+        }
+
+        // Hide success banner initially after 3 seconds
+        setTimeout(() => {
+            document.getElementById('successBanner').style.display = 'none';
+        }, 3000);
+    </script>
+</body>
+</html>

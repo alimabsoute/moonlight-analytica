@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Janus - Analytics Mockup (Redesigned)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1419;
+            color: #e7e9ea;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: #16202a;
+            border-bottom: 1px solid #38444d;
+            padding: 0 20px;
+        }
+
+        .nav-tab {
+            padding: 16px 24px;
+            color: #8899a6;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            color: #e7e9ea;
+            background: #1d2d3a;
+        }
+
+        .nav-tab.active {
+            color: #1da1f2;
+            border-bottom-color: #1da1f2;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-secondary {
+            background: #253341;
+            color: #e7e9ea;
+            border: 1px solid #38444d;
+        }
+
+        .btn-secondary:hover {
+            background: #2d4052;
+        }
+
+        .btn-primary {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .auto-refresh-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8899a6;
+            font-size: 14px;
+        }
+
+        .auto-refresh-toggle input {
+            width: 18px;
+            height: 18px;
+            accent-color: #1da1f2;
+        }
+
+        /* Time Range */
+        .time-range-section {
+            margin-bottom: 24px;
+        }
+
+        .time-range-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .time-btn {
+            padding: 10px 20px;
+            background: #253341;
+            border: 1px solid #38444d;
+            color: #8899a6;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .time-btn:hover {
+            background: #2d4052;
+            color: #e7e9ea;
+        }
+
+        .time-btn.active {
+            background: #1da1f2;
+            color: white;
+            border-color: #1da1f2;
+        }
+
+        /* KPI Grid - Large Cards */
+        .kpi-section {
+            margin-bottom: 24px;
+        }
+
+        .kpi-grid-large {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .kpi-card-large {
+            background: #16202a;
+            border: 1px solid #38444d;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .kpi-card-large:hover {
+            border-color: #1da1f2;
+            transform: translateY(-2px);
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: #8899a6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .kpi-value-large {
+            font-size: 36px;
+            font-weight: 700;
+            color: #e7e9ea;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value-large.positive { color: #17bf63; }
+        .kpi-value-large.negative { color: #e0245e; }
+        .kpi-value-large.highlight { color: #1da1f2; }
+        .kpi-value-large.warning { color: #ffad1f; }
+
+        .kpi-trend {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .kpi-trend.up { color: #17bf63; }
+        .kpi-trend.down { color: #e0245e; }
+        .kpi-trend.neutral { color: #8899a6; }
+
+        .see-all-link {
+            text-align: right;
+            margin-top: 12px;
+        }
+
+        .see-all-link a {
+            color: #1da1f2;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .see-all-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Quick Insights */
+        .insights-bar {
+            background: #1d2d3a;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .insight-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .insight-badge.warning { color: #ffad1f; }
+        .insight-badge.success { color: #17bf63; }
+        .insight-badge.info { color: #1da1f2; }
+        .insight-badge.alert { color: #e0245e; }
+
+        /* Cards */
+        .card {
+            background: #16202a;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #38444d;
+            cursor: pointer;
+        }
+
+        .card-header:hover {
+            background: #1d2d3a;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .collapse-icon {
+            transition: transform 0.2s;
+        }
+
+        .collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .collapsed .card-body {
+            display: none;
+        }
+
+        /* Chart Area */
+        .chart-container {
+            height: 300px;
+            position: relative;
+            background: linear-gradient(180deg, rgba(29, 161, 242, 0.1) 0%, transparent 100%);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .chart-line-svg {
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Zone Charts Row */
+        .chart-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .chart-card-inner {
+            background: #1d2d3a;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .chart-card-inner h4 {
+            font-size: 14px;
+            color: #8899a6;
+            margin-bottom: 16px;
+        }
+
+        /* Bar Chart Simulation */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            height: 200px;
+            padding-top: 20px;
+        }
+
+        .bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar-pair {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            height: 160px;
+        }
+
+        .bar {
+            width: 24px;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar.visitors { background: #0088FE; }
+        .bar.events { background: #00C49F; }
+
+        .bar-label {
+            font-size: 12px;
+            color: #8899a6;
+        }
+
+        /* Radar Chart Placeholder */
+        .radar-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radar-svg {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* Dwell Distribution */
+        .dwell-chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Pie Chart Simulation */
+        .pie-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pie-svg {
+            width: 180px;
+            height: 180px;
+        }
+
+        /* Horizontal Bar Chart */
+        .h-bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .h-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .h-bar-label {
+            width: 80px;
+            font-size: 12px;
+            color: #8899a6;
+            text-align: right;
+        }
+
+        .h-bar-track {
+            flex: 1;
+            height: 24px;
+            background: #253341;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .h-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 12px;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Funnel */
+        .funnel-container {
+            padding: 20px;
+        }
+
+        .funnel-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .funnel-stage {
+            width: 150px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .funnel-bar-track {
+            flex: 1;
+            height: 40px;
+            background: #253341;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .funnel-bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .funnel-bar-fill.visitors { background: linear-gradient(90deg, #8884d8, #a29bfe); }
+        .funnel-bar-fill.engaged { background: linear-gradient(90deg, #00C49F, #55efc4); }
+        .funnel-bar-fill.converted { background: linear-gradient(90deg, #FF8042, #fdcb6e); }
+
+        /* Traffic Flow Summary */
+        .traffic-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 24px;
+            flex-wrap: wrap;
+        }
+
+        .flow-node {
+            text-align: center;
+            padding: 16px 24px;
+            background: #1d2d3a;
+            border-radius: 12px;
+            min-width: 120px;
+        }
+
+        .flow-node-label {
+            font-size: 12px;
+            color: #8899a6;
+            margin-bottom: 8px;
+        }
+
+        .flow-node-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .flow-node-value.inbound { color: #17bf63; }
+        .flow-node-value.outbound { color: #e0245e; }
+        .flow-node-value.success { color: #ffad1f; }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: #38444d;
+        }
+
+        /* Expanded KPIs Modal */
+        .expanded-kpis {
+            display: none;
+            background: #16202a;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .expanded-kpis.show {
+            display: block;
+        }
+
+        .expanded-kpis h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .kpi-category {
+            margin-bottom: 20px;
+        }
+
+        .kpi-category h4 {
+            font-size: 13px;
+            color: #8899a6;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-grid-small {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .kpi-card-small {
+            background: #1d2d3a;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .kpi-card-small .kpi-label {
+            font-size: 10px;
+            margin-bottom: 6px;
+        }
+
+        .kpi-card-small .kpi-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Legend */
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #8899a6;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .kpi-grid-large {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid-large {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .traffic-flow {
+                flex-direction: column;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <a href="live-monitor.html" class="nav-tab">Live Monitor</a>
+        <a href="#analytics" class="nav-tab active">Analytics</a>
+        <a href="#reports" class="nav-tab">Reports</a>
+        <a href="#heatmap" class="nav-tab">Heatmap</a>
+        <a href="#zones" class="nav-tab">Zone Config</a>
+        <a href="#settings" class="nav-tab">Settings</a>
+    </nav>
+
+    <main class="main-container">
+        <!-- Header -->
+        <header class="page-header">
+            <h1>Analytics Dashboard</h1>
+            <div class="header-controls">
+                <label class="auto-refresh-toggle">
+                    <input type="checkbox" checked>
+                    Auto-refresh (30s)
+                </label>
+                <button class="btn btn-secondary">
+                    <span>&#128229;</span> Export
+                </button>
+            </div>
+        </header>
+
+        <!-- Time Range -->
+        <section class="time-range-section">
+            <div class="time-range-picker">
+                <button class="time-btn">1 Hour</button>
+                <button class="time-btn">6 Hours</button>
+                <button class="time-btn active">24 Hours</button>
+                <button class="time-btn">7 Days</button>
+                <button class="time-btn">30 Days</button>
+                <button class="time-btn">Custom</button>
+            </div>
+        </section>
+
+        <!-- Top 10 KPIs -->
+        <section class="kpi-section">
+            <div class="kpi-grid-large">
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Current Occupancy</div>
+                    <div class="kpi-value-large highlight">12</div>
+                    <div class="kpi-trend up">&#8593; +3 vs avg</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Total Visitors</div>
+                    <div class="kpi-value-large">298</div>
+                    <div class="kpi-trend up">&#8593; +12%</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Peak Traffic</div>
+                    <div class="kpi-value-large warning">24</div>
+                    <div class="kpi-trend down">&#8595; -2</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Conversion Rate</div>
+                    <div class="kpi-value-large positive">42%</div>
+                    <div class="kpi-trend up">&#8593; +5%</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Avg Dwell Time</div>
+                    <div class="kpi-value-large">8.5m</div>
+                    <div class="kpi-trend neutral">&#8594; 0%</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Bounce Rate</div>
+                    <div class="kpi-value-large positive">15%</div>
+                    <div class="kpi-trend up">&#8595; -3%</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Queue Length</div>
+                    <div class="kpi-value-large warning">4</div>
+                    <div class="kpi-trend down">&#8593; +2</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Engagement Rate</div>
+                    <div class="kpi-value-large positive">68%</div>
+                    <div class="kpi-trend up">&#8593; +8%</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Net Traffic</div>
+                    <div class="kpi-value-large positive">+14</div>
+                    <div class="kpi-trend up">&#8593; +6</div>
+                </div>
+                <div class="kpi-card-large">
+                    <div class="kpi-label">Capacity Util</div>
+                    <div class="kpi-value-large">45%</div>
+                    <div class="kpi-trend up">&#8593; +10%</div>
+                </div>
+            </div>
+            <div class="see-all-link">
+                <a href="#" onclick="toggleExpandedKpis()">See All 26 KPIs &#8594;</a>
+            </div>
+        </section>
+
+        <!-- Expanded KPIs (hidden by default) -->
+        <div id="expanded-kpis" class="expanded-kpis">
+            <h3>All Key Performance Indicators</h3>
+
+            <div class="kpi-category">
+                <h4>Traffic Metrics</h4>
+                <div class="kpi-grid-small">
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Entries</div>
+                        <div class="kpi-value">156</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Exits</div>
+                        <div class="kpi-value">142</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Net Traffic</div>
+                        <div class="kpi-value">+14</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Sessions</div>
+                        <div class="kpi-value">298</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Total Traffic</div>
+                        <div class="kpi-value">298</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-category">
+                <h4>Occupancy Metrics</h4>
+                <div class="kpi-grid-small">
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Current</div>
+                        <div class="kpi-value">12</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Capacity</div>
+                        <div class="kpi-value">200</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Occ Rate</div>
+                        <div class="kpi-value">6%</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Available</div>
+                        <div class="kpi-value">188</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Utilization</div>
+                        <div class="kpi-value">45%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-category">
+                <h4>Dwell Time Metrics</h4>
+                <div class="kpi-grid-small">
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Avg Dwell</div>
+                        <div class="kpi-value">8.5m</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Median</div>
+                        <div class="kpi-value">6.2m</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Max</div>
+                        <div class="kpi-value">45m</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Min</div>
+                        <div class="kpi-value">0.2m</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Samples</div>
+                        <div class="kpi-value">847</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-category">
+                <h4>Conversion Metrics</h4>
+                <div class="kpi-grid-small">
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Conversions</div>
+                        <div class="kpi-value">127</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Conv Rate</div>
+                        <div class="kpi-value">42%</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Bounce</div>
+                        <div class="kpi-value">15%</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Engaged</div>
+                        <div class="kpi-value">68%</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Non-Conv</div>
+                        <div class="kpi-value">171</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-category">
+                <h4>Queue & Performance</h4>
+                <div class="kpi-grid-small">
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Queue</div>
+                        <div class="kpi-value">4</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Avg Wait</div>
+                        <div class="kpi-value">3.2m</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Queued</div>
+                        <div class="kpi-value">89</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Avg Traffic</div>
+                        <div class="kpi-value">8.5</div>
+                    </div>
+                    <div class="kpi-card-small">
+                        <div class="kpi-label">Peak</div>
+                        <div class="kpi-value">24</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Insights -->
+        <div class="insights-bar">
+            <span class="insight-badge warning">&#9888; Queue above average (4 people)</span>
+            <span class="insight-badge success">&#10004; Strong engagement: 68%</span>
+            <span class="insight-badge info">&#128200; Traffic up 12% vs yesterday</span>
+        </div>
+
+        <!-- Traffic Over Time Chart -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">&#128200; Traffic Over Time</span>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <svg viewBox="0 0 800 250" class="chart-line-svg">
+                        <!-- Grid lines -->
+                        <g stroke="#38444d" stroke-width="1">
+                            <line x1="60" y1="20" x2="60" y2="200"></line>
+                            <line x1="60" y1="200" x2="780" y2="200"></line>
+                            <line x1="60" y1="50" x2="780" y2="50" stroke-dasharray="4"></line>
+                            <line x1="60" y1="100" x2="780" y2="100" stroke-dasharray="4"></line>
+                            <line x1="60" y1="150" x2="780" y2="150" stroke-dasharray="4"></line>
+                        </g>
+                        <!-- Y-axis labels -->
+                        <g fill="#8899a6" font-size="11">
+                            <text x="50" y="55" text-anchor="end">25</text>
+                            <text x="50" y="105" text-anchor="end">20</text>
+                            <text x="50" y="155" text-anchor="end">10</text>
+                            <text x="50" y="205" text-anchor="end">0</text>
+                        </g>
+                        <!-- X-axis labels -->
+                        <g fill="#8899a6" font-size="11">
+                            <text x="100" y="220">00:00</text>
+                            <text x="220" y="220">04:00</text>
+                            <text x="340" y="220">08:00</text>
+                            <text x="460" y="220">12:00</text>
+                            <text x="580" y="220">16:00</text>
+                            <text x="700" y="220">20:00</text>
+                        </g>
+                        <!-- Area fill -->
+                        <path d="M60,180 L140,170 L220,160 L300,100 L380,80 L460,120 L540,90 L620,110 L700,130 L780,150 L780,200 L60,200 Z" fill="url(#areaGradient)" opacity="0.4"></path>
+                        <!-- Line -->
+                        <path d="M60,180 L140,170 L220,160 L300,100 L380,80 L460,120 L540,90 L620,110 L700,130 L780,150" stroke="#1da1f2" stroke-width="3" fill="none"></path>
+                        <!-- Gradient definition -->
+                        <defs>
+                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#1da1f2" stop-opacity="0.4"/>
+                                <stop offset="100%" stop-color="#1da1f2" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone Performance (Collapsible) -->
+        <div class="card" id="zone-section">
+            <div class="card-header" onclick="toggleSection('zone-section')">
+                <span class="card-title">
+                    <span class="collapse-icon">&#9660;</span>
+                    Zone Performance Analysis
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="chart-row">
+                    <div class="chart-card-inner">
+                        <h4>Zone Traffic - Unique Visitors</h4>
+                        <div class="bar-chart">
+                            <div class="bar-group">
+                                <div class="bar-pair">
+                                    <div class="bar visitors" style="height: 80%;"></div>
+                                    <div class="bar events" style="height: 95%;"></div>
+                                </div>
+                                <span class="bar-label">entrance</span>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar-pair">
+                                    <div class="bar visitors" style="height: 100%;"></div>
+                                    <div class="bar events" style="height: 85%;"></div>
+                                </div>
+                                <span class="bar-label">main_floor</span>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar-pair">
+                                    <div class="bar visitors" style="height: 45%;"></div>
+                                    <div class="bar events" style="height: 55%;"></div>
+                                </div>
+                                <span class="bar-label">queue</span>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar-pair">
+                                    <div class="bar visitors" style="height: 60%;"></div>
+                                    <div class="bar events" style="height: 70%;"></div>
+                                </div>
+                                <span class="bar-label">checkout</span>
+                            </div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #0088FE;"></div>
+                                <span>Unique Visitors</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #00C49F;"></div>
+                                <span>Total Events</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-card-inner">
+                        <h4>Zone Utilization Radar</h4>
+                        <div class="radar-placeholder">
+                            <svg viewBox="0 0 200 200" class="radar-svg">
+                                <!-- Radar grid -->
+                                <g fill="none" stroke="#38444d">
+                                    <polygon points="100,20 180,100 100,180 20,100"></polygon>
+                                    <polygon points="100,40 160,100 100,160 40,100"></polygon>
+                                    <polygon points="100,60 140,100 100,140 60,100"></polygon>
+                                    <polygon points="100,80 120,100 100,120 80,100"></polygon>
+                                </g>
+                                <!-- Radar data -->
+                                <polygon points="100,35 155,100 100,150 55,100" fill="#8884d8" fill-opacity="0.5" stroke="#8884d8" stroke-width="2"></polygon>
+                                <!-- Labels -->
+                                <g fill="#8899a6" font-size="10" text-anchor="middle">
+                                    <text x="100" y="12">entrance</text>
+                                    <text x="192" y="104">main</text>
+                                    <text x="100" y="198">queue</text>
+                                    <text x="8" y="104">checkout</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dwell Distribution (Collapsible) -->
+        <div class="card collapsed" id="dwell-section">
+            <div class="card-header" onclick="toggleSection('dwell-section')">
+                <span class="card-title">
+                    <span class="collapse-icon">&#9660;</span>
+                    Dwell Time Distribution
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="dwell-chart-row">
+                    <div class="chart-card-inner">
+                        <h4>Dwell Time Breakdown</h4>
+                        <div class="pie-placeholder">
+                            <svg viewBox="0 0 200 200" class="pie-svg">
+                                <!-- Pie segments (simplified) -->
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#FF8042" stroke-width="40" stroke-dasharray="50 452" transform="rotate(-90 100 100)"></circle>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#00C49F" stroke-width="40" stroke-dasharray="100 402" stroke-dashoffset="-50" transform="rotate(-90 100 100)"></circle>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#0088FE" stroke-width="40" stroke-dasharray="150 352" stroke-dashoffset="-150" transform="rotate(-90 100 100)"></circle>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#FFBB28" stroke-width="40" stroke-dasharray="100 402" stroke-dashoffset="-300" transform="rotate(-90 100 100)"></circle>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#8884d8" stroke-width="40" stroke-dasharray="52 450" stroke-dashoffset="-400" transform="rotate(-90 100 100)"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="chart-card-inner">
+                        <h4>Session Distribution</h4>
+                        <div class="h-bar-chart">
+                            <div class="h-bar-row">
+                                <span class="h-bar-label">&lt;1min</span>
+                                <div class="h-bar-track">
+                                    <div class="h-bar-fill" style="width: 15%; background: #FF8042;">45</div>
+                                </div>
+                            </div>
+                            <div class="h-bar-row">
+                                <span class="h-bar-label">1-5min</span>
+                                <div class="h-bar-track">
+                                    <div class="h-bar-fill" style="width: 35%; background: #00C49F;">105</div>
+                                </div>
+                            </div>
+                            <div class="h-bar-row">
+                                <span class="h-bar-label">5-15min</span>
+                                <div class="h-bar-track">
+                                    <div class="h-bar-fill" style="width: 55%; background: #0088FE;">165</div>
+                                </div>
+                            </div>
+                            <div class="h-bar-row">
+                                <span class="h-bar-label">15-30min</span>
+                                <div class="h-bar-track">
+                                    <div class="h-bar-fill" style="width: 30%; background: #FFBB28;">90</div>
+                                </div>
+                            </div>
+                            <div class="h-bar-row">
+                                <span class="h-bar-label">30min+</span>
+                                <div class="h-bar-track">
+                                    <div class="h-bar-fill" style="width: 15%; background: #8884d8;">42</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion Funnel (Collapsible) -->
+        <div class="card collapsed" id="funnel-section">
+            <div class="card-header" onclick="toggleSection('funnel-section')">
+                <span class="card-title">
+                    <span class="collapse-icon">&#9660;</span>
+                    Conversion Funnel Analysis
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="funnel-container">
+                    <div class="funnel-step">
+                        <span class="funnel-stage">Visitors</span>
+                        <div class="funnel-bar-track">
+                            <div class="funnel-bar-fill visitors" style="width: 100%;">298 (100%)</div>
+                        </div>
+                    </div>
+                    <div class="funnel-step">
+                        <span class="funnel-stage">Engaged (5m+)</span>
+                        <div class="funnel-bar-track">
+                            <div class="funnel-bar-fill engaged" style="width: 68%;">203 (68%)</div>
+                        </div>
+                    </div>
+                    <div class="funnel-step">
+                        <span class="funnel-stage">Converted</span>
+                        <div class="funnel-bar-track">
+                            <div class="funnel-bar-fill converted" style="width: 42%;">127 (42%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traffic Flow Summary -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">&#127754; Traffic Flow Summary</span>
+            </div>
+            <div class="card-body">
+                <div class="traffic-flow">
+                    <div class="flow-node">
+                        <div class="flow-node-label">Entries</div>
+                        <div class="flow-node-value inbound">156</div>
+                    </div>
+                    <span class="flow-arrow">&#8594;</span>
+                    <div class="flow-node">
+                        <div class="flow-node-label">Total Sessions</div>
+                        <div class="flow-node-value">298</div>
+                    </div>
+                    <span class="flow-arrow">&#8594;</span>
+                    <div class="flow-node">
+                        <div class="flow-node-label">Conversions</div>
+                        <div class="flow-node-value success">127 (42%)</div>
+                    </div>
+                    <span class="flow-arrow">&#8594;</span>
+                    <div class="flow-node">
+                        <div class="flow-node-label">Exits</div>
+                        <div class="flow-node-value outbound">142</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('collapsed');
+        }
+
+        function toggleExpandedKpis() {
+            const expanded = document.getElementById('expanded-kpis');
+            expanded.classList.toggle('show');
+        }
+
+        // Time range button handling
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
