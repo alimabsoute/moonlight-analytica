@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import './TimeRangePicker.css';
 
 const PRESET_RANGES = [
@@ -25,29 +28,38 @@ export default function TimeRangePicker({ value, onChange }) {
     }
   };
 
+  // Find which preset matches current value (if any)
+  const activePreset = PRESET_RANGES.find(r => r.hours === value)?.label || 'custom';
+
   return (
     <div className="time-range-picker">
-      <div className="preset-buttons">
-        {PRESET_RANGES.map(({ label, hours }) => (
-          <button
-            key={label}
-            className={`preset-btn ${value === hours ? 'active' : ''}`}
-            onClick={() => handlePresetClick(hours)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <Tabs value={activePreset} className="time-tabs">
+        <TabsList className="bg-[#1e293b] border border-[#374151]">
+          {PRESET_RANGES.map(({ label, hours }) => (
+            <TabsTrigger
+              key={label}
+              value={label}
+              onClick={() => handlePresetClick(hours)}
+              className="data-[state=active]:bg-[#3b82f6] data-[state=active]:text-white text-gray-400 hover:text-white"
+            >
+              {label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
       <form className="custom-range" onSubmit={handleCustomSubmit}>
-        <input
+        <Input
           type="number"
           step="0.01"
           min="0.01"
-          placeholder="Custom hours"
+          placeholder="Custom h"
           value={customHours}
           onChange={(e) => setCustomHours(e.target.value)}
+          className="w-24 h-9 bg-[#1e293b] border-[#374151] text-white placeholder:text-gray-500"
         />
-        <button type="submit">Go</button>
+        <Button type="submit" size="sm" className="bg-[#10b981] hover:bg-[#059669] text-white">
+          Go
+        </Button>
       </form>
     </div>
   );

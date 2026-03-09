@@ -24,6 +24,23 @@ const CONFIG = {
   FLOOR_COLS: 15
 };
 
+// Bounding box color palette (distinct, high-contrast colors)
+const BBOX_COLORS = [
+  '#00ffff', // Cyan
+  '#ff00ff', // Magenta
+  '#ffff00', // Yellow
+  '#00ff00', // Lime
+  '#ff6600', // Orange
+  '#6600ff', // Purple
+  '#ff0066', // Pink
+  '#00ff99', // Mint
+  '#ff3333', // Red
+  '#3399ff', // Blue
+];
+
+// Get consistent color by person ID
+const getBboxColor = (id) => BBOX_COLORS[(id - 1) % BBOX_COLORS.length];
+
 // Zone definitions for 3D view
 const ZONES_3D = [
   { id: 'entrance', name: 'ENTRANCE', col: 0, row: 3, width: 2, depth: 4, height: 0.5, color: '#3b82f6' },
@@ -162,7 +179,8 @@ export default function Tracking3DView({ onMetricsUpdate, className = '', theme 
     totalExits: 0,
     currentCount: 0,
     zoneCounts: {},
-    peakCount: 0
+    peakCount: 0,
+    startTime: Date.now()
   });
 
   const [isRunning, setIsRunning] = useState(true);
@@ -345,11 +363,62 @@ export default function Tracking3DView({ onMetricsUpdate, className = '', theme 
       ctx.arc(pos.x, pos.y - 25, 6, 0, Math.PI * 2);
       ctx.fill();
 
-      // ID badge
-      ctx.fillStyle = colors.text;
-      ctx.font = '9px monospace';
+      // Draw bounding box (isometric wireframe)
+      const bboxColor = getBboxColor(person.id);
+      const bboxWidth = 0.4;  // in grid units
+      const bboxDepth = 0.4;
+      const bboxHeight = 1.2; // visual height
+
+      // Calculate 8 corners of the bounding box
+      const halfW = bboxWidth / 2;
+      const halfD = bboxDepth / 2;
+
+      // Bottom corners
+      const b1 = toIso(person.col - halfW, person.row - halfD, person.z);
+      const b2 = toIso(person.col + halfW, person.row - halfD, person.z);
+      const b3 = toIso(person.col + halfW, person.row + halfD, person.z);
+      const b4 = toIso(person.col - halfW, person.row + halfD, person.z);
+
+      // Top corners
+      const t1 = toIso(person.col - halfW, person.row - halfD, person.z + bboxHeight);
+      const t2 = toIso(person.col + halfW, person.row - halfD, person.z + bboxHeight);
+      const t3 = toIso(person.col + halfW, person.row + halfD, person.z + bboxHeight);
+      const t4 = toIso(person.col - halfW, person.row + halfD, person.z + bboxHeight);
+
+      ctx.strokeStyle = bboxColor;
+      ctx.lineWidth = 2;
+
+      // Draw bottom face
+      ctx.beginPath();
+      ctx.moveTo(b1.x, b1.y);
+      ctx.lineTo(b2.x, b2.y);
+      ctx.lineTo(b3.x, b3.y);
+      ctx.lineTo(b4.x, b4.y);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Draw top face
+      ctx.beginPath();
+      ctx.moveTo(t1.x, t1.y);
+      ctx.lineTo(t2.x, t2.y);
+      ctx.lineTo(t3.x, t3.y);
+      ctx.lineTo(t4.x, t4.y);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Draw vertical edges
+      ctx.beginPath();
+      ctx.moveTo(b1.x, b1.y); ctx.lineTo(t1.x, t1.y);
+      ctx.moveTo(b2.x, b2.y); ctx.lineTo(t2.x, t2.y);
+      ctx.moveTo(b3.x, b3.y); ctx.lineTo(t3.x, t3.y);
+      ctx.moveTo(b4.x, b4.y); ctx.lineTo(t4.x, t4.y);
+      ctx.stroke();
+
+      // ID badge with matching color
+      ctx.fillStyle = bboxColor;
+      ctx.font = 'bold 10px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(person.id.toString(), pos.x, pos.y - 35);
+      ctx.fillText('#' + person.id, pos.x, pos.y - 38);
     }
 
     // Update metrics
@@ -386,7 +455,8 @@ export default function Tracking3DView({ onMetricsUpdate, className = '', theme 
       totalExits: 0,
       currentCount: 0,
       zoneCounts: {},
-      peakCount: 0
+      peakCount: 0,
+      startTime: Date.now()
     };
     nextId.current = 1;
     setMetrics(metricsRef.current);

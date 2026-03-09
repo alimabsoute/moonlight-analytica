@@ -53,13 +53,16 @@
 }
 
 /* ============================================
-   RANGE SELECTOR
+   RANGE SELECTOR - Liquid Glass
    ============================================ */
 .range-selector {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(22, 30, 46, 0.8) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .range-group {
@@ -110,13 +113,16 @@
 }
 
 /* ============================================
-   KPI SECTION
+   KPI SECTION - Liquid Glass
    ============================================ */
 .kpi-section {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.85) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .kpi-section h2 {
@@ -142,13 +148,16 @@
 }
 
 /* ============================================
-   CHARTS SECTION
+   CHARTS SECTION - Liquid Glass
    ============================================ */
 .charts-section {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.85) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .charts-section h2 {
@@ -226,13 +235,16 @@
 }
 
 /* ============================================
-   INSIGHTS SECTION
+   INSIGHTS SECTION - Liquid Glass
    ============================================ */
 .insights-section {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.85) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .insights-section h2 {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-const TABS = ['tracker','counter','analytics'];
-export function useHashTabs(defaultTab='tracker') {
+const TABS = ['live','analytics','reports','heatmap','zones','settings'];
+export function useHashTabs(defaultTab='live') {
   const [tab,setTab] = useState(() => {
     const h=(location.hash||'').slice(1); return TABS.includes(h)?h:defaultTab;
   });

@@ -30,16 +30,19 @@
 }
 
 /* ============================================
-   CONTROLS BAR
+   CONTROLS BAR - Liquid Glass
    ============================================ */
 .controls-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--space-3) var(--space-4);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(22, 30, 46, 0.8) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .controls-left,
@@ -117,13 +120,29 @@
 }
 
 /* ============================================
-   VIDEO SECTION
+   VIDEO SECTION - Liquid Glass
    ============================================ */
 .video-section {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.85) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle gradient overlay for depth */
+.video-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 }
 
 /* Model/Tracker Bar */
@@ -373,13 +392,16 @@
 }
 
 /* ============================================
-   SECONDARY STATS SECTION
+   SECONDARY STATS SECTION - Liquid Glass
    ============================================ */
 .secondary-stats {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.85) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .stats-grid {
@@ -401,13 +423,16 @@
 }
 
 /* ============================================
-   CHART SECTION
+   CHART SECTION - Liquid Glass
    ============================================ */
 .chart-section {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.85) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .chart-container {
@@ -438,10 +463,20 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-6);
-  background: var(--gradient-card);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(22, 30, 46, 0.8) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
   text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: all 0.3s ease;
+}
+
+.throughput-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-color: rgba(59, 130, 246, 0.2);
 }
 
 .throughput-label {

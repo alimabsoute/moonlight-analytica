@@ -1,11 +1,13 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { getKpis, getSeriesCsv, parseSeries, seedDemo, getDwellTime, getOccupancy, getEntriesExits, getQueue } from '../api';
+import { getKpis, getSeriesCsv, parseSeries, seedDemo, getDwellTime, getOccupancy, getEntriesExits, getQueue, startBatchJob } from '../api';
 import Button from '../components/Button';
 import { HeroStatCard, StatCard } from '../components/Card';
 import TimeRangePicker from '../components/TimeRangePicker';
 import ErrorBanner from '../components/ErrorBanner';
 import Loading from '../components/Loading';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
+import { Users, TrendingUp, LogIn, LogOut, Library, RefreshCw, Video, Settings, Play, Pause, Square, BarChart3, Clock, Activity, Layers } from 'lucide-react';
 import './LiveMonitor.css';
 
 // Lazy load the animated demo components
@@ -39,6 +41,8 @@ export default function LiveMonitor() {
   const [newVideoName, setNewVideoName] = useState('');
   const [newVideoDescription, setNewVideoDescription] = useState('');
   const [newVideoFile, setNewVideoFile] = useState(null);
+  const [playingVideoId, setPlayingVideoId] = useState(null);
+  const [batchingVideoId, setBatchingVideoId] = useState(null);
 
   // Model and tracker state
   const [currentModel, setCurrentModel] = useState('yolov8n.pt');
@@ -178,7 +182,9 @@ export default function LiveMonitor() {
         return;
       }
 
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // YouTube needs more time for yt-dlp extraction + model load
+      const waitMs = youtubeUrl ? 10000 : 5000;
+      await new Promise(resolve => setTimeout(resolve, waitMs));
       setLoading(false);
       setVideoPlaying(true);
       setVideoFeedError(false);
@@ -255,20 +261,32 @@ export default function LiveMonitor() {
 
   const handlePlayFromLibrary = async (videoId) => {
     try {
-      setLoading(true);
+      setPlayingVideoId(videoId);
+      setError(null);
       const response = await fetch(`http://localhost:8000/video/library/${videoId}/play`, { method: 'POST' });
       const data = await response.json();
       if (!data.ok) throw new Error(data.error || 'Failed to play video');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setShowVideoLibrary(false);
-      setLoading(false);
+      // For cold starts, wait for streamer to load YOLO model before showing feed
+      if (data.method === 'subprocess_start') {
+        let ready = false;
+        for (let i = 0; i < 30; i++) {
+          await new Promise(r => setTimeout(r, 500));
+          try {
+            const health = await fetch('http://localhost:8001/health');
+            if (health.ok) { ready = true; break; }
+          } catch { /* streamer not ready yet */ }
+        }
+        if (!ready) throw new Error('Video streamer is starting but taking longer than expected. Try again in a few seconds.');
+      }
+      setVideoStreamUrl(`http://localhost:8001/video_feed?t=${Date.now()}`);
       setVideoPlaying(true);
       setVideoFeedError(false);
-      await fetchData();
-      setVideoStreamUrl(`http://localhost:8001/video_feed?t=${Date.now()}`);
+      setShowVideoLibrary(false);
+      setPlayingVideoId(null);
+      fetchData();
     } catch (err) {
       setError(err.message || 'Failed to play video');
-      setLoading(false);
+      setPlayingVideoId(null);
     }
   };
 
@@ -281,6 +299,19 @@ export default function LiveMonitor() {
       await fetchVideoLibrary();
     } catch (err) {
       setError(err.message || 'Failed to delete video');
+    }
+  };
+
+  const handleBatchAnalyze = async (videoId) => {
+    try {
+      setBatchingVideoId(videoId);
+      setError(null);
+      const data = await startBatchJob(videoId);
+      if (!data.ok) throw new Error(data.error || 'Failed to start batch analysis');
+      setBatchingVideoId(null);
+    } catch (err) {
+      setError(err.message || 'Failed to start batch analysis');
+      setBatchingVideoId(null);
     }
   };
 
@@ -341,26 +372,26 @@ export default function LiveMonitor() {
         <HeroStatCard
           label="Current Count"
           value={kpis?.current_count ?? 0}
-          icon="👥"
+          icon={<Users size={28} />}
           color="primary"
           pulsing={autoRefresh}
         />
         <HeroStatCard
           label="Peak Today"
           value={kpis?.peak_count ?? 0}
-          icon="📈"
+          icon={<TrendingUp size={28} />}
           color="warning"
         />
         <HeroStatCard
           label="Entries"
           value={entriesExits?.entries ?? 0}
-          icon="🚪"
+          icon={<LogIn size={28} />}
           color="success"
         />
         <HeroStatCard
           label="Exits"
           value={entriesExits?.exits ?? 0}
-          icon="🚶"
+          icon={<LogOut size={28} />}
           color="error"
         />
       </section>
@@ -379,10 +410,10 @@ export default function LiveMonitor() {
           </label>
         </div>
         <div className="controls-right">
-          <Button variant="secondary" size="sm" onClick={() => setShowVideoLibrary(true)} icon="📚">
+          <Button variant="secondary" size="sm" onClick={() => setShowVideoLibrary(true)} icon={<Library size={16} />}>
             Library
           </Button>
-          <Button variant="secondary" size="sm" onClick={fetchData} icon="🔄">
+          <Button variant="secondary" size="sm" onClick={fetchData} icon={<RefreshCw size={16} />}>
             Refresh
           </Button>
         </div>
@@ -395,41 +426,43 @@ export default function LiveMonitor() {
           <div className="section-header">
             <h2>Live Video Feed</h2>
             <div className="section-actions">
-              <Button variant="ghost" size="sm" onClick={() => setShowVideoSourceModal(true)} icon="📹">
+              <Button variant="ghost" size="sm" onClick={() => setShowVideoSourceModal(true)} icon={<Video size={16} />}>
                 Change Source
               </Button>
             </div>
           </div>
 
-          {/* Model/Tracker Selection */}
+          {/* Model/Tracker Selection - shadcn Select */}
           <div className="model-tracker-bar">
             <div className="selector-group">
               <label>Model:</label>
-              <div className="selector-buttons">
-                {availableModels.map((model) => (
-                  <button
-                    key={model}
-                    onClick={() => handleSwitchModel(model)}
-                    className={`selector-btn ${currentModel === model ? 'active' : ''}`}
-                  >
-                    {model.replace('.pt', '')}
-                  </button>
-                ))}
-              </div>
+              <Select value={currentModel} onValueChange={handleSwitchModel}>
+                <SelectTrigger className="w-[140px] h-9 bg-[#1e293b] border-[#374151] text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1e293b] border-[#374151]">
+                  {availableModels.map((model) => (
+                    <SelectItem key={model} value={model} className="text-white hover:bg-[#374151] focus:bg-[#374151]">
+                      {model.replace('.pt', '')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="selector-group">
               <label>Tracker:</label>
-              <div className="selector-buttons">
-                {availableTrackers.map((tracker) => (
-                  <button
-                    key={tracker}
-                    onClick={() => handleSwitchTracker(tracker)}
-                    className={`selector-btn ${currentTracker === tracker ? 'active' : ''}`}
-                  >
-                    {tracker.replace('.yaml', '')}
-                  </button>
-                ))}
-              </div>
+              <Select value={currentTracker} onValueChange={handleSwitchTracker}>
+                <SelectTrigger className="w-[140px] h-9 bg-[#1e293b] border-[#374151] text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1e293b] border-[#374151]">
+                  {availableTrackers.map((tracker) => (
+                    <SelectItem key={tracker} value={tracker} className="text-white hover:bg-[#374151] focus:bg-[#374151]">
+                      {tracker.replace('.yaml', '')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -538,7 +571,7 @@ export default function LiveMonitor() {
                   <Button variant="secondary" size="sm" onClick={() => {
                     setShowProceduralDemo(false);
                     setShowVideoSourceModal(true);
-                  }} icon="📹">
+                  }} icon={<Video size={16} />}>
                     Switch to Real Video
                   </Button>
                 </div>
@@ -568,8 +601,8 @@ export default function LiveMonitor() {
         <div className="section-header">
           <h2>Count Over Time</h2>
           <div className="section-actions">
-            <Button variant="ghost" size="sm" onClick={handleDownloadCSV} icon="📥">Export CSV</Button>
-            <Button variant="ghost" size="sm" onClick={handleSeedDemo} icon="🎲">Seed Demo</Button>
+            <Button variant="ghost" size="sm" onClick={handleDownloadCSV} icon={<BarChart3 size={16} />}>Export CSV</Button>
+            <Button variant="ghost" size="sm" onClick={handleSeedDemo} icon={<Layers size={16} />}>Seed Demo</Button>
           </div>
         </div>
         <div className="chart-container">
@@ -704,6 +737,12 @@ export default function LiveMonitor() {
               <button onClick={() => setShowVideoLibrary(false)} className="modal-close">×</button>
             </div>
             <div className="modal-body">
+              {error && (
+                <div style={{ background: '#dc2626', color: 'white', padding: '0.75rem 1rem', borderRadius: '0.5rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{error}</span>
+                  <button onClick={() => setError(null)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '1.2rem' }}>×</button>
+                </div>
+              )}
               <div className="library-upload">
                 <h3>Upload New Video</h3>
                 <div className="upload-form">
@@ -737,9 +776,14 @@ export default function LiveMonitor() {
                           <span>{(video.file_size / 1024 / 1024).toFixed(2)} MB</span>
                           <span>{new Date(video.uploaded_at).toLocaleDateString()}</span>
                         </div>
-                        <Button variant="primary" size="sm" fullWidth onClick={() => handlePlayFromLibrary(video.id)}>
-                          Play & Track
-                        </Button>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <Button variant="primary" size="sm" style={{ flex: 1 }} onClick={() => handlePlayFromLibrary(video.id)} loading={playingVideoId === video.id} disabled={!!playingVideoId}>
+                            {playingVideoId === video.id ? 'Starting...' : 'Play & Track'}
+                          </Button>
+                          <Button variant="secondary" size="sm" style={{ flex: 1 }} onClick={() => handleBatchAnalyze(video.id)} loading={batchingVideoId === video.id} disabled={!!batchingVideoId}>
+                            {batchingVideoId === video.id ? 'Starting...' : 'Batch Analyze'}
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>

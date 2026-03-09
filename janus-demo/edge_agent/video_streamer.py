@@ -746,7 +746,7 @@ def run_tracking(source, conf=0.30, backend_url="http://localhost:8000"):
         return
 
     print("[INFO] Video opened. Tracking pipeline active.")
-    print(f"[INFO] Pipeline: Detect({INFERENCE_URL}) → ByteTrack → Re-ID → Zones → Sessions")
+    print(f"[INFO] Pipeline: Detect({INFERENCE_URL}) -> ByteTrack -> Re-ID -> Zones -> Sessions")
 
     frame_num = 0
     prev_track_ids: set = set()

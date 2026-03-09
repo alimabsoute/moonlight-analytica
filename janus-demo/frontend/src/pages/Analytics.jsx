@@ -4,11 +4,12 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
-import { getKpis, getSeriesCsv, parseSeries, getConversion, getDwellTime, getZones, getEntriesExits, getOccupancy, getQueue } from '../api';
+import { getKpis, getSeriesCsv, parseSeries, getConversion, getDwellTime, getZones, getEntriesExits, getOccupancy, getQueue, getBatchJobs } from '../api';
 import KPIStat from '../components/KPIStat';
 import ChartCard from '../components/ChartCard';
 import ErrorBanner from '../components/ErrorBanner';
 import Loading from '../components/Loading';
+import { BarChart3, Target, Building2, Clock, ArrowRightLeft, TrendingUp, Lightbulb, AlertTriangle, CheckCircle, Info, XCircle, Database } from 'lucide-react';
 import './Analytics.css';
 
 const TIME_RANGES = [
@@ -28,18 +29,20 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [dataSource, setDataSource] = useState('all');
 
   const fetchData = async (hours) => {
     try {
+      const src = dataSource;
       const [kpiData, csvData, convData, dwellData, zonesData, entriesExitsData, occupancyData, queueData] = await Promise.all([
-        getKpis(hours),
-        getSeriesCsv(hours),
-        getConversion(hours),
-        getDwellTime(hours),
-        getZones(hours),
-        getEntriesExits(hours),
+        getKpis(hours, src),
+        getSeriesCsv(hours, src),
+        getConversion(hours, src),
+        getDwellTime(hours, src),
+        getZones(hours, src),
+        getEntriesExits(hours, src),
         getOccupancy(),
-        getQueue(hours)
+        getQueue(hours, src)
       ]);
 
       return {
@@ -80,7 +83,7 @@ export default function Analytics() {
 
   useEffect(() => {
     loadAllData();
-  }, [selectedRange, compareRange]);
+  }, [selectedRange, compareRange, dataSource]);
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -90,7 +93,7 @@ export default function Analytics() {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [autoRefresh, selectedRange, compareRange]);
+  }, [autoRefresh, selectedRange, compareRange, dataSource]);
 
   if (loading) {
     return <Loading message="Loading comprehensive analytics..." />;
@@ -167,7 +170,7 @@ export default function Analytics() {
     <div className="analytics">
       <div className="page-header">
         <div>
-          <h1>📊 Advanced Analytics Dashboard</h1>
+          <h1 className="flex items-center gap-3"><BarChart3 size={28} className="text-blue-400" /> Advanced Analytics</h1>
           <p>Comprehensive real-time visitor analytics with 26+ KPIs</p>
         </div>
         <div className="header-controls">
@@ -200,6 +203,24 @@ export default function Analytics() {
           </div>
         </div>
         <div className="range-group">
+          <label className="flex items-center gap-2"><Database size={14} /> Data Source:</label>
+          <div className="range-buttons">
+            {[
+              { value: 'all', label: 'All Data' },
+              { value: 'live', label: 'Live Only' },
+              { value: 'batch', label: 'Batch (Verified)' },
+            ].map(({ value, label }) => (
+              <button
+                key={value}
+                className={`range-btn ${dataSource === value ? 'active' : ''}`}
+                onClick={() => setDataSource(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="range-group">
           <label>Compare To:</label>
           <div className="range-buttons">
             <button
@@ -222,7 +243,7 @@ export default function Analytics() {
       </div>
 
       <div className="kpi-section">
-        <h2>🎯 Key Performance Indicators</h2>
+        <h2 className="flex items-center gap-2"><Target size={20} className="text-blue-400" /> Key Performance Indicators</h2>
         <div className="kpi-grid-5col">
           <KPIStat label="Total Entries" value={primaryData.entriesExits?.entries || 0} />
           <KPIStat label="Total Exits" value={primaryData.entriesExits?.exits || 0} />
@@ -259,7 +280,7 @@ export default function Analytics() {
       </div>
 
       <div className="charts-section">
-        <h2>🏢 Zone Performance Analysis</h2>
+        <h2 className="flex items-center gap-2"><Building2 size={20} className="text-blue-400" /> Zone Performance Analysis</h2>
         <div className="chart-row">
           <ChartCard title="Zone Traffic - Unique Visitors">
             <ResponsiveContainer width="100%" height={300}>
@@ -307,7 +328,7 @@ export default function Analytics() {
       </div>
 
       <div className="charts-section">
-        <h2>⏱️ Dwell Time Distribution</h2>
+        <h2 className="flex items-center gap-2"><Clock size={20} className="text-blue-400" /> Dwell Time Distribution</h2>
         <div className="chart-row">
           <ChartCard title="Dwell Time Breakdown (Session Count)">
             <ResponsiveContainer width="100%" height={300}>
@@ -347,7 +368,7 @@ export default function Analytics() {
       </div>
 
       <div className="charts-section">
-        <h2>🔄 Conversion Funnel Analysis</h2>
+        <h2 className="flex items-center gap-2"><ArrowRightLeft size={20} className="text-blue-400" /> Conversion Funnel Analysis</h2>
         <ChartCard title="Visitor Journey Funnel">
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={conversionFunnel} layout="vertical">
@@ -363,7 +384,7 @@ export default function Analytics() {
       </div>
 
       <div className="charts-section">
-        <h2>📈 Traffic Trends</h2>
+        <h2 className="flex items-center gap-2"><TrendingUp size={20} className="text-blue-400" /> Traffic Trends</h2>
         {compareRange && data[compareRange] ? (
           <ChartCard title={`Traffic Comparison: ${TIME_RANGES.find(r => r.hours === selectedRange)?.label} vs ${TIME_RANGES.find(r => r.hours === compareRange)?.label}`}>
             <ResponsiveContainer width="100%" height={350}>
@@ -396,7 +417,7 @@ export default function Analytics() {
       </div>
 
       <div className="charts-section">
-        <h2>🌊 Traffic Flow Summary</h2>
+        <h2 className="flex items-center gap-2"><ArrowRightLeft size={20} className="text-blue-400" /> Traffic Flow Summary</h2>
         <div className="traffic-flow-summary">
           <div className="flow-metric">
             <span className="flow-label">Entries</span>
@@ -421,41 +442,41 @@ export default function Analytics() {
       </div>
 
       <div className="insights-section">
-        <h2>💡 Automated Insights</h2>
+        <h2 className="flex items-center gap-2"><Lightbulb size={20} className="text-blue-400" /> Automated Insights</h2>
         <div className="insights-grid">
           {bounceRate > 40 && (
             <div className="insight-card warning">
-              <strong>⚠️ High Bounce Rate</strong>
+              <strong className="flex items-center gap-2"><AlertTriangle size={16} /> High Bounce Rate</strong>
               <p>{bounceRate.toFixed(1)}% of visitors spend less than 1 minute. Consider improving entrance experience.</p>
             </div>
           )}
           {conversionRate < 20 && totalSessions > 10 && (
             <div className="insight-card alert">
-              <strong>🚨 Low Conversion Rate</strong>
+              <strong className="flex items-center gap-2"><XCircle size={16} /> Low Conversion Rate</strong>
               <p>Only {conversionRate.toFixed(1)}% of visitors converted. Analyze zone paths and engagement strategies.</p>
             </div>
           )}
           {queueLength > 10 && (
             <div className="insight-card warning">
-              <strong>⏳ Queue Building Up</strong>
+              <strong className="flex items-center gap-2"><Clock size={16} /> Queue Building Up</strong>
               <p>{queueLength} people currently in queue with {avgWaitMinutes.toFixed(1)}m average wait time.</p>
             </div>
           )}
           {occupancyRate > 80 && (
             <div className="insight-card alert">
-              <strong>🔴 High Occupancy</strong>
+              <strong className="flex items-center gap-2"><XCircle size={16} /> High Occupancy</strong>
               <p>{occupancyRate.toFixed(1)}% capacity reached. Consider managing traffic flow.</p>
             </div>
           )}
           {engagementRate > 60 && (
             <div className="insight-card success">
-              <strong>✅ Strong Engagement</strong>
+              <strong className="flex items-center gap-2"><CheckCircle size={16} /> Strong Engagement</strong>
               <p>{engagementRate.toFixed(1)}% of visitors spend 5+ minutes. Great visitor experience!</p>
             </div>
           )}
           {trafficBalance > 20 && (
             <div className="insight-card info">
-              <strong>📊 Net Positive Traffic</strong>
+              <strong className="flex items-center gap-2"><Info size={16} /> Net Positive Traffic</strong>
               <p>{trafficBalance} more entries than exits. Active visitor accumulation.</p>
             </div>
           )}

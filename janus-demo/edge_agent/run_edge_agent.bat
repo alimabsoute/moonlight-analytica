@@ -1,9 +1,9 @@
-REM Edit RTSP_URL, then double-click this file (or run from CMD).
+﻿REM Edit RTSP_URL, then double-click this file (or run from CMD).
 @echo off
 setlocal
 
 REM ======== CONFIGURE THESE ========
-set RTSP_URL=rtsp://user:pass@CAMERA/stream
+set RTSP_URL=0
 set BACKEND=http://localhost:8000
 set INTERVAL=60
 REM =================================
@@ -26,7 +26,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 
 echo.
-echo [edge_agent] starting… source=%RTSP_URL% backend=%BACKEND% interval=%INTERVAL%s
+echo [edge_agent] startingâ€¦ source=%RTSP_URL% backend=%BACKEND% interval=%INTERVAL%s
 echo.
 python edge_agent.py --rtsp "%RTSP_URL%" --backend "%BACKEND%" --interval %INTERVAL%
 

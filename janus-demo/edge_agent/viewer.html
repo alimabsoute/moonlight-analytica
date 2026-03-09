@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Janus Tracking - Live View</title>
+    <style>
+        body { margin: 0; background: #111; display: flex; flex-direction: column; align-items: center; font-family: sans-serif; color: #fff; }
+        h1 { margin: 10px 0 5px; font-size: 18px; color: #0bf; }
+        img { max-width: 100vw; max-height: 85vh; border: 2px solid #333; }
+        #stats { margin: 8px; font-size: 14px; color: #aaa; }
+    </style>
+</head>
+<body>
+    <h1>Janus Tracking - Live Feed</h1>
+    <img src="http://localhost:8001/video_feed" alt="Live tracking feed" />
+    <div id="stats">Loading stats...</div>
+    <script>
+        setInterval(async () => {
+            try {
+                const r = await fetch('http://localhost:8001/stats');
+                const s = await r.json();
+                document.getElementById('stats').textContent =
+                    `People: ${s.current_occupancy} | Visitors: ${s.total_visitors} | ` +
+                    `Re-IDs: ${s.total_reids} | Sessions: ${s.total_sessions} | ` +
+                    `Avg Dwell: ${s.avg_dwell_s}s | Exits: ${s.total_exits}`;
+            } catch(e) {}
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -1,17 +1,12 @@
-:: run_all_counts_only.bat — one-click: start backend, seed data, start edge agent (video or webcam), run checks
-:: Save this file as: C:\Users\alima\janus-demo\run_all_counts_only.bat
-:: Then double-click it (or run from CMD). Assumes repo layout:
-::   C:\Users\alima\janus-demo\
-::     ├─ backend\main.py
-::     └─ edge_agent\ (edge_agent.py, requirements.txt)
-
+﻿:: run_all_counts_only.bat â€” one-click: start backend, seed data, start edge agent (video or webcam), run checks
+:: Save as: C:\Users\alima\janus-demo\run_all_counts_only.bat
 @echo off
 setlocal
 
 REM ======== CONFIGURE HERE ========
 set "BACKEND=http://localhost:8000"
 set "INTERVAL=60"
-set "RTSP_URL=C:\Path\To\your_demo_video.mp4"   REM <-- change to your demo video; use 0 for webcam
+set "RTSP_URL=0"   REM <-- using webcam (0); change to video file path if needed
 REM =================================
 
 REM Move to repo root (this .bat should live in janus-demo\)
