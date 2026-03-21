@@ -436,13 +436,6 @@ export default function PreProcessedPlayer({ theme = 'dark', onMetricsUpdate }) 
   }
 
   // ── Replay view ───────────────────────────────────────
-  const videoSrc = selectedVideo.path
-    ? `${API_BASE}/video/serve/${selectedVideo.id}`
-    : null
-
-  // Build video URL from the file path
-  const videoUrl = `http://localhost:8001/video_file/${selectedVideo.id}.mp4`
-
   return (
     <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
       {/* Video + Canvas overlay */}
