@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, TrendingUp, TrendingDown, Clock, AlertTriangle,
   Activity, ArrowUpRight, ArrowDownRight, Eye, Zap,
-  Box, Cpu, MonitorDot
+  Box, Cpu, MonitorDot, Database
 } from 'lucide-react'
 
 // Lazy load tracking components
@@ -13,6 +13,8 @@ const Tracking3DView = lazy(() => import('../../../shared/Tracking3DView'))
 const RealTimeDetection = lazy(() => import('../../../shared/RealTimeDetection'))
 // Enhanced: TensorFlow.js + COCO-SSD with ByteTrack smoothing & Kalman filter
 const RealTimeDetectionEnhanced = lazy(() => import('../../../shared/RealTimeDetectionEnhanced'))
+// Pre-Processed: Roboflow Cloud + ByteTrack offline pipeline
+const PreProcessedPlayer = lazy(() => import('../components/PreProcessedPlayer'))
 
 const generateLiveKPIs = () => ({
   currentOccupancy: Math.floor(Math.random() * 200) + 150,
@@ -48,10 +50,11 @@ const VIEW_MODES = [
   { id: 'ml', label: 'ML Detection', icon: Cpu, description: 'Real-time person detection' }
 ]
 
-// ML Pipeline versions - Standard and Enhanced only
+// ML Pipeline versions - Standard, Enhanced, and Pre-Processed
 const PIPELINE_VERSIONS = [
   { id: 'A', label: 'Standard', description: 'TensorFlow + COCO-SSD', color: '#3b82f6' },
-  { id: 'E', label: 'Enhanced', description: 'COCO-SSD + ByteTrack smoothing', color: '#10b981' }
+  { id: 'E', label: 'Enhanced', description: 'COCO-SSD + ByteTrack smoothing', color: '#10b981' },
+  { id: 'P', label: 'Pre-Processed', description: 'Offline YOLO + BoT-SORT (highest accuracy)', color: '#8b5cf6' }
 ]
 
 // Loading component
@@ -481,7 +484,7 @@ export default function LiveMonitor() {
                         setMlStats({ fps: metrics.fps, tracking: { confirmedCount: metrics.currentCount } })
                       }}
                     />
-                  ) : (
+                  ) : pipelineVersion === 'E' ? (
                     /* Enhanced tracking - COCO-SSD + ByteTrack smoothing + Kalman filter */
                     <RealTimeDetectionEnhanced
                       theme="dark"
@@ -493,6 +496,20 @@ export default function LiveMonitor() {
                           peakCount: Math.max(trackingMetrics?.peakCount || 0, metrics.currentCount)
                         })
                         setMlStats({ fps: metrics.fps, tracking: { confirmedCount: metrics.currentCount } })
+                      }}
+                    />
+                  ) : (
+                    /* Pre-Processed: Roboflow Cloud offline pipeline */
+                    <PreProcessedPlayer
+                      theme="dark"
+                      onMetricsUpdate={(metrics) => {
+                        handleTrackingMetrics({
+                          currentCount: metrics.currentCount,
+                          totalEntries: metrics.totalEntries || 0,
+                          totalExits: metrics.totalExits || 0,
+                          peakCount: metrics.peakCount || Math.max(trackingMetrics?.peakCount || 0, metrics.currentCount)
+                        })
+                        setMlStats({ fps: 30, tracking: { confirmedCount: metrics.currentCount } })
                       }}
                     />
                   )}

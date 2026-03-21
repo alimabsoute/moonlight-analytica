@@ -1239,6 +1239,195 @@ def batch_clear_results(video_id):
     return jsonify({"ok": True, "video_id": video_id})
 
 
+# ── Video file serving (for pre-processed replay) ────────────────────────
+
+@app.get("/video/library/<video_id>/file")
+def serve_library_video_file(video_id):
+    """Serve a video file from the library for HTML5 <video> playback."""
+    from flask import send_file
+
+    library_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "edge_agent", "video_library")
+    )
+
+    # Try direct filename match
+    for ext in [".mp4", ".avi", ".mov"]:
+        candidate = os.path.join(library_dir, f"{video_id}{ext}")
+        if os.path.exists(candidate):
+            return send_file(candidate, mimetype="video/mp4")
+
+    # Check metadata for path
+    metadata_file = os.path.join(library_dir, "metadata.json")
+    if os.path.exists(metadata_file):
+        import json as _json
+        with open(metadata_file, "r") as f:
+            meta = _json.load(f)
+        for v in meta.get("videos", []):
+            if v["id"] == video_id and os.path.exists(v.get("path", "")):
+                return send_file(v["path"], mimetype="video/mp4")
+
+    return jsonify({"error": "Video file not found"}), 404
+
+
+# ── Pre-Processed Pipeline Endpoints ─────────────────────────────────────
+
+@app.post("/api/process-video")
+def process_video_start():
+    """Trigger offline Roboflow cloud processing for a video."""
+    import subprocess
+
+    body = request.get_json() or {}
+    video_id = body.get("video_id")
+    skip = body.get("skip", 3)
+    model = body.get("model")
+
+    if not video_id:
+        return jsonify({"error": "video_id required"}), 400
+
+    edge_agent_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "edge_agent")
+    )
+    library_dir = os.path.join(edge_agent_dir, "video_library")
+
+    # Find video file
+    video_path = None
+    for ext in [".mp4", ".avi", ".mov"]:
+        candidate = os.path.join(library_dir, f"{video_id}{ext}")
+        if os.path.exists(candidate):
+            video_path = candidate
+            break
+
+    if not video_path:
+        # Check metadata.json for path
+        metadata_file = os.path.join(library_dir, "metadata.json")
+        if os.path.exists(metadata_file):
+            import json as _json
+            with open(metadata_file, "r") as f:
+                meta = _json.load(f)
+            for v in meta.get("videos", []):
+                if v["id"] == video_id and os.path.exists(v.get("path", "")):
+                    video_path = v["path"]
+                    break
+
+    if not video_path:
+        return jsonify({"error": f"Video not found for id: {video_id}"}), 404
+
+    # Check if already processed
+    tracking_file = os.path.join(library_dir, f"{video_id}_tracking.json")
+    if os.path.exists(tracking_file):
+        return jsonify({"ok": True, "status": "already_processed",
+                        "video_id": video_id})
+
+    # Use venv python if available
+    venv_python = os.path.join(edge_agent_dir, ".venv", "Scripts", "python.exe")
+    python_exe = venv_python if os.path.exists(venv_python) else sys.executable
+
+    cmd = [python_exe, "process_video.py",
+           "--source", video_path,
+           "--skip", str(skip)]
+    if model:
+        cmd.extend(["--model", model])
+
+    try:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=edge_agent_dir,
+            creationflags=subprocess.CREATE_NEW_CONSOLE,
+        )
+        return jsonify({"ok": True, "video_id": video_id, "pid": proc.pid,
+                        "status": "started"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.get("/api/process-status/<video_id>")
+def process_video_status(video_id):
+    """Check processing progress for a video."""
+    edge_agent_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "edge_agent")
+    )
+    library_dir = os.path.join(edge_agent_dir, "video_library")
+
+    # Check if tracking data already exists (completed)
+    tracking_file = os.path.join(library_dir, f"{video_id}_tracking.json")
+    if os.path.exists(tracking_file):
+        return jsonify({"video_id": video_id, "status": "completed",
+                        "percent": 100, "frame": 0, "total": 0})
+
+    # Check progress file
+    progress_file = os.path.join(library_dir, f"{video_id}_progress.json")
+    if os.path.exists(progress_file):
+        try:
+            import json as _json
+            with open(progress_file, "r") as f:
+                progress = _json.load(f)
+            return jsonify(progress)
+        except Exception:
+            pass
+
+    return jsonify({"video_id": video_id, "status": "not_started",
+                    "percent": 0, "frame": 0, "total": 0})
+
+
+@app.get("/api/tracking-data/<video_id>")
+def get_tracking_data(video_id):
+    """Serve the pre-computed tracking JSON for a video."""
+    edge_agent_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "edge_agent")
+    )
+    tracking_file = os.path.join(edge_agent_dir, "video_library",
+                                  f"{video_id}_tracking.json")
+
+    if not os.path.exists(tracking_file):
+        return jsonify({"error": "Tracking data not found. Process the video first."}), 404
+
+    # Stream the file directly for large JSON
+    def generate():
+        with open(tracking_file, "r") as f:
+            while True:
+                chunk = f.read(65536)
+                if not chunk:
+                    break
+                yield chunk
+
+    return Response(generate(), mimetype="application/json",
+                    headers={"Cache-Control": "public, max-age=3600"})
+
+
+@app.get("/api/tracking-metrics/<video_id>")
+def get_tracking_metrics(video_id):
+    """Serve pre-computed dashboard metrics for a video."""
+    edge_agent_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "edge_agent")
+    )
+    tracking_file = os.path.join(edge_agent_dir, "video_library",
+                                  f"{video_id}_tracking.json")
+
+    if not os.path.exists(tracking_file):
+        return jsonify({"error": "Tracking data not found"}), 404
+
+    try:
+        import json as _json
+        with open(tracking_file, "r") as f:
+            data = _json.load(f)
+        # Return only metrics + summary (not the per-frame data)
+        return jsonify({
+            "video_id": data.get("video_id"),
+            "total_frames": data.get("total_frames"),
+            "fps": data.get("fps"),
+            "duration_s": data.get("duration_s"),
+            "resolution": data.get("resolution"),
+            "model": data.get("model"),
+            "frame_skip": data.get("frame_skip"),
+            "processing_time_s": data.get("processing_time_s"),
+            "processed_at": data.get("processed_at"),
+            "metrics": data.get("metrics", {}),
+            "sessions": data.get("sessions", []),
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == "__main__":
     # Dev server
     import sys
