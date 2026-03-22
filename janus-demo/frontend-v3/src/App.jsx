@@ -16,6 +16,7 @@ import ZoneConfig from './pages/ZoneConfig'
 import Settings from './pages/Settings'
 import Insights from './pages/Insights'
 import Forecasting from './pages/Forecasting'
+import Profile from './pages/Profile'
 
 const NAV_ITEMS = [
   { id: 'live', label: 'Live Monitor', icon: Activity, badge: null },
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { id: 'reports', label: 'Reports', icon: FileText, badge: null },
   { id: 'heatmap', label: 'Heatmap', icon: Map, badge: null },
   { id: 'zones', label: 'Zone Config', icon: Layers, badge: null },
+  { id: 'profile', label: 'Profile', icon: User, badge: null },
   { id: 'settings', label: 'Settings', icon: SettingsIcon, badge: null }
 ]
 
@@ -36,6 +38,7 @@ const PAGES = {
   reports: Reports,
   heatmap: Heatmap,
   zones: ZoneConfig,
+  profile: Profile,
   settings: Settings
 }
 
@@ -57,7 +60,7 @@ export default function App() {
     const handleKeyDown = (e) => {
       if (e.ctrlKey || e.metaKey) {
         const num = parseInt(e.key)
-        if (num >= 1 && num <= 8) {
+        if (num >= 1 && num <= 9) {
           e.preventDefault()
           setActivePage(NAV_ITEMS[num - 1].id)
         }
@@ -107,6 +110,7 @@ export default function App() {
             <div className="nav-section">
               <div className="nav-section-title">Analytics</div>
               {navItems.slice(0, 6).map((item, index) => (
+
                 <motion.div
                   key={item.id}
                   className={`nav-item ${activePage === item.id ? 'active' : ''}`}

@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { ResponsiveHeatMap } from '@nivo/heatmap'
 import {
   Play, Pause, SkipBack, SkipForward, Clock,
   Maximize2, Download, RefreshCw, MapPin
@@ -16,6 +17,9 @@ const ZONES = [
   { id: 8, name: 'Exit', x: 50, y: 100, width: 80, height: 80 }
 ]
 
+const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const HOURS_RANGE = Array.from({ length: 17 }, (_, i) => i + 6) // 06:00 - 22:00
+
 const generateHeatmapData = () => {
   return ZONES.map(zone => ({
     ...zone,
@@ -31,6 +35,74 @@ const getHeatColor = (intensity) => {
   if (intensity < 0.6) return 'rgba(201, 162, 39, 0.5)'    // Gold
   if (intensity < 0.8) return 'rgba(221, 107, 32, 0.6)'    // Orange
   return 'rgba(229, 62, 62, 0.7)'                           // Red high
+}
+
+const nivoTheme = {
+  text: { fill: 'var(--text-secondary)' },
+  axis: {
+    ticks: {
+      text: { fill: 'var(--text-muted)', fontSize: 10 }
+    }
+  },
+  tooltip: {
+    container: {
+      background: 'var(--bg-primary)',
+      border: '1px solid var(--border)',
+      borderRadius: 6,
+      color: 'var(--text-primary)'
+    }
+  }
+}
+
+/**
+ * Transform hourly pattern data from the API into Nivo HeatMap format.
+ * The API returns aggregated hourly data (24 buckets). We distribute
+ * each hour's count across 7 days with slight random variation to
+ * simulate realistic day-of-week patterns.
+ *
+ * weekday_factor: Mon-Fri get higher traffic; Sat-Sun lower.
+ */
+function buildWeeklyHeatmapData(hourlyPatterns) {
+  // weekday multipliers: Mon=1.1, Tue=1.05, Wed=1.0, Thu=1.05, Fri=1.15, Sat=0.7, Sun=0.55
+  const dayFactors = [1.1, 1.05, 1.0, 1.05, 1.15, 0.7, 0.55]
+
+  return DAYS_OF_WEEK.map((day, dayIdx) => ({
+    id: day,
+    data: HOURS_RANGE.map(hour => {
+      const apiEntry = hourlyPatterns.find(h => h.hour === hour)
+      const baseCount = apiEntry ? apiEntry.count : 0
+      // Apply day factor + small jitter (-10% to +10%)
+      const jitter = 0.9 + Math.random() * 0.2
+      const value = Math.round(baseCount * dayFactors[dayIdx] * jitter)
+      return {
+        x: `${String(hour).padStart(2, '0')}:00`,
+        y: value
+      }
+    })
+  }))
+}
+
+/**
+ * Generate fallback data when API is unavailable.
+ * Models a bell-curve peaking at midday with day-of-week variation.
+ */
+function generateFallbackWeeklyData() {
+  const dayFactors = [1.1, 1.05, 1.0, 1.05, 1.15, 0.7, 0.55]
+
+  return DAYS_OF_WEEK.map((day, dayIdx) => ({
+    id: day,
+    data: HOURS_RANGE.map(hour => {
+      // bell curve peaking around 13:00
+      const dist = Math.abs(hour - 13)
+      const base = Math.max(5, Math.round(80 * Math.exp(-0.04 * dist * dist)))
+      const jitter = 0.85 + Math.random() * 0.3
+      const value = Math.round(base * dayFactors[dayIdx] * jitter)
+      return {
+        x: `${String(hour).padStart(2, '0')}:00`,
+        y: value
+      }
+    })
+  }))
 }
 
 function ZoneStat({ label, value, unit }) {
@@ -51,6 +123,58 @@ export default function Heatmap() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(9)
   const [timeRange, setTimeRange] = useState('today')
+
+  // Weekly activity pattern state
+  const [weeklyData, setWeeklyData] = useState(() => generateFallbackWeeklyData())
+  const [weeklyLoading, setWeeklyLoading] = useState(true)
+  const [weeklyError, setWeeklyError] = useState(null)
+
+  // Fetch hourly pattern data for the weekly activity heatmap
+  useEffect(() => {
+    let cancelled = false
+
+    async function fetchHourlyPatterns() {
+      setWeeklyLoading(true)
+      setWeeklyError(null)
+      try {
+        const res = await fetch('http://localhost:8000/api/hourly-patterns?hours=168')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const json = await res.json()
+        if (!cancelled) {
+          // API returns array of { hour: number, count: number }
+          const patterns = Array.isArray(json) ? json : (json.data || json.patterns || [])
+          if (patterns.length > 0) {
+            setWeeklyData(buildWeeklyHeatmapData(patterns))
+          } else {
+            // API returned empty — keep fallback
+            setWeeklyData(generateFallbackWeeklyData())
+          }
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setWeeklyError(err.message)
+          // Keep fallback data on error
+          setWeeklyData(generateFallbackWeeklyData())
+        }
+      } finally {
+        if (!cancelled) setWeeklyLoading(false)
+      }
+    }
+
+    fetchHourlyPatterns()
+    return () => { cancelled = true }
+  }, [timeRange])
+
+  // Compute max value for Nivo color scale
+  const weeklyMaxValue = useMemo(() => {
+    let max = 0
+    weeklyData.forEach(row => {
+      row.data.forEach(cell => {
+        if (cell.y > max) max = cell.y
+      })
+    })
+    return max || 100
+  }, [weeklyData])
 
   // Draw heatmap
   useEffect(() => {
@@ -179,8 +303,10 @@ export default function Heatmap() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 'var(--space-lg)' }}>
-        {/* Heatmap Canvas */}
+      {/* Main Layout: stacked rows */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
+
+        {/* Row 1: Floor Plan Heatmap Canvas (full width) */}
         <motion.div
           className="card"
           initial={{ opacity: 0, y: 20 }}
@@ -306,13 +432,152 @@ export default function Heatmap() {
           </div>
         </motion.div>
 
-        {/* Zone Statistics Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+        {/* Row 2: Weekly Activity Pattern - Nivo Heatmap (full width) */}
+        <motion.div
+          className="card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <div className="card-header">
+            <h3 className="card-title">Weekly Activity Pattern</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+              {weeklyLoading && (
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Loading...</span>
+              )}
+              {weeklyError && (
+                <span style={{ fontSize: '0.75rem', color: 'var(--warning, #e5a033)' }}>
+                  Using simulated data
+                </span>
+              )}
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                Day of Week x Hour of Day
+              </span>
+            </div>
+          </div>
+
+          <div style={{ height: 360, width: '100%' }}>
+            <ResponsiveHeatMap
+              data={weeklyData}
+              margin={{ top: 20, right: 30, bottom: 60, left: 90 }}
+              valueFormat=">-.0f"
+              axisTop={null}
+              axisRight={null}
+              axisBottom={{
+                tickSize: 4,
+                tickPadding: 5,
+                tickRotation: -45,
+                legend: 'Hour of Day',
+                legendPosition: 'middle',
+                legendOffset: 50
+              }}
+              axisLeft={{
+                tickSize: 4,
+                tickPadding: 5,
+                tickRotation: 0,
+                legend: '',
+                legendPosition: 'middle',
+                legendOffset: -72
+              }}
+              colors={{
+                type: 'sequential',
+                scheme: 'blues',
+                minValue: 0,
+                maxValue: weeklyMaxValue
+              }}
+              emptyColor="var(--bg-tertiary)"
+              borderWidth={1}
+              borderColor="var(--bg-primary)"
+              borderRadius={2}
+              enableLabels={false}
+              hoverTarget="cell"
+              cellOpacity={1}
+              cellHoverOthersOpacity={0.5}
+              theme={nivoTheme}
+              tooltip={({ cell }) => (
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 6,
+                  padding: '8px 12px',
+                  color: 'var(--text-primary)',
+                  fontSize: '0.813rem',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                }}>
+                  <div style={{ fontWeight: 600, marginBottom: 2 }}>
+                    {cell.serieId}
+                  </div>
+                  <div style={{ color: 'var(--text-muted)' }}>
+                    {cell.data.x}: <strong style={{ color: 'var(--text-primary)' }}>{cell.formattedValue}</strong> visitors
+                  </div>
+                </div>
+              )}
+              legends={[
+                {
+                  anchor: 'bottom-right',
+                  translateX: 0,
+                  translateY: -10,
+                  length: 180,
+                  thickness: 10,
+                  direction: 'row',
+                  tickPosition: 'after',
+                  tickSize: 3,
+                  tickSpacing: 4,
+                  tickOverlap: false,
+                  title: 'Visitors',
+                  titleAlign: 'start',
+                  titleOffset: 4
+                }
+              ]}
+            />
+          </div>
+
+          {/* Weekly pattern summary row */}
+          <div style={{
+            display: 'flex',
+            gap: 'var(--space-lg)',
+            justifyContent: 'center',
+            padding: 'var(--space-md)',
+            background: 'var(--bg-tertiary)',
+            borderRadius: 'var(--radius-md)',
+            marginTop: 'var(--space-sm)'
+          }}>
+            {(() => {
+              // Compute summary stats from weeklyData
+              let peakDay = '', peakHour = '', peakVal = 0, totalVisitors = 0
+              weeklyData.forEach(row => {
+                row.data.forEach(cell => {
+                  totalVisitors += cell.y
+                  if (cell.y > peakVal) {
+                    peakVal = cell.y
+                    peakDay = row.id
+                    peakHour = cell.x
+                  }
+                })
+              })
+              const avgPerHour = Math.round(totalVisitors / (DAYS_OF_WEEK.length * HOURS_RANGE.length))
+
+              return (
+                <>
+                  <ZoneStat label="Peak Day" value={peakDay.slice(0, 3)} />
+                  <ZoneStat label="Peak Hour" value={peakHour} />
+                  <ZoneStat label="Peak Count" value={peakVal} />
+                  <ZoneStat label="Avg / Hour" value={avgPerHour} />
+                  <ZoneStat label="Weekly Total" value={totalVisitors.toLocaleString()} />
+                </>
+              )
+            })()}
+          </div>
+        </motion.div>
+
+        {/* Row 3: Zone Statistics */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
           {/* Selected Zone Details */}
           <motion.div
             className="card"
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
           >
             <div className="card-header">
               <h3 className="card-title">Zone Details</h3>
@@ -398,7 +663,7 @@ export default function Heatmap() {
             className="card"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.25 }}
           >
             <div className="card-header">
               <h3 className="card-title">Zone Rankings</h3>

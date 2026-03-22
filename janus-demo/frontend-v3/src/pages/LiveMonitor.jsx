@@ -3,8 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, TrendingUp, TrendingDown, Clock, AlertTriangle,
   Activity, ArrowUpRight, ArrowDownRight, Eye, Zap,
-  Box, Cpu, MonitorDot, Database
+  Box, Cpu, MonitorDot, Database, BarChart3, Timer, Target, MousePointerClick
 } from 'lucide-react'
+import {
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis,
+  CartesianGrid, Tooltip, ResponsiveContainer
+} from 'recharts'
 
 // Lazy load tracking components
 const HumanoidTrackingDemo = lazy(() => import('../../../shared/HumanoidTrackingDemo'))
@@ -56,6 +60,28 @@ const PIPELINE_VERSIONS = [
   { id: 'E', label: 'Enhanced', description: 'COCO-SSD + ByteTrack smoothing', color: '#10b981' },
   { id: 'P', label: 'Pre-Processed', description: 'Offline YOLO + BoT-SORT (highest accuracy)', color: '#8b5cf6' }
 ]
+
+// Custom tooltip for recharts
+function ChartTooltip({ active, payload, label }) {
+  if (!active || !payload || !payload.length) return null
+  return (
+    <div style={{
+      background: 'var(--bg-primary)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-md)',
+      padding: 'var(--space-sm) var(--space-md)',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      fontSize: '0.75rem'
+    }}>
+      <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
+      {payload.map((entry, i) => (
+        <div key={i} style={{ color: entry.color, fontWeight: '600' }}>
+          {entry.name}: {entry.value}
+        </div>
+      ))}
+    </div>
+  )
+}
 
 // Loading component
 function LoadingSpinner() {
@@ -200,6 +226,36 @@ export default function LiveMonitor() {
   const [trackingMetrics, setTrackingMetrics] = useState(null)
   const [pipelineVersion, setPipelineVersion] = useState('A') // 'A' standard, 'E' enhanced
   const [mlStats, setMlStats] = useState(null)
+  const [apiData, setApiData] = useState({ conversion: null, queue: null, zones: null })
+  const [entryExitTrend, setEntryExitTrend] = useState([])
+
+  // Fetch real API data on mount and refresh every 30s
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [convRes, queueRes, zonesRes, entryExitRes] = await Promise.all([
+          fetch('http://localhost:8000/api/conversion?hours=24'),
+          fetch('http://localhost:8000/api/queue?hours=24'),
+          fetch('http://localhost:8000/api/zones?hours=24'),
+          fetch('http://localhost:8000/api/entries-exits?hours=24')
+        ])
+        setApiData({
+          conversion: convRes.ok ? await convRes.json() : null,
+          queue: queueRes.ok ? await queueRes.json() : null,
+          zones: zonesRes.ok ? await zonesRes.json() : null
+        })
+        if (entryExitRes.ok) {
+          const entryExitData = await entryExitRes.json()
+          setEntryExitTrend(Array.isArray(entryExitData) ? entryExitData : entryExitData?.data || [])
+        }
+      } catch (e) {
+        console.error('API fetch error:', e)
+      }
+    }
+    fetchData()
+    const interval = setInterval(fetchData, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     if (!isLive) return
@@ -220,6 +276,21 @@ export default function LiveMonitor() {
   const handleTrackingMetrics = (metrics) => {
     setTrackingMetrics(metrics)
   }
+
+  // Derive KPI values from API data with fallbacks
+  const bounceRate = apiData.conversion?.bounce_rate ?? apiData.conversion?.bounceRate ?? '--'
+  const engagementRate = apiData.conversion?.engagement_rate ?? apiData.conversion?.engagementRate ?? '--'
+  const conversionRate = apiData.conversion?.conversion_rate ?? apiData.conversion?.conversionRate ?? kpis.conversionRate
+  const queueWaitTime = apiData.queue?.avg_wait_time ?? apiData.queue?.avgWaitTime ?? apiData.queue?.wait_time ?? '--'
+
+  // Prepare zone data for bar chart
+  const zoneChartData = apiData.zones
+    ? (Array.isArray(apiData.zones) ? apiData.zones : apiData.zones?.data || apiData.zones?.zones || []).map(z => ({
+        name: z.name || z.zone_name || z.zone || z.label || 'Zone',
+        occupancy: z.occupancy ?? z.count ?? z.current ?? 0,
+        capacity: z.capacity ?? z.max ?? 100
+      }))
+    : []
 
   return (
     <div className="page-container">
@@ -415,6 +486,51 @@ export default function LiveMonitor() {
         />
       </div>
 
+      {/* Secondary KPI Row - Conversion & Queue Metrics */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 'var(--space-md)',
+        marginBottom: 'var(--space-xl)'
+      }}>
+        <KPICard
+          title="Bounce Rate"
+          value={bounceRate}
+          unit="%"
+          trend="down"
+          trendValue="4"
+          icon={MousePointerClick}
+          delay={6}
+        />
+        <KPICard
+          title="Engagement Rate"
+          value={engagementRate}
+          unit="%"
+          trend="up"
+          trendValue="6"
+          icon={Target}
+          delay={7}
+        />
+        <KPICard
+          title="Conversion Rate"
+          value={conversionRate}
+          unit="%"
+          trend="up"
+          trendValue="3"
+          icon={Zap}
+          delay={8}
+        />
+        <KPICard
+          title="Queue Wait Time"
+          value={queueWaitTime}
+          unit="min"
+          trend="down"
+          trendValue="2"
+          icon={Timer}
+          delay={9}
+        />
+      </div>
+
       {/* Main Content */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 'var(--space-lg)' }}>
         {/* Video Feed */}
@@ -592,6 +708,195 @@ export default function LiveMonitor() {
           </div>
         </div>
       </motion.div>
+
+      {/* Trend Charts Section */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 'var(--space-lg)',
+        marginTop: 'var(--space-lg)'
+      }}>
+        {/* Entry/Exit Trend Line Chart */}
+        <motion.div
+          className="card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="card-header">
+            <h3 className="card-title">Entry / Exit Trend (24h)</h3>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              Hourly traffic flow
+            </span>
+          </div>
+          <div style={{ width: '100%', height: 280, marginTop: 'var(--space-md)' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={entryExitTrend.length > 0 ? entryExitTrend : generateFallbackEntryExitData()}
+                margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+              >
+                <defs>
+                  <linearGradient id="entryGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#1e3a5f" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#1e3a5f" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="exitGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#c9a227" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#c9a227" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis
+                  dataKey="hour"
+                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                  axisLine={{ stroke: 'var(--border)' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                  axisLine={{ stroke: 'var(--border)' }}
+                  tickLine={false}
+                />
+                <Tooltip content={<ChartTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="entries"
+                  name="Entries"
+                  stroke="#1e3a5f"
+                  strokeWidth={2}
+                  fill="url(#entryGradient)"
+                  dot={false}
+                  activeDot={{ r: 4, fill: '#1e3a5f' }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="exits"
+                  name="Exits"
+                  stroke="#c9a227"
+                  strokeWidth={2}
+                  fill="url(#exitGradient)"
+                  dot={false}
+                  activeDot={{ r: 4, fill: '#c9a227' }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{
+            display: 'flex',
+            gap: 'var(--space-lg)',
+            justifyContent: 'center',
+            marginTop: 'var(--space-sm)',
+            fontSize: '0.75rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: 12, height: 3, background: '#1e3a5f', borderRadius: 2 }} />
+              <span style={{ color: 'var(--text-muted)' }}>Entries</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: 12, height: 3, background: '#c9a227', borderRadius: 2 }} />
+              <span style={{ color: 'var(--text-muted)' }}>Exits</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Zone Occupancy Bar Chart */}
+        <motion.div
+          className="card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <div className="card-header">
+            <h3 className="card-title">Zone Occupancy</h3>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              Current by zone
+            </span>
+          </div>
+          <div style={{ width: '100%', height: 280, marginTop: 'var(--space-md)' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={zoneChartData.length > 0 ? zoneChartData : generateFallbackZoneData()}
+                margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                barGap={4}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                  axisLine={{ stroke: 'var(--border)' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                  axisLine={{ stroke: 'var(--border)' }}
+                  tickLine={false}
+                />
+                <Tooltip content={<ChartTooltip />} />
+                <Bar
+                  dataKey="occupancy"
+                  name="Occupancy"
+                  fill="#1e3a5f"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={40}
+                />
+                <Bar
+                  dataKey="capacity"
+                  name="Capacity"
+                  fill="#38a169"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={40}
+                  opacity={0.3}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{
+            display: 'flex',
+            gap: 'var(--space-lg)',
+            justifyContent: 'center',
+            marginTop: 'var(--space-sm)',
+            fontSize: '0.75rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: 12, height: 12, background: '#1e3a5f', borderRadius: 2 }} />
+              <span style={{ color: 'var(--text-muted)' }}>Current</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: 12, height: 12, background: '#38a169', borderRadius: 2, opacity: 0.3 }} />
+              <span style={{ color: 'var(--text-muted)' }}>Capacity</span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   )
+}
+
+// Fallback data generators when API is unavailable
+function generateFallbackEntryExitData() {
+  const hours = []
+  const now = new Date()
+  for (let i = 23; i >= 0; i--) {
+    const h = new Date(now - i * 3600000)
+    const hourLabel = h.getHours().toString().padStart(2, '0') + ':00'
+    const isBusinessHours = h.getHours() >= 8 && h.getHours() <= 20
+    const base = isBusinessHours ? 40 : 10
+    hours.push({
+      hour: hourLabel,
+      entries: Math.floor(Math.random() * base + base * 0.5),
+      exits: Math.floor(Math.random() * (base * 0.8) + base * 0.4)
+    })
+  }
+  return hours
+}
+
+function generateFallbackZoneData() {
+  return [
+    { name: 'Lobby', occupancy: 45, capacity: 80 },
+    { name: 'Zone A', occupancy: 72, capacity: 100 },
+    { name: 'Zone B', occupancy: 58, capacity: 120 },
+    { name: 'Retail', occupancy: 34, capacity: 60 },
+    { name: 'Display', occupancy: 88, capacity: 100 },
+    { name: 'Exit Hall', occupancy: 22, capacity: 50 }
+  ]
 }

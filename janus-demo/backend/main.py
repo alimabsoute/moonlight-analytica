@@ -140,8 +140,30 @@ def ensure_schema():
             "CREATE INDEX IF NOT EXISTS idx_events_video_id ON events(video_id)",
             "CREATE INDEX IF NOT EXISTS idx_sessions_source ON sessions(source)",
             "CREATE INDEX IF NOT EXISTS idx_sessions_video_id ON sessions(video_id)",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_entry_time ON sessions(entry_time)",
+            "CREATE INDEX IF NOT EXISTS idx_events_timestamp ON events(timestamp)",
         ]:
             con.execute(idx)
+
+        # Profile table (singleton row, id=1)
+        con.execute(
+            """
+            CREATE TABLE IF NOT EXISTS profile (
+              id                   INTEGER PRIMARY KEY CHECK (id = 1),
+              store_name           TEXT DEFAULT 'My Store',
+              total_capacity       INTEGER DEFAULT 100,
+              camera_name          TEXT DEFAULT 'Camera 1',
+              timezone             TEXT DEFAULT 'America/New_York',
+              business_hours_start INTEGER DEFAULT 9,
+              business_hours_end   INTEGER DEFAULT 21,
+              updated_at           TEXT
+            )
+            """
+        )
+        # Ensure default profile row exists
+        con.execute(
+            "INSERT OR IGNORE INTO profile (id) VALUES (1)"
+        )
 
         # Insert default zones if empty
         con.execute("INSERT OR IGNORE INTO zones (zone_name, capacity, zone_type) VALUES ('entrance', 50, 'entrance')")
@@ -1427,6 +1449,244 @@ def get_tracking_metrics(video_id):
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# ── Profile Endpoints ─────────────────────────────────────────────────────
+
+@app.get("/api/profile")
+def get_profile():
+    """Get location profile settings."""
+    with db() as con:
+        row = con.execute("SELECT * FROM profile WHERE id = 1").fetchone()
+    if not row:
+        return jsonify({"error": "no profile"}), 404
+    return jsonify(dict(row))
+
+
+@app.put("/api/profile")
+def update_profile():
+    """Update location profile settings."""
+    body = request.get_json() or {}
+    allowed = ["store_name", "total_capacity", "camera_name", "timezone",
+               "business_hours_start", "business_hours_end"]
+    updates = {k: body[k] for k in allowed if k in body}
+    if not updates:
+        return jsonify({"error": "no valid fields provided"}), 400
+
+    set_clause = ", ".join(f"{k} = ?" for k in updates)
+    values = list(updates.values())
+    values.append(datetime.now(timezone.utc).isoformat(timespec="seconds"))
+
+    with db() as con:
+        con.execute(
+            f"UPDATE profile SET {set_clause}, updated_at = ? WHERE id = 1",
+            values,
+        )
+        con.commit()
+        row = con.execute("SELECT * FROM profile WHERE id = 1").fetchone()
+    return jsonify(dict(row))
+
+
+# ── New Analytics Endpoints ───────────────────────────────────────────────
+
+@app.get("/api/hourly-patterns")
+def hourly_patterns():
+    """Returns hourly traffic breakdown (24 bins) for peak/quiet hour identification."""
+    hours = parse_hours()
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        rows = con.execute(
+            f"""
+            SELECT CAST(strftime('%H', entry_time) AS INTEGER) AS hour,
+                   COUNT(*) AS sessions,
+                   AVG(dwell_seconds) AS avg_dwell,
+                   SUM(converted) AS conversions
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY hour
+            ORDER BY hour
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    # Build full 24-hour array (fill missing hours with 0)
+    hour_map = {row["hour"]: dict(row) for row in rows}
+    result = []
+    for h in range(24):
+        if h in hour_map:
+            result.append({
+                "hour": h,
+                "label": f"{h:02d}:00",
+                "sessions": hour_map[h]["sessions"],
+                "avg_dwell": round(hour_map[h]["avg_dwell"] or 0, 1),
+                "conversions": hour_map[h]["conversions"] or 0,
+            })
+        else:
+            result.append({
+                "hour": h,
+                "label": f"{h:02d}:00",
+                "sessions": 0,
+                "avg_dwell": 0,
+                "conversions": 0,
+            })
+
+    peak = max(result, key=lambda x: x["sessions"])
+    quiet = min(result, key=lambda x: x["sessions"])
+
+    return jsonify({
+        "hours": result,
+        "peak_hour": peak["hour"],
+        "quiet_hour": quiet["hour"],
+        "total_sessions": sum(r["sessions"] for r in result),
+    })
+
+
+@app.get("/api/dwell-distribution")
+def dwell_distribution():
+    """Returns dwell time histogram bins with counts."""
+    hours = parse_hours()
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        rows = con.execute(
+            f"""
+            SELECT dwell_seconds FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL AND dwell_seconds IS NOT NULL{src_sql}
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    dwell_times = [row["dwell_seconds"] for row in rows]
+    total = len(dwell_times)
+
+    bins = [
+        {"label": "< 1 min", "min": 0, "max": 60, "count": 0},
+        {"label": "1-5 min", "min": 60, "max": 300, "count": 0},
+        {"label": "5-15 min", "min": 300, "max": 900, "count": 0},
+        {"label": "15-30 min", "min": 900, "max": 1800, "count": 0},
+        {"label": "30+ min", "min": 1800, "max": 999999, "count": 0},
+    ]
+
+    for d in dwell_times:
+        for b in bins:
+            if b["min"] <= d < b["max"]:
+                b["count"] += 1
+                break
+
+    for b in bins:
+        b["percentage"] = round((b["count"] / total * 100) if total > 0 else 0, 1)
+
+    return jsonify({"bins": bins, "total_sessions": total})
+
+
+@app.get("/api/flow-between-zones")
+def flow_between_zones():
+    """Returns zone-to-zone transition counts from session zone_path data."""
+    import json as _json
+
+    hours = parse_hours()
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        rows = con.execute(
+            f"""
+            SELECT zone_path FROM sessions
+            WHERE entry_time > ? AND zone_path IS NOT NULL{src_sql}
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    transitions = {}
+    for row in rows:
+        try:
+            path = _json.loads(row["zone_path"])
+        except (TypeError, _json.JSONDecodeError):
+            continue
+        for i in range(len(path) - 1):
+            key = f"{path[i]} -> {path[i+1]}"
+            transitions[key] = transitions.get(key, 0) + 1
+
+    # Sort by count descending
+    sorted_transitions = sorted(transitions.items(), key=lambda x: x[1], reverse=True)
+    result = [{"from": t[0].split(" -> ")[0], "to": t[0].split(" -> ")[1], "count": t[1]}
+              for t in sorted_transitions]
+
+    return jsonify({"transitions": result, "total_paths": len(rows)})
+
+
+@app.get("/api/period-comparison")
+def period_comparison():
+    """Compare KPIs between current and previous period."""
+    current_hours = parse_hours(default=24)
+    now = datetime.now(timezone.utc)
+    current_start = now - timedelta(hours=current_hours)
+    previous_start = current_start - timedelta(hours=current_hours)
+    src_sql, src_params = source_filter()
+
+    def get_period_kpis(start, end, src_sql, src_params):
+        with db() as con:
+            stats = con.execute(
+                f"""
+                SELECT
+                    COUNT(*) as total_sessions,
+                    AVG(dwell_seconds) as avg_dwell,
+                    SUM(converted) as conversions,
+                    SUM(CASE WHEN dwell_seconds < 60 THEN 1 ELSE 0 END) as bounced,
+                    SUM(CASE WHEN dwell_seconds >= 300 THEN 1 ELSE 0 END) as engaged
+                FROM sessions
+                WHERE entry_time > ? AND entry_time <= ? AND exit_time IS NOT NULL{src_sql}
+                """,
+                [start.isoformat(timespec="seconds"),
+                 end.isoformat(timespec="seconds")] + src_params,
+            ).fetchone()
+
+            entries = con.execute(
+                f"""
+                SELECT COUNT(*) as count FROM events
+                WHERE timestamp > ? AND timestamp <= ? AND event_type = 'entry'{src_sql}
+                """,
+                [start.isoformat(timespec="seconds"),
+                 end.isoformat(timespec="seconds")] + src_params,
+            ).fetchone()["count"] or 0
+
+        total = stats["total_sessions"] or 0
+        conversions = stats["conversions"] or 0
+        bounced = stats["bounced"] or 0
+        engaged = stats["engaged"] or 0
+
+        return {
+            "total_visitors": entries,
+            "total_sessions": total,
+            "avg_dwell_seconds": round(stats["avg_dwell"] or 0, 1),
+            "conversions": conversions,
+            "conversion_rate": round((conversions / total * 100) if total > 0 else 0, 1),
+            "bounce_rate": round((bounced / total * 100) if total > 0 else 0, 1),
+            "engagement_rate": round((engaged / total * 100) if total > 0 else 0, 1),
+        }
+
+    current = get_period_kpis(current_start, now, src_sql, src_params)
+    previous = get_period_kpis(previous_start, current_start, src_sql, src_params)
+
+    # Calculate % changes
+    changes = {}
+    for key in current:
+        curr_val = current[key]
+        prev_val = previous[key]
+        if prev_val and prev_val != 0:
+            changes[key] = round(((curr_val - prev_val) / prev_val) * 100, 1)
+        else:
+            changes[key] = 0.0
+
+    return jsonify({
+        "current": current,
+        "previous": previous,
+        "changes": changes,
+        "period_hours": current_hours,
+    })
 
 
 if __name__ == "__main__":
