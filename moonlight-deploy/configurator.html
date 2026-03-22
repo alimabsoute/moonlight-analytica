@@ -793,15 +793,25 @@ const ECO_NAMES = [
 // ── 5 PRODUCTS DATA ──
 const PRODUCTS = [
   {id:'phynxtimer',name:'PhynxTimer',cat:'Productivity',tagline:'Time is your scarcest resource. Measure it.',
-   desc:'Workforce analytics and productivity tracking. Analyze time allocation, identify inefficiencies, and optimize team output.'},
+   desc:'Workforce analytics and productivity tracking. Analyze time allocation, identify inefficiencies, and optimize team output.',
+   bullets:['Employee time allocation heatmaps','Productivity scoring per team/project','Idle time detection & alerts','Export reports to PDF/CSV'],
+   icon:`<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="26" r="14" stroke="#4dd8e6" stroke-width="2.5" fill="none"/><line x1="24" y1="26" x2="24" y2="16" stroke="#4dd8e6" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="26" x2="32" y2="26" stroke="#36d6b3" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="12" x2="24" y2="8" stroke="#4dd8e6" stroke-width="2"/><line x1="20" y1="8" x2="28" y2="8" stroke="#4dd8e6" stroke-width="2" stroke-linecap="round"/></svg>`},
   {id:'roninseo',name:'Ronin SEO',cat:'SEO Intelligence',tagline:'See tomorrow\u2019s keywords today.',
-   desc:'Advanced keyword research + forecasting engine. Real-time blog topic suggestions, competitor gap analysis, and predictive search intelligence.'},
+   desc:'Advanced keyword research + forecasting engine. Real-time blog topic suggestions, competitor gap analysis, and predictive search intelligence.',
+   bullets:['Predictive keyword forecasting','Competitor SERP gap analysis','Auto blog topic suggestions','Google Trends integration'],
+   icon:`<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="12" stroke="#4dd8e6" stroke-width="2.5" fill="none"/><line x1="30" y1="30" x2="40" y2="40" stroke="#4dd8e6" stroke-width="3" stroke-linecap="round"/><polyline points="16,26 20,20 24,24 30,16" stroke="#36d6b3" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`},
   {id:'projectg',name:'Project G',cat:'Content Automation',tagline:'From idea to published in minutes.',
-   desc:'AI-powered blog automation platform. Input a topic, output a fully optimized article with images, internal links, SEO metadata.'},
+   desc:'AI-powered blog automation platform. Input a topic, output a fully optimized article with images, internal links, SEO metadata.',
+   bullets:['AI article generation (Claude + GPT)','Auto SEO metadata & internal links','Image sourcing & optimization','One-click publish to CMS'],
+   icon:`<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 8 L34 8 L38 14 L38 40 L10 40 L10 14 Z" stroke="#4dd8e6" stroke-width="2" fill="none"/><line x1="16" y1="20" x2="32" y2="20" stroke="#36d6b3" stroke-width="1.5" opacity="0.6"/><line x1="16" y1="26" x2="28" y2="26" stroke="#36d6b3" stroke-width="1.5" opacity="0.4"/><line x1="16" y1="32" x2="30" y2="32" stroke="#36d6b3" stroke-width="1.5" opacity="0.3"/><path d="M30 8 L30 14 L38 14" stroke="#4dd8e6" stroke-width="1.5" fill="none"/></svg>`},
   {id:'theseus',name:'Theseus',cat:'Review Intelligence',tagline:'Know what they\u2019re saying before it hits your bottom line.',
-   desc:'Multi-platform review scraping and sentiment analytics. Aggregate customer feedback from Walmart, Amazon, Google, Yelp.'},
+   desc:'Multi-platform review scraping and sentiment analytics. Aggregate customer feedback from Walmart, Amazon, Google, Yelp.',
+   bullets:['Multi-platform review aggregation','Real-time sentiment scoring','Competitor review benchmarks','Alert on negative trend spikes'],
+   icon:`<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="#4dd8e6" stroke-width="2" fill="none"/><path d="M24 10 A14 14 0 0 1 38 24" stroke="#36d6b3" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M18 18 L24 24 L30 18" stroke="#4dd8e6" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="#4dd8e6"/></svg>`},
   {id:'sentinel',name:'Project Sentinel',cat:'Product Intelligence',tagline:'Never be the last to know.',
-   desc:'Real-time product intelligence platform. Surface new tools the moment they launch, track competitive threats.'}
+   desc:'Real-time product intelligence platform. Surface new tools the moment they launch, track competitive threats.',
+   bullets:['Real-time launch detection','Competitive threat alerts','Market trend radar','Weekly intelligence digest'],
+   icon:`<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 6 L40 16 L40 32 L24 42 L8 32 L8 16 Z" stroke="#4dd8e6" stroke-width="2" fill="none"/><circle cx="24" cy="24" r="6" stroke="#36d6b3" stroke-width="2" fill="none"/><circle cx="24" cy="24" r="2" fill="#4dd8e6"/><line x1="24" y1="6" x2="24" y2="18" stroke="#4dd8e6" stroke-width="1" opacity="0.4"/><line x1="24" y1="30" x2="24" y2="42" stroke="#4dd8e6" stroke-width="1" opacity="0.4"/></svg>`}
 ];
 
 // ── CTA VARIATIONS ──
@@ -1451,49 +1461,169 @@ function renderCaps(cfg) {
   </div>`;
 }
 
+function mkProdLogo(p) {
+  return `<div style="width:48px;height:48px;border-radius:14px;background:rgba(77,216,230,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0">${p.icon ? `<div style="width:32px;height:32px">${p.icon}</div>` : `<span style="font-size:1.2rem;font-weight:700;color:#4dd8e6">${p.name[0]}</span>`}</div>`;
+}
+function mkProdBullets(p) {
+  return p.bullets ? `<ul style="list-style:none;padding:0;margin:8px 0 0">${p.bullets.map(b=>`<li style="font-size:.76rem;color:#64748b;line-height:1.5;padding:2px 0"><span style="color:#4dd8e6;margin-right:6px">&#10003;</span>${b}</li>`).join('')}</ul>` : '';
+}
+
 function renderEco(cfg, sectionName) {
   const name = sectionName || 'The Moonlight Suite';
   let inner = '';
 
   if (cfg.layout === 'horizontal') {
-    inner = PRODUCTS.map(p=>`<div style="display:flex;gap:28px;align-items:flex-start;padding:28px 0;border-bottom:1px solid rgba(0,0,0,.06)">
-      <div style="width:56px;height:56px;border-radius:14px;background:rgba(77,216,230,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;font-weight:700;color:#4dd8e6">${p.name[0]}</div>
+    inner = PRODUCTS.map(p=>`<div style="display:flex;gap:24px;align-items:flex-start;padding:28px 0;border-bottom:1px solid rgba(0,0,0,.06)">
+      ${mkProdLogo(p)}
       <div style="flex:1">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
           <h3 style="font-size:1.1rem;font-weight:700;color:#111827">${p.name}</h3>
           <span style="font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:rgba(77,216,230,.08);color:#4dd8e6">${p.cat}</span>
         </div>
         <p style="font-size:.82rem;color:#64748b;font-style:italic;margin-bottom:4px">"${p.tagline}"</p>
-        <p style="font-size:.85rem;color:#94a3b8;line-height:1.6">${p.desc}</p>
+        <p style="font-size:.85rem;color:#94a3b8;line-height:1.6;margin-bottom:2px">${p.desc}</p>
+        ${mkProdBullets(p)}
+        <a style="display:inline-block;margin-top:8px;font-size:.78rem;font-weight:600;color:#4dd8e6;text-decoration:none">Learn more &#8594;</a>
       </div>
     </div>`).join('');
+
   } else if (cfg.layout === 'grid-3-2') {
-    inner = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px">
-      ${PRODUCTS.slice(0,3).map(p=>`<div style="padding:28px 24px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff">
-        <div style="font-size:1.5rem;font-weight:800;color:#4dd8e6;margin-bottom:8px">${p.name[0]}</div>
-        <span style="font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8">${p.cat}</span>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#111827;margin:6px 0">${p.name}</h3>
+    const card = p => `<div style="padding:28px 24px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff">
+      ${mkProdLogo(p)}
+      <span style="display:block;font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8;margin-top:12px">${p.cat}</span>
+      <h3 style="font-size:1.1rem;font-weight:700;color:#111827;margin:6px 0">${p.name}</h3>
+      <p style="font-size:.78rem;color:#64748b;font-style:italic;margin-bottom:6px">"${p.tagline}"</p>
+      <p style="font-size:.82rem;color:#94a3b8;line-height:1.6">${p.desc}</p>
+      ${mkProdBullets(p)}
+      <a style="display:inline-block;margin-top:10px;font-size:.78rem;font-weight:600;color:#4dd8e6;text-decoration:none">Learn more &#8594;</a>
+    </div>`;
+    inner = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px">${PRODUCTS.slice(0,3).map(card).join('')}</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:66%;margin:0 auto">${PRODUCTS.slice(3).map(card).join('')}</div>`;
+
+  } else if (cfg.layout === 'list') {
+    inner = PRODUCTS.map(p=>`<div style="display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid rgba(0,0,0,.05)">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(77,216,230,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:24px;height:24px">${p.icon||''}</div></div>
+      <h3 style="font-size:.95rem;font-weight:700;color:#111827;min-width:120px">${p.name}</h3>
+      <span style="font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:rgba(77,216,230,.06);color:#4dd8e6;flex-shrink:0">${p.cat}</span>
+      <p style="font-size:.82rem;color:#64748b;font-style:italic;flex:1">"${p.tagline}"</p>
+      <a style="font-size:.75rem;font-weight:600;color:#4dd8e6;text-decoration:none;flex-shrink:0">Details &#8594;</a>
+    </div>`).join('');
+
+  } else if (cfg.layout === 'carousel') {
+    inner = `<div style="display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 0 16px;-webkit-overflow-scrolling:touch">
+      ${PRODUCTS.map(p=>`<div style="min-width:280px;max-width:280px;scroll-snap-align:start;padding:28px 24px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff;flex-shrink:0">
+        ${mkProdLogo(p)}
+        <span style="display:block;font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8;margin-top:14px">${p.cat}</span>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#111827;margin:6px 0">${p.name}</h3>
         <p style="font-size:.78rem;color:#64748b;font-style:italic;margin-bottom:6px">"${p.tagline}"</p>
         <p style="font-size:.82rem;color:#94a3b8;line-height:1.6">${p.desc}</p>
+        ${mkProdBullets(p)}
+        <a style="display:inline-block;margin-top:10px;font-size:.78rem;font-weight:600;color:#4dd8e6;text-decoration:none">Learn more &#8594;</a>
       </div>`).join('')}
     </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:66%;margin:0 auto">
-      ${PRODUCTS.slice(3).map(p=>`<div style="padding:28px 24px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff">
-        <div style="font-size:1.5rem;font-weight:800;color:#4dd8e6;margin-bottom:8px">${p.name[0]}</div>
-        <span style="font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8">${p.cat}</span>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#111827;margin:6px 0">${p.name}</h3>
-        <p style="font-size:.78rem;color:#64748b;font-style:italic;margin-bottom:6px">"${p.tagline}"</p>
-        <p style="font-size:.82rem;color:#94a3b8;line-height:1.6">${p.desc}</p>
+    <div style="display:flex;justify-content:center;gap:6px;margin-top:8px">${PRODUCTS.map((_,i)=>`<span style="width:8px;height:8px;border-radius:50%;background:${i===0?'#4dd8e6':'rgba(0,0,0,.12)'}"></span>`).join('')}</div>`;
+
+  } else if (cfg.layout === 'bento') {
+    const lg = PRODUCTS[0]; // Janus gets the large card (or PhynxTimer since no Janus in list)
+    const sm = PRODUCTS.slice(1);
+    inner = `<div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px">
+      <div style="grid-row:1/3;padding:36px 28px;border-radius:20px;border:1px solid rgba(0,0,0,.06);background:#fff;display:flex;flex-direction:column;justify-content:center">
+        ${mkProdLogo(lg)}
+        <span style="display:block;font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8;margin-top:16px">${lg.cat}</span>
+        <h3 style="font-size:1.3rem;font-weight:700;color:#111827;margin:8px 0">${lg.name}</h3>
+        <p style="font-size:.82rem;color:#64748b;font-style:italic;margin-bottom:8px">"${lg.tagline}"</p>
+        <p style="font-size:.88rem;color:#94a3b8;line-height:1.7">${lg.desc}</p>
+        ${mkProdBullets(lg)}
+        <a style="display:inline-block;margin-top:14px;font-size:.82rem;font-weight:600;color:#4dd8e6;text-decoration:none">Learn more &#8594;</a>
+      </div>
+      ${sm.map(p=>`<div style="padding:24px 20px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          ${mkProdLogo(p)}
+          <div><span style="display:block;font-size:.58rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8">${p.cat}</span><h3 style="font-size:.95rem;font-weight:700;color:#111827">${p.name}</h3></div>
+        </div>
+        <p style="font-size:.78rem;color:#64748b;font-style:italic;margin-bottom:4px">"${p.tagline}"</p>
+        <p style="font-size:.8rem;color:#94a3b8;line-height:1.6">${p.desc}</p>
+        <a style="display:inline-block;margin-top:8px;font-size:.75rem;font-weight:600;color:#4dd8e6;text-decoration:none">Learn more &#8594;</a>
       </div>`).join('')}
     </div>`;
+
+  } else if (cfg.layout === 'tabs') {
+    inner = `<div>
+      <div style="display:flex;border-bottom:2px solid rgba(0,0,0,.06);margin-bottom:24px;gap:0">
+        ${PRODUCTS.map((p,i)=>`<button style="padding:12px 20px;border:none;background:none;font-family:inherit;font-size:.82rem;font-weight:${i===0?'700':'500'};color:${i===0?'#4dd8e6':'#94a3b8'};cursor:pointer;border-bottom:2px solid ${i===0?'#4dd8e6':'transparent'};margin-bottom:-2px;transition:all .2s">${p.name}</button>`).join('')}
+      </div>
+      <div style="display:flex;gap:28px;align-items:flex-start;padding:8px 0">
+        <div style="width:64px;height:64px;border-radius:16px;background:rgba(77,216,230,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:40px;height:40px">${PRODUCTS[0].icon||''}</div></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <h3 style="font-size:1.2rem;font-weight:700;color:#111827">${PRODUCTS[0].name}</h3>
+            <span style="font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:rgba(77,216,230,.08);color:#4dd8e6">${PRODUCTS[0].cat}</span>
+          </div>
+          <p style="font-size:.88rem;color:#64748b;font-style:italic;margin-bottom:8px">"${PRODUCTS[0].tagline}"</p>
+          <p style="font-size:.9rem;color:#94a3b8;line-height:1.7">${PRODUCTS[0].desc}</p>
+          ${mkProdBullets(PRODUCTS[0])}
+          <a style="display:inline-block;margin-top:14px;font-size:.82rem;font-weight:600;color:#4dd8e6;text-decoration:none">Explore ${PRODUCTS[0].name} &#8594;</a>
+        </div>
+      </div>
+    </div>`;
+
+  } else if (cfg.layout === 'magazine') {
+    inner = `<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px">
+      ${[PRODUCTS[0]].map(p=>`<div style="padding:36px 28px;border-radius:20px;border:1px solid rgba(0,0,0,.06);background:#fff">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">${mkProdLogo(p)}<div><span style="font-size:.58rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8">${p.cat}</span><h3 style="font-size:1.2rem;font-weight:700;color:#111827">${p.name}</h3></div></div>
+        <p style="font-size:.82rem;color:#64748b;font-style:italic;margin-bottom:8px">"${p.tagline}"</p>
+        <p style="font-size:.88rem;color:#94a3b8;line-height:1.7">${p.desc}</p>
+        ${mkProdBullets(p)}
+        <a style="display:inline-block;margin-top:12px;font-size:.8rem;font-weight:600;color:#4dd8e6;text-decoration:none">Learn more &#8594;</a>
+      </div>`).join('')}
+      ${[PRODUCTS[1]].map(p=>`<div style="padding:28px 22px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff">
+        ${mkProdLogo(p)}
+        <span style="display:block;font-size:.58rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8;margin-top:12px">${p.cat}</span>
+        <h3 style="font-size:1rem;font-weight:700;color:#111827;margin:6px 0">${p.name}</h3>
+        <p style="font-size:.78rem;color:#64748b;font-style:italic">"${p.tagline}"</p>
+        <p style="font-size:.8rem;color:#94a3b8;line-height:1.6;margin-top:6px">${p.desc}</p>
+      </div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      ${PRODUCTS.slice(2).map(p=>`<div style="padding:24px 20px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">${mkProdLogo(p)}<div><h3 style="font-size:.92rem;font-weight:700;color:#111827">${p.name}</h3><span style="font-size:.58rem;font-weight:600;color:#94a3b8;text-transform:uppercase">${p.cat}</span></div></div>
+        <p style="font-size:.78rem;color:#64748b;font-style:italic">"${p.tagline}"</p>
+        <p style="font-size:.8rem;color:#94a3b8;line-height:1.5;margin-top:4px">${p.desc}</p>
+      </div>`).join('')}
+    </div>`;
+
+  } else if (cfg.layout === 'badges') {
+    inner = `<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+      ${PRODUCTS.map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:60px;border:1px solid rgba(0,0,0,.08);background:#fff;cursor:pointer;transition:all .2s">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(77,216,230,.08);display:flex;align-items:center;justify-content:center"><div style="width:20px;height:20px">${p.icon||''}</div></div>
+        <div>
+          <h3 style="font-size:.82rem;font-weight:700;color:#111827;line-height:1.2">${p.name}</h3>
+          <span style="font-size:.6rem;color:#94a3b8">${p.cat}</span>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div style="margin-top:28px;padding:28px 24px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff">
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div style="width:56px;height:56px;border-radius:14px;background:rgba(77,216,230,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:36px;height:36px">${PRODUCTS[0].icon||''}</div></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><h3 style="font-size:1.1rem;font-weight:700;color:#111827">${PRODUCTS[0].name}</h3><span style="font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:rgba(77,216,230,.08);color:#4dd8e6">${PRODUCTS[0].cat}</span></div>
+          <p style="font-size:.82rem;color:#64748b;font-style:italic;margin-bottom:4px">"${PRODUCTS[0].tagline}"</p>
+          <p style="font-size:.85rem;color:#94a3b8;line-height:1.6">${PRODUCTS[0].desc}</p>
+          ${mkProdBullets(PRODUCTS[0])}
+        </div>
+      </div>
+    </div>`;
+
   } else {
-    // Default: grid-5 or fallback to 3+2
+    // Default: grid-5
     inner = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
       ${PRODUCTS.map(p=>`<div style="padding:28px 20px;border-radius:16px;border:1px solid rgba(0,0,0,.06);background:#fff;text-align:center">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(77,216,230,.08);display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#4dd8e6;margin-bottom:12px">${p.name[0]}</div>
+        <div style="display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px"><div style="width:40px;height:40px">${p.icon||''}</div></div>
         <span style="display:block;font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:4px">${p.cat}</span>
         <h3 style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px">${p.name}</h3>
-        <p style="font-size:.75rem;color:#64748b;font-style:italic">"${p.tagline}"</p>
+        <p style="font-size:.75rem;color:#64748b;font-style:italic;margin-bottom:6px">"${p.tagline}"</p>
+        <p style="font-size:.78rem;color:#94a3b8;line-height:1.5">${p.desc}</p>
+        <a style="display:inline-block;margin-top:10px;font-size:.75rem;font-weight:600;color:#4dd8e6;text-decoration:none">Learn more &#8594;</a>
       </div>`).join('')}
     </div>`;
   }
@@ -1503,7 +1633,7 @@ function renderEco(cfg, sectionName) {
       <div style="text-align:center;margin-bottom:4rem">
         <span style="font-size:.72rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#94a3b8;display:block;margin-bottom:1rem">Ecosystem</span>
         <h2 style="font-family:'Outfit',sans-serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;color:#111827;letter-spacing:-1px;margin-bottom:.6rem">${name}</h2>
-        <p style="font-size:1rem;color:#94a3b8">Every tool a business needs to compete.</p>
+        <p style="font-size:1rem;color:#94a3b8;max-width:480px;margin:0 auto;line-height:1.6">Five purpose-built tools. One unified intelligence layer. Everything a business needs to compete.</p>
       </div>
       ${inner}
     </div>
@@ -1516,22 +1646,105 @@ function renderCTA(cfg) {
   const subCol = isDark ? 'rgba(255,255,255,.5)' : '#94a3b8';
   const inputBg = isDark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.04)';
   const inputBorder = isDark ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)';
+  const btnStyle = `padding:14px 24px;background:#4dd8e6;color:#0a0f1a;border:none;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;white-space:nowrap`;
+  const inputStyle = `flex:1;padding:14px 18px;border:1px solid ${inputBorder};border-radius:12px;background:${inputBg};color:${textCol};font-size:.92rem;font-family:inherit;outline:none`;
 
-  const form = cfg.style === 'toggle'
-    ? `<div style="margin-bottom:20px">
-        <div style="display:inline-flex;background:rgba(0,0,0,.06);border-radius:8px;overflow:hidden;margin-bottom:24px">
-          <button style="padding:8px 20px;background:#4dd8e6;color:#0a0f1a;border:none;font-weight:600;font-size:.82rem;cursor:pointer;font-family:inherit">Individual</button>
-          <button style="padding:8px 20px;background:none;color:#64748b;border:none;font-weight:500;font-size:.82rem;cursor:pointer;font-family:inherit">Business</button>
+  let form = '';
+  const socialProof = `<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px">
+    <div style="display:flex"><span style="width:24px;height:24px;border-radius:50%;background:#e2e8f0;border:2px solid ${isDark?'#1a1f2e':'#fff'};display:inline-block;margin-right:-8px"></span><span style="width:24px;height:24px;border-radius:50%;background:#cbd5e1;border:2px solid ${isDark?'#1a1f2e':'#fff'};display:inline-block;margin-right:-8px"></span><span style="width:24px;height:24px;border-radius:50%;background:#94a3b8;border:2px solid ${isDark?'#1a1f2e':'#fff'};display:inline-block"></span></div>
+    <span style="font-size:.78rem;font-weight:600;color:${isDark?'rgba(255,255,255,.7)':'#64748b'}">Join <span style="color:#4dd8e6">500+</span> teams already on the waitlist</span>
+  </div>`;
+
+  if (cfg.style === 'toggle') {
+    const tBg = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.06)';
+    form = `<div style="margin-bottom:20px">
+        <div style="display:inline-flex;background:${tBg};border-radius:8px;overflow:hidden;margin-bottom:24px" id="ctaToggle">
+          <button onclick="this.style.background='#4dd8e6';this.style.color='#0a0f1a';this.nextElementSibling.style.background='none';this.nextElementSibling.style.color='#64748b';this.closest('.s-cta').querySelector('.cta-biz').style.display='none';this.closest('.s-cta').querySelector('.cta-ind').style.display='flex'" style="padding:8px 20px;background:#4dd8e6;color:#0a0f1a;border:none;font-weight:600;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .2s">Individual</button>
+          <button onclick="this.style.background='#4dd8e6';this.style.color='#0a0f1a';this.previousElementSibling.style.background='none';this.previousElementSibling.style.color='#64748b';this.closest('.s-cta').querySelector('.cta-ind').style.display='none';this.closest('.s-cta').querySelector('.cta-biz').style.display='flex'" style="padding:8px 20px;background:none;color:#64748b;border:none;font-weight:500;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .2s">Business</button>
         </div>
       </div>
-      <div style="display:flex;gap:10px;max-width:460px;margin:0 auto">
-        <input type="email" placeholder="you@email.com" style="flex:1;padding:14px 18px;border:1px solid ${inputBorder};border-radius:12px;background:${inputBg};color:${textCol};font-size:.92rem;font-family:inherit;outline:none">
-        <button style="padding:14px 24px;background:#4dd8e6;color:#0a0f1a;border:none;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;white-space:nowrap">Join Waitlist</button>
-      </div>`
-    : `<div style="display:flex;gap:10px;max-width:460px;margin:0 auto">
-        <input type="email" placeholder="you@company.com" style="flex:1;padding:14px 18px;border:1px solid ${inputBorder};border-radius:12px;background:${inputBg};color:${textCol};font-size:.92rem;font-family:inherit;outline:none">
-        <button style="padding:14px 24px;background:#4dd8e6;color:#0a0f1a;border:none;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;white-space:nowrap">Join Waitlist</button>
+      <div class="cta-ind" style="display:flex;gap:10px;max-width:460px;margin:0 auto">
+        <input type="email" placeholder="you@email.com" style="${inputStyle}">
+        <button style="${btnStyle}">Join Waitlist</button>
+      </div>
+      <div class="cta-biz" style="display:none;flex-direction:column;gap:10px;max-width:460px;margin:0 auto">
+        <div style="display:flex;gap:10px">
+          <input type="text" placeholder="Company name" style="${inputStyle}">
+          <input type="text" placeholder="Team size" style="${inputStyle};max-width:120px">
+        </div>
+        <div style="display:flex;gap:10px">
+          <input type="email" placeholder="work@company.com" style="${inputStyle}">
+          <button style="${btnStyle}">Request Demo</button>
+        </div>
       </div>`;
+
+  } else if (cfg.style === 'two-col') {
+    form = `<div style="display:flex;gap:48px;align-items:center;text-align:left;max-width:800px;margin:0 auto">
+      <div style="flex:1">
+        <h3 style="font-size:1.3rem;font-weight:700;color:${textCol};margin-bottom:8px">Get Early Access</h3>
+        <p style="font-size:.88rem;color:${subCol};line-height:1.7">Be among the first to try Janus and the full Moonlight suite. Priority access for waitlist members.</p>
+        ${socialProof}
+      </div>
+      <div style="flex:1">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <input type="email" placeholder="you@company.com" style="${inputStyle};flex:initial">
+          <button style="${btnStyle};width:100%">Join the Waitlist</button>
+        </div>
+        <p style="margin-top:8px;font-size:.72rem;color:${subCol};opacity:.6;text-align:center">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>`;
+    return `<div class="s-cta" style="background:${cfg.bg};text-align:left"><div class="container">${form}</div></div>`;
+
+  } else if (cfg.style === 'card') {
+    form = `<div style="max-width:480px;margin:0 auto;padding:36px 32px;border-radius:20px;background:${isDark?'rgba(255,255,255,.04)':'#fff'};border:1px solid ${isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)'};box-shadow:0 4px 24px rgba(0,0,0,.04)">
+      <h3 style="font-size:1.1rem;font-weight:700;color:${textCol};margin-bottom:6px">Join the Waitlist</h3>
+      <p style="font-size:.85rem;color:${subCol};margin-bottom:20px;line-height:1.6">Priority access to Janus Beta and the full suite.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input type="email" placeholder="you@company.com" style="${inputStyle};flex:initial">
+        <button style="${btnStyle};width:100%">Get Early Access</button>
+      </div>
+      <p style="margin-top:12px;font-size:.72rem;color:${subCol};opacity:.6;text-align:center">No spam. Unsubscribe anytime.</p>
+    </div>`;
+
+  } else if (cfg.style === 'banner') {
+    form = `<div style="display:flex;align-items:center;gap:20px;max-width:720px;margin:0 auto;padding:20px 28px;border-radius:16px;background:${isDark?'rgba(255,255,255,.04)':'rgba(0,0,0,.02)'};border:1px solid ${isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)'}">
+      <div style="flex:1">
+        <h3 style="font-size:1rem;font-weight:700;color:${textCol};margin-bottom:2px">Ready to see Janus in action?</h3>
+        <p style="font-size:.8rem;color:${subCol}">Join 500+ teams on the waitlist.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0">
+        <input type="email" placeholder="you@email.com" style="${inputStyle};min-width:200px;flex:initial">
+        <button style="${btnStyle}">Join</button>
+      </div>
+    </div>`;
+    return `<div class="s-cta" style="background:${cfg.bg}"><div class="container" style="padding-top:3rem;padding-bottom:3rem">${form}</div></div>`;
+
+  } else if (cfg.style === 'gradient') {
+    form = `<div style="display:flex;gap:10px;max-width:460px;margin:0 auto">
+      <input type="email" placeholder="you@company.com" style="${inputStyle}">
+      <button style="${btnStyle}">Join Waitlist</button>
+    </div>
+    ${socialProof}`;
+
+  } else if (cfg.style === 'social-proof') {
+    form = `${socialProof}
+    <div style="display:flex;gap:10px;max-width:460px;margin:0 auto;margin-top:24px">
+      <input type="email" placeholder="you@company.com" style="${inputStyle}">
+      <button style="${btnStyle}">Join Waitlist</button>
+    </div>
+    <div style="display:flex;justify-content:center;gap:24px;margin-top:20px">
+      <span style="font-size:.72rem;color:${subCol}">&#10003; Free tier available</span>
+      <span style="font-size:.72rem;color:${subCol}">&#10003; No credit card</span>
+      <span style="font-size:.72rem;color:${subCol}">&#10003; Cancel anytime</span>
+    </div>`;
+
+  } else {
+    // simple, dark, dark-full
+    form = `<div style="display:flex;gap:10px;max-width:460px;margin:0 auto">
+      <input type="email" placeholder="you@company.com" style="${inputStyle}">
+      <button style="${btnStyle}">Join Waitlist</button>
+    </div>`;
+  }
 
   return `<div class="s-cta" style="background:${cfg.bg}">
     <div class="container">
@@ -1539,7 +1752,7 @@ function renderCTA(cfg) {
       <h2 style="font-family:'Outfit',sans-serif;font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:700;color:${textCol};letter-spacing:-.5px;margin-bottom:.6rem">Stay Ahead of the Curve.</h2>
       <p style="font-size:.95rem;color:${subCol};max-width:440px;margin:0 auto 2rem;line-height:1.7">Join the mailing list for Janus Beta access and ecosystem updates.</p>
       ${form}
-      <p style="margin-top:1rem;font-size:.72rem;color:${subCol};opacity:.6">No spam. Unsubscribe anytime.</p>
+      ${cfg.style !== 'social-proof' && cfg.style !== 'two-col' && cfg.style !== 'banner' ? `<p style="margin-top:1rem;font-size:.72rem;color:${subCol};opacity:.6">No spam. Unsubscribe anytime.</p>` : ''}
     </div>
   </div>`;
 }
