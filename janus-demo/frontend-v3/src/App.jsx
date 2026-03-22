@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Activity, BarChart3, FileText, Map, Settings as SettingsIcon,
   Layers, Sun, Moon, Bell, Brain, TrendingUp, User, Search,
-  MoreHorizontal, X
+  MoreHorizontal, X, LineChart, UserSearch, MapPin
 } from 'lucide-react'
 import { useTheme } from './context/ThemeContext'
 import { useToast } from './context/ToastContext'
@@ -18,6 +18,10 @@ import Settings from './pages/Settings'
 import Insights from './pages/Insights'
 import Forecasting from './pages/Forecasting'
 import Profile from './pages/Profile'
+import DeepAnalytics from './pages/DeepAnalytics'
+import Visitors from './pages/Visitors'
+import Alerts from './pages/Alerts'
+import ZoneExplorer from './pages/ZoneExplorer'
 
 const NAV_ITEMS = [
   { id: 'live', label: 'Live Monitor', icon: Activity, badge: null },
@@ -28,7 +32,11 @@ const NAV_ITEMS = [
   { id: 'heatmap', label: 'Heatmap', icon: Map, badge: null },
   { id: 'zones', label: 'Zone Config', icon: Layers, badge: null },
   { id: 'profile', label: 'Profile', icon: User, badge: null },
-  { id: 'settings', label: 'Settings', icon: SettingsIcon, badge: null }
+  { id: 'settings', label: 'Settings', icon: SettingsIcon, badge: null },
+  { id: 'deep-analytics', label: 'Deep Analytics', icon: LineChart, badge: null },
+  { id: 'visitors', label: 'Visitors', icon: UserSearch, badge: null },
+  { id: 'alerts', label: 'Alerts', icon: Bell, badge: null },
+  { id: 'zone-explorer', label: 'Zone Explorer', icon: MapPin, badge: null }
 ]
 
 const PAGES = {
@@ -40,7 +48,11 @@ const PAGES = {
   heatmap: Heatmap,
   zones: ZoneConfig,
   profile: Profile,
-  settings: Settings
+  settings: Settings,
+  'deep-analytics': DeepAnalytics,
+  visitors: Visitors,
+  alerts: Alerts,
+  'zone-explorer': ZoneExplorer
 }
 
 export default function App() {
@@ -131,8 +143,28 @@ export default function App() {
             </div>
 
             <div className="nav-section">
+              <div className="nav-section-title">Deep Insights</div>
+              {navItems.slice(9).map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  className={`nav-item ${activePage === item.id ? 'active' : ''}`}
+                  onClick={() => setActivePage(item.id)}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (index + 9) * 0.03 }}
+                >
+                  <item.icon size={18} className="nav-item-icon" />
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className="nav-item-badge">{item.badge}</span>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="nav-section">
               <div className="nav-section-title">Administration</div>
-              {navItems.slice(6).map((item, index) => (
+              {navItems.slice(6, 9).map((item, index) => (
                 <motion.div
                   key={item.id}
                   className={`nav-item ${activePage === item.id ? 'active' : ''}`}

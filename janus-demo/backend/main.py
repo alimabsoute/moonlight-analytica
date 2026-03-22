@@ -133,6 +133,7 @@ def ensure_schema():
             "ALTER TABLE events ADD COLUMN video_id TEXT",
             "ALTER TABLE sessions ADD COLUMN source TEXT DEFAULT 'live'",
             "ALTER TABLE sessions ADD COLUMN video_id TEXT",
+            "ALTER TABLE profile ADD COLUMN avg_transaction_value REAL DEFAULT 25.0",
         ]:
             try:
                 con.execute(alter)
@@ -231,13 +232,19 @@ def parse_hours(default: float = 168.0) -> float:
 @app.post("/seed_demo")
 def seed_demo():
     """
-    Reseed comprehensive demo data with sessions, events, zones for the last 14 days.
+    Reseed comprehensive demo data with 500+ sessions across 7 days.
+    Features: day-of-week variation, hour bell curve, realistic zone paths,
+    varied dwell, conversion correlation, zone_change events, repeat visitors.
     """
     import json
     import uuid
+    import math
 
-    days = 14
+    days = 7
     now = datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
+
+    # Pre-generate a pool of ~15% repeat visitor IDs
+    repeat_pool = [f"repeat-{i:04d}" for i in range(40)]
 
     with db() as con:
         # Clear existing data
@@ -247,52 +254,90 @@ def seed_demo():
 
         # Get zone IDs
         zones = {row["zone_name"]: row["id"] for row in con.execute("SELECT id, zone_name FROM zones").fetchall()}
+        zone_names = list(zones.keys())
 
         total_sessions = 0
         total_events = 0
 
-        # Generate realistic visitor sessions
         for d in range(days, -1, -1):
+            day_dt = now - timedelta(days=d)
+            weekday = day_dt.weekday()  # 0=Mon, 6=Sun
+            is_weekend = weekday >= 5
+
+            # Weekend = 60% of weekday traffic
+            day_multiplier = 0.6 if is_weekend else 1.0
+
             for h in range(24):
                 base_ts = now - timedelta(days=d, hours=(23 - h))
                 hour = base_ts.hour
 
-                # Hourly visitor volume (more during business hours 9-18)
-                if 9 <= hour <= 18:
-                    num_visitors = random.randint(15, 35)
-                elif 6 <= hour < 9 or 18 < hour <= 22:
-                    num_visitors = random.randint(5, 15)
-                else:
-                    num_visitors = random.randint(0, 5)
+                # Hour-of-day bell curve: peak 11am-2pm, quiet before 8am / after 8pm
+                # Using a Gaussian-like distribution centered at 12:30
+                hour_weight = math.exp(-0.5 * ((hour - 12.5) / 3.5) ** 2)
+                base_visitors = int(25 * hour_weight * day_multiplier)
+                # Add some noise
+                num_visitors = max(0, base_visitors + random.randint(-3, 5))
 
                 for _ in range(num_visitors):
-                    person_id = str(uuid.uuid4())[:8]
+                    # 15% chance to pick a repeat visitor
+                    if random.random() < 0.15:
+                        person_id = random.choice(repeat_pool)
+                    else:
+                        person_id = str(uuid.uuid4())[:8]
+
                     entry_ts = base_ts + timedelta(minutes=random.randint(0, 55))
 
-                    # Dwell time distribution (seconds)
+                    # Dwell time distribution: 10% bounce, 30% casual, 40% engaged, 20% power
                     dwell_type = random.choices(
-                        ['bounce', 'browse', 'shop', 'dine'],
-                        weights=[0.15, 0.35, 0.35, 0.15]
+                        ['bounce', 'casual', 'engaged', 'power'],
+                        weights=[0.10, 0.30, 0.40, 0.20]
                     )[0]
 
                     if dwell_type == 'bounce':
-                        dwell_sec = random.randint(10, 55)  # < 1 min
-                    elif dwell_type == 'browse':
-                        dwell_sec = random.randint(60, 600)  # 1-10 min
-                    elif dwell_type == 'shop':
-                        dwell_sec = random.randint(600, 1800)  # 10-30 min
-                    else:  # dine
-                        dwell_sec = random.randint(1800, 5400)  # 30-90 min
+                        dwell_sec = random.randint(10, 55)
+                    elif dwell_type == 'casual':
+                        dwell_sec = random.randint(120, 600)
+                    elif dwell_type == 'engaged':
+                        dwell_sec = random.randint(600, 1800)
+                    else:  # power
+                        dwell_sec = random.randint(1800, 5400)
 
                     exit_ts = entry_ts + timedelta(seconds=dwell_sec)
 
-                    # Conversion (more likely with longer dwell)
-                    converted = 1 if dwell_sec > 300 and random.random() < 0.4 else 0
+                    # Conversion: longer dwell = higher probability
+                    if dwell_sec < 120:
+                        conv_prob = 0.02
+                    elif dwell_sec < 600:
+                        conv_prob = 0.15
+                    elif dwell_sec < 1800:
+                        conv_prob = 0.45
+                    else:
+                        conv_prob = 0.65
+                    converted = 1 if random.random() < conv_prob else 0
 
-                    # Zone path (entrance -> main_floor -> maybe queue -> checkout -> exit)
-                    zone_path = ["entrance", "main_floor"]
-                    if converted:
-                        zone_path.extend(["queue", "checkout"])
+                    # Realistic zone paths based on dwell type
+                    if dwell_type == 'bounce':
+                        zone_path = ["entrance"]
+                    elif dwell_type == 'casual':
+                        zone_path = ["entrance", "main_floor"]
+                        if random.random() < 0.3:
+                            zone_path.append("queue")
+                    elif dwell_type == 'engaged':
+                        zone_path = ["entrance", "main_floor"]
+                        if random.random() < 0.5:
+                            zone_path.append("main_floor")  # revisit
+                        if converted:
+                            zone_path.extend(["queue", "checkout"])
+                        else:
+                            if random.random() < 0.3:
+                                zone_path.append("queue")
+                    else:  # power
+                        zone_path = ["entrance", "main_floor", "main_floor"]
+                        if random.random() < 0.4:
+                            zone_path.append("queue")
+                        if converted:
+                            zone_path.extend(["checkout"])
+                        zone_path.append("main_floor")
 
                     # Insert session
                     con.execute(
@@ -313,14 +358,15 @@ def seed_demo():
                         VALUES (?, ?, 'entry', ?, 'in', ?, 'demo')
                         """,
                         (entry_ts.isoformat(timespec="seconds"), person_id,
-                         zones.get("entrance"), random.uniform(0.85, 1.0))
+                         zones.get("entrance"), round(random.uniform(0.85, 1.0), 3))
                     )
                     total_events += 1
 
-                    # Insert zone change events
+                    # Insert zone change events for every transition in the path
                     current_ts = entry_ts
                     for zone_name in zone_path[1:]:
-                        current_ts += timedelta(seconds=random.randint(30, 180))
+                        step_secs = max(20, dwell_sec // (len(zone_path)))
+                        current_ts += timedelta(seconds=random.randint(int(step_secs * 0.5), int(step_secs * 1.5)))
                         if current_ts < exit_ts and zone_name in zones:
                             con.execute(
                                 """
@@ -328,7 +374,7 @@ def seed_demo():
                                 VALUES (?, ?, 'zone_change', ?, 'lateral', ?, 'demo')
                                 """,
                                 (current_ts.isoformat(timespec="seconds"), person_id,
-                                 zones.get(zone_name), random.uniform(0.85, 1.0))
+                                 zones.get(zone_name), round(random.uniform(0.85, 1.0), 3))
                             )
                             total_events += 1
 
@@ -339,11 +385,11 @@ def seed_demo():
                         VALUES (?, ?, 'exit', ?, 'out', ?, 'demo')
                         """,
                         (exit_ts.isoformat(timespec="seconds"), person_id,
-                         zones.get("entrance"), random.uniform(0.85, 1.0))
+                         zones.get("entrance"), round(random.uniform(0.85, 1.0), 3))
                     )
                     total_events += 1
 
-                # Also create legacy counts for backwards compatibility
+                # Legacy counts for backwards compatibility
                 count_val = num_visitors + random.randint(-3, 3)
                 con.execute(
                     "INSERT INTO counts(timestamp, count_value) VALUES (?, ?)",
@@ -1492,7 +1538,7 @@ def update_profile():
     """Update location profile settings."""
     body = request.get_json() or {}
     allowed = ["store_name", "total_capacity", "camera_name", "timezone",
-               "business_hours_start", "business_hours_end"]
+               "business_hours_start", "business_hours_end", "avg_transaction_value"]
     updates = {k: body[k] for k in allowed if k in body}
     if not updates:
         return jsonify({"error": "no valid fields provided"}), 400
@@ -1750,6 +1796,833 @@ def period_comparison():
         "changes": changes,
         "period_hours": current_hours,
     })
+
+
+# ── Deep Analytics Endpoints ──────────────────────────────────────────────
+
+@app.get("/api/trends")
+def trends():
+    """Daily aggregates for sparklines and trend charts."""
+    days = int(request.args.get("days", 30))
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        rows = con.execute(
+            f"""
+            SELECT DATE(entry_time) AS date,
+                   COUNT(*) AS visitors,
+                   AVG(dwell_seconds) AS avg_dwell,
+                   SUM(converted) AS conversions,
+                   SUM(CASE WHEN dwell_seconds < 60 THEN 1 ELSE 0 END) AS bounced,
+                   SUM(CASE WHEN dwell_seconds >= 300 THEN 1 ELSE 0 END) AS engaged
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY DATE(entry_time)
+            ORDER BY date ASC
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+        # Get peak hour per day
+        peak_rows = con.execute(
+            f"""
+            SELECT DATE(entry_time) AS date,
+                   CAST(strftime('%H', entry_time) AS INTEGER) AS hour,
+                   COUNT(*) AS cnt
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY DATE(entry_time), hour
+            ORDER BY date, cnt DESC
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    # Build peak hour map (first row per date = highest count)
+    peak_map = {}
+    for r in peak_rows:
+        if r["date"] not in peak_map:
+            peak_map[r["date"]] = r["hour"]
+
+    result = []
+    for row in rows:
+        total = row["visitors"] or 1
+        bounced = row["bounced"] or 0
+        engaged = row["engaged"] or 0
+        result.append({
+            "date": row["date"],
+            "visitors": row["visitors"],
+            "avg_dwell": round(row["avg_dwell"] or 0, 1),
+            "conversions": row["conversions"] or 0,
+            "bounce_rate": round(bounced / total * 100, 1),
+            "engagement_rate": round(engaged / total * 100, 1),
+            "peak_hour": peak_map.get(row["date"], 12),
+        })
+
+    return jsonify({"trends": result, "days": days})
+
+
+@app.get("/api/sessions/recent")
+def sessions_recent():
+    """Individual session list for visitor detail."""
+    limit = int(request.args.get("limit", 25))
+    offset = int(request.args.get("offset", 0))
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        rows = con.execute(
+            f"""
+            SELECT person_id, entry_time, exit_time, dwell_seconds, zone_path,
+                   converted
+            FROM sessions
+            WHERE exit_time IS NOT NULL{src_sql}
+            ORDER BY entry_time DESC
+            LIMIT ? OFFSET ?
+            """,
+            src_params + [limit, offset],
+        ).fetchall()
+
+        total_row = con.execute(
+            f"SELECT COUNT(*) AS cnt FROM sessions WHERE exit_time IS NOT NULL{src_sql}",
+            src_params,
+        ).fetchone()
+
+    import json as _json
+    sessions_list = []
+    for r in rows:
+        try:
+            path = _json.loads(r["zone_path"]) if r["zone_path"] else []
+        except Exception:
+            path = []
+        sessions_list.append({
+            "person_id": r["person_id"],
+            "entry_time": r["entry_time"],
+            "exit_time": r["exit_time"],
+            "dwell_seconds": r["dwell_seconds"],
+            "zone_path": path,
+            "converted": r["converted"],
+            "zones_visited_count": len(set(path)),
+        })
+
+    return jsonify({
+        "sessions": sessions_list,
+        "total": total_row["cnt"],
+        "limit": limit,
+        "offset": offset,
+    })
+
+
+@app.get("/api/zones/<int:zone_id>/detail")
+def zone_detail(zone_id):
+    """Deep dive into a single zone: hourly pattern, daily trend, transitions."""
+    hours = parse_hours(168)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    import json as _json
+
+    with db() as con:
+        zone_row = con.execute("SELECT * FROM zones WHERE id = ?", (zone_id,)).fetchone()
+        if not zone_row:
+            return jsonify({"error": "Zone not found"}), 404
+
+        zone_name = zone_row["zone_name"]
+
+        # Hourly pattern (24 buckets)
+        hourly = con.execute(
+            """
+            SELECT CAST(strftime('%H', timestamp) AS INTEGER) AS hour,
+                   COUNT(*) AS events,
+                   COUNT(DISTINCT person_id) AS unique_visitors
+            FROM events
+            WHERE zone_id = ? AND timestamp > ?
+            GROUP BY hour ORDER BY hour
+            """,
+            (zone_id, since.isoformat(timespec="seconds")),
+        ).fetchall()
+
+        # Daily trend (7 days)
+        daily = con.execute(
+            """
+            SELECT DATE(timestamp) AS date,
+                   COUNT(*) AS events,
+                   COUNT(DISTINCT person_id) AS unique_visitors
+            FROM events
+            WHERE zone_id = ? AND timestamp > ?
+            GROUP BY date ORDER BY date
+            """,
+            (zone_id, since.isoformat(timespec="seconds")),
+        ).fetchall()
+
+        # Avg dwell for sessions that visited this zone
+        dwell_row = con.execute(
+            """
+            SELECT AVG(dwell_seconds) AS avg_dwell,
+                   SUM(converted) AS conversions,
+                   COUNT(*) AS total
+            FROM sessions
+            WHERE entry_time > ? AND zone_path LIKE ? AND exit_time IS NOT NULL
+            """,
+            (since.isoformat(timespec="seconds"), f'%"{zone_name}"%'),
+        ).fetchone()
+
+        # Zone transitions from zone_path
+        paths = con.execute(
+            "SELECT zone_path FROM sessions WHERE entry_time > ? AND zone_path IS NOT NULL",
+            (since.isoformat(timespec="seconds"),),
+        ).fetchall()
+
+    # Process transitions
+    inbound = {}
+    outbound = {}
+    for row in paths:
+        try:
+            path = _json.loads(row["zone_path"])
+        except Exception:
+            continue
+        for i, z in enumerate(path):
+            if z == zone_name:
+                if i > 0:
+                    inbound[path[i - 1]] = inbound.get(path[i - 1], 0) + 1
+                if i < len(path) - 1:
+                    outbound[path[i + 1]] = outbound.get(path[i + 1], 0) + 1
+
+    # Build hourly array
+    hour_map = {r["hour"]: dict(r) for r in hourly}
+    hourly_result = []
+    for h in range(24):
+        hourly_result.append({
+            "hour": h,
+            "events": hour_map[h]["events"] if h in hour_map else 0,
+            "unique_visitors": hour_map[h]["unique_visitors"] if h in hour_map else 0,
+        })
+
+    total_events = sum(h["events"] for h in hourly_result)
+    capacity = zone_row["capacity"] or 1
+    total = dwell_row["total"] or 1
+    conversions = dwell_row["conversions"] or 0
+
+    return jsonify({
+        "zone_id": zone_id,
+        "zone_name": zone_name,
+        "zone_type": zone_row["zone_type"],
+        "capacity": capacity,
+        "hourly_pattern": hourly_result,
+        "daily_trend": [dict(r) for r in daily],
+        "avg_dwell": round(dwell_row["avg_dwell"] or 0, 1),
+        "conversion_rate": round(conversions / total * 100, 1),
+        "total_events": total_events,
+        "utilization_pct": round(total_events / (capacity * 24) * 100, 1) if capacity > 0 else 0,
+        "top_inbound": sorted(inbound.items(), key=lambda x: -x[1])[:5],
+        "top_outbound": sorted(outbound.items(), key=lambda x: -x[1])[:5],
+    })
+
+
+@app.get("/api/anomalies")
+def anomalies():
+    """Real anomaly detection: compare hourly counts to 7-day rolling average."""
+    hours = parse_hours(168)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        # Get hourly session counts
+        rows = con.execute(
+            f"""
+            SELECT substr(entry_time, 1, 13) AS hour_bucket,
+                   CAST(strftime('%H', entry_time) AS INTEGER) AS hour_of_day,
+                   CAST(strftime('%w', entry_time) AS INTEGER) AS day_of_week,
+                   COUNT(*) AS count
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY hour_bucket
+            ORDER BY hour_bucket
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    if not rows:
+        return jsonify({"anomalies": [], "total_hours_analyzed": 0})
+
+    # Build average by hour-of-day
+    from collections import defaultdict
+    hour_counts = defaultdict(list)
+    for r in rows:
+        hour_counts[r["hour_of_day"]].append(r["count"])
+
+    # Compute mean and std for each hour-of-day
+    hour_stats = {}
+    for h, counts in hour_counts.items():
+        mean = sum(counts) / len(counts)
+        variance = sum((c - mean) ** 2 for c in counts) / max(len(counts) - 1, 1)
+        std = variance ** 0.5
+        hour_stats[h] = {"mean": mean, "std": max(std, 1)}
+
+    # Flag deviations > 1.5 sigma
+    anomaly_list = []
+    for r in rows:
+        stats = hour_stats.get(r["hour_of_day"], {"mean": 0, "std": 1})
+        deviation = abs(r["count"] - stats["mean"])
+        if stats["std"] > 0 and deviation > 1.5 * stats["std"]:
+            deviation_pct = round((r["count"] - stats["mean"]) / stats["mean"] * 100, 1) if stats["mean"] > 0 else 0
+            anomaly_list.append({
+                "hour": r["hour_bucket"],
+                "actual": r["count"],
+                "expected": round(stats["mean"], 1),
+                "deviation_pct": deviation_pct,
+                "type": "spike" if r["count"] > stats["mean"] else "drop",
+                "sigma": round(deviation / stats["std"], 2),
+            })
+
+    # Sort by severity
+    anomaly_list.sort(key=lambda x: abs(x["deviation_pct"]), reverse=True)
+
+    return jsonify({
+        "anomalies": anomaly_list[:50],
+        "total_hours_analyzed": len(rows),
+    })
+
+
+@app.get("/api/forecast")
+def forecast():
+    """Historical-based forecast: day-of-week averages from past 4 weeks."""
+    days = int(request.args.get("days", 7))
+    now = datetime.now(timezone.utc)
+    four_weeks_ago = now - timedelta(days=28)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        # Day-of-week averages
+        rows = con.execute(
+            f"""
+            SELECT CAST(strftime('%w', entry_time) AS INTEGER) AS dow,
+                   DATE(entry_time) AS date,
+                   COUNT(*) AS visitors
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY date
+            ORDER BY date
+            """,
+            [four_weeks_ago.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+        # Hour-of-day averages for today's remaining hours
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        hourly_rows = con.execute(
+            f"""
+            SELECT CAST(strftime('%H', entry_time) AS INTEGER) AS hour,
+                   COUNT(*) AS avg_count
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY hour
+            """,
+            [four_weeks_ago.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    # Compute day-of-week averages
+    from collections import defaultdict
+    dow_totals = defaultdict(list)
+    for r in rows:
+        dow_totals[r["dow"]].append(r["visitors"])
+
+    dow_avg = {}
+    dow_std = {}
+    for dow, counts in dow_totals.items():
+        mean = sum(counts) / len(counts)
+        variance = sum((c - mean) ** 2 for c in counts) / max(len(counts) - 1, 1)
+        dow_avg[dow] = round(mean)
+        dow_std[dow] = round(variance ** 0.5)
+
+    # Build forecast for next N days
+    day_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    forecast_days = []
+    for d in range(days):
+        future = now + timedelta(days=d)
+        dow = int(future.strftime("%w"))
+        predicted = dow_avg.get(dow, 0)
+        std = dow_std.get(dow, 0)
+        forecast_days.append({
+            "date": future.strftime("%Y-%m-%d"),
+            "day_name": day_names[dow],
+            "predicted_visitors": predicted,
+            "lower_bound": max(0, predicted - std),
+            "upper_bound": predicted + std,
+        })
+
+    # Hour-of-day predictions for today
+    weeks_count = max(1, len(set(r["date"] for r in rows)) // 7)
+    hourly_forecast = []
+    for r in hourly_rows:
+        hourly_forecast.append({
+            "hour": r["hour"],
+            "predicted": round(r["avg_count"] / weeks_count),
+        })
+
+    return jsonify({
+        "daily_forecast": forecast_days,
+        "hourly_forecast": hourly_forecast,
+        "based_on_weeks": weeks_count,
+    })
+
+
+@app.get("/api/peak-analysis")
+def peak_analysis():
+    """Busiest/quietest patterns: day, hour, weekend vs weekday, time-of-day splits."""
+    hours = parse_hours(168)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        # Day-level
+        day_rows = con.execute(
+            f"""
+            SELECT DATE(entry_time) AS date,
+                   CAST(strftime('%w', entry_time) AS INTEGER) AS dow,
+                   COUNT(*) AS visitors
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY date ORDER BY visitors DESC
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+        # Hour-level
+        hour_rows = con.execute(
+            f"""
+            SELECT CAST(strftime('%H', entry_time) AS INTEGER) AS hour,
+                   COUNT(*) AS visitors
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY hour ORDER BY visitors DESC
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+        # Weekend vs weekday
+        wkday_rows = con.execute(
+            f"""
+            SELECT
+                CASE WHEN CAST(strftime('%w', entry_time) AS INTEGER) IN (0, 6) THEN 'weekend' ELSE 'weekday' END AS period,
+                COUNT(*) AS visitors,
+                COUNT(DISTINCT DATE(entry_time)) AS days_count
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY period
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+        # Morning/Afternoon/Evening split
+        tod_row = con.execute(
+            f"""
+            SELECT
+                SUM(CASE WHEN CAST(strftime('%H', entry_time) AS INTEGER) BETWEEN 6 AND 11 THEN 1 ELSE 0 END) AS morning,
+                SUM(CASE WHEN CAST(strftime('%H', entry_time) AS INTEGER) BETWEEN 12 AND 17 THEN 1 ELSE 0 END) AS afternoon,
+                SUM(CASE WHEN CAST(strftime('%H', entry_time) AS INTEGER) BETWEEN 18 AND 23 THEN 1 ELSE 0 END) AS evening,
+                SUM(CASE WHEN CAST(strftime('%H', entry_time) AS INTEGER) BETWEEN 0 AND 5 THEN 1 ELSE 0 END) AS night
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchone()
+
+    day_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+    busiest_day = dict(day_rows[0]) if day_rows else {}
+    quietest_day = dict(day_rows[-1]) if day_rows else {}
+
+    wk_map = {r["period"]: r for r in wkday_rows}
+    wkday_info = wk_map.get("weekday", {"visitors": 0, "days_count": 1})
+    wkend_info = wk_map.get("weekend", {"visitors": 0, "days_count": 1})
+
+    # Day-of-week averages for bar chart
+    from collections import defaultdict
+    dow_totals = defaultdict(list)
+    for r in day_rows:
+        dow_totals[r["dow"]].append(r["visitors"])
+    dow_avgs = []
+    for d in range(7):
+        vals = dow_totals.get(d, [0])
+        dow_avgs.append({
+            "day": day_names[d],
+            "dow": d,
+            "avg_visitors": round(sum(vals) / len(vals)),
+        })
+
+    return jsonify({
+        "busiest_day": {
+            "date": busiest_day.get("date", ""),
+            "day_name": day_names[busiest_day.get("dow", 0)],
+            "visitors": busiest_day.get("visitors", 0),
+        },
+        "quietest_day": {
+            "date": quietest_day.get("date", ""),
+            "day_name": day_names[quietest_day.get("dow", 0)],
+            "visitors": quietest_day.get("visitors", 0),
+        },
+        "busiest_hour": hour_rows[0]["hour"] if hour_rows else 0,
+        "quietest_hour": hour_rows[-1]["hour"] if hour_rows else 0,
+        "weekday_avg": round(wkday_info["visitors"] / max(wkday_info["days_count"], 1)),
+        "weekend_avg": round(wkend_info["visitors"] / max(wkend_info["days_count"], 1)),
+        "time_of_day": {
+            "morning": tod_row["morning"] or 0,
+            "afternoon": tod_row["afternoon"] or 0,
+            "evening": tod_row["evening"] or 0,
+            "night": tod_row["night"] or 0,
+        },
+        "dow_averages": dow_avgs,
+    })
+
+
+@app.get("/api/customer-journey")
+def customer_journey():
+    """Top zone path sequences with conversion rate and avg dwell."""
+    import json as _json
+    hours = parse_hours(168)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+
+    with db() as con:
+        rows = con.execute(
+            f"""
+            SELECT zone_path, dwell_seconds, converted
+            FROM sessions
+            WHERE entry_time > ? AND zone_path IS NOT NULL AND exit_time IS NOT NULL{src_sql}
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    from collections import defaultdict
+    path_stats = defaultdict(lambda: {"count": 0, "total_dwell": 0, "conversions": 0})
+    for r in rows:
+        try:
+            path = _json.loads(r["zone_path"])
+            key = " → ".join(path)
+        except Exception:
+            continue
+        path_stats[key]["count"] += 1
+        path_stats[key]["total_dwell"] += r["dwell_seconds"] or 0
+        path_stats[key]["conversions"] += r["converted"] or 0
+
+    # Top 10 by count
+    sorted_paths = sorted(path_stats.items(), key=lambda x: -x[1]["count"])[:10]
+    result = []
+    for path_str, stats in sorted_paths:
+        count = stats["count"]
+        result.append({
+            "path": path_str,
+            "sessions": count,
+            "avg_dwell": round(stats["total_dwell"] / count, 1),
+            "conversion_rate": round(stats["conversions"] / count * 100, 1),
+        })
+
+    return jsonify({"journeys": result, "total_sessions": len(rows)})
+
+
+@app.get("/api/cohort-analysis")
+def cohort_analysis():
+    """Visitor segments: Quick (<2min), Casual (2-10min), Engaged (10-30min), Power (30min+)."""
+    hours = parse_hours(168)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+    import json as _json
+
+    with db() as con:
+        rows = con.execute(
+            f"""
+            SELECT dwell_seconds, converted, zone_path
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL AND dwell_seconds IS NOT NULL{src_sql}
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    cohorts = {
+        "quick": {"label": "Quick Browsers", "min": 0, "max": 120, "count": 0, "conversions": 0, "zones_total": 0},
+        "casual": {"label": "Casual Visitors", "min": 120, "max": 600, "count": 0, "conversions": 0, "zones_total": 0},
+        "engaged": {"label": "Engaged Shoppers", "min": 600, "max": 1800, "count": 0, "conversions": 0, "zones_total": 0},
+        "power": {"label": "Power Visitors", "min": 1800, "max": 999999, "count": 0, "conversions": 0, "zones_total": 0},
+    }
+
+    for r in rows:
+        dwell = r["dwell_seconds"]
+        for key, c in cohorts.items():
+            if c["min"] <= dwell < c["max"]:
+                c["count"] += 1
+                c["conversions"] += r["converted"] or 0
+                try:
+                    path = _json.loads(r["zone_path"]) if r["zone_path"] else []
+                    c["zones_total"] += len(set(path))
+                except Exception:
+                    pass
+                break
+
+    total = len(rows) or 1
+    result = []
+    for key, c in cohorts.items():
+        count = c["count"] or 1
+        result.append({
+            "id": key,
+            "label": c["label"],
+            "count": c["count"],
+            "pct_of_total": round(c["count"] / total * 100, 1),
+            "conversion_rate": round(c["conversions"] / count * 100, 1),
+            "avg_zones": round(c["zones_total"] / count, 1),
+        })
+
+    return jsonify({"cohorts": result, "total_sessions": len(rows)})
+
+
+@app.get("/api/realtime-snapshot")
+def realtime_snapshot():
+    """Live state: active sessions, entries/exits last hour, velocity, peak today."""
+    now = datetime.now(timezone.utc)
+    five_min_ago = (now - timedelta(minutes=5)).isoformat(timespec="seconds")
+    one_hour_ago = (now - timedelta(hours=1)).isoformat(timespec="seconds")
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
+
+    with db() as con:
+        # Active sessions (entry in last 5 min, not exited)
+        active = con.execute(
+            "SELECT COUNT(*) AS cnt FROM sessions WHERE entry_time > ? AND exit_time IS NULL",
+            (five_min_ago,),
+        ).fetchone()["cnt"]
+
+        # Also count sessions with entry in last 5 min regardless of exit (for demo data)
+        active_recent = con.execute(
+            "SELECT COUNT(*) AS cnt FROM sessions WHERE entry_time > ?",
+            (five_min_ago,),
+        ).fetchone()["cnt"]
+
+        # Entries/exits last hour
+        hourly = con.execute(
+            """
+            SELECT
+                SUM(CASE WHEN event_type = 'entry' THEN 1 ELSE 0 END) AS entries,
+                SUM(CASE WHEN event_type = 'exit' THEN 1 ELSE 0 END) AS exits
+            FROM events WHERE timestamp > ?
+            """,
+            (one_hour_ago,),
+        ).fetchone()
+
+        # Peak today (busiest hour)
+        peak = con.execute(
+            """
+            SELECT CAST(strftime('%H', entry_time) AS INTEGER) AS hour,
+                   COUNT(*) AS cnt
+            FROM sessions WHERE entry_time > ?
+            GROUP BY hour ORDER BY cnt DESC LIMIT 1
+            """,
+            (today_start,),
+        ).fetchone()
+
+        # Today total
+        today_total = con.execute(
+            "SELECT COUNT(*) AS cnt FROM sessions WHERE entry_time > ?",
+            (today_start,),
+        ).fetchone()["cnt"]
+
+    entries = (hourly["entries"] or 0) if hourly else 0
+    exits = (hourly["exits"] or 0) if hourly else 0
+
+    return jsonify({
+        "active_sessions": max(active, active_recent),
+        "entries_last_hour": entries,
+        "exits_last_hour": exits,
+        "velocity_per_min": round(entries / 60, 2),
+        "peak_hour_today": peak["hour"] if peak else 0,
+        "peak_count_today": peak["cnt"] if peak else 0,
+        "total_today": today_total,
+    })
+
+
+@app.get("/api/zone-rankings")
+def zone_rankings():
+    """Zones ranked by traffic with detailed metrics."""
+    hours = parse_hours(24)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    import json as _json
+
+    with db() as con:
+        zones_list = con.execute("SELECT * FROM zones").fetchall()
+
+        zone_stats = con.execute(
+            """
+            SELECT z.id, z.zone_name, z.capacity, z.zone_type,
+                   COUNT(e.id) AS total_events,
+                   COUNT(DISTINCT e.person_id) AS unique_visitors
+            FROM zones z
+            LEFT JOIN events e ON z.id = e.zone_id AND e.timestamp > ?
+            GROUP BY z.id ORDER BY total_events DESC
+            """,
+            (since.isoformat(timespec="seconds"),),
+        ).fetchall()
+
+        # Get dwell per zone from sessions
+        session_rows = con.execute(
+            "SELECT zone_path, dwell_seconds, converted FROM sessions WHERE entry_time > ? AND exit_time IS NOT NULL",
+            (since.isoformat(timespec="seconds"),),
+        ).fetchall()
+
+    # Compute per-zone dwell and conversion
+    from collections import defaultdict
+    zone_dwell = defaultdict(list)
+    zone_conv = defaultdict(lambda: {"total": 0, "converted": 0})
+    for r in session_rows:
+        try:
+            path = _json.loads(r["zone_path"]) if r["zone_path"] else []
+        except Exception:
+            continue
+        for z in set(path):
+            zone_dwell[z].append(r["dwell_seconds"] or 0)
+            zone_conv[z]["total"] += 1
+            zone_conv[z]["converted"] += r["converted"] or 0
+
+    result = []
+    for r in zone_stats:
+        name = r["zone_name"]
+        dwell_list = zone_dwell.get(name, [0])
+        conv = zone_conv.get(name, {"total": 1, "converted": 0})
+        cap = r["capacity"] or 1
+        result.append({
+            "zone_id": r["id"],
+            "zone_name": name,
+            "zone_type": r["zone_type"],
+            "capacity": r["capacity"],
+            "total_events": r["total_events"],
+            "unique_visitors": r["unique_visitors"],
+            "avg_dwell": round(sum(dwell_list) / len(dwell_list), 1),
+            "conversion_rate": round(conv["converted"] / max(conv["total"], 1) * 100, 1),
+            "utilization_pct": round(r["unique_visitors"] / cap * 100, 1) if cap > 0 else 0,
+        })
+
+    return jsonify({"zones": result, "hours": hours})
+
+
+@app.get("/api/revenue-estimates")
+def revenue_estimates():
+    """Revenue modeling from conversion data and configurable avg transaction value."""
+    hours = parse_hours(168)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    src_sql, src_params = source_filter()
+    import json as _json
+
+    with db() as con:
+        # Get avg_transaction_value from profile
+        profile = con.execute("SELECT * FROM profile WHERE id = 1").fetchone()
+        avg_txn = 25.0
+        if profile:
+            try:
+                avg_txn = float(profile["avg_transaction_value"] or 25.0)
+            except Exception:
+                avg_txn = 25.0
+
+        stats = con.execute(
+            f"""
+            SELECT COUNT(*) AS total_sessions,
+                   SUM(converted) AS total_conversions
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchone()
+
+        # Per-zone revenue
+        session_rows = con.execute(
+            f"""
+            SELECT zone_path, converted FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL AND converted = 1{src_sql}
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+        # Daily revenue
+        daily = con.execute(
+            f"""
+            SELECT DATE(entry_time) AS date,
+                   SUM(converted) AS conversions
+            FROM sessions
+            WHERE entry_time > ? AND exit_time IS NOT NULL{src_sql}
+            GROUP BY date ORDER BY date
+            """,
+            [since.isoformat(timespec="seconds")] + src_params,
+        ).fetchall()
+
+    total = stats["total_sessions"] or 1
+    conversions = stats["total_conversions"] or 0
+    estimated_revenue = conversions * avg_txn
+
+    # Zone revenue attribution
+    from collections import defaultdict
+    zone_revenue = defaultdict(int)
+    for r in session_rows:
+        try:
+            path = _json.loads(r["zone_path"]) if r["zone_path"] else []
+        except Exception:
+            continue
+        # Attribute to checkout zone if present, else last zone
+        if "checkout" in path:
+            zone_revenue["checkout"] += 1
+        elif path:
+            zone_revenue[path[-1]] += 1
+
+    zone_rev_list = [{"zone": z, "conversions": c, "estimated_revenue": round(c * avg_txn, 2)}
+                     for z, c in sorted(zone_revenue.items(), key=lambda x: -x[1])]
+
+    daily_rev = [{"date": r["date"], "conversions": r["conversions"] or 0,
+                  "estimated_revenue": round((r["conversions"] or 0) * avg_txn, 2)} for r in daily]
+
+    num_days = len(daily) or 1
+    return jsonify({
+        "total_conversions": conversions,
+        "avg_transaction_value": avg_txn,
+        "estimated_revenue": round(estimated_revenue, 2),
+        "revenue_per_visitor": round(estimated_revenue / total, 2),
+        "daily_avg_revenue": round(estimated_revenue / num_days, 2),
+        "conversion_value": round(avg_txn, 2),
+        "zone_revenue": zone_rev_list,
+        "daily_revenue": daily_rev,
+        "hours": hours,
+    })
+
+
+@app.get("/api/hourly-comparison")
+def hourly_comparison():
+    """Today vs Yesterday vs Last Week same day — 3-line overlay data."""
+    now = datetime.now(timezone.utc)
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    yesterday_start = today_start - timedelta(days=1)
+    last_week_start = today_start - timedelta(days=7)
+    src_sql, src_params = source_filter()
+
+    def get_hourly(start, end):
+        with db() as con:
+            rows = con.execute(
+                f"""
+                SELECT CAST(strftime('%H', entry_time) AS INTEGER) AS hour,
+                       COUNT(*) AS visitors
+                FROM sessions
+                WHERE entry_time >= ? AND entry_time < ? AND exit_time IS NOT NULL{src_sql}
+                GROUP BY hour
+                """,
+                [start.isoformat(timespec="seconds"),
+                 end.isoformat(timespec="seconds")] + src_params,
+            ).fetchall()
+        return {r["hour"]: r["visitors"] for r in rows}
+
+    today_data = get_hourly(today_start, today_start + timedelta(days=1))
+    yesterday_data = get_hourly(yesterday_start, today_start)
+    last_week_data = get_hourly(last_week_start, last_week_start + timedelta(days=1))
+
+    result = []
+    for h in range(24):
+        result.append({
+            "hour": h,
+            "label": f"{h:02d}:00",
+            "today": today_data.get(h, 0),
+            "yesterday": yesterday_data.get(h, 0),
+            "last_week": last_week_data.get(h, 0),
+        })
+
+    return jsonify({"comparison": result})
 
 
 if __name__ == "__main__":
