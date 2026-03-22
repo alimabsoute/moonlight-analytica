@@ -358,6 +358,96 @@ frontend-v3/src/
 
 ---
 
+## Phase 0: Beta Deployment Readiness (Before Floorplan Work)
+
+### Goal
+A real store owner can sign up, connect their security camera, and see real data — without touching a command line.
+
+### 0.1 Authentication & Multi-Tenant
+
+**User accounts:**
+- Sign up / login (email + password, or OAuth with Google)
+- JWT token-based auth for API
+- Each user gets their own tenant (isolated data)
+- Options: build custom, or use **Supabase Auth** (already in your stack)
+
+**Database changes:**
+- Add `user_id` foreign key to: `profile`, `sessions`, `events`, `zones`, `floorplans`
+- All queries filtered by authenticated user's tenant
+- Migrate from SQLite → **PostgreSQL** (Supabase provides this free)
+
+**Effort:** 2-3 days
+
+### 0.2 Camera Connection UI
+
+**"Connect Camera" page in dashboard:**
+- Input field for RTSP URL (e.g. `rtsp://192.168.1.100:554/stream`)
+- Or upload a video file for batch processing
+- "Test Connection" button — grabs a single frame, shows preview
+- "Start Tracking" button — launches edge agent in background
+- Status indicator: Connected / Processing / Error
+- Stop/restart controls
+
+**Backend:**
+- `POST /api/cameras` — register camera with RTSP URL
+- `POST /api/cameras/:id/start` — spawn edge agent subprocess
+- `POST /api/cameras/:id/stop` — kill edge agent
+- `GET /api/cameras/:id/status` — running, frame count, errors
+- Store camera configs in DB, auto-restart on server reboot
+
+**Effort:** 2-3 days
+
+### 0.3 Cloud Deployment
+
+**Options (cheapest to most robust):**
+
+| Option | Cost | Pros | Cons |
+|--------|------|------|------|
+| **Railway.app** | Free tier → $5/mo | One-click deploy, Postgres included | Limited GPU |
+| **Render** | Free tier → $7/mo | Auto-deploy from git, easy | No GPU |
+| **DigitalOcean Droplet** | $12/mo | Full control, can add GPU later | Manual setup |
+| **Supabase + Vercel** | Free tiers | You already use both | Edge agent needs a server |
+
+**Recommended: DigitalOcean or Railway** — need a persistent server for the edge agent (can't run YOLO on serverless).
+
+**Deployment checklist:**
+- Dockerize backend + edge agent (Dockerfiles exist in plan already)
+- Postgres connection string from environment
+- CORS origins from environment variable
+- HTTPS via reverse proxy (Caddy or nginx)
+- File uploads to S3/R2 instead of local disk
+- Process manager (systemd or PM2) for edge agent
+
+**Effort:** 1-2 days
+
+### 0.4 Onboarding Flow
+
+First-time user experience:
+1. Sign up → lands on empty dashboard
+2. Guided setup wizard: "Name your store" → "Set capacity" → "Connect camera"
+3. Option to load demo data to explore first
+4. Once camera connected: "We're collecting data — check back in an hour for your first insights"
+
+**Effort:** 1 day
+
+### Updated Priority Order
+
+| Phase | What | Effort | Priority |
+|-------|------|--------|----------|
+| **0.1** | Auth + multi-tenant + Postgres | 2-3 days | **CRITICAL** — blocks real users |
+| **0.2** | Camera connection UI | 2-3 days | **CRITICAL** — blocks real data |
+| **0.3** | Cloud deployment | 1-2 days | **CRITICAL** — blocks access |
+| **0.4** | Onboarding wizard | 1 day | HIGH — first impression |
+| 1 | Floorplan + polygon editor | 3-4 days | HIGH — core feature |
+| 2 | Camera calibration | 2-3 days | HIGH — spatial accuracy |
+| 3 | Zone hit-testing | 1-2 days | HIGH — core value |
+| 4 | Spatial heatmap | 2-3 days | MEDIUM — wow factor |
+| 5 | Multi-camera | 3-5 days | LOW — future |
+
+**Total to real beta: ~2 weeks (Phase 0) + 2-3 weeks (Phases 1-4)**
+
+---
+
 ## Open Questions for Planning Session
 
 1. **Do you have actual floorplan images** to test with, or should we include a sample floorplan generator?
