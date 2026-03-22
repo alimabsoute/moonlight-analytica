@@ -224,6 +224,23 @@ export default function Insights() {
 
   return (
     <div className="page-container">
+      {/* Demo data disclosure */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'var(--space-sm)',
+        padding: 'var(--space-sm) var(--space-md)',
+        background: 'rgba(49, 130, 206, 0.1)',
+        border: '1px solid var(--info)',
+        borderRadius: 'var(--radius-md)',
+        marginBottom: 'var(--space-md)',
+        fontSize: '0.813rem',
+        color: 'var(--info)'
+      }}>
+        <Brain size={16} />
+        Insights based on industry benchmarks. Connect live data for personalized analysis.
+      </div>
+
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-xl)' }}>
         <div>

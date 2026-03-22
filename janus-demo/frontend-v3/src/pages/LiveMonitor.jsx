@@ -228,6 +228,7 @@ export default function LiveMonitor() {
   const [mlStats, setMlStats] = useState(null)
   const [apiData, setApiData] = useState({ conversion: null, queue: null, zones: null })
   const [entryExitTrend, setEntryExitTrend] = useState([])
+  const [apiError, setApiError] = useState(null)
 
   // Fetch real API data on mount and refresh every 30s
   useEffect(() => {
@@ -248,8 +249,10 @@ export default function LiveMonitor() {
           const entryExitData = await entryExitRes.json()
           setEntryExitTrend(Array.isArray(entryExitData) ? entryExitData : entryExitData?.data || [])
         }
+        setApiError(null)
       } catch (e) {
         console.error('API fetch error:', e)
+        setApiError('Unable to connect to backend. Make sure the server is running on port 8000.')
       }
     }
     fetchData()
@@ -332,6 +335,29 @@ export default function LiveMonitor() {
           </button>
         </div>
       </div>
+
+      {/* API Error Banner */}
+      {apiError && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-sm)',
+            padding: 'var(--space-sm) var(--space-md)',
+            background: 'rgba(229, 62, 62, 0.1)',
+            border: '1px solid var(--danger)',
+            borderRadius: 'var(--radius-md)',
+            marginBottom: 'var(--space-md)',
+            fontSize: '0.813rem',
+            color: 'var(--danger)'
+          }}
+        >
+          <AlertTriangle size={16} />
+          {apiError}
+        </motion.div>
+      )}
 
       {/* View Mode Tabs */}
       <div style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center', marginBottom: 'var(--space-lg)', flexWrap: 'wrap' }}>

@@ -351,7 +351,7 @@ export default function Forecasting() {
           fontSize: '0.75rem'
         }}>
           <span style={{ color: 'var(--text-muted)' }}>
-            📊 Model accuracy: <strong style={{ color: 'var(--success)' }}>94.2%</strong> based on last 30 days
+            Demo mode — sample forecast data. Connect ML model for real predictions.
           </span>
         </div>
       </motion.div>

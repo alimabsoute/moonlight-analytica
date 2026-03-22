@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Activity, BarChart3, FileText, Map, Settings as SettingsIcon,
-  Layers, Sun, Moon, Bell, Brain, TrendingUp, User, Search
+  Layers, Sun, Moon, Bell, Brain, TrendingUp, User, Search,
+  MoreHorizontal, X
 } from 'lucide-react'
 import { useTheme } from './context/ThemeContext'
 import { useToast } from './context/ToastContext'
@@ -46,6 +47,7 @@ export default function App() {
   const [activePage, setActivePage] = useState('live')
   const [isMobile, setIsMobile] = useState(false)
   const [alertCount, setAlertCount] = useState(2)
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
   const { addToast } = useToast()
 
@@ -252,18 +254,65 @@ export default function App() {
       {isMobile && (
         <nav className="mobile-nav">
           <div className="mobile-nav-items">
-            {navItems.slice(0, 5).map(item => (
+            {navItems.slice(0, 4).map(item => (
               <motion.div
                 key={item.id}
                 className={`mobile-nav-item ${activePage === item.id ? 'active' : ''}`}
-                onClick={() => setActivePage(item.id)}
+                onClick={() => { setActivePage(item.id); setMoreMenuOpen(false) }}
                 whileTap={{ scale: 0.9 }}
               >
                 <item.icon size={20} />
                 <span>{item.label.split(' ')[0]}</span>
               </motion.div>
             ))}
+            {/* More menu toggle */}
+            <motion.div
+              className={`mobile-nav-item ${moreMenuOpen || navItems.slice(4).some(i => i.id === activePage) ? 'active' : ''}`}
+              onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+              whileTap={{ scale: 0.9 }}
+            >
+              {moreMenuOpen ? <X size={20} /> : <MoreHorizontal size={20} />}
+              <span>More</span>
+            </motion.div>
           </div>
+
+          {/* More menu expansion */}
+          <AnimatePresence>
+            {moreMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.2 }}
+                style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: 0,
+                  right: 0,
+                  background: 'var(--bg-primary)',
+                  borderTop: '1px solid var(--border)',
+                  padding: 'var(--space-sm)',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(5, 1fr)',
+                  gap: 'var(--space-xs)',
+                  boxShadow: '0 -4px 12px rgba(0,0,0,0.1)'
+                }}
+              >
+                {navItems.slice(4).map(item => (
+                  <motion.div
+                    key={item.id}
+                    className={`mobile-nav-item ${activePage === item.id ? 'active' : ''}`}
+                    onClick={() => { setActivePage(item.id); setMoreMenuOpen(false) }}
+                    whileTap={{ scale: 0.9 }}
+                    style={{ padding: 'var(--space-sm)', textAlign: 'center' }}
+                  >
+                    <item.icon size={20} />
+                    <span>{item.label.split(' ')[0]}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </nav>
       )}
     </div>

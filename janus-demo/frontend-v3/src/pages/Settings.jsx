@@ -108,38 +108,68 @@ function ThresholdSlider({ label, value, onChange, min, max, unit, warning, crit
   )
 }
 
+const SETTINGS_KEY = 'janus_settings'
+
+const defaultSettings = {
+  // Notifications
+  emailAlerts: true,
+  pushNotifications: true,
+  smsAlerts: false,
+  weeklyDigest: true,
+
+  // Thresholds
+  capacityWarning: 70,
+  capacityCritical: 90,
+  dwellTimeAlert: 30,
+
+  // API
+  apiEndpoint: 'http://localhost:8000',
+  refreshInterval: 5,
+
+  // Data
+  retentionDays: 90,
+  autoArchive: true,
+  anonymization: true,
+
+  // Industry
+  industry: 'generic'
+}
+
+function loadSettings() {
+  try {
+    const stored = localStorage.getItem(SETTINGS_KEY)
+    if (stored) {
+      return { ...defaultSettings, ...JSON.parse(stored) }
+    }
+  } catch (e) {
+    console.error('Failed to load settings:', e)
+  }
+  return defaultSettings
+}
+
 export default function Settings() {
   const { theme, toggleTheme } = useTheme()
   const { addToast } = useToast()
 
-  const [settings, setSettings] = useState({
-    // Notifications
-    emailAlerts: true,
-    pushNotifications: true,
-    smsAlerts: false,
-    weeklyDigest: true,
-
-    // Thresholds
-    capacityWarning: 70,
-    capacityCritical: 90,
-    dwellTimeAlert: 30,
-
-    // API
-    apiEndpoint: 'https://api.janus.local',
-    apiKey: 'janus_key_••••••••••••',
-    refreshInterval: 5,
-
-    // Data
-    retentionDays: 90,
-    autoArchive: true,
-    anonymization: true,
-
-    // Industry
-    industry: 'generic'
-  })
+  const [settings, setSettings] = useState(loadSettings)
+  const [backendStatus, setBackendStatus] = useState(null) // null=unknown, true=connected, false=disconnected
 
   const handleSave = () => {
-    addToast('Settings saved successfully', 'success')
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+      addToast('Settings saved successfully', 'success')
+    } catch (e) {
+      addToast('Failed to save settings', 'error')
+    }
+  }
+
+  const checkBackendConnection = async () => {
+    try {
+      const res = await fetch(`${settings.apiEndpoint}/health`, { signal: AbortSignal.timeout(3000) })
+      setBackendStatus(res.ok)
+    } catch {
+      setBackendStatus(false)
+    }
   }
 
   return (
@@ -345,35 +375,39 @@ export default function Settings() {
                 onChange={(e) => setSettings(prev => ({ ...prev, apiEndpoint: e.target.value }))}
                 style={{ flex: 1 }}
               />
-              <button className="btn btn-secondary btn-icon">
+              <button className="btn btn-secondary btn-icon" onClick={checkBackendConnection} title="Test connection">
                 <RefreshCw size={16} />
               </button>
             </div>
           </div>
           <div style={{ marginBottom: 'var(--space-md)' }}>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '500', color: 'var(--text-muted)', marginBottom: '8px' }}>
-              API Key
+              Refresh Interval (seconds)
             </label>
             <input
-              type="password"
+              type="number"
               className="input"
-              value={settings.apiKey}
-              onChange={(e) => setSettings(prev => ({ ...prev, apiKey: e.target.value }))}
+              value={settings.refreshInterval}
+              min={1}
+              max={60}
+              onChange={(e) => setSettings(prev => ({ ...prev, refreshInterval: parseInt(e.target.value) || 5 }))}
             />
           </div>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--space-sm)',
-            padding: 'var(--space-sm) var(--space-md)',
-            background: 'rgba(56, 161, 105, 0.1)',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '0.75rem',
-            color: 'var(--success)'
-          }}>
-            <Check size={14} />
-            Connected • Last sync: 2 minutes ago
-          </div>
+          {backendStatus !== null && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--space-sm)',
+              padding: 'var(--space-sm) var(--space-md)',
+              background: backendStatus ? 'rgba(56, 161, 105, 0.1)' : 'rgba(229, 62, 62, 0.1)',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '0.75rem',
+              color: backendStatus ? 'var(--success)' : 'var(--danger)'
+            }}>
+              {backendStatus ? <Check size={14} /> : <AlertTriangle size={14} />}
+              {backendStatus ? 'Connected to backend' : 'Cannot reach backend'}
+            </div>
+          )}
         </SettingSection>
 
         {/* Data Management */}

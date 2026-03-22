@@ -33,6 +33,7 @@ CORS(
 def db():
     con = sqlite3.connect(DB)
     con.row_factory = sqlite3.Row
+    con.execute("PRAGMA busy_timeout = 5000")
     try:
         yield con
     finally:
@@ -142,6 +143,9 @@ def ensure_schema():
             "CREATE INDEX IF NOT EXISTS idx_sessions_video_id ON sessions(video_id)",
             "CREATE INDEX IF NOT EXISTS idx_sessions_entry_time ON sessions(entry_time)",
             "CREATE INDEX IF NOT EXISTS idx_events_timestamp ON events(timestamp)",
+            "CREATE INDEX IF NOT EXISTS idx_events_zone_id ON events(zone_id)",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_converted ON sessions(converted)",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_dwell ON sessions(dwell_seconds)",
         ]:
             con.execute(idx)
 
@@ -289,8 +293,8 @@ def seed_demo():
                     # Insert session
                     con.execute(
                         """
-                        INSERT INTO sessions (person_id, entry_time, exit_time, dwell_seconds, zone_path, converted)
-                        VALUES (?, ?, ?, ?, ?, ?)
+                        INSERT INTO sessions (person_id, entry_time, exit_time, dwell_seconds, zone_path, converted, source)
+                        VALUES (?, ?, ?, ?, ?, ?, 'demo')
                         """,
                         (person_id, entry_ts.isoformat(timespec="seconds"),
                          exit_ts.isoformat(timespec="seconds"), dwell_sec,
@@ -301,8 +305,8 @@ def seed_demo():
                     # Insert entry event
                     con.execute(
                         """
-                        INSERT INTO events (timestamp, person_id, event_type, zone_id, direction, confidence)
-                        VALUES (?, ?, 'entry', ?, 'in', ?)
+                        INSERT INTO events (timestamp, person_id, event_type, zone_id, direction, confidence, source)
+                        VALUES (?, ?, 'entry', ?, 'in', ?, 'demo')
                         """,
                         (entry_ts.isoformat(timespec="seconds"), person_id,
                          zones.get("entrance"), random.uniform(0.85, 1.0))
@@ -316,8 +320,8 @@ def seed_demo():
                         if current_ts < exit_ts and zone_name in zones:
                             con.execute(
                                 """
-                                INSERT INTO events (timestamp, person_id, event_type, zone_id, direction, confidence)
-                                VALUES (?, ?, 'zone_change', ?, 'lateral', ?)
+                                INSERT INTO events (timestamp, person_id, event_type, zone_id, direction, confidence, source)
+                                VALUES (?, ?, 'zone_change', ?, 'lateral', ?, 'demo')
                                 """,
                                 (current_ts.isoformat(timespec="seconds"), person_id,
                                  zones.get(zone_name), random.uniform(0.85, 1.0))
@@ -327,8 +331,8 @@ def seed_demo():
                     # Insert exit event
                     con.execute(
                         """
-                        INSERT INTO events (timestamp, person_id, event_type, zone_id, direction, confidence)
-                        VALUES (?, ?, 'exit', ?, 'out', ?)
+                        INSERT INTO events (timestamp, person_id, event_type, zone_id, direction, confidence, source)
+                        VALUES (?, ?, 'exit', ?, 'out', ?, 'demo')
                         """,
                         (exit_ts.isoformat(timespec="seconds"), person_id,
                          zones.get("entrance"), random.uniform(0.85, 1.0))
@@ -400,7 +404,12 @@ def kpis():
         ).fetchall()
 
     if not rows:
-        return jsonify({"error": "no data"}), 404
+        return jsonify({
+            "avg_people": 0,
+            "peak_people": 0,
+            "throughput": 0,
+            "hours": float(hours),
+        })
 
     avg_people = sum(r["avg_val"] for r in rows) / len(rows)
     peak_people = max(r["peak"] for r in rows)
@@ -472,13 +481,20 @@ def dwell_time():
             [since.isoformat(timespec="seconds")] + src_params,
         ).fetchall()
 
-    if not sessions_data:
-        return jsonify({"error": "no data"}), 404
-
     dwell_times = [row["dwell_seconds"] for row in sessions_data if row["dwell_seconds"]]
 
     if not dwell_times:
-        return jsonify({"error": "no data"}), 404
+        return jsonify({
+            "avg_dwell_seconds": 0,
+            "min_dwell_seconds": 0,
+            "max_dwell_seconds": 0,
+            "median_dwell_seconds": 0,
+            "distribution": {
+                "under_1min": 0, "1_to_5min": 0, "5_to_15min": 0,
+                "15_to_30min": 0, "over_30min": 0
+            },
+            "total_sessions": 0
+        })
 
     avg_dwell = sum(dwell_times) / len(dwell_times)
     min_dwell = min(dwell_times)
@@ -677,7 +693,11 @@ def queue_analytics():
         ).fetchone()
 
         if not queue_zone:
-            return jsonify({"error": "no queue zone configured"}), 404
+            return jsonify({
+                "current_queue_length": 0,
+                "avg_wait_seconds": 0,
+                "total_queued": 0
+            })
 
         # Current queue length
         current_queue = con.execute(
@@ -1473,6 +1493,37 @@ def update_profile():
     if not updates:
         return jsonify({"error": "no valid fields provided"}), 400
 
+    # Validate inputs
+    if "total_capacity" in updates:
+        try:
+            cap = int(updates["total_capacity"])
+            if cap <= 0:
+                return jsonify({"error": "total_capacity must be > 0"}), 400
+            updates["total_capacity"] = cap
+        except (TypeError, ValueError):
+            return jsonify({"error": "total_capacity must be a positive integer"}), 400
+    if "business_hours_start" in updates:
+        try:
+            h = int(updates["business_hours_start"])
+            if not (0 <= h <= 23):
+                return jsonify({"error": "business_hours_start must be 0-23"}), 400
+            updates["business_hours_start"] = h
+        except (TypeError, ValueError):
+            return jsonify({"error": "business_hours_start must be an integer 0-23"}), 400
+    if "business_hours_end" in updates:
+        try:
+            h = int(updates["business_hours_end"])
+            if not (0 <= h <= 23):
+                return jsonify({"error": "business_hours_end must be 0-23"}), 400
+            updates["business_hours_end"] = h
+        except (TypeError, ValueError):
+            return jsonify({"error": "business_hours_end must be an integer 0-23"}), 400
+    if "timezone" in updates:
+        tz = str(updates["timezone"]).strip()
+        if not tz or "/" not in tz:
+            return jsonify({"error": "timezone must be IANA format (e.g. America/New_York)"}), 400
+        updates["timezone"] = tz
+
     set_clause = ", ".join(f"{k} = ?" for k in updates)
     values = list(updates.values())
     values.append(datetime.now(timezone.utc).isoformat(timespec="seconds"))
@@ -1545,39 +1596,47 @@ def hourly_patterns():
 
 @app.get("/api/dwell-distribution")
 def dwell_distribution():
-    """Returns dwell time histogram bins with counts."""
+    """Returns dwell time histogram bins with counts (binned in SQL for efficiency)."""
     hours = parse_hours()
     since = datetime.now(timezone.utc) - timedelta(hours=hours)
     src_sql, src_params = source_filter()
 
     with db() as con:
-        rows = con.execute(
+        row = con.execute(
             f"""
-            SELECT dwell_seconds FROM sessions
+            SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN dwell_seconds < 60 THEN 1 ELSE 0 END) AS under_1min,
+                SUM(CASE WHEN dwell_seconds >= 60 AND dwell_seconds < 300 THEN 1 ELSE 0 END) AS min_1_5,
+                SUM(CASE WHEN dwell_seconds >= 300 AND dwell_seconds < 900 THEN 1 ELSE 0 END) AS min_5_15,
+                SUM(CASE WHEN dwell_seconds >= 900 AND dwell_seconds < 1800 THEN 1 ELSE 0 END) AS min_15_30,
+                SUM(CASE WHEN dwell_seconds >= 1800 THEN 1 ELSE 0 END) AS over_30min
+            FROM sessions
             WHERE entry_time > ? AND exit_time IS NOT NULL AND dwell_seconds IS NOT NULL{src_sql}
             """,
             [since.isoformat(timespec="seconds")] + src_params,
-        ).fetchall()
+        ).fetchone()
 
-    dwell_times = [row["dwell_seconds"] for row in rows]
-    total = len(dwell_times)
-
-    bins = [
-        {"label": "< 1 min", "min": 0, "max": 60, "count": 0},
-        {"label": "1-5 min", "min": 60, "max": 300, "count": 0},
-        {"label": "5-15 min", "min": 300, "max": 900, "count": 0},
-        {"label": "15-30 min", "min": 900, "max": 1800, "count": 0},
-        {"label": "30+ min", "min": 1800, "max": 999999, "count": 0},
+    total = row["total"] or 0
+    counts = [
+        row["under_1min"] or 0,
+        row["min_1_5"] or 0,
+        row["min_5_15"] or 0,
+        row["min_15_30"] or 0,
+        row["over_30min"] or 0,
     ]
 
-    for d in dwell_times:
-        for b in bins:
-            if b["min"] <= d < b["max"]:
-                b["count"] += 1
-                break
+    bins = [
+        {"label": "< 1 min", "min": 0, "max": 60},
+        {"label": "1-5 min", "min": 60, "max": 300},
+        {"label": "5-15 min", "min": 300, "max": 900},
+        {"label": "15-30 min", "min": 900, "max": 1800},
+        {"label": "30+ min", "min": 1800, "max": 999999},
+    ]
 
-    for b in bins:
-        b["percentage"] = round((b["count"] / total * 100) if total > 0 else 0, 1)
+    for b, c in zip(bins, counts):
+        b["count"] = c
+        b["percentage"] = round((c / total * 100) if total > 0 else 0, 1)
 
     return jsonify({"bins": bins, "total_sessions": total})
 
