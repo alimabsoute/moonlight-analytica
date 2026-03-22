@@ -1077,95 +1077,120 @@ function renderJanus(cfg) {
       </div></div></div>`;
   }
 
-  // 13-16: 3D Zone Visualization hero
+  // 13-16: 3D Zone Visualization hero — each uses a DIFFERENT industry
   if (cfg.id <= 16) {
+    const industries = {13:'retail',14:'restaurant',15:'hotel',16:'gym'};
+    const ind = industries[cfg.id] || 'retail';
+    const headlines = {13:'Define. Track. Optimize.',14:'Every Table. Every Seat. Measured.',15:'Spatial Intelligence.',16:'Every Rep. Every Zone. Tracked.'};
     const isStacked = cfg.id === 14;
     return `<div class="s-janus" style="background:${bg}"><div class="container">
       ${isStacked ? `
-        <div style="text-align:center;margin-bottom:2rem">${mkJanusText(cfg, 'Define. Track. Optimize.', feats, extra)}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
-          <div>${mkZoneViz('retail')}</div>
-          <div style="position:relative">${mkBrowserChrome('safari', `<div style="position:relative">${vid}${mkTrackingOverlay()}</div>`)}</div>
-        </div>` : `
-        <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:center">
-          ${mkJanusText(cfg, cfg.id===15?'Spatial Intelligence.':'Define. Track. Optimize.', feats, extra)}
+        <div style="text-align:center;margin-bottom:2rem">${mkJanusText(cfg, headlines[cfg.id], feats, extra)}</div>
+        <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:start">
+          <div>${mkZoneViz(ind)}</div>
           <div>
-            ${mkZoneViz('retail')}
-            <div style="margin-top:16px;display:flex;gap:8px;justify-content:center">
-              ${['Entrance','Display','Checkout','Electronics'].map((z,i)=>`<span style="display:flex;align-items:center;gap:4px;font-size:.6rem;color:#64748b"><span style="width:8px;height:8px;border-radius:2px;background:${['#4dd8e622','#36d6b322','#fbbf2422','#8b5cf622'][i]};border:1.5px solid ${['#4dd8e6','#36d6b3','#fbbf24','#8b5cf6'][i]}"></span>${z}</span>`).join('')}
+            <div style="position:relative;margin-bottom:16px">${mkBrowserChrome('safari', `<div style="position:relative">${vid}${mkTrackingOverlay()}</div>`)}</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+              ${[{l:'Foot Traffic',v:'2,340/hr',c:'#4dd8e6'},{l:'Avg Dwell',v:'3.2min',c:'#36d6b3'},{l:'Conversion',v:'18.4%',c:'#fbbf24'},{l:'Accuracy',v:'99.1%',c:'#22c55e'}].map(m=>
+                `<div style="padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,.06);background:#fff;text-align:center">
+                  <div style="font-size:.5rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px">${m.l}</div>
+                  <div style="font-size:1.1rem;font-weight:800;color:${m.c};font-family:'Outfit',sans-serif">${m.v}</div>
+                </div>`).join('')}
             </div>
           </div>
+        </div>` : `
+        <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center">
+          ${mkJanusText(cfg, headlines[cfg.id], feats, {badges:true,stat:cfg.density==='rich'})}
+          <div>${mkZoneViz(ind)}</div>
         </div>`}
     </div></div>`;
   }
 
-  // 17-20: Rich compositions mixing multiple visual modules
+  // 17: Full composition — zone viz + floating metrics + video + dashboard overlay
   if (cfg.id === 17) {
-    // Gradient transition + zone viz + floating metrics
     return `<div class="s-janus" style="background:${bg}"><div class="container">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start">
         <div>${mkJanusText(cfg, 'Meet Janus.', featsRich, {badges:true,stat:true})}
-          <div style="margin-top:24px">${mkZoneViz('retail')}</div>
+          <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            ${[{l:'Events/day',v:'50K+',c:'#4dd8e6'},{l:'Zones',v:'16',c:'#36d6b3'},{l:'Accuracy',v:'99.1%',c:'#22c55e'}].map(m=>
+              `<div style="padding:10px;border-radius:8px;background:${m.c}08;border:1px solid ${m.c}20;text-align:center">
+                <div style="font-size:1rem;font-weight:800;color:${m.c}">${m.v}</div>
+                <div style="font-size:.45rem;font-weight:600;color:#94a3b8;text-transform:uppercase">${m.l}</div>
+              </div>`).join('')}
+          </div>
         </div>
-        <div style="position:relative;padding:30px 20px">
-          ${mkFloatingMetrics()}
-          ${mkBrowserChrome('safari', `<div style="position:relative">${vid}${mkDashboardOverlay()}</div>`)}
+        <div>
+          <div style="position:relative;padding:25px 15px;margin-bottom:16px">
+            ${mkFloatingMetrics()}
+            ${mkBrowserChrome('safari', `<div style="position:relative">${vid}${mkDashboardOverlay()}</div>`)}
+          </div>
+          <div>${mkZoneViz('restaurant')}</div>
         </div>
       </div></div></div>`;
   }
+  // 18: Stacked hero — video center, zone viz + metrics flanking below
   if (cfg.id === 18) {
-    // Full-width hero with tracking overlay + metrics below
     return `<div class="s-janus" style="background:${bg}"><div class="container">
       <div style="text-align:center;margin-bottom:3rem">
         <div style="font-size:.72rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:${cfg.accent};margin-bottom:1rem">Core Product</div>
         <h2 style="font-family:'Outfit',sans-serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:700;color:${cfg.text};letter-spacing:-1.2px;line-height:1.1;margin-bottom:.8rem">Meet Janus.</h2>
-        <p style="font-size:1rem;color:#64748b;line-height:1.8;max-width:560px;margin:0 auto">Total visibility into your digital and physical storefronts.</p>
+        <p style="font-size:1rem;color:#64748b;line-height:1.8;max-width:600px;margin:0 auto">Total visibility into your physical storefronts. Camera-based tracking, polygonal zone definitions, real-time dashboards — all from standard IP cameras.</p>
       </div>
-      <div style="max-width:800px;margin:0 auto;position:relative;padding:20px">
+      <div style="max-width:800px;margin:0 auto;position:relative;padding:25px">
         ${mkFloatingMetrics()}
         ${mkBrowserChrome('chrome', `<div style="position:relative">${vid}${mkTrackingOverlay()}${mkDashboardOverlay()}</div>`)}
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px">
-        ${[{l:'Foot Traffic',v:'2,340/hr',c:'+12%'},{l:'Dwell Time',v:'3.2 min',c:'+8%'},{l:'Conversion',v:'18.4%',c:'+3.1pp'},{l:'Zones Active',v:'12/16',c:''}].map(m=>
-          `<div style="text-align:center;padding:20px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:#fff">
-            <div style="font-size:.65rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:4px">${m.l}</div>
-            <div style="font-size:1.5rem;font-weight:800;color:#111827;font-family:'Outfit',sans-serif">${m.v}</div>
-            ${m.c?`<div style="font-size:.7rem;font-weight:600;color:#22c55e;margin-top:2px">&#9650; ${m.c}</div>`:''}
-          </div>`).join('')}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px">
+        <div>${mkZoneViz('hotel')}</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          ${[{l:'Foot Traffic',v:'2,340/hr',d:'+12% vs last week',c:'#4dd8e6',icon:'&#128065;'},{l:'Dwell Time',v:'3.2 min',d:'+8% — Display zone highest',c:'#36d6b3',icon:'&#9201;'},{l:'Conversion Rate',v:'18.4%',d:'+3.1pp since campaign launch',c:'#fbbf24',icon:'&#127919;'},{l:'Active Zones',v:'12 / 16',d:'94.2% coverage',c:'#8b5cf6',icon:'&#128200;'}].map(m=>
+            `<div style="padding:14px 16px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:#fff;display:flex;gap:14px;align-items:center">
+              <div style="width:40px;height:40px;border-radius:10px;background:${m.c}10;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">${m.icon}</div>
+              <div style="flex:1">
+                <div style="font-size:.55rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">${m.l}</div>
+                <div style="font-size:1.2rem;font-weight:800;color:#111827;font-family:'Outfit',sans-serif">${m.v}</div>
+              </div>
+              <div style="font-size:.6rem;font-weight:600;color:#22c55e">&#9650; ${m.d}</div>
+            </div>`).join('')}
+        </div>
       </div>
     </div></div>`;
   }
+  // 19: Zone viz hero with gradient + stat bar
   if (cfg.id === 19) {
-    // Zone viz hero with gradient background
     return `<div class="s-janus" style="background:${bg}"><div class="container">
       <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center">
         ${mkJanusText(cfg, 'Spatial Intelligence,\nRedefined.', featsRich, {badges:true,stat:true})}
         <div>
-          ${mkZoneViz('retail')}
-          <div style="margin-top:20px;padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:#fff;display:flex;gap:16px;align-items:center">
-            <div style="flex:1"><div style="font-size:.65rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Active Zones</div><div style="font-size:1.2rem;font-weight:800;color:#111827">12 zones</div></div>
+          ${mkZoneViz('gym')}
+          <div style="margin-top:16px;padding:14px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:#fff;display:flex;gap:16px;align-items:center">
+            <div style="flex:1"><div style="font-size:.6rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Active Zones</div><div style="font-size:1.2rem;font-weight:800;color:#111827">12 zones</div></div>
             <div style="width:1px;height:32px;background:#e2e8f0"></div>
-            <div style="flex:1"><div style="font-size:.65rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Coverage</div><div style="font-size:1.2rem;font-weight:800;color:#111827">94.2%</div></div>
+            <div style="flex:1"><div style="font-size:.6rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Coverage</div><div style="font-size:1.2rem;font-weight:800;color:#111827">94.2%</div></div>
             <div style="width:1px;height:32px;background:#e2e8f0"></div>
-            <div style="flex:1"><div style="font-size:.65rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Accuracy</div><div style="font-size:1.2rem;font-weight:800;color:#22c55e">99.1%</div></div>
+            <div style="flex:1"><div style="font-size:.6rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Accuracy</div><div style="font-size:1.2rem;font-weight:800;color:#22c55e">99.1%</div></div>
           </div>
         </div>
       </div></div></div>`;
   }
-  // id === 20: Purple accent, full composition
+  // 20: Full-page composition — 3-col top, zone viz + video bottom
   return `<div class="s-janus" style="background:${bg}"><div class="container">
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:start">
-      <div style="grid-column:span 2">${mkJanusText(cfg, 'Meet Janus.', featsMed, {badges:false,stat:false})}</div>
-      <div style="display:flex;flex-direction:column;gap:16px">
-        ${[{l:'Foot Traffic',v:'2,340/hr',icon:'&#128065;'},{l:'Dwell Time',v:'3.2m',icon:'&#9201;'},{l:'Campaign ROI',v:'+23%',icon:'&#127919;'}].map(m=>
-          `<div style="padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:#fff;display:flex;gap:12px;align-items:center">
+      <div style="grid-column:span 2">${mkJanusText(cfg, 'Meet Janus.', featsRich, {badges:true,stat:true})}</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        ${[{l:'Foot Traffic',v:'2,340/hr',icon:'&#128065;',s:[35,50,65,80,95,75,60]},{l:'Dwell Time',v:'3.2m',icon:'&#9201;',s:[40,55,70,60,50,65,80]},{l:'Campaign ROI',v:'+23%',icon:'&#127919;',s:[20,35,50,60,75,85,95]}].map(m=>
+          `<div style="padding:14px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:#fff;display:flex;gap:12px;align-items:center">
             <div style="width:36px;height:36px;border-radius:8px;background:${cfg.accent}12;display:flex;align-items:center;justify-content:center;font-size:1rem">${m.icon}</div>
-            <div><div style="font-size:.6rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">${m.l}</div><div style="font-size:1.1rem;font-weight:800;color:#111827">${m.v}</div></div>
+            <div style="flex:1"><div style="font-size:.55rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">${m.l}</div><div style="font-size:1.1rem;font-weight:800;color:#111827">${m.v}</div></div>
+            <div class="anim-bars" style="height:24px;gap:2px">${m.s.map((h,i)=>`<span style="height:${h}%;width:3px;animation-delay:${i*.06}s"></span>`).join('')}</div>
           </div>`).join('')}
       </div>
     </div>
-    <div style="margin-top:32px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px">
-      <div style="position:relative">${mkBrowserChrome('chrome', `<div style="position:relative">${vid}${mkTrackingOverlay()}</div>`)}</div>
+    <div style="margin-top:28px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px">
+      <div style="position:relative;padding:20px 15px">
+        ${mkFloatingMetrics()}
+        ${mkBrowserChrome('chrome', `<div style="position:relative">${vid}${mkTrackingOverlay()}</div>`)}
+      </div>
       <div>${mkZoneViz('retail')}</div>
     </div>
   </div></div>`;
