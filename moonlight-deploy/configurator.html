@@ -408,7 +408,52 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--app-bg);color:var
 .mock-roi .roi-arrow{width:40px;display:flex;align-items:center;justify-content:center;background:#fafafa}
 .mock-roi .roi-kpi{font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800}
 
-/* 3D Zone Visualization */
+/* ═══ 3D ZONE VISUALIZATION — REBUILT WITH DEPTH ═══ */
+.zviz{position:relative;width:100%;height:420px;background:linear-gradient(145deg,#11131a 0%,#161924 50%,#11131a 100%);border-radius:16px;border:1px solid rgba(77,216,230,.12);overflow:hidden;font-family:'Outfit',sans-serif;box-shadow:0 0 60px rgba(77,216,230,.04),0 20px 60px rgba(0,0,0,.3)}
+.zviz::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(77,216,230,.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(139,92,246,.04) 0%,transparent 50%);pointer-events:none}
+.zviz__head{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:center;gap:12px;padding:18px 24px 0;text-align:center}
+.zviz__icon{font-size:1.5rem;filter:drop-shadow(0 0 6px rgba(77,216,230,.4))}
+.zviz__title{font-size:1.1rem;font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#4dd8e6,#36d6b3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.zviz__sub{position:absolute;top:44px;left:50%;transform:translateX(-50%);font-size:.55rem;color:rgba(224,230,240,.35);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.zviz__scan{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden;opacity:.2}
+.zviz__scan::before{content:'';position:absolute;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(77,216,230,.5),transparent);animation:zvScan 4s linear infinite}
+@keyframes zvScan{0%{top:-2px}100%{top:100%}}
+/* 3D stage */
+.zviz__stage{position:absolute;top:60px;left:50%;width:90%;height:calc(100% - 110px);transform:translateX(-50%);perspective:1200px;perspective-origin:50% 35%}
+.zviz__scene{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(55deg) rotateZ(-12deg);animation:zvRotate 20s ease-in-out infinite}
+@keyframes zvRotate{0%,100%{transform:rotateX(55deg) rotateZ(-12deg)}50%{transform:rotateX(55deg) rotateZ(-18deg)}}
+/* Floor plane */
+.zviz__floor{position:absolute;left:50%;top:50%;width:420px;height:320px;transform:translate(-50%,-50%) translateZ(0);transform-style:preserve-3d}
+.zviz__floor-surface{position:absolute;inset:0;background:rgba(20,24,36,.9);border:1px solid rgba(77,216,230,.12);border-radius:4px}
+.zviz__floor-surface::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(77,216,230,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(77,216,230,.05) 1px,transparent 1px);background-size:30px 30px}
+/* 3D box zones with 6 faces */
+.zbox{position:absolute;transform-style:preserve-3d;opacity:0;transform:scaleY(0);transform-origin:bottom;animation:zboxIn .8s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes zboxIn{0%{opacity:0;transform:scaleY(0)}100%{opacity:1;transform:scaleY(1)}}
+.zface{position:absolute;backface-visibility:visible}
+.zface--bot{width:100%;height:100%;transform:translateZ(0);border:1.5px solid var(--zc);background:var(--zc-bg,rgba(77,216,230,.06))}
+.zface--top{width:100%;height:100%;transform:translateZ(var(--zh));background:var(--zc-top,rgba(77,216,230,.1));border:1.5px solid var(--zc)}
+.zface--front{width:100%;height:var(--zh);bottom:0;left:0;transform-origin:bottom;transform:rotateX(-90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-top:1.5px solid var(--zc)}
+.zface--back{width:100%;height:var(--zh);top:0;left:0;transform-origin:top;transform:rotateX(90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc)}
+.zface--left{height:100%;width:var(--zh);top:0;left:0;transform-origin:left;transform:rotateY(90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-top:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);border-right:1.5px solid var(--zc)}
+.zface--right{height:100%;width:var(--zh);top:0;right:0;transform-origin:right;transform:rotateY(-90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-top:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);border-left:1.5px solid var(--zc)}
+.zbox__label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translateZ(calc(var(--zh) + 2px)) rotateZ(12deg);font-size:.55rem;font-weight:600;color:var(--zc);text-shadow:0 0 6px var(--zc);white-space:nowrap;pointer-events:none;letter-spacing:.02em;opacity:0;animation:zlblIn .3s ease forwards .6s}
+@keyframes zlblIn{to{opacity:1}}
+/* Hotspot blips */
+.zblip{position:absolute;transform-style:preserve-3d;z-index:10;opacity:0;animation:zblipIn .5s ease forwards}
+@keyframes zblipIn{to{opacity:1}}
+.zblip__dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--bc,#4dd8e6);box-shadow:0 0 10px var(--bc,#4dd8e6),0 0 20px var(--bc,#4dd8e6);transform:translateZ(var(--bz,50px));animation:zbpulse 2s ease-in-out infinite}
+.zblip__dot::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid var(--bc,#4dd8e6);opacity:.4;animation:zbring 2s ease-in-out infinite}
+@keyframes zbpulse{0%,100%{opacity:.7;transform:translateZ(var(--bz,50px)) scale(1)}50%{opacity:1;transform:translateZ(var(--bz,50px)) scale(1.3)}}
+@keyframes zbring{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.8);opacity:0}}
+.zblip__leader{position:absolute;transform:translateZ(var(--bz,50px));border-left:1.5px dashed var(--bc,#4dd8e6);opacity:.4;height:35px;left:3px;bottom:8px}
+.zblip__callout{position:absolute;bottom:44px;left:-35px;transform:translateZ(var(--bz,50px));background:rgba(12,14,20,.92);border:1px solid var(--bc,#4dd8e6);border-radius:5px;padding:4px 9px;white-space:nowrap;font-size:.5rem;font-weight:600;color:var(--bc,#4dd8e6);box-shadow:0 0 10px rgba(0,0,0,.6),0 0 4px var(--bc,#4dd8e6);letter-spacing:.02em;animation:zcFloat 3s ease-in-out infinite}
+@keyframes zcFloat{0%,100%{transform:translateZ(var(--bz,50px)) translateY(0)}50%{transform:translateZ(var(--bz,50px)) translateY(-3px)}}
+/* Progress dots */
+.zviz__dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
+.zviz__dot{width:6px;height:6px;border-radius:50%;background:rgba(77,216,230,.15);border:1px solid rgba(77,216,230,.25)}
+.zviz__dot--active{width:22px;border-radius:3px;background:linear-gradient(90deg,#4dd8e6,#36d6b3);border-color:transparent;box-shadow:0 0 8px rgba(77,216,230,.3)}
+
+/* ── LEGACY FLAT ZONE VIZ (kept for backward compat) ── */
 .zone-viz-container{position:relative;width:100%;height:280px;perspective:800px;overflow:hidden}
 .zone-floor{
   position:absolute;left:50%;top:50%;width:260px;height:200px;
@@ -429,6 +474,14 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--app-bg);color:var
   position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;border:2px solid;
   transform:translate(-50%,-50%);z-index:2
 }
+
+/* ═══ ENHANCED CAPABILITY ANIMATIONS ═══ */
+@keyframes capPulse{0%,100%{box-shadow:0 0 0 0 rgba(77,216,230,.15)}50%{box-shadow:0 0 0 8px rgba(77,216,230,0)}}
+@keyframes capCount{0%{transform:translateY(4px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes capBarWave{0%{transform:scaleY(.3)}50%{transform:scaleY(1)}100%{transform:scaleY(.3)}}
+@keyframes capHeatPulse{0%,100%{opacity:.4;transform:scale(.95)}50%{opacity:.7;transform:scale(1.08)}}
+@keyframes capLineTrace{0%{stroke-dashoffset:300}100%{stroke-dashoffset:0}}
+.cap-live-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e;animation:livePulse 1.5s ease-in-out infinite}
 </style>
 </head>
 <body>
@@ -869,8 +922,61 @@ function mkTrackingOverlay() {
   </div>`;
 }
 
-/* ── Visual Module: 3D Zone Viz ── */
-function mkZoneViz() {
+/* ── Visual Module: 3D Zone Viz (REBUILT — full 3D enclosures, hotspot blips) ── */
+function mkZoneViz(industry) {
+  const ind = industry || 'retail';
+  const configs = {
+    retail: {icon:'&#128722;',name:'Retail Store',zones:[
+      {l:'Entrance',x:20,y:15,w:300,h:120,h3:45,c:'#4dd8e6',d:'.4s',m:'2,340/hr',bx:150,by:60},
+      {l:'Display',x:30,y:150,w:180,h:110,h3:60,c:'#36d6b3',d:'1s',m:'1.8m dwell',bx:90,by:55},
+      {l:'Checkout',x:250,y:170,w:140,h:120,h3:50,c:'#fbbf24',d:'1.6s',m:'18.4% conv',bx:70,by:60},
+      {l:'Electronics',x:20,y:5,w:140,h:80,h3:75,c:'#8b5cf6',d:'2.2s',m:'4.1m dwell',bx:70,by:40}
+    ]},
+    restaurant: {icon:'&#127860;',name:'Restaurant',zones:[
+      {l:'Dining Room',x:20,y:10,w:200,h:180,h3:55,c:'#f97316',d:'.4s',m:'Occupancy: 82%',bx:100,by:90},
+      {l:'Bar Area',x:240,y:10,w:150,h:100,h3:70,c:'#4dd8e6',d:'1s',m:'28 seated',bx:75,by:50},
+      {l:'Kitchen',x:240,y:130,w:150,h:130,h3:90,c:'#ef4444',d:'1.6s',m:'8min ticket',bx:75,by:65},
+      {l:'Patio',x:30,y:210,w:180,h:90,h3:35,c:'#22c55e',d:'2.2s',m:'Dwell: 42min',bx:90,by:45}
+    ]},
+    hotel: {icon:'&#127976;',name:'Hotel Lobby',zones:[
+      {l:'Front Desk',x:20,y:10,w:160,h:90,h3:50,c:'#8b5cf6',d:'.4s',m:'Check-ins: 14/hr',bx:80,by:45},
+      {l:'Lobby Lounge',x:200,y:10,w:190,h:170,h3:80,c:'#4dd8e6',d:'1s',m:'Occupancy: 78%',bx:95,by:85},
+      {l:'Elevator Bank',x:30,y:120,w:120,h:100,h3:100,c:'#3b82f6',d:'1.6s',m:'Wait: 45sec',bx:60,by:50},
+      {l:'Concierge',x:30,y:240,w:150,h:60,h3:45,c:'#36d6b3',d:'2.2s',m:'8 active req',bx:75,by:30}
+    ]},
+    gym: {icon:'&#127947;&#65039;',name:'Gym / Fitness',zones:[
+      {l:'Reception',x:20,y:10,w:130,h:80,h3:40,c:'#f43f5e',d:'.4s',m:'Members: 127',bx:65,by:40},
+      {l:'Free Weights',x:170,y:10,w:160,h:130,h3:60,c:'#fbbf24',d:'1s',m:'Session: 38min',bx:80,by:65},
+      {l:'Cardio',x:350,y:10,w:60,h:180,h3:70,c:'#22c55e',d:'1.6s',m:'Active: 34',bx:30,by:90},
+      {l:'Group Class',x:80,y:200,w:200,h:100,h3:85,c:'#8b5cf6',d:'2.2s',m:'Yoga 24/30',bx:100,by:50}
+    ]}
+  };
+  const cfg = configs[ind] || configs.retail;
+  const zones = cfg.zones;
+  return `<div class="zviz">
+    <div class="zviz__head"><span class="zviz__icon">${cfg.icon}</span><span class="zviz__title">${cfg.name}</span></div>
+    <div class="zviz__sub">JANUS ZONE TRACKING — LIVE SPATIAL ANALYTICS</div>
+    <div class="zviz__scan"></div>
+    <div class="zviz__stage"><div class="zviz__scene"><div class="zviz__floor">
+      <div class="zviz__floor-surface"></div>
+      ${zones.map((z,i)=>`<div class="zbox" style="left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px;--zc:${z.c};--zh:${z.h3}px;--zc-bg:${z.c}0a;--zc-top:${z.c}15;--zc-wall:${z.c}10;animation-delay:${z.d}">
+        <div class="zface zface--bot"></div><div class="zface zface--top"></div>
+        <div class="zface zface--front"></div><div class="zface zface--back"></div>
+        <div class="zface zface--left"></div><div class="zface zface--right"></div>
+        <div class="zbox__label">${z.l}</div>
+      </div>
+      <div class="zblip" style="left:${z.x+z.bx}px;top:${z.y+z.by}px;--bc:${z.c};--bz:${z.h3+12}px;animation-delay:${parseFloat(z.d)+1.2}s">
+        <div class="zblip__dot" style="animation-delay:${i*.4}s"></div>
+        <div class="zblip__leader"></div>
+        <div class="zblip__callout">${z.m}</div>
+      </div>`).join('')}
+    </div></div></div>
+    <div class="zviz__dots">${zones.map((_,i)=>`<div class="zviz__dot${i===0?' zviz__dot--active':''}"></div>`).join('')}</div>
+  </div>`;
+}
+
+/* ── Legacy flat zone viz (small inline variant for compact layouts) ── */
+function mkZoneVizFlat() {
   const zones = [
     {name:'Entrance',x:10,y:10,w:80,h:40,color:'#4dd8e6',z:0,delay:'.5s',metric:'2,340/hr'},
     {name:'Display',x:15,y:55,w:45,h:35,color:'#36d6b3',z:20,delay:'1.2s',metric:'1.8m dwell'},
@@ -978,13 +1084,13 @@ function renderJanus(cfg) {
       ${isStacked ? `
         <div style="text-align:center;margin-bottom:2rem">${mkJanusText(cfg, 'Define. Track. Optimize.', feats, extra)}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
-          <div>${mkZoneViz()}</div>
+          <div>${mkZoneViz('retail')}</div>
           <div style="position:relative">${mkBrowserChrome('safari', `<div style="position:relative">${vid}${mkTrackingOverlay()}</div>`)}</div>
         </div>` : `
         <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:center">
           ${mkJanusText(cfg, cfg.id===15?'Spatial Intelligence.':'Define. Track. Optimize.', feats, extra)}
           <div>
-            ${mkZoneViz()}
+            ${mkZoneViz('retail')}
             <div style="margin-top:16px;display:flex;gap:8px;justify-content:center">
               ${['Entrance','Display','Checkout','Electronics'].map((z,i)=>`<span style="display:flex;align-items:center;gap:4px;font-size:.6rem;color:#64748b"><span style="width:8px;height:8px;border-radius:2px;background:${['#4dd8e622','#36d6b322','#fbbf2422','#8b5cf622'][i]};border:1.5px solid ${['#4dd8e6','#36d6b3','#fbbf24','#8b5cf6'][i]}"></span>${z}</span>`).join('')}
             </div>
@@ -999,7 +1105,7 @@ function renderJanus(cfg) {
     return `<div class="s-janus" style="background:${bg}"><div class="container">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">
         <div>${mkJanusText(cfg, 'Meet Janus.', featsRich, {badges:true,stat:true})}
-          <div style="margin-top:24px">${mkZoneViz()}</div>
+          <div style="margin-top:24px">${mkZoneViz('retail')}</div>
         </div>
         <div style="position:relative;padding:30px 20px">
           ${mkFloatingMetrics()}
@@ -1035,7 +1141,7 @@ function renderJanus(cfg) {
       <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center">
         ${mkJanusText(cfg, 'Spatial Intelligence,\nRedefined.', featsRich, {badges:true,stat:true})}
         <div>
-          ${mkZoneViz()}
+          ${mkZoneViz('retail')}
           <div style="margin-top:20px;padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:#fff;display:flex;gap:16px;align-items:center">
             <div style="flex:1"><div style="font-size:.65rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Active Zones</div><div style="font-size:1.2rem;font-weight:800;color:#111827">12 zones</div></div>
             <div style="width:1px;height:32px;background:#e2e8f0"></div>
@@ -1060,72 +1166,98 @@ function renderJanus(cfg) {
     </div>
     <div style="margin-top:32px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px">
       <div style="position:relative">${mkBrowserChrome('chrome', `<div style="position:relative">${vid}${mkTrackingOverlay()}</div>`)}</div>
-      <div>${mkZoneViz()}</div>
+      <div>${mkZoneViz('retail')}</div>
     </div>
   </div></div>`;
 }
 
-/* ── Capability Card Visual Mockups (3D depth, animated, mini-dashboard compositions) ── */
+/* ── Capability Card Visual Mockups (REBUILT — animated mini-dashboards, 3D depth) ── */
 function mkTrackingMockup() {
-  return `<div class="depth-card" style="height:240px;position:relative">
-    <div class="mock-tracking" style="height:150px;border-radius:12px 12px 0 0;overflow:hidden">
+  return `<div class="depth-card" style="height:280px;position:relative">
+    <div class="mock-tracking" style="height:165px;border-radius:12px 12px 0 0;overflow:hidden">
       <div class="scan-line"></div>
       <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0f1219 0%,#1a1f2e 100%)"></div>
-      <div style="position:absolute;top:15%;left:10%;width:80%;height:70%;border:1px solid rgba(77,216,230,.1);border-radius:4px"></div>
-      ${[{t:18,l:12,w:32,h:52,d:0},{t:22,l:38,w:28,h:48,d:.5},{t:28,l:62,w:35,h:55,d:1},{t:15,l:82,w:30,h:50,d:1.5}].map(p=>
+      <div style="position:absolute;top:12%;left:8%;width:84%;height:74%;border:1px solid rgba(77,216,230,.08);border-radius:4px"></div>
+      ${[{t:16,l:10,w:34,h:56,d:0},{t:24,l:35,w:28,h:48,d:.6},{t:18,l:58,w:36,h:60,d:1.2},{t:30,l:78,w:30,h:46,d:1.8},{t:12,l:48,w:26,h:44,d:2.4}].map(p=>
         `<div style="position:absolute;top:${p.t}%;left:${p.l}%;width:${p.w}px;height:${p.h}px;background:rgba(200,200,220,.12);border-radius:${p.w/2}px ${p.w/2}px 4px 4px;filter:blur(2px)"></div>
          <div class="bbox" style="top:${p.t-1}%;left:${p.l-1}%;width:${p.w+4}px;height:${p.h+4}px;animation-delay:${p.d}s"></div>`).join('')}
-      <div class="live-badge"><span class="live-dot"></span>LIVE</div>
-      <div class="counter">2,340</div>
+      <div class="live-badge"><span class="live-dot"></span>LIVE TRACKING</div>
+      <div class="counter" style="font-size:1.3rem">2,340</div>
+      <div style="position:absolute;top:10px;right:60px;display:flex;gap:4px;align-items:center">
+        <span style="font-size:.5rem;color:rgba(255,255,255,.4);padding:2px 6px;border-radius:3px;background:rgba(255,255,255,.06)">16 FPS</span>
+        <span style="font-size:.5rem;color:rgba(255,255,255,.4);padding:2px 6px;border-radius:3px;background:rgba(255,255,255,.06)">4 Cams</span>
+      </div>
     </div>
-    <div style="display:flex;gap:0;height:90px;border-radius:0 0 12px 12px;overflow:hidden;background:#fff">
+    <div style="display:flex;gap:0;height:115px;border-radius:0 0 12px 12px;overflow:hidden;background:#fff">
       <div style="flex:1;padding:10px 12px;border-right:1px solid rgba(0,0,0,.06)">
-        <div style="font-size:.5rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Hourly Traffic</div>
-        <div class="anim-bars" style="height:50px">${[40,55,65,80,70,90,95,85,75,60,50,45].map((h,i)=>
-          `<span style="height:${h}%;animation-delay:${i*.06}s"></span>`).join('')}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:.5rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Hourly Traffic</span>
+          <span style="font-size:.7rem;font-weight:800;color:#111827">2,340<span style="font-size:.5rem;color:#22c55e;margin-left:3px">&#9650;12%</span></span>
+        </div>
+        <div class="anim-bars" style="height:55px">${[35,50,60,75,65,85,95,88,78,65,55,48,40,52,68,80].map((h,i)=>
+          `<span style="height:${h}%;animation-delay:${i*.05}s;background:${h>80?'#22c55e':'#4dd8e6'}"></span>`).join('')}</div>
+        <div style="display:flex;justify-content:space-between;margin-top:3px">
+          <span style="font-size:.38rem;color:#cbd5e1">8AM</span><span style="font-size:.38rem;color:#cbd5e1">12PM</span><span style="font-size:.38rem;color:#cbd5e1">4PM</span><span style="font-size:.38rem;color:#cbd5e1">8PM</span>
+        </div>
       </div>
       <div style="flex:1;padding:10px 12px">
-        <div style="font-size:.5rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Traffic Trend</div>
-        <div class="anim-spark" style="height:50px"><svg viewBox="0 0 100 40" style="width:100%;height:100%" preserveAspectRatio="none">
-          <path d="M0,35 L10,30 L20,32 L30,25 L40,20 L50,22 L60,15 L70,10 L80,12 L90,8 L100,5" fill="none" stroke="#4dd8e6" stroke-width="2" vector-effect="non-scaling-stroke"/>
-          <path d="M0,35 L10,30 L20,32 L30,25 L40,20 L50,22 L60,15 L70,10 L80,12 L90,8 L100,5 L100,40 L0,40Z" fill="url(#trkGrad)" opacity=".15"/>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:.5rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Traffic Trend</span>
+          <span class="cap-live-dot"></span>
+        </div>
+        <div class="anim-spark" style="height:45px"><svg viewBox="0 0 100 40" style="width:100%;height:100%" preserveAspectRatio="none">
+          <path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3" fill="none" stroke="#4dd8e6" stroke-width="2" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 2s ease forwards"/>
+          <path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3 L100,3 L100,40 L0,40Z" fill="url(#trkGrad)" opacity=".12"/>
           <defs><linearGradient id="trkGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4dd8e6"/><stop offset="1" stop-color="#4dd8e6" stop-opacity="0"/></linearGradient></defs>
         </svg></div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          ${[{l:'Peak',v:'2:30PM',c:'#fbbf24'},{l:'Avg',v:'1,890',c:'#4dd8e6'}].map(s=>`<span style="font-size:.45rem;padding:2px 6px;border-radius:3px;background:${s.c}10;color:${s.c};font-weight:600">${s.l}: ${s.v}</span>`).join('')}
+        </div>
       </div>
     </div>
   </div>`;
 }
 
 function mkHeatmapMockup() {
-  return `<div class="depth-card" style="height:240px;display:flex;overflow:hidden">
+  return `<div class="depth-card" style="height:280px;display:flex;overflow:hidden">
     <div class="mock-heatmap" style="flex:1.3;position:relative;background:#f8fafb;overflow:hidden;border-radius:0">
       <div class="floor">
         <div class="wall" style="top:0;left:35%;width:30%;height:2px"></div>
         <div class="wall" style="top:0;left:0;width:2px;height:100%"></div>
         <div class="wall" style="top:0;right:0;width:2px;height:100%"></div>
         <div class="wall" style="bottom:0;left:0;width:100%;height:2px"></div>
+        <div class="wall" style="top:45%;left:0;width:40%;height:1.5px"></div>
+        <div class="wall" style="top:0;left:60%;width:1.5px;height:55%"></div>
       </div>
-      <div class="heat-zone" style="top:18%;left:12%;width:70px;height:70px;background:radial-gradient(circle,rgba(239,68,68,.55),rgba(239,68,68,0))"></div>
-      <div class="heat-zone" style="top:32%;left:48%;width:55px;height:55px;background:radial-gradient(circle,rgba(251,191,36,.45),rgba(251,191,36,0));animation-delay:.8s"></div>
-      <div class="heat-zone" style="top:55%;left:22%;width:80px;height:80px;background:radial-gradient(circle,rgba(34,197,94,.35),rgba(34,197,94,0));animation-delay:1.5s"></div>
-      <div class="heat-zone" style="top:12%;left:68%;width:45px;height:45px;background:radial-gradient(circle,rgba(59,130,246,.4),rgba(59,130,246,0));animation-delay:2s"></div>
-      <div class="zone-label" style="top:16%;left:16%">Entrance &mdash; 3.2m</div>
-      <div class="zone-label" style="top:58%;left:52%">Display &mdash; 1.1m</div>
-      <div class="zone-label" style="top:38%;left:68%">Checkout &mdash; 0.4m</div>
-      <div style="position:absolute;bottom:6px;right:8px;display:flex;align-items:center;gap:3px;font-size:.48rem;color:#94a3b8">
-        <span style="width:28px;height:7px;border-radius:2px;background:linear-gradient(90deg,#3b82f6,#22c55e,#fbbf24,#ef4444)"></span>Low&mdash;High
+      ${[
+        {t:12,l:8,w:75,h:75,g:'rgba(239,68,68,.55),rgba(239,68,68,0)',d:'0s'},
+        {t:28,l:42,w:60,h:60,g:'rgba(251,191,36,.45),rgba(251,191,36,0)',d:'.8s'},
+        {t:55,l:18,w:85,h:85,g:'rgba(34,197,94,.35),rgba(34,197,94,0)',d:'1.5s'},
+        {t:8,l:65,w:50,h:50,g:'rgba(59,130,246,.4),rgba(59,130,246,0)',d:'2s'},
+        {t:50,l:55,w:55,h:55,g:'rgba(244,63,94,.3),rgba(244,63,94,0)',d:'2.5s'}
+      ].map(h=>`<div class="heat-zone" style="top:${h.t}%;left:${h.l}%;width:${h.w}px;height:${h.h}px;background:radial-gradient(circle,${h.g});animation-delay:${h.d};animation:capHeatPulse 3s ease-in-out infinite ${h.d}"></div>`).join('')}
+      <div class="zone-label" style="top:14%;left:14%">Entrance &mdash; 3.2m</div>
+      <div class="zone-label" style="top:56%;left:48%">Display &mdash; 1.1m</div>
+      <div class="zone-label" style="top:34%;left:66%">Checkout &mdash; 0.4m</div>
+      <div class="zone-label" style="top:60%;left:12%">Electronics &mdash; 4.1m</div>
+      <div style="position:absolute;top:6px;left:8px;display:flex;align-items:center;gap:5px;font-size:.5rem;color:#475569;font-weight:600">
+        <span class="cap-live-dot"></span>Live Heatmap
+      </div>
+      <div style="position:absolute;bottom:6px;right:8px;display:flex;align-items:center;gap:3px;font-size:.45rem;color:#94a3b8">
+        <span style="width:32px;height:6px;border-radius:2px;background:linear-gradient(90deg,#3b82f6,#22c55e,#fbbf24,#ef4444)"></span>Low&mdash;High
       </div>
     </div>
-    <div style="flex:.7;padding:12px;display:flex;flex-direction:column;gap:6px;background:#fff;border-left:1px solid rgba(0,0,0,.06)">
-      <div style="font-size:.55rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Zone Breakdown</div>
-      ${[{z:'Entrance',v:'3.2m',pct:80,c:'#ef4444'},{z:'Display',v:'1.8m',pct:55,c:'#fbbf24'},{z:'Checkout',v:'0.4m',pct:15,c:'#22c55e'},{z:'Electronics',v:'4.1m',pct:95,c:'#ef4444'}].map(z=>
-        `<div style="font-size:.55rem">
+    <div style="flex:.7;padding:10px;display:flex;flex-direction:column;gap:5px;background:#fff;border-left:1px solid rgba(0,0,0,.06)">
+      <div style="font-size:.52rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Zone Dwell Time</div>
+      ${[{z:'Entrance',v:'3.2m',pct:80,c:'#ef4444'},{z:'Display',v:'1.8m',pct:55,c:'#fbbf24'},{z:'Checkout',v:'0.4m',pct:15,c:'#22c55e'},{z:'Electronics',v:'4.1m',pct:95,c:'#ef4444'},{z:'Corridor',v:'0.2m',pct:8,c:'#3b82f6'}].map(z=>
+        `<div style="font-size:.52rem">
           <div style="display:flex;justify-content:space-between;color:#475569;margin-bottom:2px"><span>${z.z}</span><span style="font-weight:700">${z.v}</span></div>
-          <div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="height:100%;width:${z.pct}%;background:${z.c};border-radius:2px"></div></div>
+          <div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="height:100%;width:${z.pct}%;background:${z.c};border-radius:2px;animation:barGrow .8s ease forwards"></div></div>
         </div>`).join('')}
-      <div style="margin-top:auto;font-size:.5rem;color:#94a3b8;border-top:1px solid rgba(0,0,0,.06);padding-top:6px">
-        <div style="font-weight:600;color:#111827;font-size:.7rem;margin-bottom:2px">Avg: 2.4 min</div>
-        Bottleneck: Electronics zone
+      <div style="margin-top:auto;padding-top:6px;border-top:1px solid rgba(0,0,0,.06)">
+        <div style="font-weight:700;color:#111827;font-size:.75rem;margin-bottom:2px">Avg: 2.4 min</div>
+        <div style="font-size:.48rem;color:#ef4444;font-weight:600">&#9888; Bottleneck: Electronics</div>
+        <div style="margin-top:4px;display:flex;gap:3px">${[28,35,42,50,55,48,40].map((h,i)=>`<div style="width:100%;height:${h*.5}px;background:linear-gradient(to top,#4dd8e640,#4dd8e610);border-radius:1px;animation:capBarWave 2s ease-in-out infinite ${i*.2}s"></div>`).join('')}</div>
       </div>
     </div>
   </div>`;
@@ -1133,69 +1265,80 @@ function mkHeatmapMockup() {
 
 function mkForecastMockup() {
   const pts = [20,35,30,55,70,65,80];
-  const forecast = [80,75,85];
+  const forecast = [80,75,85,90];
   const w = 100 / (pts.length + forecast.length - 1);
   const toPath = (arr, startIdx=0) => arr.map((p,i)=>`${(startIdx+i)*w},${100-p}`).join(' ');
-  return `<div class="depth-card" style="height:240px;display:flex;flex-direction:column;background:#fff">
+  return `<div class="depth-card" style="height:280px;display:flex;flex-direction:column;background:#fff">
     <div style="padding:12px 14px 0;display:flex;justify-content:space-between;align-items:center">
-      <div><div style="font-size:.75rem;font-weight:700;color:#111827">Visitor Forecast</div><div style="font-size:.5rem;color:#94a3b8">ML-powered prediction model</div></div>
-      <div style="display:flex;gap:6px">
-        <span style="font-size:.5rem;padding:3px 8px;border-radius:5px;background:#22c55e12;color:#22c55e;font-weight:600">94% accuracy</span>
-        <span style="font-size:.5rem;padding:3px 8px;border-radius:5px;background:rgba(77,216,230,.1);color:#4dd8e6;font-weight:600">Live</span>
+      <div><div style="font-size:.8rem;font-weight:700;color:#111827">Visitor Forecast</div><div style="font-size:.48rem;color:#94a3b8">ML-powered &middot; 7-day lookahead</div></div>
+      <div style="display:flex;gap:5px">
+        <span style="font-size:.48rem;padding:3px 8px;border-radius:5px;background:#22c55e12;color:#22c55e;font-weight:600">94% accuracy</span>
+        <span style="font-size:.48rem;padding:3px 8px;border-radius:5px;background:rgba(77,216,230,.1);color:#4dd8e6;font-weight:600;display:flex;align-items:center;gap:3px"><span class="cap-live-dot" style="width:4px;height:4px"></span>Live</span>
       </div>
     </div>
     <div style="flex:1;position:relative;padding:8px 14px 20px 36px">
       <div style="position:relative;height:100%;border-left:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
-        ${[0,25,50,75,100].map(v=>`<div style="position:absolute;left:-30px;bottom:${v}%;font-size:.42rem;color:#94a3b8;transform:translateY(50%)">${Math.round(v*25)}</div>`).join('')}
-        ${['8AM','10AM','12PM','2PM','4PM','6PM','8PM'].map((t,i)=>`<div style="position:absolute;bottom:-14px;left:${i*100/6}%;font-size:.42rem;color:#94a3b8;transform:translateX(-50%)">${t}</div>`).join('')}
+        ${[0,25,50,75,100].map(v=>`<div style="position:absolute;left:-30px;bottom:${v}%;font-size:.4rem;color:#94a3b8;transform:translateY(50%)">${Math.round(v*25)}</div>`).join('')}
+        ${['8AM','10AM','12PM','2PM','4PM','6PM','8PM','10PM'].map((t,i)=>`<div style="position:absolute;bottom:-14px;left:${i*100/7}%;font-size:.38rem;color:#94a3b8;transform:translateX(-50%)">${t}</div>`).join('')}
         <svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polyline points="${toPath(pts)}" fill="none" stroke="#4dd8e6" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+          <rect x="55" y="0" width="45" height="100" fill="#4dd8e604" stroke="none"/>
+          <polyline points="${toPath(pts)}" fill="none" stroke="#4dd8e6" stroke-width="2.5" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 2s ease forwards"/>
           <polyline points="${toPath(forecast, pts.length-1)}" fill="none" stroke="#4dd8e6" stroke-width="2" stroke-dasharray="4 3" vector-effect="non-scaling-stroke" opacity=".5"/>
           <polygon points="${toPath(pts)},${(pts.length-1)*w},100 0,100" fill="url(#fGrad2)" opacity=".12"/>
           <defs><linearGradient id="fGrad2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4dd8e6"/><stop offset="1" stop-color="#4dd8e6" stop-opacity="0"/></linearGradient></defs>
         </svg>
-        <div style="position:absolute;left:50%;top:10%;border-left:1px dashed #fbbf24;height:75%;opacity:.35"></div>
-        <div style="position:absolute;left:48%;top:5%;font-size:.45rem;color:#fbbf24;font-weight:700;background:#fbbf2410;padding:1px 6px;border-radius:3px">PEAK 2:30PM</div>
+        <div style="position:absolute;left:55%;top:0;bottom:0;border-left:1px dashed rgba(77,216,230,.2)"></div>
+        <div style="position:absolute;left:53%;top:0;font-size:.4rem;color:rgba(77,216,230,.5);font-weight:600;letter-spacing:.5px">FORECAST &rarr;</div>
+        <div style="position:absolute;left:48%;top:12%;font-size:.45rem;color:#fbbf24;font-weight:700;background:#fbbf2410;padding:2px 7px;border-radius:3px;border:1px solid #fbbf2425">&#9650; PEAK 2:30PM</div>
+        <div style="position:absolute;left:48%;top:10%;border-left:1px dashed #fbbf24;height:70%;opacity:.25"></div>
       </div>
     </div>
-    <div style="display:flex;gap:0;border-top:1px solid rgba(0,0,0,.06);height:56px">
-      ${[{d:'Mon',v:65},{d:'Tue',v:80},{d:'Wed',v:75},{d:'Thu',v:90},{d:'Fri',v:95},{d:'Sat',v:60},{d:'Sun',v:45}].map(d=>
-        `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:4px 2px;border-right:1px solid rgba(0,0,0,.03)">
-          <div style="width:80%;height:${d.v*.35}px;background:linear-gradient(to top,#4dd8e640,#4dd8e615);border-radius:2px 2px 0 0"></div>
-          <div style="font-size:.4rem;color:#94a3b8;margin-top:2px">${d.d}</div>
+    <div style="display:flex;gap:0;border-top:1px solid rgba(0,0,0,.06);height:58px">
+      ${[{d:'Mon',v:65,a:true},{d:'Tue',v:80},{d:'Wed',v:75},{d:'Thu',v:90,peak:true},{d:'Fri',v:95,peak:true},{d:'Sat',v:60},{d:'Sun',v:45}].map(d=>
+        `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:4px 2px;border-right:1px solid rgba(0,0,0,.03);${d.a?'background:#4dd8e608':''}">
+          <div style="width:80%;height:${d.v*.35}px;background:linear-gradient(to top,${d.peak?'#fbbf2450,#fbbf2415':'#4dd8e640,#4dd8e615'});border-radius:2px 2px 0 0;animation:capBarWave 3s ease-in-out infinite ${Math.random()*2}s"></div>
+          <div style="font-size:.38rem;color:${d.a?'#4dd8e6':'#94a3b8'};margin-top:2px;font-weight:${d.a?'700':'400'}">${d.d}</div>
         </div>`).join('')}
     </div>
   </div>`;
 }
 
 function mkRoiMockup() {
-  return `<div class="depth-card" style="height:240px;display:flex;flex-direction:column;background:#fff">
-    <div style="display:flex;flex:1;overflow:hidden">
-      <div class="roi-half roi-digital" style="flex:1;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#f0f7ff">
-        <div style="font-size:.55rem;font-weight:600;color:#3b82f6;letter-spacing:.5px;text-transform:uppercase">Digital Campaign</div>
-        <div style="width:90px;height:55px;border-radius:8px;border:1.5px solid #3b82f6;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.05)">
-          <div style="text-align:center"><div style="font-size:.75rem;font-weight:700;color:#3b82f6">Spring Sale</div><div style="font-size:.5rem;color:#64748b">-30% OFF</div></div>
-        </div>
-        <div style="font-size:.5rem;color:#94a3b8">10,000 impressions</div>
-        <div style="font-size:.5rem;color:#64748b">Google Ads + Meta</div>
-      </div>
-      <div style="width:40px;display:flex;align-items:center;justify-content:center;background:#fafafa;position:relative">
-        <div style="width:100%;height:2px;background:linear-gradient(90deg,#3b82f6,#22c55e)"></div>
-        <svg style="position:absolute" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-      </div>
-      <div class="roi-half roi-physical" style="flex:1;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#f0fdf4">
-        <div style="font-size:.55rem;font-weight:600;color:#22c55e;letter-spacing:.5px;text-transform:uppercase">In-Store Impact</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:800;color:#22c55e">+23%</div>
-        <div style="font-size:.5rem;color:#64748b">conversion lift measured</div>
-        <div class="anim-bars" style="height:30px">${[30,45,55,65,80,90,95].map((h,i)=>
-          `<span style="height:${h}%;background:#22c55e;animation-delay:${i*.08}s"></span>`).join('')}</div>
+  return `<div class="depth-card" style="height:280px;display:flex;flex-direction:column;background:#fff">
+    <div style="padding:10px 14px 0;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:.72rem;font-weight:700;color:#111827">Campaign Attribution</div>
+      <div style="display:flex;gap:4px">
+        <span style="font-size:.45rem;padding:2px 7px;border-radius:4px;background:#3b82f610;color:#3b82f6;font-weight:600">Digital</span>
+        <span style="font-size:.45rem;padding:2px 7px;border-radius:4px;background:#22c55e10;color:#22c55e;font-weight:600">Physical</span>
       </div>
     </div>
-    <div style="display:flex;gap:0;border-top:1px solid rgba(0,0,0,.06);height:52px">
-      ${[{l:'Attributed Visits',v:'340',c:'#4dd8e6'},{l:'Revenue Impact',v:'$12.4K',c:'#22c55e'},{l:'Cost per Visit',v:'$0.42',c:'#fbbf24'}].map(k=>
-        `<div style="flex:1;padding:8px;text-align:center;border-right:1px solid rgba(0,0,0,.04)">
-          <div style="font-size:.45rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.3px">${k.l}</div>
-          <div style="font-size:.9rem;font-weight:800;color:${k.c};font-family:'Outfit',sans-serif">${k.v}</div>
+    <div style="display:flex;flex:1;overflow:hidden;margin-top:8px">
+      <div style="flex:1;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:#f0f7ff;border-radius:8px 0 0 0">
+        <div style="font-size:.52rem;font-weight:600;color:#3b82f6;letter-spacing:.5px;text-transform:uppercase">Digital Campaign</div>
+        <div style="width:85px;height:50px;border-radius:6px;border:1.5px solid #3b82f6;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.05)">
+          <div style="text-align:center"><div style="font-size:.7rem;font-weight:700;color:#3b82f6">Spring Sale</div><div style="font-size:.45rem;color:#64748b">-30% OFF</div></div>
+        </div>
+        <div style="font-size:.48rem;color:#94a3b8">10,000 impressions</div>
+        <div style="font-size:.48rem;color:#64748b;font-weight:500">Google Ads + Meta + TikTok</div>
+        <div class="anim-bars" style="height:22px">${[20,35,50,65,80,70,60,75,90].map((h,i)=>`<span style="height:${h}%;background:#3b82f6;animation-delay:${i*.06}s"></span>`).join('')}</div>
+      </div>
+      <div style="width:36px;display:flex;align-items:center;justify-content:center;background:#fafafa;position:relative">
+        <div style="width:100%;height:2px;background:linear-gradient(90deg,#3b82f6,#22c55e)"></div>
+        <svg style="position:absolute" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </div>
+      <div style="flex:1;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:#f0fdf4;border-radius:0 8px 0 0">
+        <div style="font-size:.52rem;font-weight:600;color:#22c55e;letter-spacing:.5px;text-transform:uppercase">In-Store Impact</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;color:#22c55e;animation:capCount .6s ease forwards">+23%</div>
+        <div style="font-size:.48rem;color:#64748b">conversion lift measured</div>
+        <div class="anim-bars" style="height:28px">${[30,45,55,65,80,90,95,92].map((h,i)=>`<span style="height:${h}%;background:#22c55e;animation-delay:${i*.07}s"></span>`).join('')}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:0;border-top:1px solid rgba(0,0,0,.06);height:58px">
+      ${[{l:'Attributed Visits',v:'340',c:'#4dd8e6',d:'+18%'},{l:'Revenue Impact',v:'$12.4K',c:'#22c55e',d:'+23%'},{l:'Cost/Visit',v:'$0.42',c:'#fbbf24',d:'-31%'},{l:'ROAS',v:'4.2x',c:'#8b5cf6',d:'+1.1x'}].map(k=>
+        `<div style="flex:1;padding:6px;text-align:center;border-right:1px solid rgba(0,0,0,.04)">
+          <div style="font-size:.42rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.3px">${k.l}</div>
+          <div style="font-size:.85rem;font-weight:800;color:${k.c};font-family:'Outfit',sans-serif">${k.v}</div>
+          <div style="font-size:.42rem;font-weight:600;color:#22c55e">&#9650; ${k.d}</div>
         </div>`).join('')}
     </div>
   </div>`;
