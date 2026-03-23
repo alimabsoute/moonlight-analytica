@@ -81,6 +81,24 @@ def build_deck(filename, v):
     replace_shape_text(sh['Text 3'], v['s4_brand'])
     replace_shape_text(sh['Text 5'], v['s4_search'])
     replace_shape_text(sh['Text 7'], v['s4_item_title'])
+    # Dish list items (left side)
+    replace_shape_text(sh['Text 8'], v.get('s4_dish1_sub', 'Thai  \u2605 96/100'))
+    replace_shape_text(sh['Text 10'], v.get('s4_dish1_badge', '96'))
+    replace_shape_text(sh['Text 12'], v.get('s4_dish2_name', 'Truffle Mushroom Risotto'))
+    replace_shape_text(sh['Text 13'], v.get('s4_dish2_sub', 'Italian  \u2605 94/100'))
+    replace_shape_text(sh['Text 15'], v.get('s4_dish2_badge', '94'))
+    replace_shape_text(sh['Text 17'], v.get('s4_dish3_name', 'Nashville Hot Chicken'))
+    replace_shape_text(sh['Text 18'], v.get('s4_dish3_sub', 'Southern  \u2605 91/100'))
+    replace_shape_text(sh['Text 20'], v.get('s4_dish3_badge', '91'))
+    # Feature cards (right side)
+    replace_shape_text(sh['Text 21'], v.get('s4_feat1_title', 'Patent-Pending Dish Scores'))
+    replace_shape_text(sh['Text 22'], v.get('s4_feat1_body', 'Every dish gets a 0-100 TastyrScore powered by our proprietary AI algorithm across 9 food verticals.'))
+    replace_shape_text(sh['Text 23'], v.get('s4_feat2_title', 'Cuisine Vertical AI'))
+    replace_shape_text(sh['Text 24'], v.get('s4_feat2_body', 'Specialized models for each cuisine — what makes great sushi is different from great BBQ.'))
+    replace_shape_text(sh['Text 25'], v.get('s4_feat3_title', 'Real-Time Dish Rankings'))
+    replace_shape_text(sh['Text 26'], v.get('s4_feat3_body', 'Live trending dishes, new additions, and neighborhood-level dish intelligence updated continuously.'))
+    replace_shape_text(sh['Text 27'], v.get('s4_feat4_title', 'Restaurant Dashboard'))
+    replace_shape_text(sh['Text 28'], v.get('s4_feat4_body', 'Analytics for restaurants — dish performance, competitive benchmarking, menu optimization insights.'))
 
     # SLIDE 5: Market Opportunity
     sh = get_shapes_by_name(slides[4])
@@ -116,6 +134,34 @@ def build_deck(filename, v):
     sh = get_shapes_by_name(slides[6])
     replace_shape_text(sh['Text 1'], 'Competitive Landscape')
     replace_shape_text(sh['Text 2'], v['s7_desc'])
+    # Replace competitive table data
+    for s in slides[6].shapes:
+        if s.has_table:
+            tbl = s.table
+            comp_rows = v.get('s7_table', [
+                ['Feature', 'Tastyr IQ', 'Yelp', 'Google Maps', 'OpenTable'],
+                ['Dish-Level Scores', '\u2713', '\u2717', '\u2717', '\u2717'],
+                ['AI Scoring Algorithm', '\u2713', '\u2717', '\u2717', '\u2717'],
+                ['9 Cuisine Verticals', '\u2713', '\u2717', '\u2717', '\u2717'],
+                ['Restaurant Dashboard', '\u2713', 'Paid Only', 'Limited', '\u2717'],
+                ['Consumer Discovery', '\u2713', '\u2713', '\u2713', 'Partial'],
+                ['Menu Optimization', '\u2713', '\u2717', '\u2717', '\u2717'],
+                ['Data Licensing', '\u2713', '\u2717', '\u2717', '\u2717'],
+            ])
+            for ri, row_data in enumerate(comp_rows):
+                if ri < len(list(tbl.rows)):
+                    row = list(tbl.rows)[ri]
+                    for ci, cell_text in enumerate(row_data):
+                        if ci < len(tbl.columns):
+                            cell = row.cells[ci]
+                            for para in cell.text_frame.paragraphs:
+                                for run in para.runs:
+                                    run.text = ""
+                            if cell.text_frame.paragraphs and cell.text_frame.paragraphs[0].runs:
+                                cell.text_frame.paragraphs[0].runs[0].text = cell_text
+                            elif cell.text_frame.paragraphs:
+                                cell.text_frame.paragraphs[0].text = cell_text
+            break
 
     # SLIDE 8: Go-to-Market Strategy
     sh = get_shapes_by_name(slides[7])
@@ -240,6 +286,13 @@ V1 = {
     "s3_f4_title": "Data Licensing Infrastructure",
     "s3_f4_body": "Dish intelligence data licensed to delivery platforms, CPG brands, and food industry analysts.",
     "s4_brand": "TASTYR IQ", "s4_search": "Search dishes near you...", "s4_item_title": "Spicy Tuna Crispy Rice",
+    "s4_dish1_sub": "Japanese  \u2605 96/100", "s4_dish1_badge": "96",
+    "s4_dish2_name": "Truffle Mushroom Risotto", "s4_dish2_sub": "Italian  \u2605 94/100", "s4_dish2_badge": "94",
+    "s4_dish3_name": "Nashville Hot Chicken", "s4_dish3_sub": "Southern  \u2605 91/100", "s4_dish3_badge": "91",
+    "s4_feat1_title": "Patent-Pending Dish Scores", "s4_feat1_body": "Every dish gets a 0-100 TastyrScore using AI that analyzes flavor, presentation, value, and consistency.",
+    "s4_feat2_title": "9 Cuisine Vertical AI", "s4_feat2_body": "Specialized models for each food category — sushi, BBQ, vegan, Italian, and more.",
+    "s4_feat3_title": "Real-Time Dish Rankings", "s4_feat3_body": "Live trending dishes, new additions, and neighborhood-level intelligence updated continuously.",
+    "s4_feat4_title": "Restaurant Dashboard", "s4_feat4_body": "Free analytics for restaurants — dish performance, competitive benchmarking, menu optimization insights.",
     "s5_tam_label": "TAM", "s5_tam_val": "$371B", "s5_tam_desc": ["US restaurant industry", "total addressable market"],
     "s5_sam_label": "SAM", "s5_sam_val": "$23B", "s5_sam_desc": ["Restaurant tech & analytics", "SaaS market"],
     "s5_som_label": "SOM", "s5_som_val": "$2.3B", "s5_som_desc": ["Dish-level intelligence", "Year 5 target"],
@@ -314,6 +367,13 @@ V2 = {
     "s3_f4_title": "Winner-Take-All Dynamics",
     "s3_f4_body": "Like Rotten Tomatoes for movies, the first credible dish scoring platform becomes the default. Second place is irrelevant.",
     "s4_brand": "TASTYR IQ", "s4_search": "Find the best dishes near you...", "s4_item_title": "Birria Tacos",
+    "s4_dish1_sub": "Mexican  \u2605 97/100", "s4_dish1_badge": "97",
+    "s4_dish2_name": "Khao Soi Curry", "s4_dish2_sub": "Thai  \u2605 95/100", "s4_dish2_badge": "95",
+    "s4_dish3_name": "Wood-Fired Margherita", "s4_dish3_sub": "Italian  \u2605 93/100", "s4_dish3_badge": "93",
+    "s4_feat1_title": "First-Mover Dish Scoring", "s4_feat1_body": "Patent-pending AI scores every dish 0-100. No competitor has filed. We own the IP.",
+    "s4_feat2_title": "App Store Live NOW", "s4_feat2_body": "Not a concept. Users can download today. 2,490+ dishes already scored and live.",
+    "s4_feat3_title": "Network Effects Lock-In", "s4_feat3_body": "Every dish scored makes the platform exponentially more valuable. Winner-take-all dynamics.",
+    "s4_feat4_title": "Data Licensing Ready", "s4_feat4_body": "Dish intelligence data ready to license to DoorDash, UberEats, Instacart, and CPG brands.",
     "s5_tam_label": "TAM", "s5_tam_val": "$371B", "s5_tam_desc": ["US restaurant industry", "and the race is on"],
     "s5_sam_label": "SAM", "s5_sam_val": "$23B", "s5_sam_desc": ["Restaurant tech market", "growing 12.5% CAGR"],
     "s5_som_label": "SOM", "s5_som_val": "$2.3B", "s5_som_desc": ["Dish intelligence market", "we are creating this category"],
@@ -388,6 +448,13 @@ V3 = {
     "s3_f4_title": "Consumer Demand Signals",
     "s3_f4_body": "Understand what dishes consumers are searching for in your area before they walk through your door.",
     "s4_brand": "TASTYR IQ", "s4_search": "Search dishes, restaurants...", "s4_item_title": "Truffle Mushroom Risotto",
+    "s4_dish1_sub": "Italian  \u2605 94/100", "s4_dish1_badge": "94",
+    "s4_dish2_name": "Pan-Seared Salmon", "s4_dish2_sub": "Seafood  \u2605 92/100", "s4_dish2_badge": "92",
+    "s4_dish3_name": "Wagyu Beef Burger", "s4_dish3_sub": "American  \u2605 89/100", "s4_dish3_badge": "89",
+    "s4_feat1_title": "Dish Performance Dashboard", "s4_feat1_body": "Real-time scoring and trend analysis for every dish. See what customers love and what needs work.",
+    "s4_feat2_title": "Menu Optimization Engine", "s4_feat2_body": "AI recommendations for pricing, positioning, and seasonal rotations based on dish data.",
+    "s4_feat3_title": "Competitive Benchmarking", "s4_feat3_body": "See how your dishes score against competitors in your area. Identify gaps and opportunities.",
+    "s4_feat4_title": "Consumer Demand Signals", "s4_feat4_body": "Understand what dishes consumers search for in your area before they walk through your door.",
     "s5_tam_label": "TAM", "s5_tam_val": "$23B", "s5_tam_desc": ["Restaurant technology", "and analytics SaaS market"],
     "s5_sam_label": "SAM", "s5_sam_val": "$5.8B", "s5_sam_desc": ["Restaurant analytics &", "menu intelligence tools"],
     "s5_som_label": "SOM", "s5_som_val": "$580M", "s5_som_desc": ["Dish-level analytics SaaS", "Year 5 target"],
@@ -397,6 +464,16 @@ V3 = {
     "s6_pct3": "15%", "s6_rev3": "B2C Subscriptions", "s6_rev3_desc": ["Consumer app drives data collection", "$4.99/mo premium tier"],
     "s6_pct4": "10%", "s6_rev4": "POS Integration Fees", "s6_rev4_desc": ["Integration partnerships with Toast, Square", "Per-location setup fees"],
     "s7_desc": "Toast does POS. OpenTable does reservations. No one offers dish-level performance analytics. We are the first.",
+    "s7_table": [
+        ['Feature', 'Tastyr IQ', 'Toast', 'Yelp', 'OpenTable'],
+        ['Dish-Level Scores', '\u2713', '\u2717', '\u2717', '\u2717'],
+        ['AI Scoring Algorithm', '\u2713', '\u2717', '\u2717', '\u2717'],
+        ['Menu Optimization', '\u2713', '\u2717', '\u2717', '\u2717'],
+        ['Competitive Benchmarks', '\u2713', '\u2717', 'Partial', '\u2717'],
+        ['Consumer Discovery', '\u2713', '\u2717', '\u2713', 'Partial'],
+        ['POS Integration', 'Planned', '\u2713', '\u2717', '\u2717'],
+        ['Data Licensing', '\u2713', '\u2717', '\u2717', '\u2717'],
+    ],
     "s8_p1_phase": "Phase 1", "s8_p1_name": "Prove", "s8_p1_time": "Q2-Q4 2026",
     "s8_p1_items": ["Founding restaurant cohort: 10 Philly restaurants", "Prove dish analytics ROI with case studies", "POS integration pilot (Toast)", "Consumer app drives data flywheel"],
     "s8_p2_phase": "Phase 2", "s8_p2_name": "Partner", "s8_p2_time": "2027",
@@ -462,6 +539,13 @@ V4 = {
     "s3_f4_title": "9 Verticals Deep",
     "s3_f4_body": "Not a horizontal play. Deep vertical expertise across 9 cuisines, understanding what excellence means in each category.",
     "s4_brand": "TASTYR IQ", "s4_search": "Discover the best dishes...", "s4_item_title": "Wagyu Beef Tartare",
+    "s4_dish1_sub": "Japanese  \u2605 98/100", "s4_dish1_badge": "98",
+    "s4_dish2_name": "Lamb Shank Tagine", "s4_dish2_sub": "Moroccan  \u2605 95/100", "s4_dish2_badge": "95",
+    "s4_dish3_name": "Duck Confit", "s4_dish3_sub": "French  \u2605 93/100", "s4_dish3_badge": "93",
+    "s4_feat1_title": "A New Data Category", "s4_feat1_body": "Dish intelligence doesn't exist today. We're building the foundational data layer the food ecosystem will depend on.",
+    "s4_feat2_title": "Patent-Pending AI", "s4_feat2_body": "Category ownership through intellectual property. Our scoring algorithm is patent-pending.",
+    "s4_feat3_title": "Three-Sided Marketplace", "s4_feat3_body": "Consumers discover. Restaurants optimize. Data partners license. Three value streams from one platform.",
+    "s4_feat4_title": "9 Verticals Deep", "s4_feat4_body": "Deep vertical expertise across 9 cuisines, understanding what excellence means in each category.",
     "s5_tam_label": "TAM", "s5_tam_val": "$371B", "s5_tam_desc": ["US restaurant industry", "zero dish-level data today"],
     "s5_sam_label": "SAM", "s5_sam_val": "$23B", "s5_sam_desc": ["Restaurant tech market", "no dish intelligence player"],
     "s5_som_label": "SOM", "s5_som_val": "$2.3B", "s5_som_desc": ["New category: dish intelligence", "we define the market"],
