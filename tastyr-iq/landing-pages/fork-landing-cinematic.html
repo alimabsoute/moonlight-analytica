@@ -8,15 +8,15 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;font-size:16px}
-body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
+body{background:#1a1a1f;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
 h1,h2,h3,h4,h5,h6{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;line-height:1.1}
 
 /* ===== HERO ===== */
-.hero{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:1;overflow:hidden}
+.hero{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:1;overflow:hidden;background:transparent !important}
 #three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;transition:opacity .6s ease}
-.hero-content{position:relative;z-index:2;text-align:center;pointer-events:none}
+.hero-content{position:relative;z-index:2;text-align:center}
 .hero-title{display:flex;justify-content:center;gap:0.05em;margin-bottom:1.2rem}
-.hero-letter{font-size:clamp(5rem,18vw,14rem);font-weight:900;color:#fff;opacity:0;transform:translateY(80px) scale(0.7);animation:letterBounce .8s cubic-bezier(.34,1.56,.64,1) forwards;text-shadow:0 0 60px rgba(249,115,22,0.4),0 0 120px rgba(249,115,22,0.15)}
+.hero-letter{font-size:clamp(5rem,18vw,14rem);font-weight:900;color:#fff;opacity:0;transform:translateY(80px) scale(0.7);animation:letterBounce .8s cubic-bezier(.34,1.56,.64,1) forwards}
 .hero-letter:nth-child(1){animation-delay:.2s}
 .hero-letter:nth-child(2){animation-delay:.35s}
 .hero-letter:nth-child(3){animation-delay:.5s}
@@ -30,12 +30,162 @@ h1,h2,h3,h4,h5,h6{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;lin
 .scroll-arrow{width:24px;height:24px;border-right:2px solid rgba(255,255,255,.4);border-bottom:2px solid rgba(255,255,255,.4);transform:rotate(45deg);animation:scrollBounce 2s infinite}
 @keyframes scrollBounce{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(5px,5px)}}
 
+/* ===== HERO WAITLIST — LIQUID GLASS TITANIUM ===== */
+.hero-waitlist{
+ position:relative;z-index:2;margin-top:2rem;
+ opacity:0;transform:translateY(30px);
+ animation:fadeUp 1s ease 1.6s forwards;
+}
+.glass-card{
+ position:relative;
+ max-width:480px;margin:0 auto;
+ padding:2rem 2.5rem;
+ border-radius:24px;
+ background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+ backdrop-filter:blur(20px) saturate(1.4);
+ -webkit-backdrop-filter:blur(20px) saturate(1.4);
+ border:1px solid rgba(255,255,255,.1);
+ overflow:hidden;
+}
+/* Liquid shimmer layer */
+.glass-card::before{
+ content:'';position:absolute;inset:-2px;
+ border-radius:26px;
+ background:conic-gradient(
+  from var(--shimmer-angle, 0deg),
+  transparent 0%,
+  rgba(249,115,22,.25) 10%,
+  rgba(251,191,36,.15) 20%,
+  transparent 30%,
+  transparent 70%,
+  rgba(255,255,255,.12) 80%,
+  rgba(249,115,22,.2) 90%,
+  transparent 100%
+ );
+ animation:shimmerSpin 4s linear infinite;
+ z-index:-1;
+ mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+ mask-composite:exclude;
+ -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+ -webkit-mask-composite:xor;
+ padding:1.5px;
+}
+@property --shimmer-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes shimmerSpin{to{--shimmer-angle:360deg}}
+
+/* Titanium inner reflection */
+.glass-card::after{
+ content:'';position:absolute;
+ top:0;left:0;right:0;height:50%;
+ border-radius:24px 24px 0 0;
+ background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);
+ pointer-events:none;
+}
+
+.glass-card h3{
+ font-size:1.1rem;font-weight:700;margin-bottom:.3rem;
+ font-family:'Plus Jakarta Sans',sans-serif;
+ background:linear-gradient(90deg,#fff,rgba(255,255,255,.7));
+ -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.glass-card .glass-sub{
+ font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:1.2rem;
+}
+
+/* Input row */
+.glass-form{display:flex;gap:.5rem;position:relative;z-index:1}
+.glass-form input{
+ flex:1;
+ padding:.85rem 1.2rem;
+ border-radius:14px;
+ border:1px solid rgba(255,255,255,.08);
+ background:rgba(255,255,255,.04);
+ backdrop-filter:blur(8px);
+ color:#fff;font-size:.9rem;font-family:inherit;outline:none;
+ transition:border .3s,background .3s;
+}
+.glass-form input:focus{
+ border-color:rgba(249,115,22,.4);
+ background:rgba(255,255,255,.07);
+}
+.glass-form input::placeholder{color:rgba(255,255,255,.25)}
+
+/* CTA Button — liquid titanium */
+.glass-btn{
+ position:relative;
+ padding:.85rem 1.6rem;
+ border-radius:14px;border:none;
+ background:linear-gradient(135deg,#f97316,#fb923c);
+ color:#fff;font-weight:800;font-size:.85rem;
+ cursor:pointer;white-space:nowrap;
+ font-family:'Plus Jakarta Sans',sans-serif;
+ overflow:hidden;
+ transition:transform .2s,box-shadow .3s;
+}
+.glass-btn:hover{
+ transform:scale(1.04);
+ box-shadow:0 0 30px rgba(249,115,22,.35),0 0 60px rgba(249,115,22,.15);
+}
+/* Liquid sweep animation on button */
+.glass-btn::before{
+ content:'';position:absolute;
+ top:0;left:-100%;width:100%;height:100%;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+ animation:liquidSweep 3s ease-in-out infinite;
+}
+@keyframes liquidSweep{
+ 0%{left:-100%}
+ 50%{left:100%}
+ 100%{left:100%}
+}
+
+/* Proof dots */
+.glass-proof{
+ display:flex;align-items:center;justify-content:center;gap:1rem;
+ margin-top:1rem;position:relative;z-index:1;flex-wrap:wrap;
+}
+.proof-dot{
+ display:flex;align-items:center;gap:.35rem;
+ font-size:.7rem;color:rgba(255,255,255,.35);
+}
+.proof-dot::before{
+ content:'';width:5px;height:5px;border-radius:50%;
+ background:#f97316;
+ box-shadow:0 0 6px rgba(249,115,22,.5);
+ animation:dotPulse 2s ease-in-out infinite;
+}
+.proof-dot:nth-child(2)::before{animation-delay:.4s}
+.proof-dot:nth-child(3)::before{animation-delay:.8s}
+@keyframes dotPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+
+/* Success state */
+.glass-success{
+ display:none;
+ text-align:center;padding:1rem;
+ position:relative;z-index:1;
+}
+.glass-success.show{display:block}
+.glass-success .check-circle{
+ width:56px;height:56px;margin:0 auto .8rem;
+ border-radius:50%;
+ background:linear-gradient(135deg,#f97316,#fbbf24);
+ display:flex;align-items:center;justify-content:center;
+ font-size:1.6rem;
+ animation:popIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.glass-success h4{
+ font-size:1.1rem;font-weight:800;margin-bottom:.3rem;
+ font-family:'Plus Jakarta Sans',sans-serif;
+}
+.glass-success p{font-size:.82rem;color:rgba(255,255,255,.4)}
+
 /* ===== SECTIONS ===== */
-section{position:relative;z-index:3;background:#000}
+section{position:relative;z-index:3;background:#1a1a1f}
 .section-inner{max-width:1200px;margin:0 auto;padding:120px 24px}
 
 /* Problem */
-.problem{background:linear-gradient(180deg,transparent,#000 5%)}
+.problem{background:linear-gradient(180deg,transparent,#1a1a1f 5%)}
 .problem-heading{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:4rem;max-width:700px}
 .problem-heading span{background:linear-gradient(135deg,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .pain-point{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:2.5rem;opacity:0;transform:translateX(-60px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
@@ -45,7 +195,7 @@ section{position:relative;z-index:3;background:#000}
 .pain-text p{color:rgba(255,255,255,.5);font-size:.95rem}
 
 /* Solution */
-.solution{background:#000}
+.solution{background:#1a1a1f}
 .solution-heading{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:1rem}
 .solution-heading span{background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .solution-sub{color:rgba(255,255,255,.5);font-size:1.1rem;margin-bottom:4rem;max-width:500px}
@@ -57,22 +207,84 @@ section{position:relative;z-index:3;background:#000}
 .feature-card h3{font-size:1.15rem;margin-bottom:.5rem}
 .feature-card p{color:rgba(255,255,255,.5);font-size:.9rem}
 
-/* How It Works — Sticky Cards */
-.how-it-works{min-height:300vh;position:relative}
-.how-header{text-align:center;margin-bottom:4rem}
-.how-header h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:1rem}
-.how-header p{color:rgba(255,255,255,.5)}
-.sticky-container{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center}
-.step-card{position:absolute;width:min(90vw,560px);background:rgba(20,20,20,.95);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:3rem;text-align:center;opacity:0;transform:scale(.85);transition:all .6s ease;backdrop-filter:blur(20px)}
-.step-card.active{opacity:1;transform:scale(1)}
-.step-number{font-size:5rem;font-weight:900;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.step-card h3{font-size:1.8rem;margin:.8rem 0}
-.step-card p{color:rgba(255,255,255,.5);font-size:1rem;margin-bottom:1.5rem}
-.step-visual{height:120px;display:flex;align-items:center;justify-content:center;font-size:3rem}
-.score-counter{font-size:4rem;font-weight:900;color:#f97316;font-family:'Plus Jakarta Sans',sans-serif}
+/* App Showcase — Two Column */
+.app-showcase{background:#f8f7f4;color:#111;overflow:hidden;position:relative;z-index:3}
+.app-showcase .section-inner{display:flex;align-items:center;gap:clamp(2rem,5vw,5rem);flex-wrap:wrap}
+
+/* Left column — text */
+.showcase-text{flex:1;min-width:300px;max-width:520px}
+.showcase-text h2{font-size:clamp(2rem,4.5vw,3.2rem);margin-bottom:1rem;color:#111}
+.showcase-text h2 span{background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.showcase-text>p{font-size:1.05rem;color:#555;line-height:1.7;margin-bottom:2rem}
+.showcase-bullets{list-style:none;padding:0;margin:0}
+.showcase-bullets li{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:1.2rem;font-size:.95rem;color:#333;line-height:1.5}
+.showcase-bullets li::before{content:'';flex-shrink:0;width:8px;height:8px;margin-top:7px;border-radius:50%;background:linear-gradient(135deg,#f97316,#fbbf24)}
+
+/* Right column — phones */
+.showcase-phones{flex:1;min-width:320px;display:flex;justify-content:center;position:relative;height:620px}
+
+/* iPhone styling */
+.iphone{
+ position:absolute;width:270px;height:550px;
+ transition:all .8s cubic-bezier(.25,.46,.45,.94);
+}
+.iphone-body{
+ width:100%;height:100%;border-radius:44px;
+ background:linear-gradient(145deg,#2a2a30,#1c1c22);
+ border:2px solid rgba(255,255,255,.12);padding:10px;
+ box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.06);
+ position:relative;overflow:hidden;
+}
+.iphone-body::before{
+ content:'';position:absolute;inset:-2px;border-radius:46px;
+ background:linear-gradient(160deg,rgba(255,255,255,.15),transparent 40%,transparent 60%,rgba(255,255,255,.05));
+ pointer-events:none;z-index:10;
+}
+.dynamic-island{
+ position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:20;
+ width:100px;height:28px;border-radius:20px;background:#000;
+}
+.dynamic-island::after{
+ content:'';position:absolute;right:22px;top:50%;transform:translateY(-50%);
+ width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,#1a1a2e,#000);border:1px solid rgba(255,255,255,.06);
+}
+.iphone-screen{
+ width:100%;height:100%;border-radius:36px;overflow:hidden;background:#0d0d12;
+}
+.s-content{width:100%;height:100%;display:flex;flex-direction:column;padding:3rem 1.2rem 1.2rem}
+.s-status{display:flex;justify-content:space-between;font-size:.55rem;color:rgba(255,255,255,.3);margin-bottom:.6rem;padding:0 .3rem}
+.s-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.3rem;color:#fff}
+.s-sub{font-size:.7rem;color:rgba(255,255,255,.35);margin-bottom:.8rem}
+.s-search{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.55rem .8rem;margin-bottom:.8rem;font-size:.7rem;color:rgba(255,255,255,.2)}
+.s-dish{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:.7rem;margin-bottom:.5rem;display:flex;gap:.5rem;align-items:center}
+.s-dish-icon{width:44px;height:44px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.s-dish-info{flex:1}
+.s-dish-name{font-size:.72rem;font-weight:700;color:#fff}
+.s-dish-sub{font-size:.58rem;color:rgba(255,255,255,.3)}
+.s-score{font-size:1.1rem;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.s-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:.25rem}
+.s-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#f97316,#fbbf24)}
+.s-tags{display:flex;gap:.3rem;flex-wrap:wrap;justify-content:center;margin:.6rem 0}
+.s-tag{font-size:.55rem;font-weight:600;padding:.2rem .5rem;border-radius:100px}
+.s-map-area{flex:1;border-radius:14px;margin-bottom:.5rem;position:relative;background:rgba(249,115,22,.03);border:1px solid rgba(249,115,22,.08);display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:.35;min-height:100px}
+.s-map-dot{position:absolute;border-radius:50%;box-shadow:0 0 8px currentColor;animation:dotPulse 2s infinite}
+
+/* Stagger positions + gentle float */
+.iphone:nth-child(1){z-index:3;top:0;left:50%;margin-left:-135px;animation:phoneFloat1 5s ease-in-out infinite}
+.iphone:nth-child(2){z-index:2;top:30px;left:50%;margin-left:-80px;animation:phoneFloat2 6s ease-in-out infinite .5s}
+.iphone:nth-child(3){z-index:1;top:55px;left:50%;margin-left:-25px;animation:phoneFloat3 5.5s ease-in-out infinite 1s}
+@keyframes phoneFloat1{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-12px) rotate(0deg)}}
+@keyframes phoneFloat2{0%,100%{transform:translateY(0) rotate(.5deg)}50%{transform:translateY(-8px) rotate(-.5deg)}}
+@keyframes phoneFloat3{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-10px) rotate(0deg)}}
+
+@media(max-width:900px){
+ .app-showcase .section-inner{flex-direction:column}
+ .showcase-phones{height:520px;width:100%;min-width:unset}
+ .showcase-text{max-width:100%}
+}
 
 /* Traction */
-.traction{background:linear-gradient(180deg,#000,#0a0705,#000)}
+.traction{background:linear-gradient(180deg,#1a1a1f,#1f1810,#1a1a1f)}
 .traction h2{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2rem}
 .metric{text-align:center;padding:2rem 1rem;border-radius:16px;background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.1)}
@@ -86,7 +298,7 @@ section{position:relative;z-index:3;background:#000}
 .city-item{display:flex;align-items:baseline;gap:1rem;opacity:0;transform:translateY(30px);transition:all .8s ease}
 .city-item.visible{opacity:1;transform:translateY(0)}
 .city-name{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;-webkit-text-stroke:2px #f97316;color:transparent;transition:all .6s ease}
-.city-name.filled{color:#f97316;-webkit-text-stroke:0;text-shadow:0 0 40px rgba(249,115,22,.3)}
+.city-name.filled{color:#f97316;-webkit-text-stroke:0}
 .city-date{font-size:.85rem;color:rgba(255,255,255,.3);white-space:nowrap}
 
 /* Email Capture */
@@ -104,7 +316,7 @@ section{position:relative;z-index:3;background:#000}
 @keyframes ripple{to{transform:scale(4);opacity:0}}
 
 /* Footer */
-footer{text-align:center;padding:3rem 24px;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:3;background:#000}
+footer{text-align:center;padding:3rem 24px;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:3;background:#1a1a1f}
 .footer-logo{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5rem;font-weight:900;margin-bottom:.5rem}
 .footer-links{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem}
 .footer-links a{color:rgba(255,255,255,.4);text-decoration:none;font-size:.85rem;transition:color .3s}
@@ -141,91 +353,140 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
   </div>
   <p class="hero-tagline">Rate the dish. Not the restaurant.</p>
  </div>
+
+ <!-- LIQUID GLASS WAITLIST -->
+ <div class="hero-waitlist">
+  <div class="glass-card">
+   <div id="heroFormWrap">
+    <h3>Sign up for the beta</h3>
+    <p class="glass-sub">Be first in line when we launch in your city.</p>
+    <form class="glass-form" id="heroForm">
+     <input type="email" placeholder="your@email.com" required>
+     <button type="submit" class="glass-btn">Join Waitlist</button>
+    </form>
+    <div class="glass-proof">
+     <span class="proof-dot">Patent pending</span>
+     <span class="proof-dot">App Store live</span>
+     <span class="proof-dot">2,490+ dishes scored</span>
+    </div>
+   </div>
+   <div class="glass-success" id="heroSuccess">
+    <div class="check-circle">&#10003;</div>
+    <h4>You're on the list.</h4>
+    <p>We'll let you know the moment Fork launches near you.</p>
+   </div>
+  </div>
+ </div>
+
  <div class="scroll-indicator">
   <span>Scroll</span>
   <div class="scroll-arrow"></div>
  </div>
 </section>
 
-<!-- PROBLEM -->
-<section class="problem">
- <div class="section-inner">
-  <h2 class="problem-heading">A <span>$371B industry</span> built on the wrong data model.</h2>
-  <div class="pain-point" data-reveal>
-   <div class="pain-line"></div>
-   <div class="pain-text">
-    <h3>No dish-level data</h3>
-    <p>Restaurants have zero visibility into which dishes actually perform. Menus are built on gut feel, not intelligence.</p>
-   </div>
-  </div>
-  <div class="pain-point" data-reveal>
-   <div class="pain-line"></div>
-   <div class="pain-text">
-    <h3>Restaurants fly blind on menus</h3>
-    <p>$100K+ wasted annually on underperforming dishes. No analytics, no scoring, no optimization layer.</p>
-   </div>
-  </div>
-  <div class="pain-point" data-reveal>
-   <div class="pain-line"></div>
-   <div class="pain-text">
-    <h3>Consumers scroll through useless reviews</h3>
-    <p>Star ratings tell you nothing about the food. A 4.2 restaurant can have a 96-point dish hiding in the menu.</p>
-   </div>
-  </div>
- </div>
-</section>
+<!-- Sections removed — content merged into app showcase -->
 
-<!-- SOLUTION -->
-<section class="solution">
+<!-- APP SHOWCASE -->
+<section class="app-showcase">
  <div class="section-inner">
-  <h2 class="solution-heading">Fork scores every dish <span>with AI.</span></h2>
-  <p class="solution-sub">Patent-pending intelligence that transforms how the world discovers, evaluates, and optimizes food.</p>
-  <div class="features-grid">
-   <div class="feature-card" data-reveal>
-    <div class="feature-icon">🧠</div>
-    <h3>Patent-Pending Scoring</h3>
-    <p>AI scores every dish 0-100 across taste, presentation, value, and consistency dimensions.</p>
-   </div>
-   <div class="feature-card" data-reveal>
-    <div class="feature-icon">🍜</div>
-    <h3>9 Cuisine Verticals</h3>
-    <p>Japanese, Italian, Mexican, Indian, American, Thai, Chinese, Mediterranean, and Korean — each with specialized scoring models.</p>
-   </div>
-   <div class="feature-card" data-reveal>
-    <div class="feature-icon">📊</div>
-    <h3>Dual Platform</h3>
-    <p>Consumer app for dish discovery. Restaurant dashboard for menu intelligence, optimization, and competitive insights.</p>
-   </div>
+  <div class="showcase-text">
+   <h2>Every dish gets a <span>score.</span></h2>
+   <p>Fork is the first platform to rate individual dishes — not restaurants. Our patent-pending AI analyzes every plate across 9 cuisines and delivers a score from 0 to 100.</p>
+   <ul class="showcase-bullets">
+    <li>AI scores dishes on taste, presentation, value, and consistency</li>
+    <li>9 cuisine verticals — Japanese, Italian, Mexican, Indian, and more</li>
+    <li>2,490+ dishes already indexed and scored</li>
+    <li>Consumer app for discovery + restaurant dashboard for menu intelligence</li>
+    <li>Patent pending. App Store approved. TestFlight beta live.</li>
+   </ul>
   </div>
- </div>
-</section>
+  <div class="showcase-phones">
 
-<!-- HOW IT WORKS -->
-<section class="how-it-works">
- <div class="section-inner">
-  <div class="how-header">
-   <h2>How Fork Works</h2>
-   <p>Three steps to dish intelligence</p>
-  </div>
- </div>
- <div class="sticky-container">
-  <div class="step-card" id="step1">
-   <div class="step-number">01</div>
-   <h3>Browse</h3>
-   <p>Explore menus across 9 cuisine categories. Every dish, every restaurant, every city.</p>
-   <div class="step-visual">🍣 🍕 🌮 🍛 🥘 🍜</div>
-  </div>
-  <div class="step-card" id="step2">
-   <div class="step-number">02</div>
-   <h3>Score</h3>
-   <p>AI analyzes each dish and delivers a score from 0-100. See exactly what makes a dish great.</p>
-   <div class="step-visual"><span class="score-counter" id="scoreAnim">0</span></div>
-  </div>
-  <div class="step-card" id="step3">
-   <div class="step-number">03</div>
-   <h3>Discover</h3>
-   <p>Find the highest-scored dishes near you. Filter by cuisine, price, or dietary needs.</p>
-   <div class="step-visual">📍 🗺️ ⭐</div>
+    <!-- iPhone 1: Browse -->
+    <div class="iphone">
+     <div class="iphone-body">
+      <div class="dynamic-island"></div>
+      <div class="iphone-screen">
+       <div class="s-content">
+        <div class="s-status"><span>9:41</span><span>Fork</span><span>100%</span></div>
+        <div class="s-title">Discover</div>
+        <div class="s-sub">What are you craving?</div>
+        <div class="s-search">🔍 Search dishes, cuisines...</div>
+        <div class="s-dish">
+         <div class="s-dish-icon" style="background:rgba(249,115,22,.1)">🍣</div>
+         <div class="s-dish-info"><div class="s-dish-name">Omakase Platter</div><div class="s-dish-sub">Zama &middot; Philadelphia</div><div class="s-bar"><div class="s-bar-fill" style="width:96%"></div></div></div>
+         <div class="s-score">96</div>
+        </div>
+        <div class="s-dish">
+         <div class="s-dish-icon" style="background:rgba(251,191,36,.1)">🍕</div>
+         <div class="s-dish-info"><div class="s-dish-name">Margherita DOC</div><div class="s-dish-sub">Pizzeria Beddia &middot; Philly</div><div class="s-bar"><div class="s-bar-fill" style="width:94%"></div></div></div>
+         <div class="s-score">94</div>
+        </div>
+        <div class="s-dish">
+         <div class="s-dish-icon" style="background:rgba(34,197,94,.1)">🌮</div>
+         <div class="s-dish-info"><div class="s-dish-name">Al Pastor Taco</div><div class="s-dish-sub">South Philly Barbacoa</div><div class="s-bar"><div class="s-bar-fill" style="width:91%"></div></div></div>
+         <div class="s-score">91</div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+
+    <!-- iPhone 2: Dish Detail -->
+    <div class="iphone">
+     <div class="iphone-body">
+      <div class="dynamic-island"></div>
+      <div class="iphone-screen">
+       <div class="s-content" style="align-items:center">
+        <div class="s-status" style="width:100%"><span>9:41</span><span>Fork</span><span>100%</span></div>
+        <div style="font-size:2.8rem;margin:.3rem 0">🍣</div>
+        <div class="s-title" style="text-align:center">Omakase Platter</div>
+        <div class="s-sub" style="text-align:center">Zama &middot; 128 S 19th St</div>
+        <div style="margin:.3rem 0 .6rem">
+         <span style="font-size:3.2rem;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">96</span>
+         <span style="font-size:.65rem;color:rgba(255,255,255,.3);display:block">AI Dish Score</span>
+        </div>
+        <div class="s-tags">
+         <span class="s-tag" style="background:rgba(249,115,22,.1);color:#fb923c">Taste 98</span>
+         <span class="s-tag" style="background:rgba(251,191,36,.1);color:#fbbf24">Presentation 95</span>
+         <span class="s-tag" style="background:rgba(34,197,94,.1);color:#22c55e">Value 92</span>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border-radius:10px;padding:.6rem;font-size:.6rem;color:rgba(255,255,255,.3);line-height:1.5;text-align:center">12-course seasonal selection featuring uni, otoro, and A5 wagyu. Chef's choice progression.</div>
+       </div>
+      </div>
+     </div>
+    </div>
+
+    <!-- iPhone 3: Nearby Map -->
+    <div class="iphone">
+     <div class="iphone-body">
+      <div class="dynamic-island"></div>
+      <div class="iphone-screen">
+       <div class="s-content">
+        <div class="s-status"><span>9:41</span><span>Fork</span><span>100%</span></div>
+        <div class="s-title">Near You</div>
+        <div class="s-sub">Top-scored dishes in your area</div>
+        <div class="s-map-area">
+         🗺️
+         <div class="s-map-dot" style="width:10px;height:10px;background:#f97316;color:#f97316;top:20%;left:25%"></div>
+         <div class="s-map-dot" style="width:8px;height:8px;background:#fbbf24;color:#fbbf24;top:45%;right:20%;animation-delay:.5s"></div>
+         <div class="s-map-dot" style="width:9px;height:9px;background:#22c55e;color:#22c55e;bottom:20%;left:40%;animation-delay:1s"></div>
+        </div>
+        <div class="s-dish">
+         <div class="s-dish-icon" style="background:rgba(249,115,22,.1)">🥘</div>
+         <div class="s-dish-info"><div class="s-dish-name">Lamb Biryani</div><div class="s-dish-sub">0.3 mi &middot; Amma's Kitchen</div></div>
+         <div class="s-score">93</div>
+        </div>
+        <div class="s-dish">
+         <div class="s-dish-icon" style="background:rgba(251,191,36,.1)">🍜</div>
+         <div class="s-dish-info"><div class="s-dish-name">Tonkotsu Ramen</div><div class="s-dish-sub">0.5 mi &middot; Terakawa</div></div>
+         <div class="s-score">91</div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+
   </div>
  </div>
 </section>
@@ -312,20 +573,22 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ===== THREE.JS SCENE =====
+// ===== THREE.JS SCENE — GIANT FORK + SPARKLES =====
 (function(){
  const canvas = document.getElementById('three-canvas');
- const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+ let renderer;
+ try {
+  renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
+ } catch(e) { console.error('WebGL init failed:', e); return; }
+
  renderer.setSize(window.innerWidth, window.innerHeight);
- renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
- renderer.toneMapping = THREE.ACESFilmicToneMapping;
- renderer.toneMappingExposure = 1.2;
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+ renderer.setClearColor(0x141418, 1);
 
  const scene = new THREE.Scene();
- scene.fog = new THREE.FogExp2(0x000000, 0.0008);
-
- const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+ const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000);
  camera.position.set(0, 0, 30);
+ camera.lookAt(0, 0, 0);
 
  // Mouse tracking
  const mouse = {x:0, y:0, tx:0, ty:0};
@@ -336,157 +599,222 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
 
  // Colors
  const C_ORANGE = new THREE.Color(0xf97316);
- const C_AMBER = new THREE.Color(0xfbbf24);
- const C_RED = new THREE.Color(0xef4444);
- const C_GREEN = new THREE.Color(0x22c55e);
+ const C_AMBER  = new THREE.Color(0xfbbf24);
+ const C_WHITE  = new THREE.Color(0xffffff);
 
- // ----- PARTICLES -----
- const PARTICLE_COUNT = 600;
- const pGeom = new THREE.BufferGeometry();
- const positions = new Float32Array(PARTICLE_COUNT * 3);
- const colors = new Float32Array(PARTICLE_COUNT * 3);
- const sizes = new Float32Array(PARTICLE_COUNT);
- const palette = [C_ORANGE, C_AMBER, C_RED, C_GREEN];
+ // ====== LIGHTING — studio setup for chrome fork ======
+ scene.add(new THREE.AmbientLight(0xccd0d8, 0.4));
+ const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
+ keyLight.position.set(6, 12, 10);
+ scene.add(keyLight);
+ const fillLight = new THREE.DirectionalLight(0xd4e0f7, 0.6);
+ fillLight.position.set(-8, -2, 8);
+ scene.add(fillLight);
+ const rimLight = new THREE.DirectionalLight(0xffeedd, 0.9);
+ rimLight.position.set(-3, 8, -8);
+ scene.add(rimLight);
+ const pointLight = new THREE.PointLight(0xf97316, 1.2, 50);
+ pointLight.position.set(3, 5, 8);
+ scene.add(pointLight);
 
- for(let i=0; i<PARTICLE_COUNT; i++){
-  const phi = Math.acos(2*Math.random()-1);
-  const theta = Math.random()*Math.PI*2;
-  const r = 12 + Math.random()*10;
-  positions[i*3] = r*Math.sin(phi)*Math.cos(theta);
-  positions[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
-  positions[i*3+2] = r*Math.cos(phi);
-  const c = palette[Math.floor(Math.random()*palette.length)];
-  colors[i*3] = c.r;
-  colors[i*3+1] = c.g;
-  colors[i*3+2] = c.b;
-  sizes[i] = Math.random()*3 + 1;
- }
- pGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
- pGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
- pGeom.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+ // ====== BUILD REALISTIC CHROME FORK ======
+ const forkGroup = new THREE.Group();
 
- const pVertShader = `
-  attribute float size;
-  varying vec3 vColor;
-  void main(){
-   vColor = color;
-   vec4 mv = modelViewMatrix * vec4(position, 1.0);
-   gl_PointSize = size * (200.0 / -mv.z);
-   gl_Position = projectionMatrix * mv;
-  }
- `;
- const pFragShader = `
-  varying vec3 vColor;
-  void main(){
-   float d = length(gl_PointCoord - vec2(0.5));
-   if(d > 0.5) discard;
-   float a = 1.0 - smoothstep(0.0, 0.5, d);
-   gl_FragColor = vec4(vColor, a * 0.8);
-  }
- `;
- const pMat = new THREE.ShaderMaterial({
-  vertexShader: pVertShader, fragmentShader: pFragShader,
-  transparent:true, vertexColors:true, blending: THREE.AdditiveBlending, depthWrite:false
+ // Polished silver — bright enough to read on dark bg
+ const chromeMat = new THREE.MeshStandardMaterial({
+  color: 0xe0e4ec, metalness: 0.92, roughness: 0.1,
+  emissive: 0x666677, emissiveIntensity: 0.55
  });
- const particles = new THREE.Points(pGeom, pMat);
- scene.add(particles);
 
- // ----- CONNECTION LINES -----
- const linePositions = [];
- const lineColors = [];
- const posArr = pGeom.attributes.position.array;
- for(let i=0; i<PARTICLE_COUNT; i++){
-  for(let j=i+1; j<PARTICLE_COUNT; j++){
-   const dx = posArr[i*3]-posArr[j*3], dy=posArr[i*3+1]-posArr[j*3+1], dz=posArr[i*3+2]-posArr[j*3+2];
-   const dist = Math.sqrt(dx*dx+dy*dy+dz*dz);
-   if(dist < 4){
-    linePositions.push(posArr[i*3],posArr[i*3+1],posArr[i*3+2]);
-    linePositions.push(posArr[j*3],posArr[j*3+1],posArr[j*3+2]);
-    const a = 1 - dist/4;
-    lineColors.push(C_ORANGE.r,C_ORANGE.g,C_ORANGE.b);
-    lineColors.push(C_AMBER.r*a,C_AMBER.g*a,C_AMBER.b*a);
-   }
-  }
+ function addPart(geom, pos, rot){
+  const mesh = new THREE.Mesh(geom, chromeMat);
+  mesh.position.copy(pos);
+  if(rot) mesh.rotation.copy(rot);
+  forkGroup.add(mesh);
  }
- const lGeom = new THREE.BufferGeometry();
- lGeom.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
- lGeom.setAttribute('color', new THREE.Float32BufferAttribute(lineColors, 3));
- const lMat = new THREE.LineBasicMaterial({vertexColors:true, transparent:true, opacity:0.15, blending:THREE.AdditiveBlending});
- const lines = new THREE.LineSegments(lGeom, lMat);
- scene.add(lines);
 
- // ----- ICOSAHEDRON -----
- const icoGeom = new THREE.IcosahedronGeometry(4, 1);
- // Solid
- const icoSolid = new THREE.Mesh(icoGeom, new THREE.MeshBasicMaterial({color:0xf97316, transparent:true, opacity:0.08}));
- scene.add(icoSolid);
- // Wireframe
- const icoWire = new THREE.Mesh(icoGeom, new THREE.MeshBasicMaterial({color:0xf97316, wireframe:true, transparent:true, opacity:0.35}));
- scene.add(icoWire);
- // Glow shell
- const glowGeom = new THREE.IcosahedronGeometry(4.5, 1);
- const icoGlow = new THREE.Mesh(glowGeom, new THREE.MeshBasicMaterial({color:0xfbbf24, transparent:true, opacity:0.05, side:THREE.BackSide}));
- scene.add(icoGlow);
+ // Handle — solid tapered cylinder
+ addPart(
+  new THREE.CylinderGeometry(0.5, 0.7, 14, 32),
+  new THREE.Vector3(0, -10, 0)
+ );
 
- // ----- TORUS RINGS -----
- const torusMat = new THREE.MeshBasicMaterial({color:0xf97316, wireframe:true, transparent:true, opacity:0.2});
- const torus1 = new THREE.Mesh(new THREE.TorusGeometry(7, 0.15, 8, 60), torusMat);
- const torus2 = new THREE.Mesh(new THREE.TorusGeometry(9, 0.1, 8, 80), torusMat.clone());
- torus2.material.color = C_AMBER;
- torus2.material.opacity = 0.12;
- scene.add(torus1, torus2);
+ // Handle bottom — rounded end
+ addPart(
+  new THREE.SphereGeometry(0.7, 20, 14),
+  new THREE.Vector3(0, -17, 0)
+ );
 
- // ----- ANIMATION -----
- const clock = new THREE.Clock();
+ // Decorative ring on handle
+ addPart(
+  new THREE.TorusGeometry(0.75, 0.1, 12, 32),
+  new THREE.Vector3(0, -4.5, 0),
+  new THREE.Euler(Math.PI/2, 0, 0)
+ );
+
+ // Neck — graceful flare from handle to head
+ addPart(
+  new THREE.CylinderGeometry(1.6, 0.5, 3, 32),
+  new THREE.Vector3(0, -1.5, 0)
+ );
+
+ // Head — flat paddle base
+ addPart(
+  new THREE.BoxGeometry(4.2, 1.5, 0.5, 3, 2, 1),
+  new THREE.Vector3(0, 0.5, 0)
+ );
+
+ // 4 tines — thick enough to be visible, realistic proportions
+ const tineX = [-1.4, -0.47, 0.47, 1.4];
+ tineX.forEach(x => {
+  // Tine body
+  addPart(
+   new THREE.CylinderGeometry(0.15, 0.25, 8, 16),
+   new THREE.Vector3(x, 5.3, 0)
+  );
+  // Pointed tip
+  addPart(
+   new THREE.ConeGeometry(0.15, 1.2, 12),
+   new THREE.Vector3(x, 9.9, 0)
+  );
+ });
+
+ // Position — right side, slightly tilted, large scale
+ forkGroup.position.set(6, -2, -2);
+ forkGroup.rotation.set(0.12, -0.2, 0.2);
+ forkGroup.scale.setScalar(1.15);
+ scene.add(forkGroup);
+
+ // ====== SPARKLE PARTICLES ======
+ const SPARK_COUNT = 500;
+ const sGeo = new THREE.BufferGeometry();
+ const sPos = new Float32Array(SPARK_COUNT*3);
+ const sCol = new Float32Array(SPARK_COUNT*3);
+ const sSize = new Float32Array(SPARK_COUNT);
+ const sSpeed = new Float32Array(SPARK_COUNT);
+ const sPhase = new Float32Array(SPARK_COUNT);
+ for(let i=0;i<SPARK_COUNT;i++){
+  sPos[i*3]=(Math.random()-.5)*50;
+  sPos[i*3+1]=(Math.random()-.5)*50;
+  sPos[i*3+2]=(Math.random()-.5)*30;
+  const c=Math.random()<.4?C_ORANGE:Math.random()<.6?C_AMBER:C_WHITE;
+  sCol[i*3]=c.r; sCol[i*3+1]=c.g; sCol[i*3+2]=c.b;
+  sSize[i]=Math.random()*3+.8;
+  sSpeed[i]=Math.random()*2+.5;
+  sPhase[i]=Math.random()*Math.PI*2;
+ }
+ sGeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));
+ sGeo.setAttribute('color',new THREE.BufferAttribute(sCol,3));
+ sGeo.setAttribute('size',new THREE.BufferAttribute(sSize,1));
+ sGeo.setAttribute('aSpeed',new THREE.BufferAttribute(sSpeed,1));
+ sGeo.setAttribute('aPhase',new THREE.BufferAttribute(sPhase,1));
+
+ const sMat = new THREE.ShaderMaterial({
+  vertexShader:`
+   attribute float size; attribute float aSpeed; attribute float aPhase;
+   varying vec3 vColor; varying float vAlpha;
+   uniform float uTime;
+   void main(){
+    vColor=color;
+    vAlpha=.3+.7*abs(sin(uTime*aSpeed+aPhase));
+    vec4 mv=modelViewMatrix*vec4(position,1.0);
+    gl_PointSize=size*(150.0/-mv.z)*vAlpha;
+    gl_Position=projectionMatrix*mv;
+   }`,
+  fragmentShader:`
+   varying vec3 vColor; varying float vAlpha;
+   void main(){
+    float d=length(gl_PointCoord-vec2(.5));
+    if(d>.5)discard;
+    float glow=1.-smoothstep(0.,.5,d);
+    float core=1.-smoothstep(0.,.15,d);
+    gl_FragColor=vec4(vColor*(core*1.5+glow*.5),glow*vAlpha*.9);
+   }`,
+  transparent:true, vertexColors:true, blending:THREE.AdditiveBlending, depthWrite:false,
+  uniforms:{uTime:{value:0}}
+ });
+ const sparkles = new THREE.Points(sGeo, sMat);
+ scene.add(sparkles);
+
+ // ====== EMBERS ======
+ const EMBER=40;
+ const eGeo=new THREE.BufferGeometry();
+ const ePos=new Float32Array(EMBER*3), eCol=new Float32Array(EMBER*3), eSize=new Float32Array(EMBER);
+ for(let i=0;i<EMBER;i++){
+  ePos[i*3]=(Math.random()-.5)*20+4;
+  ePos[i*3+1]=(Math.random()-.5)*25;
+  ePos[i*3+2]=(Math.random()-.5)*10;
+  const c=Math.random()<.5?C_ORANGE:C_AMBER;
+  eCol[i*3]=c.r;eCol[i*3+1]=c.g;eCol[i*3+2]=c.b;
+  eSize[i]=Math.random()*5+3;
+ }
+ eGeo.setAttribute('position',new THREE.BufferAttribute(ePos,3));
+ eGeo.setAttribute('color',new THREE.BufferAttribute(eCol,3));
+ eGeo.setAttribute('size',new THREE.BufferAttribute(eSize,1));
+ const eMat=new THREE.ShaderMaterial({
+  vertexShader:`attribute float size;varying vec3 vColor;void main(){vColor=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(150./-mv.z);gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vColor;void main(){float d=length(gl_PointCoord-vec2(.5));if(d>.5)discard;float a=1.-smoothstep(0.,.5,d);gl_FragColor=vec4(vColor,a*.5);}`,
+  transparent:true,vertexColors:true,blending:THREE.AdditiveBlending,depthWrite:false
+ });
+ scene.add(new THREE.Points(eGeo,eMat));
+
+ // ====== RINGS ======
+ const rMat=new THREE.MeshBasicMaterial({color:0xf97316,wireframe:true,transparent:true,opacity:.12});
+ const r1=new THREE.Mesh(new THREE.TorusGeometry(14,.06,6,80),rMat);
+ const r2=new THREE.Mesh(new THREE.TorusGeometry(18,.04,6,100),rMat.clone());
+ r2.material.opacity=.08;r2.material.color=C_AMBER;
+ scene.add(r1,r2);
+
+ // ====== ANIMATE ======
+ const clock=new THREE.Clock();
  function animate(){
   requestAnimationFrame(animate);
-  const t = clock.getElapsedTime();
+  const t=clock.getElapsedTime();
 
-  // Mouse smoothing
-  mouse.x += (mouse.tx - mouse.x) * 0.05;
-  mouse.y += (mouse.ty - mouse.y) * 0.05;
-  camera.position.x = mouse.x * 5;
-  camera.position.y = -mouse.y * 3;
+  mouse.x+=(mouse.tx-mouse.x)*.04;
+  mouse.y+=(mouse.ty-mouse.y)*.04;
+  camera.position.x=mouse.x*3;
+  camera.position.y=mouse.y*-2;
   camera.lookAt(0,0,0);
 
-  // Rotate particles
-  particles.rotation.y = t * 0.05;
-  particles.rotation.x = t * 0.02;
-  lines.rotation.y = t * 0.05;
-  lines.rotation.x = t * 0.02;
+  // Fork rotation + bob
+  forkGroup.rotation.y=Math.sin(t*.2)*.4;
+  forkGroup.rotation.z=.2+Math.sin(t*.12)*.06;
+  forkGroup.position.y=-2+Math.sin(t*.3)*.6;
 
-  // Rotate icosahedron
-  icoSolid.rotation.x = t * 0.3;
-  icoSolid.rotation.y = t * 0.2;
-  icoWire.rotation.x = t * 0.3;
-  icoWire.rotation.y = t * 0.2;
-  icoGlow.rotation.x = t * 0.3;
-  icoGlow.rotation.y = t * 0.2;
-  icoGlow.scale.setScalar(1 + Math.sin(t*2)*0.05);
+  // no glow mesh to pulse
 
-  // Rotate torus rings
-  torus1.rotation.x = t * 0.4;
-  torus1.rotation.z = t * 0.15;
-  torus2.rotation.y = t * 0.3;
-  torus2.rotation.x = Math.PI/3 + t * 0.1;
+  pointLight.position.x=Math.cos(t*.5)*6;
+  pointLight.position.z=Math.sin(t*.5)*6+5;
+  pointLight.position.y=3+Math.sin(t*.7)*2;
 
-  renderer.render(scene, camera);
+  sMat.uniforms.uTime.value=t;
+  sparkles.rotation.y=t*.02;
+  sparkles.rotation.x=t*.008;
+
+  // Embers float
+  const ep=eGeo.attributes.position.array;
+  for(let i=0;i<EMBER;i++){
+   ep[i*3+1]+=.01;ep[i*3]+=Math.sin(t+i)*.003;
+   if(ep[i*3+1]>15){ep[i*3+1]=-12;ep[i*3]=(Math.random()-.5)*20+4;}
+  }
+  eGeo.attributes.position.needsUpdate=true;
+
+  r1.rotation.x=t*.15;r1.rotation.z=t*.08;
+  r2.rotation.y=t*.12;r2.rotation.x=Math.PI/4+t*.05;
+
+  renderer.render(scene,camera);
  }
  animate();
 
- // Resize
- window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth/window.innerHeight;
+ window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(window.innerWidth,window.innerHeight);
  });
-
- // Fade canvas on scroll
- window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  const fadeEnd = window.innerHeight * 0.8;
-  const opacity = Math.max(0, 1 - scrollY/fadeEnd);
-  canvas.style.opacity = opacity;
+ window.addEventListener('scroll',()=>{
+  const o=Math.max(0,1-window.scrollY/(window.innerHeight*.8));
+  canvas.style.opacity=o;
  });
 })();
 
@@ -495,7 +823,6 @@ const revealObserver = new IntersectionObserver((entries) => {
  entries.forEach(e => {
   if(e.isIntersecting){
    e.target.classList.add('visible');
-   // Fill city names
    const fillEl = e.target.querySelector('[data-fill]');
    if(fillEl) setTimeout(() => fillEl.classList.add('filled'), 300);
   }
@@ -526,47 +853,17 @@ const countObserver = new IntersectionObserver((entries) => {
 }, {threshold:0.5});
 document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
 
-// ===== STICKY SCROLL CARDS =====
-(function(){
- const section = document.querySelector('.how-it-works');
- const cards = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
- let scoreAnimated = false;
-
- window.addEventListener('scroll', () => {
-  if(!section) return;
-  const rect = section.getBoundingClientRect();
-  const sectionH = section.offsetHeight;
-  const progress = -rect.top / (sectionH - window.innerHeight);
-  const clamped = Math.max(0, Math.min(1, progress));
-
-  let activeIndex = 0;
-  if(clamped < 0.33) activeIndex = 0;
-  else if(clamped < 0.66) activeIndex = 1;
-  else activeIndex = 2;
-
-  cards.forEach((c, i) => {
-   c.classList.toggle('active', i === activeIndex);
-  });
-
-  // Animate score counter
-  if(activeIndex === 1 && !scoreAnimated){
-   scoreAnimated = true;
-   const el = document.getElementById('scoreAnim');
-   const duration = 1500;
-   const start = performance.now();
-   function tick(now){
-    const p = Math.min((now-start)/duration, 1);
-    const eased = 1 - Math.pow(1-p, 3);
-    el.textContent = Math.round(eased * 96);
-    if(p < 1) requestAnimationFrame(tick);
-   }
-   requestAnimationFrame(tick);
-  }
-  if(activeIndex !== 1) scoreAnimated = false;
- });
-})();
+// ===== 3D CAROUSEL (pure CSS animation, no JS needed) =====
 
 // ===== EMAIL FORM =====
+// ===== HERO GLASS FORM =====
+document.getElementById('heroForm').addEventListener('submit', function(e){
+ e.preventDefault();
+ document.getElementById('heroFormWrap').style.display = 'none';
+ document.getElementById('heroSuccess').classList.add('show');
+});
+
+// ===== BOTTOM EMAIL FORM =====
 document.getElementById('emailForm').addEventListener('submit', function(e){
  e.preventDefault();
  const btn = this.querySelector('button');
