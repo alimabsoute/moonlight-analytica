@@ -302,23 +302,27 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--app-bg);color:var
 /* Floating KPI metric cards — heavy, weighty feel */
 .float-metrics{position:absolute;inset:-15px;pointer-events:none;z-index:5}
 .float-card{
-  position:absolute;background:#fff;border-radius:14px;padding:14px 18px;
-  box-shadow:0 2px 4px rgba(0,0,0,.04),0 8px 20px rgba(0,0,0,.08),0 24px 48px rgba(0,0,0,.10),0 48px 80px rgba(0,0,0,.04);
-  border:1px solid rgba(0,0,0,.06);
-  animation:floatBob 4s ease-in-out infinite;font-family:'Outfit',sans-serif;
-  backdrop-filter:blur(8px);transition:transform .3s ease,box-shadow .3s ease;cursor:default;pointer-events:auto;
-  min-width:140px
+  position:absolute;background:rgba(255,255,255,.82);border-radius:14px;padding:14px 18px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06),0 12px 28px rgba(0,0,0,.10),0 28px 56px rgba(0,0,0,.08),0 0 40px rgba(77,216,230,.06);
+  border:1px solid rgba(255,255,255,.25);
+  animation:floatBob 4s ease-in-out infinite, floatIn .6s cubic-bezier(.175,.885,.32,1.275) forwards;
+  font-family:'Outfit',sans-serif;
+  backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+  transition:transform .3s ease,box-shadow .3s ease;cursor:default;pointer-events:auto;
+  min-width:140px;opacity:0;overflow:hidden
 }
-.float-card:hover{transform:translateY(-10px) scale(1.04)!important;box-shadow:0 4px 8px rgba(0,0,0,.06),0 16px 32px rgba(0,0,0,.12),0 32px 64px rgba(0,0,0,.12)}
+.float-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6) 30%,rgba(255,255,255,.8) 50%,rgba(255,255,255,.6) 70%,transparent);pointer-events:none}
+.float-card:hover{transform:translateY(-10px) scale(1.04)!important;box-shadow:0 4px 8px rgba(0,0,0,.06),0 16px 32px rgba(0,0,0,.12),0 32px 64px rgba(0,0,0,.12),0 0 50px rgba(77,216,230,.1)}
 .float-card .fc-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;margin-bottom:6px}
 .float-card .fc-label{font-size:.62rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#94a3b8;margin-bottom:3px}
 .float-card .fc-value{font-size:1.5rem;font-weight:800;color:#111827;line-height:1.1;letter-spacing:-.5px}
 .float-card .fc-change{font-size:.68rem;font-weight:600;margin-top:4px;display:inline-flex;align-items:center;gap:4px}
 .float-card .fc-spark{display:flex;align-items:flex-end;gap:2px;margin-top:6px;height:20px}
-.float-card .fc-spark span{width:3px;border-radius:1px;background:#4dd8e6;opacity:.5}
+.float-card .fc-spark span{width:3px;border-radius:1px;background:#4dd8e6;opacity:.7;box-shadow:0 0 4px rgba(77,216,230,.3)}
 .fc-up{color:#22c55e}
 .fc-down{color:#ef4444}
-@keyframes floatBob{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-8px) rotate(.3deg)}50%{transform:translateY(-4px) rotate(0deg)}75%{transform:translateY(-10px) rotate(-.3deg)}}
+@keyframes floatIn{0%{opacity:0;transform:scale(.8) translateY(16px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes floatBob{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-12px) rotate(.5deg)}50%{transform:translateY(-5px) rotate(0deg)}75%{transform:translateY(-16px) rotate(-.5deg)}}
 
 /* Dashboard widget shapes for Janus section */
 .dash-widget{
@@ -430,12 +434,13 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--app-bg);color:var
 .zbox{position:absolute;transform-style:preserve-3d;opacity:0;transform:scaleY(0);transform-origin:bottom;animation:zboxIn .8s cubic-bezier(.34,1.56,.64,1) forwards}
 @keyframes zboxIn{0%{opacity:0;transform:scaleY(0)}100%{opacity:1;transform:scaleY(1)}}
 .zface{position:absolute;backface-visibility:visible}
-.zface--bot{width:100%;height:100%;transform:translateZ(0);border:1.5px solid var(--zc);background:var(--zc-bg,rgba(77,216,230,.06))}
-.zface--top{width:100%;height:100%;transform:translateZ(var(--zh));background:var(--zc-top,rgba(77,216,230,.1));border:1.5px solid var(--zc)}
-.zface--front{width:100%;height:var(--zh);bottom:0;left:0;transform-origin:bottom;transform:rotateX(-90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-top:1.5px solid var(--zc)}
-.zface--back{width:100%;height:var(--zh);top:0;left:0;transform-origin:top;transform:rotateX(90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc)}
-.zface--left{height:100%;width:var(--zh);top:0;left:0;transform-origin:left;transform:rotateY(90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-top:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);border-right:1.5px solid var(--zc)}
-.zface--right{height:100%;width:var(--zh);top:0;right:0;transform-origin:right;transform:rotateY(-90deg);background:linear-gradient(180deg,var(--zc-wall,rgba(77,216,230,.08)),transparent);border-top:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);border-left:1.5px solid var(--zc)}
+.zface--bot{width:100%;height:100%;transform:translateZ(0);border:1.5px solid var(--zc);background:var(--zc-bg,rgba(77,216,230,.1));background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:12px 12px}
+.zface--top{width:100%;height:100%;transform:translateZ(var(--zh));background:var(--zc-top,rgba(77,216,230,.22));border:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:2px;animation:zfaceShimmer 6s ease-in-out infinite}
+@keyframes zfaceShimmer{0%,100%{background:var(--zc-top,rgba(77,216,230,.22))}50%{background:var(--zc-top,rgba(77,216,230,.30))}}
+.zface--front{width:100%;height:var(--zh);bottom:0;left:0;transform-origin:bottom;transform:rotateX(-90deg);background:linear-gradient(0deg,var(--zc-wall,rgba(77,216,230,.25)) 0%,var(--zc-wall2,rgba(77,216,230,.10)) 100%);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-top:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 20px var(--zc-glow,rgba(77,216,230,.08))}
+.zface--back{width:100%;height:var(--zh);top:0;left:0;transform-origin:top;transform:rotateX(90deg);background:linear-gradient(0deg,var(--zc-wall,rgba(77,216,230,.25)) 0%,var(--zc-wall2,rgba(77,216,230,.10)) 100%);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 20px var(--zc-glow,rgba(77,216,230,.08))}
+.zface--left{height:100%;width:var(--zh);top:0;left:0;transform-origin:left;transform:rotateY(90deg);background:linear-gradient(0deg,var(--zc-wall,rgba(77,216,230,.25)) 0%,var(--zc-wall2,rgba(77,216,230,.10)) 100%);border-top:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);border-right:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 20px var(--zc-glow,rgba(77,216,230,.08))}
+.zface--right{height:100%;width:var(--zh);top:0;right:0;transform-origin:right;transform:rotateY(-90deg);background:linear-gradient(0deg,var(--zc-wall,rgba(77,216,230,.25)) 0%,var(--zc-wall2,rgba(77,216,230,.10)) 100%);border-top:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);border-left:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 20px var(--zc-glow,rgba(77,216,230,.08))}
 .zbox__label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translateZ(calc(var(--zh) + 2px)) rotateZ(12deg);font-size:.55rem;font-weight:600;color:var(--zc);text-shadow:0 0 6px var(--zc);white-space:nowrap;pointer-events:none;letter-spacing:.02em;opacity:0;animation:zlblIn .3s ease forwards .6s}
 @keyframes zlblIn{to{opacity:1}}
 /* Hotspot blips */
@@ -452,6 +457,14 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--app-bg);color:var
 .zviz__dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
 .zviz__dot{width:6px;height:6px;border-radius:50%;background:rgba(77,216,230,.15);border:1px solid rgba(77,216,230,.25)}
 .zviz__dot--active{width:22px;border-radius:3px;background:linear-gradient(90deg,#4dd8e6,#36d6b3);border-color:transparent;box-shadow:0 0 8px rgba(77,216,230,.3)}
+
+/* Interior furniture pieces inside zones */
+.zfurn{position:absolute;transform-style:preserve-3d;transform:translateZ(1px);opacity:0;animation:zfurnIn .5s ease forwards}
+@keyframes zfurnIn{0%{opacity:0;transform:translateZ(1px) scale(.5)}100%{opacity:1;transform:translateZ(1px) scale(1)}}
+.zfurn--rect{border-radius:2px}
+.zfurn--circle{border-radius:50%}
+.zfurn--dot{border-radius:50%}
+.zfurn--lshape{border-radius:2px;clip-path:polygon(0 0,60% 0,60% 50%,100% 50%,100% 100%,0 100%)}
 
 /* ── LEGACY FLAT ZONE VIZ (kept for backward compat) ── */
 .zone-viz-container{position:relative;width:100%;height:280px;perspective:800px;overflow:hidden}
@@ -933,32 +946,97 @@ function mkTrackingOverlay() {
 }
 
 /* ── Visual Module: 3D Zone Viz (REBUILT — full 3D enclosures, hotspot blips) ── */
+/* Furniture helper — returns HTML for small CSS shapes inside zones */
+function mkFurniture(industry, zoneIdx, z) {
+  const c = z.c;
+  const bg = c + '20';
+  const bdr = c + '40';
+  const base = parseFloat(z.d) + 1.2;
+  function f(type, left, top, w, h, delay) {
+    return `<div class="zfurn zfurn--${type}" style="left:${left}px;top:${top}px;width:${w}px;height:${h}px;background:${bg};border:1px solid ${bdr};box-shadow:0 1px 4px ${c}15;animation-delay:${(base+delay).toFixed(1)}s"></div>`;
+  }
+  function dot(left, top, sz, delay) {
+    return `<div class="zfurn zfurn--dot" style="left:${left}px;top:${top}px;width:${sz}px;height:${sz}px;background:${bg};border:1px solid ${bdr};animation-delay:${(base+delay).toFixed(1)}s"></div>`;
+  }
+  const furn = {
+    retail: [
+      /* Entrance: display table + welcome mat */
+      [f('rect',80,30,60,20,.2), f('rect',180,50,50,30,.4), f('rect',30,70,40,8,.5)],
+      /* Display: 3 shelf rows */
+      [f('rect',15,15,120,10,.2), f('rect',15,45,120,10,.4), f('rect',15,75,100,10,.6)],
+      /* Checkout: counter + queue barrier */
+      [f('rect',20,20,90,22,.2), f('rect',25,60,6,40,.4), f('rect',55,60,6,40,.5), f('rect',85,60,6,40,.6)],
+      /* Electronics: showcase table */
+      [f('rect',20,15,80,18,.2), f('rect',30,50,50,12,.4)]
+    ],
+    restaurant: [
+      /* Dining Room: tables with chairs */
+      [f('circle',30,30,24,24,.2), dot(22,26,5,.3), dot(46,26,5,.3), dot(34,20,5,.35), dot(34,48,5,.35),
+       f('circle',90,80,24,24,.4), dot(82,76,5,.45), dot(106,76,5,.45), dot(94,70,5,.5), dot(94,98,5,.5),
+       f('circle',40,120,24,24,.6), dot(32,116,5,.65), dot(56,116,5,.65), dot(44,110,5,.7), dot(44,138,5,.7),
+       f('circle',130,50,20,20,.5), dot(124,46,5,.55), dot(144,46,5,.55)],
+      /* Bar Area: counter rectangle */
+      [f('rect',15,15,110,16,.2), dot(25,40,5,.3), dot(50,40,5,.35), dot(75,40,5,.4), dot(100,40,5,.45)],
+      /* Kitchen: prep stations */
+      [f('rect',15,20,50,14,.2), f('rect',80,20,50,14,.3), f('rect',15,70,110,16,.5)],
+      /* Patio: round tables */
+      [f('circle',25,20,20,20,.2), dot(18,16,5,.25), dot(38,16,5,.3),
+       f('circle',90,30,20,20,.4), dot(83,26,5,.45), dot(103,26,5,.5)]
+    ],
+    hotel: [
+      /* Front Desk: reception desk */
+      [f('rect',20,20,110,20,.2), dot(30,50,5,.3), dot(70,50,5,.35), dot(110,50,5,.4)],
+      /* Lobby Lounge: seating cluster (sofa rectangles) */
+      [f('rect',25,30,60,16,.2), f('rect',25,55,60,16,.3), f('rect',100,40,50,14,.4), f('circle',120,80,18,18,.5), dot(115,76,5,.55), dot(132,76,5,.55)],
+      /* Elevator Bank: elevator doors */
+      [f('rect',20,20,28,35,.2), f('rect',58,20,28,35,.3), dot(34,60,6,.4), dot(72,60,6,.45)],
+      /* Concierge: desk + stand */
+      [f('rect',20,12,80,16,.2), dot(110,20,6,.3)]
+    ],
+    gym: [
+      /* Reception: front desk */
+      [f('rect',15,15,90,18,.2), dot(20,45,5,.3), dot(50,45,5,.35)],
+      /* Free Weights: equipment rows (benches) */
+      [f('rect',15,15,30,12,.2), f('rect',55,15,30,12,.3), f('rect',95,15,30,12,.4),
+       f('rect',15,50,30,12,.5), f('rect',55,50,30,12,.6), f('rect',95,50,30,12,.7),
+       f('rect',15,85,30,12,.8), f('rect',55,85,30,12,.9)],
+      /* Cardio: treadmills (vertical) */
+      [f('rect',10,15,30,14,.2), f('rect',10,45,30,14,.4), f('rect',10,75,30,14,.6), f('rect',10,110,30,14,.8)],
+      /* Group Class: mat rectangles */
+      [f('rect',15,15,40,22,.2), f('rect',65,15,40,22,.3), f('rect',115,15,40,22,.4),
+       f('rect',15,50,40,22,.5), f('rect',65,50,40,22,.6), f('rect',115,50,40,22,.7)]
+    ]
+  };
+  const set = (furn[industry] || furn.retail)[zoneIdx];
+  return set ? set.join('') : '';
+}
+
 function mkZoneViz(industry) {
   const ind = industry || 'retail';
   const configs = {
     retail: {icon:'&#128722;',name:'Retail Store',zones:[
-      {l:'Entrance',x:20,y:15,w:300,h:120,h3:45,c:'#4dd8e6',d:'.4s',m:'2,340/hr',bx:150,by:60},
-      {l:'Display',x:30,y:150,w:180,h:110,h3:60,c:'#36d6b3',d:'1s',m:'1.8m dwell',bx:90,by:55},
-      {l:'Checkout',x:250,y:170,w:140,h:120,h3:50,c:'#fbbf24',d:'1.6s',m:'18.4% conv',bx:70,by:60},
-      {l:'Electronics',x:20,y:5,w:140,h:80,h3:75,c:'#8b5cf6',d:'2.2s',m:'4.1m dwell',bx:70,by:40}
+      {l:'Entrance',x:20,y:15,w:300,h:120,h3:55,c:'#4dd8e6',d:'.4s',m:'2,340/hr',bx:150,by:60},
+      {l:'Display',x:30,y:150,w:180,h:110,h3:65,c:'#36d6b3',d:'1s',m:'1.8m dwell',bx:90,by:55},
+      {l:'Checkout',x:250,y:170,w:140,h:120,h3:58,c:'#fbbf24',d:'1.6s',m:'18.4% conv',bx:70,by:60},
+      {l:'Electronics',x:20,y:5,w:140,h:80,h3:80,c:'#8b5cf6',d:'2.2s',m:'4.1m dwell',bx:70,by:40}
     ]},
     restaurant: {icon:'&#127860;',name:'Restaurant',zones:[
-      {l:'Dining Room',x:20,y:10,w:200,h:180,h3:55,c:'#f97316',d:'.4s',m:'Occupancy: 82%',bx:100,by:90},
-      {l:'Bar Area',x:240,y:10,w:150,h:100,h3:70,c:'#4dd8e6',d:'1s',m:'28 seated',bx:75,by:50},
-      {l:'Kitchen',x:240,y:130,w:150,h:130,h3:90,c:'#ef4444',d:'1.6s',m:'8min ticket',bx:75,by:65},
-      {l:'Patio',x:30,y:210,w:180,h:90,h3:35,c:'#22c55e',d:'2.2s',m:'Dwell: 42min',bx:90,by:45}
+      {l:'Dining Room',x:20,y:10,w:200,h:180,h3:60,c:'#f97316',d:'.4s',m:'Occupancy: 82%',bx:100,by:90},
+      {l:'Bar Area',x:240,y:10,w:150,h:100,h3:75,c:'#4dd8e6',d:'1s',m:'28 seated',bx:75,by:50},
+      {l:'Kitchen',x:240,y:130,w:150,h:130,h3:95,c:'#ef4444',d:'1.6s',m:'8min ticket',bx:75,by:65},
+      {l:'Patio',x:30,y:210,w:180,h:90,h3:40,c:'#22c55e',d:'2.2s',m:'Dwell: 42min',bx:90,by:45}
     ]},
     hotel: {icon:'&#127976;',name:'Hotel Lobby',zones:[
-      {l:'Front Desk',x:20,y:10,w:160,h:90,h3:50,c:'#8b5cf6',d:'.4s',m:'Check-ins: 14/hr',bx:80,by:45},
-      {l:'Lobby Lounge',x:200,y:10,w:190,h:170,h3:80,c:'#4dd8e6',d:'1s',m:'Occupancy: 78%',bx:95,by:85},
-      {l:'Elevator Bank',x:30,y:120,w:120,h:100,h3:100,c:'#3b82f6',d:'1.6s',m:'Wait: 45sec',bx:60,by:50},
-      {l:'Concierge',x:30,y:240,w:150,h:60,h3:45,c:'#36d6b3',d:'2.2s',m:'8 active req',bx:75,by:30}
+      {l:'Front Desk',x:20,y:10,w:160,h:90,h3:58,c:'#8b5cf6',d:'.4s',m:'Check-ins: 14/hr',bx:80,by:45},
+      {l:'Lobby Lounge',x:200,y:10,w:190,h:170,h3:85,c:'#4dd8e6',d:'1s',m:'Occupancy: 78%',bx:95,by:85},
+      {l:'Elevator Bank',x:30,y:120,w:120,h:100,h3:105,c:'#3b82f6',d:'1.6s',m:'Wait: 45sec',bx:60,by:50},
+      {l:'Concierge',x:30,y:240,w:150,h:60,h3:50,c:'#36d6b3',d:'2.2s',m:'8 active req',bx:75,by:30}
     ]},
     gym: {icon:'&#127947;&#65039;',name:'Gym / Fitness',zones:[
-      {l:'Reception',x:20,y:10,w:130,h:80,h3:40,c:'#f43f5e',d:'.4s',m:'Members: 127',bx:65,by:40},
-      {l:'Free Weights',x:170,y:10,w:160,h:130,h3:60,c:'#fbbf24',d:'1s',m:'Session: 38min',bx:80,by:65},
-      {l:'Cardio',x:350,y:10,w:60,h:180,h3:70,c:'#22c55e',d:'1.6s',m:'Active: 34',bx:30,by:90},
-      {l:'Group Class',x:80,y:200,w:200,h:100,h3:85,c:'#8b5cf6',d:'2.2s',m:'Yoga 24/30',bx:100,by:50}
+      {l:'Reception',x:20,y:10,w:130,h:80,h3:48,c:'#f43f5e',d:'.4s',m:'Members: 127',bx:65,by:40},
+      {l:'Free Weights',x:170,y:10,w:160,h:130,h3:65,c:'#fbbf24',d:'1s',m:'Session: 38min',bx:80,by:65},
+      {l:'Cardio',x:350,y:10,w:60,h:180,h3:75,c:'#22c55e',d:'1.6s',m:'Active: 34',bx:30,by:90},
+      {l:'Group Class',x:80,y:200,w:200,h:100,h3:90,c:'#8b5cf6',d:'2.2s',m:'Yoga 24/30',bx:100,by:50}
     ]}
   };
   const cfg = configs[ind] || configs.retail;
@@ -969,11 +1047,12 @@ function mkZoneViz(industry) {
     <div class="zviz__scan"></div>
     <div class="zviz__stage"><div class="zviz__scene"><div class="zviz__floor">
       <div class="zviz__floor-surface"></div>
-      ${zones.map((z,i)=>`<div class="zbox" style="left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px;--zc:${z.c};--zh:${z.h3}px;--zc-bg:${z.c}0a;--zc-top:${z.c}15;--zc-wall:${z.c}10;animation-delay:${z.d}">
+      ${zones.map((z,i)=>`<div class="zbox" style="left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px;--zc:${z.c};--zh:${z.h3}px;--zc-bg:${z.c}18;--zc-top:${z.c}38;--zc-wall:${z.c}40;--zc-wall2:${z.c}18;--zc-glow:${z.c}15;animation-delay:${z.d}">
         <div class="zface zface--bot"></div><div class="zface zface--top"></div>
         <div class="zface zface--front"></div><div class="zface zface--back"></div>
         <div class="zface zface--left"></div><div class="zface zface--right"></div>
         <div class="zbox__label">${z.l}</div>
+        ${mkFurniture(ind, i, z)}
       </div>
       <div class="zblip" style="left:${z.x+z.bx}px;top:${z.y+z.by}px;--bc:${z.c};--bz:${z.h3+12}px;animation-delay:${parseFloat(z.d)+1.2}s">
         <div class="zblip__dot" style="animation-delay:${i*.4}s"></div>
