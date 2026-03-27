@@ -3,34 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FORK — Rate the Dish. Not the Restaurant.</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>ForkFox — Rate the Dish. Not the Restaurant.</title>
+<meta name="description" content="ForkFox is the first platform to rate individual dishes — not restaurants. Patent-pending AI scores every plate. Join the beta.">
+<meta property="og:title" content="ForkFox — AI Dish Intelligence">
+<meta property="og:description" content="Rate the dish. Not the restaurant. Patent-pending AI scores every plate across 9 cuisines.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://forkfox.ai">
+<meta property="og:image" content="https://forkfox.ai/forkfox-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ForkFox — AI Dish Intelligence">
+<meta name="twitter:description" content="Rate the dish. Not the restaurant. Patent-pending AI scores every plate.">
+<meta name="twitter:image" content="https://forkfox.ai/forkfox-logo.png">
+<link rel="icon" type="image/png" href="forkfox-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;font-size:16px}
 body{background:#1a1a1f;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
-h1,h2,h3,h4,h5,h6{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;line-height:1.1}
+h1,h2,h3,h4,h5,h6{font-family:'Geologica',sans-serif;font-weight:800;line-height:1.1}
 
 /* ===== HERO ===== */
 .hero{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:1;overflow:hidden;background:transparent !important}
 #three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;transition:opacity .6s ease}
-.hero-content{position:relative;z-index:2;text-align:center}
-.hero-title{display:flex;justify-content:center;gap:0.05em;margin-bottom:1.2rem}
-.hero-letter{font-size:clamp(5rem,18vw,14rem);font-weight:900;color:#fff;opacity:0;transform:translateY(80px) scale(0.7);animation:letterBounce .8s cubic-bezier(.34,1.56,.64,1) forwards}
-.hero-letter:nth-child(1){animation-delay:.2s}
-.hero-letter:nth-child(2){animation-delay:.35s}
-.hero-letter:nth-child(3){animation-delay:.5s}
-.hero-letter:nth-child(4){animation-delay:.65s}
-@keyframes letterBounce{to{opacity:1;transform:translateY(0) scale(1)}}
-.hero-tagline{font-size:clamp(1rem,2.5vw,1.5rem);color:rgba(255,255,255,0.7);opacity:0;animation:fadeUp 1s ease 1.2s forwards;letter-spacing:0.02em}
+.hero-content{position:relative;z-index:2;text-align:center;margin-top:clamp(180px,28vh,320px)}
+
+/* V13-style stacked logo */
+.hero-brand{display:flex;flex-direction:column;align-items:center;gap:.6rem;margin-bottom:1.5rem;opacity:0;transform:translateY(40px);animation:brandReveal 1.2s cubic-bezier(.25,.46,.45,.94) .3s forwards}
+@keyframes brandReveal{to{opacity:1;transform:translateY(0)}}
+.hero-logo{width:clamp(72px,12vw,110px);height:clamp(72px,12vw,110px);filter:drop-shadow(0 8px 30px rgba(249,115,22,.3))}
+.hero-wordmark{font-family:'Geologica',sans-serif;font-size:clamp(2.8rem,7vw,4.5rem);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1}
+.hero-wordmark .fox{color:#ea580c}
+.hero-tagline-sub{font-family:'Inter',sans-serif;font-size:clamp(.7rem,1.5vw,.85rem);font-weight:500;color:rgba(255,255,255,.35);letter-spacing:.2em;text-transform:uppercase;margin-top:.3rem}
+
+.hero-tagline{font-size:clamp(1rem,2.5vw,1.4rem);color:rgba(255,255,255,0.6);opacity:0;animation:fadeUp 1s ease 1.2s forwards;letter-spacing:0.01em;transform:translateY(20px);font-weight:300}
 @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
-.hero-tagline{transform:translateY(20px)}
-.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease 1.8s forwards}
-.scroll-indicator span{font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.4)}
-.scroll-arrow{width:24px;height:24px;border-right:2px solid rgba(255,255,255,.4);border-bottom:2px solid rgba(255,255,255,.4);transform:rotate(45deg);animation:scrollBounce 2s infinite}
+
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease 2.2s forwards}
+.scroll-indicator span{font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.3)}
+.scroll-arrow{width:20px;height:20px;border-right:1.5px solid rgba(255,255,255,.3);border-bottom:1.5px solid rgba(255,255,255,.3);transform:rotate(45deg);animation:scrollBounce 2s infinite}
 @keyframes scrollBounce{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(5px,5px)}}
 
-/* ===== HERO WAITLIST — LIQUID GLASS TITANIUM ===== */
+/* ===== HERO WAITLIST — LIQUID GLASS ===== */
 .hero-waitlist{
  position:relative;z-index:2;margin-top:2rem;
  opacity:0;transform:translateY(30px);
@@ -38,28 +51,27 @@ h1,h2,h3,h4,h5,h6{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;lin
 }
 .glass-card{
  position:relative;
- max-width:480px;margin:0 auto;
- padding:2rem 2.5rem;
+ max-width:460px;margin:0 auto;
+ padding:1.8rem 2.2rem;
  border-radius:24px;
  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
  backdrop-filter:blur(20px) saturate(1.4);
  -webkit-backdrop-filter:blur(20px) saturate(1.4);
- border:1px solid rgba(255,255,255,.1);
+ border:1px solid rgba(255,255,255,.08);
  overflow:hidden;
 }
-/* Liquid shimmer layer */
 .glass-card::before{
  content:'';position:absolute;inset:-2px;
  border-radius:26px;
  background:conic-gradient(
   from var(--shimmer-angle, 0deg),
   transparent 0%,
-  rgba(249,115,22,.25) 10%,
-  rgba(251,191,36,.15) 20%,
+  rgba(249,115,22,.2) 10%,
+  rgba(251,191,36,.12) 20%,
   transparent 30%,
   transparent 70%,
-  rgba(255,255,255,.12) 80%,
-  rgba(249,115,22,.2) 90%,
+  rgba(255,255,255,.08) 80%,
+  rgba(249,115,22,.15) 90%,
   transparent 100%
  );
  animation:shimmerSpin 4s linear infinite;
@@ -72,113 +84,56 @@ h1,h2,h3,h4,h5,h6{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;lin
 }
 @property --shimmer-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
 @keyframes shimmerSpin{to{--shimmer-angle:360deg}}
-
-/* Titanium inner reflection */
 .glass-card::after{
  content:'';position:absolute;
  top:0;left:0;right:0;height:50%;
  border-radius:24px 24px 0 0;
- background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);
+ background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
  pointer-events:none;
 }
-
 .glass-card h3{
- font-size:1.1rem;font-weight:700;margin-bottom:.3rem;
- font-family:'Plus Jakarta Sans',sans-serif;
+ font-size:1rem;font-weight:700;margin-bottom:.25rem;
+ font-family:'Geologica',sans-serif;
  background:linear-gradient(90deg,#fff,rgba(255,255,255,.7));
  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.glass-card .glass-sub{
- font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:1.2rem;
-}
-
-/* Input row */
+.glass-card .glass-sub{font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:1rem}
 .glass-form{display:flex;gap:.5rem;position:relative;z-index:1}
 .glass-form input{
- flex:1;
- padding:.85rem 1.2rem;
- border-radius:14px;
+ flex:1;padding:.8rem 1.1rem;border-radius:12px;
  border:1px solid rgba(255,255,255,.08);
- background:rgba(255,255,255,.04);
- backdrop-filter:blur(8px);
- color:#fff;font-size:.9rem;font-family:inherit;outline:none;
+ background:rgba(255,255,255,.04);backdrop-filter:blur(8px);
+ color:#fff;font-size:.88rem;font-family:inherit;outline:none;
  transition:border .3s,background .3s;
 }
-.glass-form input:focus{
- border-color:rgba(249,115,22,.4);
- background:rgba(255,255,255,.07);
-}
-.glass-form input::placeholder{color:rgba(255,255,255,.25)}
-
-/* CTA Button — liquid titanium */
+.glass-form input:focus{border-color:rgba(249,115,22,.4);background:rgba(255,255,255,.07)}
+.glass-form input::placeholder{color:rgba(255,255,255,.2)}
 .glass-btn{
- position:relative;
- padding:.85rem 1.6rem;
- border-radius:14px;border:none;
+ position:relative;padding:.8rem 1.4rem;border-radius:12px;border:none;
  background:linear-gradient(135deg,#f97316,#fb923c);
- color:#fff;font-weight:800;font-size:.85rem;
- cursor:pointer;white-space:nowrap;
- font-family:'Plus Jakarta Sans',sans-serif;
- overflow:hidden;
+ color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;
+ font-family:'Geologica',sans-serif;overflow:hidden;
  transition:transform .2s,box-shadow .3s;
 }
-.glass-btn:hover{
- transform:scale(1.04);
- box-shadow:0 0 30px rgba(249,115,22,.35),0 0 60px rgba(249,115,22,.15);
-}
-/* Liquid sweep animation on button */
+.glass-btn:hover{transform:scale(1.04);box-shadow:0 0 30px rgba(249,115,22,.3),0 0 60px rgba(249,115,22,.12)}
 .glass-btn::before{
- content:'';position:absolute;
- top:0;left:-100%;width:100%;height:100%;
- background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+ content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
  animation:liquidSweep 3s ease-in-out infinite;
 }
-@keyframes liquidSweep{
- 0%{left:-100%}
- 50%{left:100%}
- 100%{left:100%}
-}
-
-/* Proof dots */
-.glass-proof{
- display:flex;align-items:center;justify-content:center;gap:1rem;
- margin-top:1rem;position:relative;z-index:1;flex-wrap:wrap;
-}
-.proof-dot{
- display:flex;align-items:center;gap:.35rem;
- font-size:.7rem;color:rgba(255,255,255,.35);
-}
-.proof-dot::before{
- content:'';width:5px;height:5px;border-radius:50%;
- background:#f97316;
- box-shadow:0 0 6px rgba(249,115,22,.5);
- animation:dotPulse 2s ease-in-out infinite;
-}
+@keyframes liquidSweep{0%{left:-100%}50%{left:100%}100%{left:100%}}
+.glass-proof{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:.8rem;position:relative;z-index:1;flex-wrap:wrap}
+.proof-dot{display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:rgba(255,255,255,.3)}
+.proof-dot::before{content:'';width:4px;height:4px;border-radius:50%;background:#f97316;box-shadow:0 0 6px rgba(249,115,22,.4);animation:dotPulse 2s ease-in-out infinite}
 .proof-dot:nth-child(2)::before{animation-delay:.4s}
 .proof-dot:nth-child(3)::before{animation-delay:.8s}
 @keyframes dotPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
-
-/* Success state */
-.glass-success{
- display:none;
- text-align:center;padding:1rem;
- position:relative;z-index:1;
-}
+.glass-success{display:none;text-align:center;padding:1rem;position:relative;z-index:1}
 .glass-success.show{display:block}
-.glass-success .check-circle{
- width:56px;height:56px;margin:0 auto .8rem;
- border-radius:50%;
- background:linear-gradient(135deg,#f97316,#fbbf24);
- display:flex;align-items:center;justify-content:center;
- font-size:1.6rem;
- animation:popIn .5s cubic-bezier(.34,1.56,.64,1);
-}
+.glass-success .check-circle{width:52px;height:52px;margin:0 auto .6rem;border-radius:50%;background:linear-gradient(135deg,#f97316,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:1.4rem;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.glass-success h4{
- font-size:1.1rem;font-weight:800;margin-bottom:.3rem;
- font-family:'Plus Jakarta Sans',sans-serif;
-}
-.glass-success p{font-size:.82rem;color:rgba(255,255,255,.4)}
+.glass-success h4{font-size:1rem;font-weight:700;margin-bottom:.2rem;font-family:'Geologica',sans-serif}
+.glass-success p{font-size:.8rem;color:rgba(255,255,255,.35)}
 
 /* ===== SECTIONS ===== */
 section{position:relative;z-index:3;background:#1a1a1f}
@@ -190,138 +145,127 @@ section{position:relative;z-index:3;background:#1a1a1f}
 .problem-heading span{background:linear-gradient(135deg,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .pain-point{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:2.5rem;opacity:0;transform:translateX(-60px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
 .pain-point.visible{opacity:1;transform:translateX(0)}
-.pain-line{width:4px;min-height:60px;background:linear-gradient(180deg,#ef4444,transparent);border-radius:2px;flex-shrink:0;margin-top:.3rem}
-.pain-text h3{font-size:1.3rem;font-weight:700;margin-bottom:.4rem}
-.pain-text p{color:rgba(255,255,255,.5);font-size:.95rem}
+.pain-line{width:3px;min-height:60px;background:linear-gradient(180deg,#ef4444,transparent);border-radius:2px;flex-shrink:0;margin-top:.3rem}
+.pain-text h3{font-size:1.2rem;font-weight:700;margin-bottom:.3rem}
+.pain-text p{color:rgba(255,255,255,.45);font-size:.9rem}
 
 /* Solution */
 .solution{background:#1a1a1f}
 .solution-heading{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:1rem}
 .solution-heading span{background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.solution-sub{color:rgba(255,255,255,.5);font-size:1.1rem;margin-bottom:4rem;max-width:500px}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem}
-.feature-card{background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);border-radius:16px;padding:2rem;opacity:0;transform:translateX(60px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.solution-sub{color:rgba(255,255,255,.45);font-size:1.05rem;margin-bottom:4rem;max-width:500px}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.feature-card{background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.12);border-radius:16px;padding:1.8rem;opacity:0;transform:translateX(60px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
 .feature-card.visible{opacity:1;transform:translateX(0)}
-.feature-card:hover{border-color:rgba(249,115,22,.4);background:rgba(249,115,22,.08);transform:translateY(-4px) !important}
-.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f97316,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1.2rem}
-.feature-card h3{font-size:1.15rem;margin-bottom:.5rem}
-.feature-card p{color:rgba(255,255,255,.5);font-size:.9rem}
+.feature-card:hover{border-color:rgba(249,115,22,.35);background:rgba(249,115,22,.07);transform:translateY(-4px) !important}
+.feature-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#f97316,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1rem}
+.feature-card h3{font-size:1.1rem;margin-bottom:.4rem}
+.feature-card p{color:rgba(255,255,255,.45);font-size:.88rem}
 
-/* App Showcase — Two Column */
+/* App Showcase */
 .app-showcase{background:#f8f7f4;color:#111;overflow:hidden;position:relative;z-index:3}
 .app-showcase .section-inner{display:flex;align-items:center;gap:clamp(2rem,5vw,5rem);flex-wrap:wrap}
-
-/* Left column — text */
 .showcase-text{flex:1;min-width:300px;max-width:520px}
-.showcase-text h2{font-size:clamp(2rem,4.5vw,3.2rem);margin-bottom:1rem;color:#111}
+.showcase-text h2{font-size:clamp(2rem,4.5vw,3rem);margin-bottom:1rem;color:#111}
 .showcase-text h2 span{background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.showcase-text>p{font-size:1.05rem;color:#555;line-height:1.7;margin-bottom:2rem}
+.showcase-text>p{font-size:1rem;color:#555;line-height:1.7;margin-bottom:2rem}
 .showcase-bullets{list-style:none;padding:0;margin:0}
-.showcase-bullets li{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:1.2rem;font-size:.95rem;color:#333;line-height:1.5}
-.showcase-bullets li::before{content:'';flex-shrink:0;width:8px;height:8px;margin-top:7px;border-radius:50%;background:linear-gradient(135deg,#f97316,#fbbf24)}
+.showcase-bullets li{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1rem;font-size:.92rem;color:#333;line-height:1.5}
+.showcase-bullets li::before{content:'';flex-shrink:0;width:7px;height:7px;margin-top:7px;border-radius:50%;background:linear-gradient(135deg,#f97316,#fbbf24)}
+.showcase-phones{flex:1;min-width:320px;display:flex;justify-content:center;align-items:center;position:relative;height:720px}
 
-/* Right column — phones */
-.showcase-phones{flex:1;min-width:320px;display:flex;justify-content:center;position:relative;height:620px}
-
-/* iPhone styling */
-.iphone{
- position:absolute;width:270px;height:550px;
- transition:all .8s cubic-bezier(.25,.46,.45,.94);
-}
-.iphone-body{
- width:100%;height:100%;border-radius:44px;
- background:linear-gradient(145deg,#2a2a30,#1c1c22);
- border:2px solid rgba(255,255,255,.12);padding:10px;
- box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.06);
- position:relative;overflow:hidden;
-}
-.iphone-body::before{
- content:'';position:absolute;inset:-2px;border-radius:46px;
- background:linear-gradient(160deg,rgba(255,255,255,.15),transparent 40%,transparent 60%,rgba(255,255,255,.05));
- pointer-events:none;z-index:10;
-}
-.dynamic-island{
- position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:20;
- width:100px;height:28px;border-radius:20px;background:#000;
-}
-.dynamic-island::after{
- content:'';position:absolute;right:22px;top:50%;transform:translateY(-50%);
- width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,#1a1a2e,#000);border:1px solid rgba(255,255,255,.06);
-}
-.iphone-screen{
- width:100%;height:100%;border-radius:36px;overflow:hidden;background:#0d0d12;
-}
-.s-content{width:100%;height:100%;display:flex;flex-direction:column;padding:3rem 1.2rem 1.2rem}
-.s-status{display:flex;justify-content:space-between;font-size:.55rem;color:rgba(255,255,255,.3);margin-bottom:.6rem;padding:0 .3rem}
-.s-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.3rem;color:#fff}
-.s-sub{font-size:.7rem;color:rgba(255,255,255,.35);margin-bottom:.8rem}
-.s-search{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.55rem .8rem;margin-bottom:.8rem;font-size:.7rem;color:rgba(255,255,255,.2)}
-.s-dish{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:.7rem;margin-bottom:.5rem;display:flex;gap:.5rem;align-items:center}
-.s-dish-icon{width:44px;height:44px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
-.s-dish-info{flex:1}
-.s-dish-name{font-size:.72rem;font-weight:700;color:#fff}
-.s-dish-sub{font-size:.58rem;color:rgba(255,255,255,.3)}
-.s-score{font-size:1.1rem;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.s-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:.25rem}
-.s-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#f97316,#fbbf24)}
-.s-tags{display:flex;gap:.3rem;flex-wrap:wrap;justify-content:center;margin:.6rem 0}
-.s-tag{font-size:.55rem;font-weight:600;padding:.2rem .5rem;border-radius:100px}
-.s-map-area{flex:1;border-radius:14px;margin-bottom:.5rem;position:relative;background:rgba(249,115,22,.03);border:1px solid rgba(249,115,22,.08);display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:.35;min-height:100px}
-.s-map-dot{position:absolute;border-radius:50%;box-shadow:0 0 8px currentColor;animation:dotPulse 2s infinite}
-
-/* Stagger positions + gentle float */
-.iphone:nth-child(1){z-index:3;top:0;left:50%;margin-left:-135px;animation:phoneFloat1 5s ease-in-out infinite}
-.iphone:nth-child(2){z-index:2;top:30px;left:50%;margin-left:-80px;animation:phoneFloat2 6s ease-in-out infinite .5s}
-.iphone:nth-child(3){z-index:1;top:55px;left:50%;margin-left:-25px;animation:phoneFloat3 5.5s ease-in-out infinite 1s}
-@keyframes phoneFloat1{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-12px) rotate(0deg)}}
-@keyframes phoneFloat2{0%,100%{transform:translateY(0) rotate(.5deg)}50%{transform:translateY(-8px) rotate(-.5deg)}}
-@keyframes phoneFloat3{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-10px) rotate(0deg)}}
+/* Overlap Slide layout */
+.phone-mockup{position:absolute;filter:drop-shadow(0 30px 60px rgba(0,0,0,.18));transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.phone-mockup img{width:100%;height:100%;object-fit:contain}
+.phone-mockup:nth-child(1){z-index:2;width:340px;left:50%;margin-left:-310px;top:20px;animation:slideL 6s ease-in-out infinite}
+.phone-mockup:nth-child(2){z-index:3;width:380px;left:50%;margin-left:-190px;top:0;animation:slideC 5s ease-in-out infinite}
+.phone-mockup:nth-child(3){z-index:1;width:340px;left:50%;margin-left:-60px;top:35px;opacity:.88;animation:slideR 6s ease-in-out infinite}
+@keyframes slideL{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,-12px)}}
+@keyframes slideC{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes slideR{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-10px)}}
 
 @media(max-width:900px){
  .app-showcase .section-inner{flex-direction:column}
- .showcase-phones{height:520px;width:100%;min-width:unset}
+ .showcase-phones{height:500px;width:100%;min-width:unset}
  .showcase-text{max-width:100%}
+ .phone-mockup:nth-child(1){width:220px;margin-left:-200px}
+ .phone-mockup:nth-child(2){width:250px;margin-left:-125px}
+ .phone-mockup:nth-child(3){width:220px;margin-left:-40px}
 }
 
 /* Traction */
 .traction{background:linear-gradient(180deg,#1a1a1f,#1f1810,#1a1a1f)}
 .traction h2{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2rem}
-.metric{text-align:center;padding:2rem 1rem;border-radius:16px;background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.1)}
-.metric-number{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
-.metric-label{color:rgba(255,255,255,.5);font-size:.85rem;margin-top:.5rem;text-transform:uppercase;letter-spacing:.1em}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem}
+.metric{text-align:center;padding:2rem 1rem;border-radius:16px;background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.08)}
+.metric-number{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;font-family:'Geologica',sans-serif}
+.metric-label{color:rgba(255,255,255,.45);font-size:.82rem;margin-top:.5rem;text-transform:uppercase;letter-spacing:.1em}
 
 /* Cities */
 .cities{text-align:center}
-.cities h2{font-size:clamp(1.2rem,2.5vw,1.5rem);color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.2em;margin-bottom:3rem}
+.cities h2{font-size:clamp(1.1rem,2.5vw,1.4rem);color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.2em;margin-bottom:3rem}
 .city-list{display:flex;flex-direction:column;gap:1.5rem;align-items:center}
 .city-item{display:flex;align-items:baseline;gap:1rem;opacity:0;transform:translateY(30px);transition:all .8s ease}
 .city-item.visible{opacity:1;transform:translateY(0)}
-.city-name{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;-webkit-text-stroke:2px #f97316;color:transparent;transition:all .6s ease}
+.city-name{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;-webkit-text-stroke:2px #f97316;color:transparent;transition:all .6s ease;font-family:'Geologica',sans-serif}
 .city-name.filled{color:#f97316;-webkit-text-stroke:0}
 .city-date{font-size:.85rem;color:rgba(255,255,255,.3);white-space:nowrap}
 
 /* Email Capture */
 .email-capture{text-align:center}
-.email-inner{background:linear-gradient(135deg,#f97316,#fbbf24);border-radius:32px;padding:clamp(3rem,6vw,5rem);position:relative;overflow:hidden}
-.email-inner::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(255,255,255,.15),transparent 60%);pointer-events:none}
-.email-inner h2{font-size:clamp(2rem,5vw,3.5rem);color:#000;margin-bottom:.8rem}
-.email-inner p{color:rgba(0,0,0,.6);margin-bottom:2rem;font-size:1.1rem}
+.email-inner{
+ position:relative;border-radius:28px;
+ padding:clamp(3rem,6vw,5rem);overflow:hidden;
+ background:linear-gradient(135deg,#f97316,#e2630d 40%,#c2410c 100%);
+}
+.email-inner::before{
+ content:'';position:absolute;inset:3px;border-radius:25px;
+ background:#1a1a1f;z-index:0;
+}
+.email-inner::after{
+ content:'';position:absolute;inset:3px;border-radius:25px;
+ background:
+  radial-gradient(ellipse at 20% 30%,rgba(249,115,22,.12),transparent 55%),
+  radial-gradient(ellipse at 80% 70%,rgba(251,191,36,.08),transparent 50%);
+ z-index:0;pointer-events:none;
+}
+.email-inner>*{position:relative;z-index:1}
+.email-inner h2{font-size:clamp(2rem,5vw,3.2rem);color:#fff;margin-bottom:.6rem;font-family:'Geologica',sans-serif}
+.email-inner h2 em{font-style:normal;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.email-inner p{color:rgba(255,255,255,.45);margin-bottom:2rem;font-size:1rem}
 .email-form{display:flex;gap:.75rem;max-width:480px;margin:0 auto;position:relative;z-index:1}
-.email-form input{flex:1;padding:1rem 1.5rem;border-radius:100px;border:none;font-size:1rem;background:rgba(0,0,0,.15);color:#000;outline:none;font-family:'Inter',sans-serif}
-.email-form input::placeholder{color:rgba(0,0,0,.4)}
-.email-form button{padding:1rem 2rem;border-radius:100px;border:none;background:#000;color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;white-space:nowrap;transition:transform .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif}
-.email-form button:hover{transform:scale(1.05);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.email-form input{
+ flex:1;padding:1rem 1.4rem;border-radius:14px;
+ border:1px solid rgba(255,255,255,.1);
+ font-size:.95rem;background:rgba(255,255,255,.05);
+ backdrop-filter:blur(8px);
+ color:#fff;outline:none;font-family:'Inter',sans-serif;
+ transition:border .3s,background .3s;
+}
+.email-form input:focus{border-color:rgba(249,115,22,.5);background:rgba(255,255,255,.08)}
+.email-form input::placeholder{color:rgba(255,255,255,.25)}
+.email-form button{
+ padding:1rem 2rem;border-radius:14px;border:none;
+ background:linear-gradient(135deg,#f97316,#fb923c);
+ color:#fff;font-weight:700;font-size:.92rem;cursor:pointer;white-space:nowrap;
+ font-family:'Geologica',sans-serif;
+ box-shadow:0 4px 20px rgba(249,115,22,.25);
+ transition:transform .2s,box-shadow .3s;
+}
+.email-form button:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 35px rgba(249,115,22,.4)}
 .submit-ripple{position:absolute;border-radius:50%;background:rgba(34,197,94,.4);transform:scale(0);animation:ripple .8s ease-out forwards;pointer-events:none}
 @keyframes ripple{to{transform:scale(4);opacity:0}}
 
 /* Footer */
-footer{text-align:center;padding:3rem 24px;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:3;background:#1a1a1f}
-.footer-logo{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5rem;font-weight:900;margin-bottom:.5rem}
+footer{text-align:center;padding:3rem 24px;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:3;background:#1a1a1f}
+.footer-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:.8rem}
+.footer-brand img{width:32px;height:32px}
+.footer-brand span{font-family:'Geologica',sans-serif;font-size:1.3rem;font-weight:800}
+.footer-brand .fox{color:#ea580c}
 .footer-links{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem}
-.footer-links a{color:rgba(255,255,255,.4);text-decoration:none;font-size:.85rem;transition:color .3s}
+.footer-links a{color:rgba(255,255,255,.35);text-decoration:none;font-size:.82rem;transition:color .3s}
 .footer-links a:hover{color:#f97316}
-footer p{color:rgba(255,255,255,.25);font-size:.75rem}
+footer p{color:rgba(255,255,255,.2);font-size:.72rem}
 
 /* ===== MOBILE ===== */
 @media(max-width:768px){
@@ -331,6 +275,8 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
  .metrics{grid-template-columns:repeat(2,1fr)}
  .features-grid{grid-template-columns:1fr}
  .city-item{flex-direction:column;align-items:center;gap:.3rem}
+ .glass-form{flex-direction:column}
+ .glass-btn{width:100%;text-align:center}
 }
 @media(max-width:480px){
  .metrics{grid-template-columns:1fr}
@@ -345,11 +291,9 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
 <!-- HERO -->
 <section class="hero">
  <div class="hero-content">
-  <div class="hero-title">
-   <span class="hero-letter">F</span>
-   <span class="hero-letter">O</span>
-   <span class="hero-letter">R</span>
-   <span class="hero-letter">K</span>
+  <div class="hero-brand">
+   <div class="hero-wordmark">Fork<span class="fox">Fox</span></div>
+   <div class="hero-tagline-sub">AI Dish Intelligence</div>
   </div>
   <p class="hero-tagline">Rate the dish. Not the restaurant.</p>
  </div>
@@ -360,8 +304,11 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
    <div id="heroFormWrap">
     <h3>Sign up for the beta</h3>
     <p class="glass-sub">Be first in line when we launch in your city.</p>
-    <form class="glass-form" id="heroForm">
-     <input type="email" placeholder="your@email.com" required>
+    <form class="glass-form" id="heroForm" action="https://formsubmit.co/ali@forkfox.ai" method="POST">
+     <input type="hidden" name="_subject" value="ForkFox Beta Signup (Hero)">
+     <input type="hidden" name="_captcha" value="false">
+     <input type="hidden" name="_next" value="https://forkfox.ai?signed-up=true">
+     <input type="email" name="email" placeholder="your@email.com" required>
      <button type="submit" class="glass-btn">Join Waitlist</button>
     </form>
     <div class="glass-proof">
@@ -373,7 +320,7 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
    <div class="glass-success" id="heroSuccess">
     <div class="check-circle">&#10003;</div>
     <h4>You're on the list.</h4>
-    <p>We'll let you know the moment Fork launches near you.</p>
+    <p>We'll let you know the moment ForkFox launches near you.</p>
    </div>
   </div>
  </div>
@@ -384,14 +331,12 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
  </div>
 </section>
 
-<!-- Sections removed — content merged into app showcase -->
-
 <!-- APP SHOWCASE -->
 <section class="app-showcase">
  <div class="section-inner">
   <div class="showcase-text">
    <h2>Every dish gets a <span>score.</span></h2>
-   <p>Fork is the first platform to rate individual dishes — not restaurants. Our patent-pending AI analyzes every plate across 9 cuisines and delivers a score from 0 to 100.</p>
+   <p>ForkFox is the first platform to rate individual dishes — not restaurants. Our patent-pending AI analyzes every plate across 9 cuisines and delivers a score from 0 to 100.</p>
    <ul class="showcase-bullets">
     <li>AI scores dishes on taste, presentation, value, and consistency</li>
     <li>9 cuisine verticals — Japanese, Italian, Mexican, Indian, and more</li>
@@ -401,92 +346,9 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
    </ul>
   </div>
   <div class="showcase-phones">
-
-    <!-- iPhone 1: Browse -->
-    <div class="iphone">
-     <div class="iphone-body">
-      <div class="dynamic-island"></div>
-      <div class="iphone-screen">
-       <div class="s-content">
-        <div class="s-status"><span>9:41</span><span>Fork</span><span>100%</span></div>
-        <div class="s-title">Discover</div>
-        <div class="s-sub">What are you craving?</div>
-        <div class="s-search">🔍 Search dishes, cuisines...</div>
-        <div class="s-dish">
-         <div class="s-dish-icon" style="background:rgba(249,115,22,.1)">🍣</div>
-         <div class="s-dish-info"><div class="s-dish-name">Omakase Platter</div><div class="s-dish-sub">Zama &middot; Philadelphia</div><div class="s-bar"><div class="s-bar-fill" style="width:96%"></div></div></div>
-         <div class="s-score">96</div>
-        </div>
-        <div class="s-dish">
-         <div class="s-dish-icon" style="background:rgba(251,191,36,.1)">🍕</div>
-         <div class="s-dish-info"><div class="s-dish-name">Margherita DOC</div><div class="s-dish-sub">Pizzeria Beddia &middot; Philly</div><div class="s-bar"><div class="s-bar-fill" style="width:94%"></div></div></div>
-         <div class="s-score">94</div>
-        </div>
-        <div class="s-dish">
-         <div class="s-dish-icon" style="background:rgba(34,197,94,.1)">🌮</div>
-         <div class="s-dish-info"><div class="s-dish-name">Al Pastor Taco</div><div class="s-dish-sub">South Philly Barbacoa</div><div class="s-bar"><div class="s-bar-fill" style="width:91%"></div></div></div>
-         <div class="s-score">91</div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-
-    <!-- iPhone 2: Dish Detail -->
-    <div class="iphone">
-     <div class="iphone-body">
-      <div class="dynamic-island"></div>
-      <div class="iphone-screen">
-       <div class="s-content" style="align-items:center">
-        <div class="s-status" style="width:100%"><span>9:41</span><span>Fork</span><span>100%</span></div>
-        <div style="font-size:2.8rem;margin:.3rem 0">🍣</div>
-        <div class="s-title" style="text-align:center">Omakase Platter</div>
-        <div class="s-sub" style="text-align:center">Zama &middot; 128 S 19th St</div>
-        <div style="margin:.3rem 0 .6rem">
-         <span style="font-size:3.2rem;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">96</span>
-         <span style="font-size:.65rem;color:rgba(255,255,255,.3);display:block">AI Dish Score</span>
-        </div>
-        <div class="s-tags">
-         <span class="s-tag" style="background:rgba(249,115,22,.1);color:#fb923c">Taste 98</span>
-         <span class="s-tag" style="background:rgba(251,191,36,.1);color:#fbbf24">Presentation 95</span>
-         <span class="s-tag" style="background:rgba(34,197,94,.1);color:#22c55e">Value 92</span>
-        </div>
-        <div style="background:rgba(255,255,255,.03);border-radius:10px;padding:.6rem;font-size:.6rem;color:rgba(255,255,255,.3);line-height:1.5;text-align:center">12-course seasonal selection featuring uni, otoro, and A5 wagyu. Chef's choice progression.</div>
-       </div>
-      </div>
-     </div>
-    </div>
-
-    <!-- iPhone 3: Nearby Map -->
-    <div class="iphone">
-     <div class="iphone-body">
-      <div class="dynamic-island"></div>
-      <div class="iphone-screen">
-       <div class="s-content">
-        <div class="s-status"><span>9:41</span><span>Fork</span><span>100%</span></div>
-        <div class="s-title">Near You</div>
-        <div class="s-sub">Top-scored dishes in your area</div>
-        <div class="s-map-area">
-         🗺️
-         <div class="s-map-dot" style="width:10px;height:10px;background:#f97316;color:#f97316;top:20%;left:25%"></div>
-         <div class="s-map-dot" style="width:8px;height:8px;background:#fbbf24;color:#fbbf24;top:45%;right:20%;animation-delay:.5s"></div>
-         <div class="s-map-dot" style="width:9px;height:9px;background:#22c55e;color:#22c55e;bottom:20%;left:40%;animation-delay:1s"></div>
-        </div>
-        <div class="s-dish">
-         <div class="s-dish-icon" style="background:rgba(249,115,22,.1)">🥘</div>
-         <div class="s-dish-info"><div class="s-dish-name">Lamb Biryani</div><div class="s-dish-sub">0.3 mi &middot; Amma's Kitchen</div></div>
-         <div class="s-score">93</div>
-        </div>
-        <div class="s-dish">
-         <div class="s-dish-icon" style="background:rgba(251,191,36,.1)">🍜</div>
-         <div class="s-dish-info"><div class="s-dish-name">Tonkotsu Ramen</div><div class="s-dish-sub">0.5 mi &middot; Terakawa</div></div>
-         <div class="s-score">91</div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-
+    <div class="phone-mockup"><img src="mockup-browse.png" alt="ForkFox Rankings" loading="lazy"></div>
+    <div class="phone-mockup"><img src="mockup-detail.png" alt="ForkFox Dish Detail" loading="lazy"></div>
+    <div class="phone-mockup"><img src="mockup-score.png" alt="ForkFox Sushi Profile" loading="lazy"></div>
   </div>
  </div>
 </section>
@@ -509,11 +371,11 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
     <div class="metric-label">K Lines of Code</div>
    </div>
    <div class="metric" data-reveal>
-    <div class="metric-number">✓</div>
+    <div class="metric-number">&#10003;</div>
     <div class="metric-label">Patent Pending</div>
    </div>
    <div class="metric" data-reveal>
-    <div class="metric-number">✓</div>
+    <div class="metric-number">&#10003;</div>
     <div class="metric-label">App Store Live</div>
    </div>
   </div>
@@ -525,22 +387,10 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
  <div class="section-inner">
   <h2>Launching in</h2>
   <div class="city-list">
-   <div class="city-item" data-reveal>
-    <span class="city-name" data-fill>PHILADELPHIA</span>
-    <span class="city-date">Q2 2026</span>
-   </div>
-   <div class="city-item" data-reveal>
-    <span class="city-name" data-fill>NEW YORK</span>
-    <span class="city-date">2027</span>
-   </div>
-   <div class="city-item" data-reveal>
-    <span class="city-name" data-fill>CHICAGO</span>
-    <span class="city-date">2027</span>
-   </div>
-   <div class="city-item" data-reveal>
-    <span class="city-name" data-fill>MIAMI</span>
-    <span class="city-date">2028</span>
-   </div>
+   <div class="city-item" data-reveal><span class="city-name" data-fill>PHILADELPHIA</span><span class="city-date">Q2 2026</span></div>
+   <div class="city-item" data-reveal><span class="city-name" data-fill>NEW YORK</span><span class="city-date">2027</span></div>
+   <div class="city-item" data-reveal><span class="city-name" data-fill>CHICAGO</span><span class="city-date">2027</span></div>
+   <div class="city-item" data-reveal><span class="city-name" data-fill>MIAMI</span><span class="city-date">2028</span></div>
   </div>
  </div>
 </section>
@@ -549,10 +399,13 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
 <section class="email-capture">
  <div class="section-inner">
   <div class="email-inner">
-   <h2>Be the first to taste it.</h2>
-   <p>Join the waitlist for early access to Fork in your city.</p>
-   <form class="email-form" id="emailForm">
-    <input type="email" placeholder="Enter your email" required>
+   <h2>Be the first to <em>taste it.</em></h2>
+   <p>Join the waitlist for early access to ForkFox in your city.</p>
+   <form class="email-form" id="emailForm" action="https://formsubmit.co/ali@forkfox.ai" method="POST">
+    <input type="hidden" name="_subject" value="ForkFox Beta Signup (Footer)">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://forkfox.ai?signed-up=true">
+    <input type="email" name="email" placeholder="Enter your email" required>
     <button type="submit">Get Early Access</button>
    </form>
   </div>
@@ -561,19 +414,22 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
 
 <!-- FOOTER -->
 <footer>
- <div class="footer-logo">FORK</div>
+ <div class="footer-brand">
+  <img src="forkfox-logo.png" alt="ForkFox">
+  <span>Fork<span class="fox">Fox</span></span>
+ </div>
  <div class="footer-links">
   <a href="#">Twitter</a>
   <a href="#">LinkedIn</a>
   <a href="#">Instagram</a>
   <a href="#">App Store</a>
  </div>
- <p>&copy; 2026 Fork Technologies, Inc. All rights reserved.</p>
+ <p>&copy; 2026 ForkFox, Inc. All rights reserved.</p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ===== THREE.JS SCENE — GIANT FORK + SPARKLES =====
+// ===== THREE.JS SCENE — REALISTIC FORK + PARTICLES =====
 (function(){
  const canvas = document.getElementById('three-canvas');
  let renderer;
@@ -584,109 +440,142 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
  renderer.setSize(window.innerWidth, window.innerHeight);
  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  renderer.setClearColor(0x141418, 1);
+ renderer.toneMapping = THREE.ACESFilmicToneMapping;
+ renderer.toneMappingExposure = 1.2;
 
  const scene = new THREE.Scene();
- const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000);
- camera.position.set(0, 0, 30);
+ const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+ camera.position.set(0, 0, 32);
  camera.lookAt(0, 0, 0);
 
- // Mouse tracking
+ // Mouse tracking — fork follows cursor
  const mouse = {x:0, y:0, tx:0, ty:0};
+ let isDragging = false;
+ let dragStart = {x:0, y:0};
+ let forkRotOffset = {x:0, y:0};
+
  document.addEventListener('mousemove', e => {
   mouse.tx = (e.clientX/window.innerWidth - 0.5) * 2;
   mouse.ty = (e.clientY/window.innerHeight - 0.5) * 2;
  });
+
+ // Click + drag for direct fork control
+ canvas.addEventListener('mousedown', e => {
+  isDragging = true;
+  dragStart.x = e.clientX;
+  dragStart.y = e.clientY;
+  canvas.style.cursor = 'grabbing';
+ });
+ document.addEventListener('mouseup', () => {
+  isDragging = false;
+  canvas.style.cursor = 'grab';
+ });
+ document.addEventListener('mousemove', e => {
+  if(!isDragging) return;
+  const dx = (e.clientX - dragStart.x) * 0.008;
+  const dy = (e.clientY - dragStart.y) * 0.008;
+  forkRotOffset.y = dx;
+  forkRotOffset.x = dy;
+ });
+ canvas.style.cursor = 'grab';
 
  // Colors
  const C_ORANGE = new THREE.Color(0xf97316);
  const C_AMBER  = new THREE.Color(0xfbbf24);
  const C_WHITE  = new THREE.Color(0xffffff);
 
- // ====== LIGHTING — studio setup for chrome fork ======
- scene.add(new THREE.AmbientLight(0xccd0d8, 0.4));
- const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
- keyLight.position.set(6, 12, 10);
+ // ====== LIGHTING ======
+ scene.add(new THREE.AmbientLight(0xd0d4de, 0.5));
+ const keyLight = new THREE.DirectionalLight(0xfff8f0, 1.5);
+ keyLight.position.set(5, 10, 12);
  scene.add(keyLight);
- const fillLight = new THREE.DirectionalLight(0xd4e0f7, 0.6);
- fillLight.position.set(-8, -2, 8);
- scene.add(fillLight);
- const rimLight = new THREE.DirectionalLight(0xffeedd, 0.9);
- rimLight.position.set(-3, 8, -8);
- scene.add(rimLight);
- const pointLight = new THREE.PointLight(0xf97316, 1.2, 50);
- pointLight.position.set(3, 5, 8);
- scene.add(pointLight);
+ const accentLight = new THREE.PointLight(0xf97316, 1.2, 60);
+ accentLight.position.set(3, 2, 10);
+ scene.add(accentLight);
 
- // ====== BUILD REALISTIC CHROME FORK ======
- const forkGroup = new THREE.Group();
+ // ====== FLOATING 3D LOGO ======
+ const logoGroup = new THREE.Group();
+ const textureLoader = new THREE.TextureLoader();
 
- // Polished silver — bright enough to read on dark bg
- const chromeMat = new THREE.MeshStandardMaterial({
-  color: 0xe0e4ec, metalness: 0.92, roughness: 0.1,
-  emissive: 0x666677, emissiveIntensity: 0.55
+ // Load logo as texture
+ const logoTex = textureLoader.load('forkfox-logo.png', function(tex){
+  tex.encoding = THREE.sRGBEncoding;
  });
 
- function addPart(geom, pos, rot){
-  const mesh = new THREE.Mesh(geom, chromeMat);
-  mesh.position.copy(pos);
-  if(rot) mesh.rotation.copy(rot);
-  forkGroup.add(mesh);
+ // Front face — logo on a plane, full color, no lighting dependency
+ const logoGeo = new THREE.PlaneGeometry(12, 12);
+ const logoMat = new THREE.MeshBasicMaterial({
+  map: logoTex,
+  transparent: true,
+  alphaTest: 0.05,
+  side: THREE.DoubleSide
+ });
+ const logoFront = new THREE.Mesh(logoGeo, logoMat);
+ logoGroup.add(logoFront);
+
+ // Subtle glow ring — very thin, soft
+ const glowRingGeo = new THREE.TorusGeometry(6.3, 0.03, 8, 64);
+ const glowRingMat = new THREE.MeshBasicMaterial({
+  color: 0xf97316, transparent: true, opacity: 0.15
+ });
+ const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
+ glowRing.position.z = -0.15;
+ logoGroup.add(glowRing);
+
+ // Position logo — centered above the text
+ logoGroup.position.set(0, 6, -5);
+ logoGroup.scale.setScalar(0.85);
+ scene.add(logoGroup);
+
+ // ====== ORBITING PARTICLES around the logo ======
+ const ORBIT_COUNT = 80;
+ const orbitGeo = new THREE.BufferGeometry();
+ const orbitPos = new Float32Array(ORBIT_COUNT * 3);
+ const orbitCol = new Float32Array(ORBIT_COUNT * 3);
+ const orbitSize = new Float32Array(ORBIT_COUNT);
+ const orbitAngle = new Float32Array(ORBIT_COUNT);
+ const orbitRadius = new Float32Array(ORBIT_COUNT);
+ const orbitSpeed = new Float32Array(ORBIT_COUNT);
+ const orbitYOff = new Float32Array(ORBIT_COUNT);
+ for(let i = 0; i < ORBIT_COUNT; i++){
+  orbitAngle[i] = Math.random() * Math.PI * 2;
+  orbitRadius[i] = 7 + Math.random() * 4;
+  orbitSpeed[i] = (0.15 + Math.random() * 0.3) * (Math.random() < 0.5 ? 1 : -1);
+  orbitYOff[i] = (Math.random() - 0.5) * 5;
+  const c = Math.random() < 0.5 ? C_ORANGE : C_AMBER;
+  orbitCol[i*3] = c.r; orbitCol[i*3+1] = c.g; orbitCol[i*3+2] = c.b;
+  orbitSize[i] = Math.random() * 3 + 1.5;
  }
-
- // Handle — solid tapered cylinder
- addPart(
-  new THREE.CylinderGeometry(0.5, 0.7, 14, 32),
-  new THREE.Vector3(0, -10, 0)
- );
-
- // Handle bottom — rounded end
- addPart(
-  new THREE.SphereGeometry(0.7, 20, 14),
-  new THREE.Vector3(0, -17, 0)
- );
-
- // Decorative ring on handle
- addPart(
-  new THREE.TorusGeometry(0.75, 0.1, 12, 32),
-  new THREE.Vector3(0, -4.5, 0),
-  new THREE.Euler(Math.PI/2, 0, 0)
- );
-
- // Neck — graceful flare from handle to head
- addPart(
-  new THREE.CylinderGeometry(1.6, 0.5, 3, 32),
-  new THREE.Vector3(0, -1.5, 0)
- );
-
- // Head — flat paddle base
- addPart(
-  new THREE.BoxGeometry(4.2, 1.5, 0.5, 3, 2, 1),
-  new THREE.Vector3(0, 0.5, 0)
- );
-
- // 4 tines — thick enough to be visible, realistic proportions
- const tineX = [-1.4, -0.47, 0.47, 1.4];
- tineX.forEach(x => {
-  // Tine body
-  addPart(
-   new THREE.CylinderGeometry(0.15, 0.25, 8, 16),
-   new THREE.Vector3(x, 5.3, 0)
-  );
-  // Pointed tip
-  addPart(
-   new THREE.ConeGeometry(0.15, 1.2, 12),
-   new THREE.Vector3(x, 9.9, 0)
-  );
+ orbitGeo.setAttribute('position', new THREE.BufferAttribute(orbitPos, 3));
+ orbitGeo.setAttribute('color', new THREE.BufferAttribute(orbitCol, 3));
+ orbitGeo.setAttribute('size', new THREE.BufferAttribute(orbitSize, 1));
+ const orbitMat = new THREE.ShaderMaterial({
+  vertexShader:`
+   attribute float size;
+   varying vec3 vColor;
+   void main(){
+    vColor = color;
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    gl_PointSize = size * (120.0 / -mv.z);
+    gl_Position = projectionMatrix * mv;
+   }`,
+  fragmentShader:`
+   varying vec3 vColor;
+   void main(){
+    float d = length(gl_PointCoord - vec2(0.5));
+    if(d > 0.5) discard;
+    float glow = 1.0 - smoothstep(0.0, 0.5, d);
+    float core = 1.0 - smoothstep(0.0, 0.15, d);
+    gl_FragColor = vec4(vColor * (core * 2.0 + glow * 0.5), glow * 0.9);
+   }`,
+  transparent: true, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false
  });
-
- // Position — right side, slightly tilted, large scale
- forkGroup.position.set(6, -2, -2);
- forkGroup.rotation.set(0.12, -0.2, 0.2);
- forkGroup.scale.setScalar(1.15);
- scene.add(forkGroup);
+ const orbitPoints = new THREE.Points(orbitGeo, orbitMat);
+ orbitPoints.position.copy(logoGroup.position);
+ scene.add(orbitPoints);
 
  // ====== SPARKLE PARTICLES ======
- const SPARK_COUNT = 500;
+ const SPARK_COUNT = 400;
  const sGeo = new THREE.BufferGeometry();
  const sPos = new Float32Array(SPARK_COUNT*3);
  const sCol = new Float32Array(SPARK_COUNT*3);
@@ -694,13 +583,13 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
  const sSpeed = new Float32Array(SPARK_COUNT);
  const sPhase = new Float32Array(SPARK_COUNT);
  for(let i=0;i<SPARK_COUNT;i++){
-  sPos[i*3]=(Math.random()-.5)*50;
-  sPos[i*3+1]=(Math.random()-.5)*50;
+  sPos[i*3]=(Math.random()-.5)*55;
+  sPos[i*3+1]=(Math.random()-.5)*45;
   sPos[i*3+2]=(Math.random()-.5)*30;
-  const c=Math.random()<.4?C_ORANGE:Math.random()<.6?C_AMBER:C_WHITE;
+  const c=Math.random()<.35?C_ORANGE:Math.random()<.5?C_AMBER:C_WHITE;
   sCol[i*3]=c.r; sCol[i*3+1]=c.g; sCol[i*3+2]=c.b;
-  sSize[i]=Math.random()*3+.8;
-  sSpeed[i]=Math.random()*2+.5;
+  sSize[i]=Math.random()*2.5+.6;
+  sSpeed[i]=Math.random()*1.5+.4;
   sPhase[i]=Math.random()*Math.PI*2;
  }
  sGeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));
@@ -716,7 +605,7 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
    uniform float uTime;
    void main(){
     vColor=color;
-    vAlpha=.3+.7*abs(sin(uTime*aSpeed+aPhase));
+    vAlpha=.25+.75*abs(sin(uTime*aSpeed+aPhase));
     vec4 mv=modelViewMatrix*vec4(position,1.0);
     gl_PointSize=size*(150.0/-mv.z)*vAlpha;
     gl_Position=projectionMatrix*mv;
@@ -727,8 +616,8 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
     float d=length(gl_PointCoord-vec2(.5));
     if(d>.5)discard;
     float glow=1.-smoothstep(0.,.5,d);
-    float core=1.-smoothstep(0.,.15,d);
-    gl_FragColor=vec4(vColor*(core*1.5+glow*.5),glow*vAlpha*.9);
+    float core=1.-smoothstep(0.,.12,d);
+    gl_FragColor=vec4(vColor*(core*1.5+glow*.4),glow*vAlpha*.85);
    }`,
   transparent:true, vertexColors:true, blending:THREE.AdditiveBlending, depthWrite:false,
   uniforms:{uTime:{value:0}}
@@ -736,33 +625,33 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
  const sparkles = new THREE.Points(sGeo, sMat);
  scene.add(sparkles);
 
- // ====== EMBERS ======
- const EMBER=40;
+ // ====== EMBERS — warm floating particles ======
+ const EMBER=30;
  const eGeo=new THREE.BufferGeometry();
  const ePos=new Float32Array(EMBER*3), eCol=new Float32Array(EMBER*3), eSize=new Float32Array(EMBER);
  for(let i=0;i<EMBER;i++){
-  ePos[i*3]=(Math.random()-.5)*20+4;
+  ePos[i*3]=(Math.random()-.5)*25+5;
   ePos[i*3+1]=(Math.random()-.5)*25;
   ePos[i*3+2]=(Math.random()-.5)*10;
   const c=Math.random()<.5?C_ORANGE:C_AMBER;
   eCol[i*3]=c.r;eCol[i*3+1]=c.g;eCol[i*3+2]=c.b;
-  eSize[i]=Math.random()*5+3;
+  eSize[i]=Math.random()*4+2;
  }
  eGeo.setAttribute('position',new THREE.BufferAttribute(ePos,3));
  eGeo.setAttribute('color',new THREE.BufferAttribute(eCol,3));
  eGeo.setAttribute('size',new THREE.BufferAttribute(eSize,1));
  const eMat=new THREE.ShaderMaterial({
   vertexShader:`attribute float size;varying vec3 vColor;void main(){vColor=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(150./-mv.z);gl_Position=projectionMatrix*mv;}`,
-  fragmentShader:`varying vec3 vColor;void main(){float d=length(gl_PointCoord-vec2(.5));if(d>.5)discard;float a=1.-smoothstep(0.,.5,d);gl_FragColor=vec4(vColor,a*.5);}`,
+  fragmentShader:`varying vec3 vColor;void main(){float d=length(gl_PointCoord-vec2(.5));if(d>.5)discard;float a=1.-smoothstep(0.,.5,d);gl_FragColor=vec4(vColor,a*.4);}`,
   transparent:true,vertexColors:true,blending:THREE.AdditiveBlending,depthWrite:false
  });
  scene.add(new THREE.Points(eGeo,eMat));
 
- // ====== RINGS ======
- const rMat=new THREE.MeshBasicMaterial({color:0xf97316,wireframe:true,transparent:true,opacity:.12});
- const r1=new THREE.Mesh(new THREE.TorusGeometry(14,.06,6,80),rMat);
- const r2=new THREE.Mesh(new THREE.TorusGeometry(18,.04,6,100),rMat.clone());
- r2.material.opacity=.08;r2.material.color=C_AMBER;
+ // ====== SUBTLE ORBITAL RINGS ======
+ const rMat=new THREE.MeshBasicMaterial({color:0xf97316,wireframe:true,transparent:true,opacity:.08});
+ const r1=new THREE.Mesh(new THREE.TorusGeometry(16,.04,6,90),rMat);
+ const r2=new THREE.Mesh(new THREE.TorusGeometry(20,.03,6,110),rMat.clone());
+ r2.material.opacity=.05;r2.material.color=C_AMBER;
  scene.add(r1,r2);
 
  // ====== ANIMATE ======
@@ -771,37 +660,56 @@ footer p{color:rgba(255,255,255,.25);font-size:.75rem}
   requestAnimationFrame(animate);
   const t=clock.getElapsedTime();
 
-  mouse.x+=(mouse.tx-mouse.x)*.04;
-  mouse.y+=(mouse.ty-mouse.y)*.04;
-  camera.position.x=mouse.x*3;
-  camera.position.y=mouse.y*-2;
+  // Smooth mouse follow
+  mouse.x+=(mouse.tx-mouse.x)*.035;
+  mouse.y+=(mouse.ty-mouse.y)*.035;
+  camera.position.x=mouse.x*2.5;
+  camera.position.y=mouse.y*-1.8;
   camera.lookAt(0,0,0);
 
-  // Fork rotation + bob
-  forkGroup.rotation.y=Math.sin(t*.2)*.4;
-  forkGroup.rotation.z=.2+Math.sin(t*.12)*.06;
-  forkGroup.position.y=-2+Math.sin(t*.3)*.6;
+  // Logo — slow continuous rotation + gentle float at y=6
+  const mouseInfluenceX = mouse.x * 0.3;
+  const mouseInfluenceY = mouse.y * -0.2;
+  logoGroup.rotation.y = t * 0.08 + mouseInfluenceX + forkRotOffset.y;
+  logoGroup.rotation.x = Math.sin(t*.1)*.05 + mouseInfluenceY + forkRotOffset.x;
+  logoGroup.position.y = 6 + Math.sin(t*.25)*.4;
 
-  // no glow mesh to pulse
+  // Glow ring pulses
+  glowRing.scale.setScalar(1 + Math.sin(t*1.5)*.04);
+  glowRingMat.opacity = 0.2 + Math.sin(t*2)*.08;
 
-  pointLight.position.x=Math.cos(t*.5)*6;
-  pointLight.position.z=Math.sin(t*.5)*6+5;
-  pointLight.position.y=3+Math.sin(t*.7)*2;
+  // Update orbiting particles
+  const op = orbitGeo.attributes.position.array;
+  for(let i = 0; i < ORBIT_COUNT; i++){
+   orbitAngle[i] += orbitSpeed[i] * 0.016;
+   op[i*3] = Math.cos(orbitAngle[i]) * orbitRadius[i];
+   op[i*3+1] = orbitYOff[i] + Math.sin(t*.5+i)*.3;
+   op[i*3+2] = Math.sin(orbitAngle[i]) * orbitRadius[i];
+  }
+  orbitGeo.attributes.position.needsUpdate = true;
+  orbitPoints.position.copy(logoGroup.position);
 
+  // Accent light orbits
+  accentLight.position.x=Math.cos(t*.4)*5+5;
+  accentLight.position.z=Math.sin(t*.4)*5+8;
+  accentLight.position.y=2+Math.sin(t*.6)*2;
+
+  // Sparkle time
   sMat.uniforms.uTime.value=t;
-  sparkles.rotation.y=t*.02;
-  sparkles.rotation.x=t*.008;
+  sparkles.rotation.y=t*.015;
+  sparkles.rotation.x=t*.006;
 
-  // Embers float
+  // Ember drift
   const ep=eGeo.attributes.position.array;
   for(let i=0;i<EMBER;i++){
-   ep[i*3+1]+=.01;ep[i*3]+=Math.sin(t+i)*.003;
-   if(ep[i*3+1]>15){ep[i*3+1]=-12;ep[i*3]=(Math.random()-.5)*20+4;}
+   ep[i*3+1]+=.008;ep[i*3]+=Math.sin(t+i)*.002;
+   if(ep[i*3+1]>14){ep[i*3+1]=-12;ep[i*3]=(Math.random()-.5)*25+5;}
   }
   eGeo.attributes.position.needsUpdate=true;
 
-  r1.rotation.x=t*.15;r1.rotation.z=t*.08;
-  r2.rotation.y=t*.12;r2.rotation.x=Math.PI/4+t*.05;
+  // Rings rotate
+  r1.rotation.x=t*.12;r1.rotation.z=t*.06;
+  r2.rotation.y=t*.1;r2.rotation.x=Math.PI/4+t*.04;
 
   renderer.render(scene,camera);
  }
@@ -828,7 +736,6 @@ const revealObserver = new IntersectionObserver((entries) => {
   }
  });
 }, {threshold:0.2});
-
 document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
 
 // ===== COUNT-UP ANIMATION =====
@@ -853,34 +760,13 @@ const countObserver = new IntersectionObserver((entries) => {
 }, {threshold:0.5});
 document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
 
-// ===== 3D CAROUSEL (pure CSS animation, no JS needed) =====
-
-// ===== EMAIL FORM =====
-// ===== HERO GLASS FORM =====
-document.getElementById('heroForm').addEventListener('submit', function(e){
- e.preventDefault();
- document.getElementById('heroFormWrap').style.display = 'none';
- document.getElementById('heroSuccess').classList.add('show');
-});
-
-// ===== BOTTOM EMAIL FORM =====
-document.getElementById('emailForm').addEventListener('submit', function(e){
- e.preventDefault();
- const btn = this.querySelector('button');
- const rect = btn.getBoundingClientRect();
- const ripple = document.createElement('div');
- ripple.classList.add('submit-ripple');
- ripple.style.width = ripple.style.height = '100px';
- ripple.style.left = (rect.width/2 - 50) + 'px';
- ripple.style.top = (rect.height/2 - 50) + 'px';
- btn.style.position = 'relative';
- btn.style.overflow = 'hidden';
- btn.appendChild(ripple);
- setTimeout(() => ripple.remove(), 800);
- btn.textContent = 'You\'re in! 🎉';
- btn.disabled = true;
- this.querySelector('input').value = '';
-});
+// ===== CHECK IF RETURNING FROM SIGNUP =====
+if(window.location.search.includes('signed-up=true')){
+ document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('heroFormWrap').style.display = 'none';
+  document.getElementById('heroSuccess').classList.add('show');
+ });
+}
 </script>
 </body>
 </html>

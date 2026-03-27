@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Logo 3D Test</title>
+<style>*{margin:0;padding:0}body{background:#111;overflow:hidden}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x111111);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 20);
+
+// Light
+scene.add(new THREE.AmbientLight(0xffffff, 1));
+
+// Load logo
+const loader = new THREE.TextureLoader();
+loader.load('forkfox-logo.png', function(tex) {
+ tex.encoding = THREE.sRGBEncoding;
+
+ const geo = new THREE.PlaneGeometry(10, 10);
+ const mat = new THREE.MeshBasicMaterial({
+  map: tex,
+  transparent: true,
+  side: THREE.DoubleSide
+ });
+ const mesh = new THREE.Mesh(geo, mat);
+ scene.add(mesh);
+
+ // Animate
+ function animate(){
+  requestAnimationFrame(animate);
+  mesh.rotation.y += 0.005;
+  renderer.render(scene, camera);
+ }
+ animate();
+}, undefined, function(err){
+ console.error('Texture load failed:', err);
+ // Fallback — show a colored box so we know the scene works
+ const box = new THREE.Mesh(
+  new THREE.BoxGeometry(4,4,4),
+  new THREE.MeshBasicMaterial({color:0xf97316})
+ );
+ scene.add(box);
+ function animate(){
+  requestAnimationFrame(animate);
+  box.rotation.y += 0.01;
+  box.rotation.x += 0.005;
+  renderer.render(scene, camera);
+ }
+ animate();
+});
+
+window.addEventListener('resize', () => {
+ camera.aspect = window.innerWidth/window.innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
