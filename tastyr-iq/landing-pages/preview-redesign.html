@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForkFox — Rate the Dish. Not the Restaurant.</title>
+<meta name="description" content="ForkFox is the first platform to rate individual dishes — not restaurants. Patent-pending AI scores every plate. Join the beta.">
+<meta property="og:title" content="ForkFox — AI Dish Intelligence">
+<meta property="og:description" content="Rate the dish. Not the restaurant. Patent-pending AI scores every plate across 9 cuisines.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://forkfox.ai">
+<meta property="og:image" content="https://forkfox.ai/forkfox-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ForkFox — AI Dish Intelligence">
+<meta name="twitter:description" content="Rate the dish. Not the restaurant. Patent-pending AI scores every plate.">
+<meta name="twitter:image" content="https://forkfox.ai/forkfox-logo.png">
+<link rel="icon" type="image/png" href="forkfox-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:#1a1a1f;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
+h1,h2,h3,h4,h5,h6{font-family:'Geologica',sans-serif;font-weight:800;line-height:1.1}
+
+/* ===== NAV ===== */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;transition:background .4s,box-shadow .4s}
+.site-nav.scrolled{background:rgba(26,26,31,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(255,255,255,.05)}
+.nav-brand{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.nav-brand img{width:28px;height:28px}
+.nav-brand span{font-family:'Geologica',sans-serif;font-size:1.1rem;font-weight:800;color:#fff}
+.nav-brand .fox{color:#ea580c}
+.nav-links{display:flex;align-items:center;gap:1.8rem}
+.nav-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .3s;letter-spacing:.01em}
+.nav-links a:hover{color:#fff}
+.nav-cta{padding:.5rem 1.2rem;border-radius:10px;background:linear-gradient(135deg,#f97316,#fb923c);color:#fff !important;font-weight:700;font-size:.78rem;font-family:'Geologica',sans-serif;transition:transform .2s,box-shadow .3s}
+.nav-cta:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(249,115,22,.3)}
+
+/* ===== HERO ===== */
+.hero{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:1;overflow:hidden;background:transparent !important}
+#three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;transition:opacity .6s ease}
+.hero-content{position:relative;z-index:2;text-align:center;margin-top:clamp(180px,28vh,320px)}
+
+/* V13-style stacked logo */
+.hero-brand{display:flex;flex-direction:column;align-items:center;gap:.6rem;margin-bottom:1.5rem;opacity:0;transform:translateY(40px);animation:brandReveal 1.2s cubic-bezier(.25,.46,.45,.94) .3s forwards}
+@keyframes brandReveal{to{opacity:1;transform:translateY(0)}}
+.hero-logo{width:clamp(72px,12vw,110px);height:clamp(72px,12vw,110px);filter:drop-shadow(0 8px 30px rgba(249,115,22,.3))}
+.hero-wordmark{font-family:'Geologica',sans-serif;font-size:clamp(2.8rem,7vw,4.5rem);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1}
+.hero-wordmark .fox{color:#ea580c}
+.hero-tagline-sub{font-family:'Inter',sans-serif;font-size:clamp(.7rem,1.5vw,.85rem);font-weight:500;color:rgba(255,255,255,.35);letter-spacing:.2em;text-transform:uppercase;margin-top:.3rem}
+
+.hero-tagline{font-size:clamp(1rem,2.5vw,1.4rem);color:rgba(255,255,255,0.6);opacity:0;animation:fadeUp 1s ease 1.2s forwards;letter-spacing:0.01em;transform:translateY(20px);font-weight:300}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease 2.2s forwards}
+.scroll-indicator span{font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.3)}
+.scroll-arrow{width:20px;height:20px;border-right:1.5px solid rgba(255,255,255,.3);border-bottom:1.5px solid rgba(255,255,255,.3);transform:rotate(45deg);animation:scrollBounce 2s infinite}
+@keyframes scrollBounce{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(5px,5px)}}
+
+/* ===== HERO WAITLIST — LIQUID GLASS ===== */
+.hero-waitlist{
+ position:relative;z-index:2;margin-top:2rem;
+ opacity:0;transform:translateY(30px);
+ animation:fadeUp 1s ease 1.6s forwards;
+}
+.glass-card{
+ position:relative;
+ max-width:460px;margin:0 auto;
+ padding:1.8rem 2.2rem;
+ border-radius:24px;
+ background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+ backdrop-filter:blur(20px) saturate(1.4);
+ -webkit-backdrop-filter:blur(20px) saturate(1.4);
+ border:1px solid rgba(255,255,255,.08);
+ overflow:hidden;
+}
+.glass-card::before{
+ content:'';position:absolute;inset:-2px;
+ border-radius:26px;
+ background:conic-gradient(
+  from var(--shimmer-angle, 0deg),
+  transparent 0%,
+  rgba(249,115,22,.2) 10%,
+  rgba(251,191,36,.12) 20%,
+  transparent 30%,
+  transparent 70%,
+  rgba(255,255,255,.08) 80%,
+  rgba(249,115,22,.15) 90%,
+  transparent 100%
+ );
+ animation:shimmerSpin 4s linear infinite;
+ z-index:-1;
+ mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+ mask-composite:exclude;
+ -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+ -webkit-mask-composite:xor;
+ padding:1.5px;
+}
+@property --shimmer-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes shimmerSpin{to{--shimmer-angle:360deg}}
+.glass-card::after{
+ content:'';position:absolute;
+ top:0;left:0;right:0;height:50%;
+ border-radius:24px 24px 0 0;
+ background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+ pointer-events:none;
+}
+.glass-card h3{
+ font-size:1rem;font-weight:700;margin-bottom:.25rem;
+ font-family:'Geologica',sans-serif;
+ background:linear-gradient(90deg,#fff,rgba(255,255,255,.7));
+ -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.glass-card .glass-sub{font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:1rem}
+.glass-form{display:flex;gap:.5rem;position:relative;z-index:1}
+.glass-form input{
+ flex:1;padding:.8rem 1.1rem;border-radius:12px;
+ border:1px solid rgba(255,255,255,.08);
+ background:rgba(255,255,255,.04);backdrop-filter:blur(8px);
+ color:#fff;font-size:.88rem;font-family:inherit;outline:none;
+ transition:border .3s,background .3s;
+}
+.glass-form input:focus{border-color:rgba(249,115,22,.4);background:rgba(255,255,255,.07)}
+.glass-form input::placeholder{color:rgba(255,255,255,.2)}
+.glass-btn{
+ position:relative;padding:.8rem 1.4rem;border-radius:12px;border:none;
+ background:linear-gradient(135deg,#f97316,#fb923c);
+ color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;
+ font-family:'Geologica',sans-serif;overflow:hidden;
+ transition:transform .2s,box-shadow .3s;
+}
+.glass-btn:hover{transform:scale(1.04);box-shadow:0 0 30px rgba(249,115,22,.3),0 0 60px rgba(249,115,22,.12)}
+.glass-btn::before{
+ content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+ animation:liquidSweep 3s ease-in-out infinite;
+}
+@keyframes liquidSweep{0%{left:-100%}50%{left:100%}100%{left:100%}}
+.glass-proof{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:.8rem;position:relative;z-index:1;flex-wrap:wrap}
+.proof-dot{display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:rgba(255,255,255,.3)}
+.proof-dot::before{content:'';width:4px;height:4px;border-radius:50%;background:#f97316;box-shadow:0 0 6px rgba(249,115,22,.4);animation:dotPulse 2s ease-in-out infinite}
+.proof-dot:nth-child(2)::before{animation-delay:.4s}
+.proof-dot:nth-child(3)::before{animation-delay:.8s}
+@keyframes dotPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+.glass-success{display:none;text-align:center;padding:1rem;position:relative;z-index:1}
+.glass-success.show{display:block}
+.glass-success .check-circle{width:52px;height:52px;margin:0 auto .6rem;border-radius:50%;background:linear-gradient(135deg,#f97316,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:1.4rem;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.glass-success h4{font-size:1rem;font-weight:700;margin-bottom:.2rem;font-family:'Geologica',sans-serif}
+.glass-success p{font-size:.8rem;color:rgba(255,255,255,.35)}
+
+/* ===== SECTIONS ===== */
+section{position:relative;z-index:3;background:#1a1a1f}
+.section-inner{max-width:1200px;margin:0 auto;padding:120px 24px}
+
+/* Problem */
+.problem{background:linear-gradient(180deg,transparent,#1a1a1f 5%)}
+.problem .section-inner{max-width:800px}
+.problem-heading{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:4rem;max-width:700px}
+.problem-heading span{background:linear-gradient(135deg,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pain-point{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:2.5rem;opacity:0;transform:translateX(-60px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.pain-point.visible{opacity:1;transform:translateX(0)}
+.pain-line{width:3px;min-height:60px;background:linear-gradient(180deg,#ef4444,transparent);border-radius:2px;flex-shrink:0;margin-top:.3rem}
+.pain-text h3{font-size:1.2rem;font-weight:700;margin-bottom:.3rem}
+.pain-text p{color:rgba(255,255,255,.45);font-size:.9rem;line-height:1.7}
+
+/* How It Works */
+.how-it-works{background:#1a1a1f}
+.how-it-works h2{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;position:relative}
+.steps::before{content:'';position:absolute;top:36px;left:15%;right:15%;height:2px;background:linear-gradient(90deg,transparent,rgba(249,115,22,.2),rgba(249,115,22,.2),transparent);z-index:0}
+.step{text-align:center;position:relative;z-index:1;opacity:0;transform:translateY(30px);transition:all .8s ease}
+.step.visible{opacity:1;transform:translateY(0)}
+.step-num{width:72px;height:72px;border-radius:50%;background:rgba(249,115,22,.08);border:2px solid rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:1.6rem}
+.step h3{font-size:1.1rem;margin-bottom:.5rem}
+.step p{color:rgba(255,255,255,.45);font-size:.88rem;line-height:1.6;max-width:280px;margin:0 auto}
+
+/* Founders */
+.founders{background:#1a1a1f}
+.founders h2{text-align:center;font-size:clamp(1.1rem,2.5vw,1.4rem);color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.2em;margin-bottom:3rem}
+.founder-grid{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
+.founder-card{text-align:center;max-width:280px}
+.founder-avatar{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(251,191,36,.08));border:2px solid rgba(249,115,22,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;color:rgba(249,115,22,.6)}
+.founder-card h3{font-size:1.1rem;margin-bottom:.2rem}
+.founder-card .founder-role{font-size:.82rem;color:#f97316;margin-bottom:.5rem;font-weight:500}
+.founder-card p{color:rgba(255,255,255,.4);font-size:.85rem;line-height:1.6}
+
+/* App Showcase */
+.app-showcase{background:#f8f7f4;color:#111;overflow:hidden;position:relative;z-index:3}
+.app-showcase .section-inner{display:flex;align-items:center;gap:clamp(2rem,5vw,5rem);flex-wrap:wrap}
+.showcase-text{flex:1;min-width:300px;max-width:520px}
+.showcase-text h2{font-size:clamp(2rem,4.5vw,3rem);margin-bottom:1rem;color:#111}
+.showcase-text h2 span{background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.showcase-text>p{font-size:1rem;color:#555;line-height:1.7;margin-bottom:2rem}
+.showcase-bullets{list-style:none;padding:0;margin:0}
+.showcase-bullets li{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1rem;font-size:.92rem;color:#333;line-height:1.5}
+.showcase-bullets li::before{content:'';flex-shrink:0;width:7px;height:7px;margin-top:7px;border-radius:50%;background:linear-gradient(135deg,#f97316,#fbbf24)}
+.showcase-phones{flex:1;min-width:320px;display:flex;justify-content:center;align-items:center;position:relative;height:720px}
+
+/* Overlap Slide layout */
+.phone-mockup{position:absolute;filter:drop-shadow(0 30px 60px rgba(0,0,0,.18));transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.phone-mockup img{width:100%;height:100%;object-fit:contain}
+.phone-mockup:nth-child(1){z-index:2;width:340px;left:50%;margin-left:-310px;top:20px;animation:slideL 6s ease-in-out infinite}
+.phone-mockup:nth-child(2){z-index:3;width:380px;left:50%;margin-left:-190px;top:0;animation:slideC 5s ease-in-out infinite}
+.phone-mockup:nth-child(3){z-index:1;width:340px;left:50%;margin-left:-60px;top:35px;opacity:.88;animation:slideR 6s ease-in-out infinite}
+@keyframes slideL{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,-12px)}}
+@keyframes slideC{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes slideR{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-10px)}}
+
+@media(max-width:900px){
+ .app-showcase .section-inner{flex-direction:column}
+ .showcase-phones{height:500px;width:100%;min-width:unset}
+ .showcase-text{max-width:100%}
+ .phone-mockup:nth-child(1){width:220px;margin-left:-200px}
+ .phone-mockup:nth-child(2){width:250px;margin-left:-125px}
+ .phone-mockup:nth-child(3){width:220px;margin-left:-40px}
+}
+@media(max-width:600px){
+ .hero-content{margin-top:clamp(120px,22vh,180px)}
+ .showcase-phones{
+  height:auto;position:relative;
+  display:flex;justify-content:center;align-items:flex-start;
+  padding:1.5rem 0;min-width:unset;
+ }
+ .phone-mockup{
+  position:relative !important;top:auto !important;left:auto !important;
+  margin-left:0 !important;animation:none !important;
+ }
+ .phone-mockup:nth-child(1){width:32vw;z-index:2;transform:translateX(10px) translateY(12px)}
+ .phone-mockup:nth-child(2){width:37vw;z-index:3;transform:translateY(0);margin:0 -12px !important}
+ .phone-mockup:nth-child(3){width:32vw;z-index:1;transform:translateX(-10px) translateY(16px);opacity:.88}
+ .showcase-text{min-width:unset}
+}
+@media(max-width:400px){
+ .hero-content{margin-top:clamp(100px,18vh,140px)}
+ .phone-mockup:nth-child(1){width:30vw;transform:translateX(6px) translateY(10px)}
+ .phone-mockup:nth-child(2){width:35vw;margin:0 -10px !important}
+ .phone-mockup:nth-child(3){width:30vw;transform:translateX(-6px) translateY(14px)}
+}
+
+/* Traction */
+.traction{background:linear-gradient(180deg,#1a1a1f,#1f1810,#1a1a1f)}
+.traction h2{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem}
+.metric{text-align:center;padding:2rem 1rem;border-radius:16px;background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.08)}
+.metric-number{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;font-family:'Geologica',sans-serif}
+.metric-label{color:rgba(255,255,255,.45);font-size:.82rem;margin-top:.5rem;text-transform:uppercase;letter-spacing:.1em}
+
+/* Cities */
+.cities{text-align:center}
+.cities h2{font-size:clamp(1.1rem,2.5vw,1.4rem);color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.2em;margin-bottom:3rem}
+.city-list{display:flex;flex-direction:column;gap:1.5rem;align-items:center}
+.city-item{display:flex;align-items:baseline;gap:1rem;opacity:0;transform:translateY(30px);transition:all .8s ease}
+.city-item.visible{opacity:1;transform:translateY(0)}
+.city-name{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;-webkit-text-stroke:2px #f97316;color:transparent;transition:all .6s ease;font-family:'Geologica',sans-serif}
+.city-name.filled{color:#f97316;-webkit-text-stroke:0}
+.city-date{font-size:.85rem;color:rgba(255,255,255,.3);white-space:nowrap}
+
+/* Email Capture */
+.email-capture{text-align:center}
+.email-inner{
+ position:relative;border-radius:28px;
+ padding:clamp(3rem,6vw,5rem);overflow:hidden;
+ background:linear-gradient(135deg,#f97316,#e2630d 40%,#c2410c 100%);
+}
+.email-inner::before{
+ content:'';position:absolute;inset:3px;border-radius:25px;
+ background:#1a1a1f;z-index:0;
+}
+.email-inner::after{
+ content:'';position:absolute;inset:3px;border-radius:25px;
+ background:
+  radial-gradient(ellipse at 20% 30%,rgba(249,115,22,.12),transparent 55%),
+  radial-gradient(ellipse at 80% 70%,rgba(251,191,36,.08),transparent 50%);
+ z-index:0;pointer-events:none;
+}
+.email-inner>*{position:relative;z-index:1}
+.email-inner h2{font-size:clamp(2rem,5vw,3.2rem);color:#fff;margin-bottom:.6rem;font-family:'Geologica',sans-serif}
+.email-inner h2 em{font-style:normal;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.email-inner p{color:rgba(255,255,255,.45);margin-bottom:2rem;font-size:1rem}
+.email-form{display:flex;gap:.75rem;max-width:480px;margin:0 auto;position:relative;z-index:1}
+.email-form input{
+ flex:1;padding:1rem 1.4rem;border-radius:14px;
+ border:1px solid rgba(255,255,255,.1);
+ font-size:.95rem;background:rgba(255,255,255,.05);
+ backdrop-filter:blur(8px);
+ color:#fff;outline:none;font-family:'Inter',sans-serif;
+ transition:border .3s,background .3s;
+}
+.email-form input:focus{border-color:rgba(249,115,22,.5);background:rgba(255,255,255,.08)}
+.email-form input::placeholder{color:rgba(255,255,255,.25)}
+.email-form button{
+ padding:1rem 2rem;border-radius:14px;border:none;
+ background:linear-gradient(135deg,#f97316,#fb923c);
+ color:#fff;font-weight:700;font-size:.92rem;cursor:pointer;white-space:nowrap;
+ font-family:'Geologica',sans-serif;
+ box-shadow:0 4px 20px rgba(249,115,22,.25);
+ transition:transform .2s,box-shadow .3s;
+}
+.email-form button:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 35px rgba(249,115,22,.4)}
+.submit-ripple{position:absolute;border-radius:50%;background:rgba(34,197,94,.4);transform:scale(0);animation:ripple .8s ease-out forwards;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+
+/* Footer */
+footer{text-align:center;padding:3rem 24px;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:3;background:#1a1a1f}
+.footer-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:.8rem}
+.footer-brand img{width:32px;height:32px}
+.footer-brand span{font-family:'Geologica',sans-serif;font-size:1.3rem;font-weight:800}
+.footer-brand .fox{color:#ea580c}
+.footer-links{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem}
+.footer-links a{color:rgba(255,255,255,.35);text-decoration:none;font-size:.82rem;transition:color .3s}
+.footer-links a:hover{color:#f97316}
+footer p{color:rgba(255,255,255,.2);font-size:.72rem}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+ .section-inner{padding:80px 20px}
+ .email-form{flex-direction:column}
+ .email-form button{width:100%}
+ .metrics{grid-template-columns:repeat(2,1fr)}
+ .features-grid{grid-template-columns:1fr}
+ .city-item{flex-direction:column;align-items:center;gap:.3rem}
+ .glass-form{flex-direction:column}
+ .glass-btn{width:100%;text-align:center}
+ .showcase-text{min-width:unset}
+ .steps{grid-template-columns:1fr;max-width:320px;margin:0 auto}
+ .steps::before{display:none}
+ .nav-links a:not(.nav-cta){display:none}
+ .founder-grid{gap:2rem}
+}
+@media(max-width:480px){
+ .metrics{grid-template-columns:1fr}
+ .glass-card{padding:1.4rem 1.2rem}
+ .city-name{-webkit-text-stroke-width:1px}
+ .email-inner{padding:clamp(2rem,5vw,3rem)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="siteNav">
+ <a href="#" class="nav-brand">
+  <img src="forkfox-logo.png" alt="ForkFox">
+  <span>Fork<span class="fox">Fox</span></span>
+ </a>
+ <div class="nav-links">
+  <a href="#problem">Why ForkFox</a>
+  <a href="#how-it-works">How It Works</a>
+  <a href="#app-showcase">The App</a>
+  <a href="#traction">Traction</a>
+  <a href="#email-capture" class="nav-cta">Join Beta</a>
+ </div>
+</nav>
+
+<!-- Three.js Canvas -->
+<canvas id="three-canvas"></canvas>
+
+<!-- HERO -->
+<section class="hero">
+ <div class="hero-content">
+  <div class="hero-brand">
+   <div class="hero-wordmark">Fork<span class="fox">Fox</span></div>
+   <div class="hero-tagline-sub">Your Taste. Your Scores. In Real Time.</div>
+  </div>
+  <p class="hero-tagline">Rate the dish. Not the restaurant.</p>
+ </div>
+
+ <!-- LIQUID GLASS WAITLIST -->
+ <div class="hero-waitlist">
+  <div class="glass-card">
+   <div id="heroFormWrap">
+    <h3>Get early access</h3>
+    <p class="glass-sub">First 1,000 users get lifetime premium free.</p>
+    <form class="glass-form" id="heroForm" action="https://formsubmit.co/alimabsoute@gmail.com" method="POST">
+     <input type="hidden" name="_subject" value="ForkFox Beta Signup (Hero)">
+     <input type="hidden" name="_captcha" value="false">
+     <input type="hidden" name="_next" value="https://forkfox.ai?signed-up=true">
+     <input type="email" name="email" placeholder="your@email.com" required>
+     <button type="submit" class="glass-btn">Join Beta</button>
+    </form>
+    <div class="glass-proof">
+     <span class="proof-dot">App Store approved</span>
+     <span class="proof-dot">TestFlight beta live</span>
+     <span class="proof-dot">2,490+ dishes scored</span>
+    </div>
+   </div>
+   <div class="glass-success" id="heroSuccess">
+    <div class="check-circle">&#10003;</div>
+    <h4>You're on the list.</h4>
+    <p>We'll let you know the moment ForkFox launches near you.</p>
+   </div>
+  </div>
+ </div>
+
+ <div class="scroll-indicator">
+  <span>Scroll</span>
+  <div class="scroll-arrow"></div>
+ </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+ <div class="section-inner">
+  <h2 class="problem-heading">Restaurant ratings are <span>broken.</span></h2>
+  <div class="pain-point" data-reveal>
+   <div class="pain-line"></div>
+   <div class="pain-text">
+    <h3>A 4.5-star restaurant can serve a 2-star dish.</h3>
+    <p>Restaurant ratings are averages of averages. The sushi might be incredible but the pasta is terrible. A single star rating can't tell you what to actually order.</p>
+   </div>
+  </div>
+  <div class="pain-point" data-reveal>
+   <div class="pain-line"></div>
+   <div class="pain-text">
+    <h3>You've ordered the wrong thing. Everyone has.</h3>
+    <p>You pick a great restaurant, sit down, and choose the wrong dish off a 40-item menu. You leave disappointed — not because the restaurant was bad, but because nobody told you what was actually good there.</p>
+   </div>
+  </div>
+  <div class="pain-point" data-reveal>
+   <div class="pain-line"></div>
+   <div class="pain-text">
+    <h3>Yelp reviews are everyone else's opinion.</h3>
+    <p>You like extra spice. You hate cilantro. You care about portion size. But aggregate ratings don't know that. Every review you read is someone else's taste — not yours.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- APP SHOWCASE -->
+<section class="app-showcase" id="app-showcase">
+ <div class="section-inner">
+  <div class="showcase-text">
+   <h2>Scores that know <span>your taste.</span></h2>
+   <p>ForkFox doesn't give you the crowd's opinion. It builds a taste profile unique to you — then scores every dish based on what <em>you</em> actually like.</p>
+   <ul class="showcase-bullets">
+    <li>Tell us what matters — spice level, portion size, price, presentation — and every score adapts to you</li>
+    <li>Browse top-rated dishes near you, ranked for your palate in real time</li>
+    <li>See exactly what to order before you sit down — no more menu guessing</li>
+    <li>Discover hidden gems other apps miss — scored by dish, not by restaurant</li>
+    <li>9 cuisine verticals and 2,490+ dishes already indexed across Philadelphia</li>
+   </ul>
+  </div>
+  <div class="showcase-phones">
+    <div class="phone-mockup"><img src="mockup-browse.png" alt="ForkFox Rankings" loading="lazy"></div>
+    <div class="phone-mockup"><img src="mockup-detail.png" alt="ForkFox Dish Detail" loading="lazy"></div>
+    <div class="phone-mockup"><img src="mockup-score.png" alt="ForkFox Sushi Profile" loading="lazy"></div>
+  </div>
+ </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how-it-works">
+ <div class="section-inner">
+  <h2>How it works.</h2>
+  <div class="steps">
+   <div class="step" data-reveal>
+    <div class="step-num">&#127860;</div>
+    <h3>Set your taste</h3>
+    <p>Tell ForkFox what you care about — flavor profiles, spice tolerance, dietary needs, portion size, price range. Takes 30 seconds.</p>
+   </div>
+   <div class="step" data-reveal>
+    <div class="step-num">&#128270;</div>
+    <h3>Browse dishes</h3>
+    <p>See every dish near you scored 0-100 based on your personal preferences. Not the crowd — just you.</p>
+   </div>
+   <div class="step" data-reveal>
+    <div class="step-num">&#127775;</div>
+    <h3>Order with confidence</h3>
+    <p>Walk into any restaurant knowing exactly what to get. No more menu anxiety. No more wasted meals.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- TRACTION -->
+<section class="traction" id="traction">
+ <div class="section-inner">
+  <h2>Built and live.</h2>
+  <div class="metrics">
+   <div class="metric" data-reveal>
+    <div class="metric-number" data-count="2490">0</div>
+    <div class="metric-label">Dishes Scored</div>
+   </div>
+   <div class="metric" data-reveal>
+    <div class="metric-number" data-count="9">0</div>
+    <div class="metric-label">Cuisine Verticals</div>
+   </div>
+   <div class="metric" data-reveal>
+    <div class="metric-number" data-count="4">0</div>
+    <div class="metric-label">Cities in Pipeline</div>
+   </div>
+   <div class="metric" data-reveal>
+    <div class="metric-number">&#10003;</div>
+    <div class="metric-label">Patent Pending</div>
+   </div>
+   <div class="metric" data-reveal>
+    <div class="metric-number">&#10003;</div>
+    <div class="metric-label">App Store Live</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- CITIES -->
+<section class="cities">
+ <div class="section-inner">
+  <h2>Launching in</h2>
+  <div class="city-list">
+   <div class="city-item" data-reveal><span class="city-name" data-fill>PHILADELPHIA</span><span class="city-date">Q2 2026</span></div>
+   <div class="city-item" data-reveal><span class="city-name" data-fill>NEW YORK</span><span class="city-date">2027</span></div>
+   <div class="city-item" data-reveal><span class="city-name" data-fill>CHICAGO</span><span class="city-date">2027</span></div>
+   <div class="city-item" data-reveal><span class="city-name" data-fill>MIAMI</span><span class="city-date">2028</span></div>
+  </div>
+ </div>
+</section>
+
+<!-- FOUNDERS -->
+<section class="founders">
+ <div class="section-inner">
+  <h2>Who's building this</h2>
+  <div class="founder-grid">
+   <div class="founder-card">
+    <div class="founder-avatar">N</div>
+    <h3>Nik Amin</h3>
+    <div class="founder-role">CEO &middot; Bay Area</div>
+    <p>Product and engineering lead. Building the AI scoring engine and platform infrastructure.</p>
+   </div>
+   <div class="founder-card">
+    <div class="founder-avatar">A</div>
+    <h3>Ali Mabsoute</h3>
+    <div class="founder-role">CMO &middot; Philadelphia</div>
+    <p>Growth, brand, and go-to-market strategy. Turning dish intelligence into a consumer movement.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- EMAIL CAPTURE -->
+<section class="email-capture" id="email-capture">
+ <div class="section-inner">
+  <div class="email-inner">
+   <h2>Be the first to <em>taste it.</em></h2>
+   <p>First 1,000 beta users get lifetime premium access. Launching in Philly Q2 2026.</p>
+   <form class="email-form" id="emailForm" action="https://formsubmit.co/alimabsoute@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="ForkFox Beta Signup (Footer)">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://forkfox.ai?signed-up=true">
+    <input type="email" name="email" placeholder="Enter your email" required>
+    <button type="submit">Get Early Access</button>
+   </form>
+  </div>
+ </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+ <div class="footer-brand">
+  <img src="forkfox-logo.png" alt="ForkFox">
+  <span>Fork<span class="fox">Fox</span></span>
+ </div>
+ <div class="footer-links">
+  <a href="mailto:ali@forkfox.ai">Contact</a>
+ </div>
+ <p>&copy; 2026 ForkFox, Inc. All rights reserved.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ===== THREE.JS SCENE — REALISTIC FORK + PARTICLES =====
+(function(){
+ const canvas = document.getElementById('three-canvas');
+ let renderer;
+ try {
+  renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
+ } catch(e) { console.error('WebGL init failed:', e); return; }
+
+ renderer.setSize(window.innerWidth, window.innerHeight);
+ const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+ renderer.setClearColor(0x141418, 1);
+ renderer.toneMapping = THREE.ACESFilmicToneMapping;
+ renderer.toneMappingExposure = 1.2;
+
+ const scene = new THREE.Scene();
+ const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+ camera.position.set(0, 0, 32);
+ camera.lookAt(0, 0, 0);
+
+ // Mouse tracking — fork follows cursor
+ const mouse = {x:0, y:0, tx:0, ty:0};
+ let isDragging = false;
+ let dragStart = {x:0, y:0};
+ let forkRotOffset = {x:0, y:0};
+
+ document.addEventListener('mousemove', e => {
+  mouse.tx = (e.clientX/window.innerWidth - 0.5) * 2;
+  mouse.ty = (e.clientY/window.innerHeight - 0.5) * 2;
+ });
+
+ // Click + drag for direct fork control
+ canvas.addEventListener('mousedown', e => {
+  isDragging = true;
+  dragStart.x = e.clientX;
+  dragStart.y = e.clientY;
+  canvas.style.cursor = 'grabbing';
+ });
+ document.addEventListener('mouseup', () => {
+  isDragging = false;
+  canvas.style.cursor = 'grab';
+ });
+ document.addEventListener('mousemove', e => {
+  if(!isDragging) return;
+  const dx = (e.clientX - dragStart.x) * 0.008;
+  const dy = (e.clientY - dragStart.y) * 0.008;
+  forkRotOffset.y = dx;
+  forkRotOffset.x = dy;
+ });
+ canvas.style.cursor = 'grab';
+
+ // Colors
+ const C_ORANGE = new THREE.Color(0xf97316);
+ const C_AMBER  = new THREE.Color(0xfbbf24);
+ const C_WHITE  = new THREE.Color(0xffffff);
+
+ // ====== LIGHTING ======
+ scene.add(new THREE.AmbientLight(0xd0d4de, 0.5));
+ const keyLight = new THREE.DirectionalLight(0xfff8f0, 1.5);
+ keyLight.position.set(5, 10, 12);
+ scene.add(keyLight);
+ const accentLight = new THREE.PointLight(0xf97316, 1.2, 60);
+ accentLight.position.set(3, 2, 10);
+ scene.add(accentLight);
+
+ // ====== FLOATING 3D LOGO ======
+ const logoGroup = new THREE.Group();
+ const textureLoader = new THREE.TextureLoader();
+
+ // Load logo as texture
+ const logoTex = textureLoader.load('forkfox-logo.png', function(tex){
+  tex.encoding = THREE.sRGBEncoding;
+ });
+
+ // Front face — logo on a plane, full color, no lighting dependency
+ const logoGeo = new THREE.PlaneGeometry(12, 12);
+ const logoMat = new THREE.MeshBasicMaterial({
+  map: logoTex,
+  transparent: true,
+  alphaTest: 0.05,
+  side: THREE.DoubleSide
+ });
+ const logoFront = new THREE.Mesh(logoGeo, logoMat);
+ logoGroup.add(logoFront);
+
+ // Subtle glow ring — very thin, soft
+ const glowRingGeo = new THREE.TorusGeometry(6.3, 0.03, 8, 64);
+ const glowRingMat = new THREE.MeshBasicMaterial({
+  color: 0xf97316, transparent: true, opacity: 0.15
+ });
+ const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
+ glowRing.position.z = -0.15;
+ logoGroup.add(glowRing);
+
+ // Position logo — centered above the text
+ logoGroup.position.set(0, 6, -5);
+ logoGroup.scale.setScalar(0.85);
+ scene.add(logoGroup);
+
+ // ====== ORBITING PARTICLES around the logo ======
+ const ORBIT_COUNT = isMobile ? 30 : 80;
+ const orbitGeo = new THREE.BufferGeometry();
+ const orbitPos = new Float32Array(ORBIT_COUNT * 3);
+ const orbitCol = new Float32Array(ORBIT_COUNT * 3);
+ const orbitSize = new Float32Array(ORBIT_COUNT);
+ const orbitAngle = new Float32Array(ORBIT_COUNT);
+ const orbitRadius = new Float32Array(ORBIT_COUNT);
+ const orbitSpeed = new Float32Array(ORBIT_COUNT);
+ const orbitYOff = new Float32Array(ORBIT_COUNT);
+ for(let i = 0; i < ORBIT_COUNT; i++){
+  orbitAngle[i] = Math.random() * Math.PI * 2;
+  orbitRadius[i] = 7 + Math.random() * 4;
+  orbitSpeed[i] = (0.15 + Math.random() * 0.3) * (Math.random() < 0.5 ? 1 : -1);
+  orbitYOff[i] = (Math.random() - 0.5) * 5;
+  const c = Math.random() < 0.5 ? C_ORANGE : C_AMBER;
+  orbitCol[i*3] = c.r; orbitCol[i*3+1] = c.g; orbitCol[i*3+2] = c.b;
+  orbitSize[i] = Math.random() * 3 + 1.5;
+ }
+ orbitGeo.setAttribute('position', new THREE.BufferAttribute(orbitPos, 3));
+ orbitGeo.setAttribute('color', new THREE.BufferAttribute(orbitCol, 3));
+ orbitGeo.setAttribute('size', new THREE.BufferAttribute(orbitSize, 1));
+ const orbitMat = new THREE.ShaderMaterial({
+  vertexShader:`
+   attribute float size;
+   varying vec3 vColor;
+   void main(){
+    vColor = color;
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    gl_PointSize = size * (120.0 / -mv.z);
+    gl_Position = projectionMatrix * mv;
+   }`,
+  fragmentShader:`
+   varying vec3 vColor;
+   void main(){
+    float d = length(gl_PointCoord - vec2(0.5));
+    if(d > 0.5) discard;
+    float glow = 1.0 - smoothstep(0.0, 0.5, d);
+    float core = 1.0 - smoothstep(0.0, 0.15, d);
+    gl_FragColor = vec4(vColor * (core * 2.0 + glow * 0.5), glow * 0.9);
+   }`,
+  transparent: true, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false
+ });
+ const orbitPoints = new THREE.Points(orbitGeo, orbitMat);
+ orbitPoints.position.copy(logoGroup.position);
+ scene.add(orbitPoints);
+
+ // ====== SPARKLE PARTICLES ======
+ const SPARK_COUNT = isMobile ? 120 : 400;
+ const sGeo = new THREE.BufferGeometry();
+ const sPos = new Float32Array(SPARK_COUNT*3);
+ const sCol = new Float32Array(SPARK_COUNT*3);
+ const sSize = new Float32Array(SPARK_COUNT);
+ const sSpeed = new Float32Array(SPARK_COUNT);
+ const sPhase = new Float32Array(SPARK_COUNT);
+ for(let i=0;i<SPARK_COUNT;i++){
+  sPos[i*3]=(Math.random()-.5)*55;
+  sPos[i*3+1]=(Math.random()-.5)*45;
+  sPos[i*3+2]=(Math.random()-.5)*30;
+  const c=Math.random()<.35?C_ORANGE:Math.random()<.5?C_AMBER:C_WHITE;
+  sCol[i*3]=c.r; sCol[i*3+1]=c.g; sCol[i*3+2]=c.b;
+  sSize[i]=Math.random()*2.5+.6;
+  sSpeed[i]=Math.random()*1.5+.4;
+  sPhase[i]=Math.random()*Math.PI*2;
+ }
+ sGeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));
+ sGeo.setAttribute('color',new THREE.BufferAttribute(sCol,3));
+ sGeo.setAttribute('size',new THREE.BufferAttribute(sSize,1));
+ sGeo.setAttribute('aSpeed',new THREE.BufferAttribute(sSpeed,1));
+ sGeo.setAttribute('aPhase',new THREE.BufferAttribute(sPhase,1));
+
+ const sMat = new THREE.ShaderMaterial({
+  vertexShader:`
+   attribute float size; attribute float aSpeed; attribute float aPhase;
+   varying vec3 vColor; varying float vAlpha;
+   uniform float uTime;
+   void main(){
+    vColor=color;
+    vAlpha=.25+.75*abs(sin(uTime*aSpeed+aPhase));
+    vec4 mv=modelViewMatrix*vec4(position,1.0);
+    gl_PointSize=size*(150.0/-mv.z)*vAlpha;
+    gl_Position=projectionMatrix*mv;
+   }`,
+  fragmentShader:`
+   varying vec3 vColor; varying float vAlpha;
+   void main(){
+    float d=length(gl_PointCoord-vec2(.5));
+    if(d>.5)discard;
+    float glow=1.-smoothstep(0.,.5,d);
+    float core=1.-smoothstep(0.,.12,d);
+    gl_FragColor=vec4(vColor*(core*1.5+glow*.4),glow*vAlpha*.85);
+   }`,
+  transparent:true, vertexColors:true, blending:THREE.AdditiveBlending, depthWrite:false,
+  uniforms:{uTime:{value:0}}
+ });
+ const sparkles = new THREE.Points(sGeo, sMat);
+ scene.add(sparkles);
+
+ // ====== EMBERS — warm floating particles ======
+ const EMBER=isMobile?10:30;
+ const eGeo=new THREE.BufferGeometry();
+ const ePos=new Float32Array(EMBER*3), eCol=new Float32Array(EMBER*3), eSize=new Float32Array(EMBER);
+ for(let i=0;i<EMBER;i++){
+  ePos[i*3]=(Math.random()-.5)*25+5;
+  ePos[i*3+1]=(Math.random()-.5)*25;
+  ePos[i*3+2]=(Math.random()-.5)*10;
+  const c=Math.random()<.5?C_ORANGE:C_AMBER;
+  eCol[i*3]=c.r;eCol[i*3+1]=c.g;eCol[i*3+2]=c.b;
+  eSize[i]=Math.random()*4+2;
+ }
+ eGeo.setAttribute('position',new THREE.BufferAttribute(ePos,3));
+ eGeo.setAttribute('color',new THREE.BufferAttribute(eCol,3));
+ eGeo.setAttribute('size',new THREE.BufferAttribute(eSize,1));
+ const eMat=new THREE.ShaderMaterial({
+  vertexShader:`attribute float size;varying vec3 vColor;void main(){vColor=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(150./-mv.z);gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vColor;void main(){float d=length(gl_PointCoord-vec2(.5));if(d>.5)discard;float a=1.-smoothstep(0.,.5,d);gl_FragColor=vec4(vColor,a*.4);}`,
+  transparent:true,vertexColors:true,blending:THREE.AdditiveBlending,depthWrite:false
+ });
+ scene.add(new THREE.Points(eGeo,eMat));
+
+ // ====== SUBTLE ORBITAL RINGS ======
+ const rMat=new THREE.MeshBasicMaterial({color:0xf97316,wireframe:true,transparent:true,opacity:.08});
+ const r1=new THREE.Mesh(new THREE.TorusGeometry(16,.04,6,90),rMat);
+ const r2=new THREE.Mesh(new THREE.TorusGeometry(20,.03,6,110),rMat.clone());
+ r2.material.opacity=.05;r2.material.color=C_AMBER;
+ scene.add(r1,r2);
+
+ // ====== ANIMATE ======
+ const clock=new THREE.Clock();
+ function animate(){
+  requestAnimationFrame(animate);
+  const t=clock.getElapsedTime();
+
+  // Smooth mouse follow
+  mouse.x+=(mouse.tx-mouse.x)*.035;
+  mouse.y+=(mouse.ty-mouse.y)*.035;
+  camera.position.x=mouse.x*2.5;
+  camera.position.y=mouse.y*-1.8;
+  camera.lookAt(0,0,0);
+
+  // Logo — slow continuous rotation + gentle float at y=6
+  const mouseInfluenceX = mouse.x * 0.3;
+  const mouseInfluenceY = mouse.y * -0.2;
+  logoGroup.rotation.y = t * 0.08 + mouseInfluenceX + forkRotOffset.y;
+  logoGroup.rotation.x = Math.sin(t*.1)*.05 + mouseInfluenceY + forkRotOffset.x;
+  logoGroup.position.y = 6 + Math.sin(t*.25)*.4;
+
+  // Glow ring pulses
+  glowRing.scale.setScalar(1 + Math.sin(t*1.5)*.04);
+  glowRingMat.opacity = 0.2 + Math.sin(t*2)*.08;
+
+  // Update orbiting particles
+  const op = orbitGeo.attributes.position.array;
+  for(let i = 0; i < ORBIT_COUNT; i++){
+   orbitAngle[i] += orbitSpeed[i] * 0.016;
+   op[i*3] = Math.cos(orbitAngle[i]) * orbitRadius[i];
+   op[i*3+1] = orbitYOff[i] + Math.sin(t*.5+i)*.3;
+   op[i*3+2] = Math.sin(orbitAngle[i]) * orbitRadius[i];
+  }
+  orbitGeo.attributes.position.needsUpdate = true;
+  orbitPoints.position.copy(logoGroup.position);
+
+  // Accent light orbits
+  accentLight.position.x=Math.cos(t*.4)*5+5;
+  accentLight.position.z=Math.sin(t*.4)*5+8;
+  accentLight.position.y=2+Math.sin(t*.6)*2;
+
+  // Sparkle time
+  sMat.uniforms.uTime.value=t;
+  sparkles.rotation.y=t*.015;
+  sparkles.rotation.x=t*.006;
+
+  // Ember drift
+  const ep=eGeo.attributes.position.array;
+  for(let i=0;i<EMBER;i++){
+   ep[i*3+1]+=.008;ep[i*3]+=Math.sin(t+i)*.002;
+   if(ep[i*3+1]>14){ep[i*3+1]=-12;ep[i*3]=(Math.random()-.5)*25+5;}
+  }
+  eGeo.attributes.position.needsUpdate=true;
+
+  // Rings rotate
+  r1.rotation.x=t*.12;r1.rotation.z=t*.06;
+  r2.rotation.y=t*.1;r2.rotation.x=Math.PI/4+t*.04;
+
+  renderer.render(scene,camera);
+ }
+ animate();
+
+ window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+ });
+ window.addEventListener('scroll',()=>{
+  const o=Math.max(0,1-window.scrollY/(window.innerHeight*.8));
+  canvas.style.opacity=o;
+ });
+})();
+
+// ===== INTERSECTION OBSERVER FOR REVEALS =====
+const revealObserver = new IntersectionObserver((entries) => {
+ entries.forEach(e => {
+  if(e.isIntersecting){
+   e.target.classList.add('visible');
+   const fillEl = e.target.querySelector('[data-fill]');
+   if(fillEl) setTimeout(() => fillEl.classList.add('filled'), 300);
+  }
+ });
+}, {threshold:0.2});
+document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+// ===== COUNT-UP ANIMATION =====
+const countObserver = new IntersectionObserver((entries) => {
+ entries.forEach(e => {
+  if(e.isIntersecting && e.target.dataset.count){
+   const target = parseInt(e.target.dataset.count);
+   const duration = 2000;
+   const start = performance.now();
+   const el = e.target;
+   function tick(now){
+    const progress = Math.min((now - start)/duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(eased * target);
+    el.textContent = val.toLocaleString() + (target > 100 ? '+' : '');
+    if(progress < 1) requestAnimationFrame(tick);
+   }
+   requestAnimationFrame(tick);
+   countObserver.unobserve(e.target);
+  }
+ });
+}, {threshold:0.5});
+document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+
+// ===== NAV SCROLL =====
+const nav = document.getElementById('siteNav');
+window.addEventListener('scroll', () => {
+ nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ===== CHECK IF RETURNING FROM SIGNUP =====
+if(window.location.search.includes('signed-up=true')){
+ document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('heroFormWrap').style.display = 'none';
+  document.getElementById('heroSuccess').classList.add('show');
+ });
+}
+</script>
+</body>
+</html>
