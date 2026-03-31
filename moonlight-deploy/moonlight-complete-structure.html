@@ -886,8 +886,10 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
         <div class="nav-container">
             <a href="/" class="logo">
                 <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80" fill="none">
+                    <defs><filter id="lglow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
                     <circle cx="40" cy="40" r="28" stroke="currentColor" stroke-width="2"/>
-                    <line x1="14" y1="14" x2="66" y2="66" stroke="currentColor" stroke-width="1.8"/>
+                    <line x1="8" y1="72" x2="64" y2="16" stroke="currentColor" stroke-width="1.8"/>
+                    <circle cx="10" cy="70" r="3" fill="currentColor" opacity=".6" filter="url(#lglow)"/>
                 </svg>
                 Moonlight Analytica
             </a>
