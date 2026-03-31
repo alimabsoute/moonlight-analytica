@@ -52,8 +52,8 @@ if errorlevel 1 (
     echo To run tracking with YouTube video:
     echo   python video_streamer.py --youtube "%TEST_URL_1%" --port 8001
     echo.
-    echo Or use the advanced agent:
-    echo   run_advanced.bat youtube "%TEST_URL_1%"
+    echo Or use the enhanced agent:
+    echo   python edge_agent_enhanced.py --youtube "%TEST_URL_1%" --backend http://localhost:8000
 )
 
 echo.

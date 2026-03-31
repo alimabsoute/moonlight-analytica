@@ -1,9 +1,9 @@
 @echo off
 REM ============================================================
-REM Janus Advanced Edge Agent - YOLOv11 with BoT-SORT
+REM Janus Advanced Edge Agent - RF-DETR + ByteTrack
 REM ============================================================
-REM This script runs the advanced tracking agent with YOLOv11
-REM and the more accurate BoT-SORT tracking algorithm.
+REM This script runs the enhanced tracking agent with RF-DETR-Nano
+REM detection and ByteTrack tracking via Supervision zones.
 REM
 REM Usage:
 REM   run_advanced.bat                    - Run with demo video
@@ -16,7 +16,7 @@ cd /d "%~dp0"
 
 echo ============================================================
 echo JANUS ADVANCED EDGE AGENT
-echo YOLOv11 + BoT-SORT Tracking
+echo RF-DETR-Nano + ByteTrack + Supervision Zones
 echo ============================================================
 echo.
 
@@ -43,30 +43,30 @@ if "%1"=="webcam" (
 )
 
 echo Configuration:
-echo   Model:    yolo11n.pt (YOLOv11 Nano)
-echo   Tracker:  botsort.yaml (Best Re-ID)
+echo   Model:    RF-DETR-Nano (Apache 2.0)
+echo   Tracker:  ByteTrack (Roboflow Trackers)
+echo   Zones:    Supervision PolygonZone + LineZone
 echo   Source:   %SOURCE_TYPE%
 echo.
 
 REM Run based on source type
 if "%SOURCE_TYPE%"=="webcam" (
     echo Starting webcam tracking...
-    python edge_agent_advanced.py --source 0 --model yolo11n.pt --tracker botsort.yaml --visualize
+    python edge_agent_enhanced.py --source 0 --backend http://localhost:8000 --config zones.json
 ) else if "%SOURCE_TYPE%"=="youtube" (
     echo Starting YouTube tracking: %SOURCE_VALUE%
-    python edge_agent_advanced.py --youtube "%SOURCE_VALUE%" --model yolo11n.pt --tracker botsort.yaml --visualize
+    python edge_agent_enhanced.py --youtube "%SOURCE_VALUE%" --backend http://localhost:8000 --config zones.json
 ) else if "%SOURCE_TYPE%"=="file" (
     echo Starting file tracking: %SOURCE_VALUE%
-    python edge_agent_advanced.py --source "%SOURCE_VALUE%" --model yolo11n.pt --tracker botsort.yaml --visualize
+    python edge_agent_enhanced.py --source "%SOURCE_VALUE%" --backend http://localhost:8000 --config zones.json
 ) else (
     echo Starting demo video tracking...
     if exist "video_library\people_walking_street_1.mp4" (
-        python edge_agent_advanced.py --source "video_library\people_walking_street_1.mp4" --model yolo11n.pt --tracker botsort.yaml --visualize
+        python edge_agent_enhanced.py --source "video_library\people_walking_street_1.mp4" --backend http://localhost:8000 --config zones.json
     ) else (
-        echo [ERROR] No demo video found. Please download test videos first:
-        echo   python download_test_videos.py
+        echo [ERROR] No demo video found.
         echo.
-        echo Or specify a video source:
+        echo Specify a video source:
         echo   run_advanced.bat webcam
         echo   run_advanced.bat path\to\video.mp4
         echo   run_advanced.bat youtube "https://youtube.com/watch?v=..."

@@ -10,7 +10,7 @@ if "%1"=="" (
     echo.
     echo This will:
     echo   1. Extract the video stream from YouTube
-    echo   2. Run YOLO person detection and tracking
+    echo   2. Run RF-DETR person detection and tracking
     echo   3. Track people across zones
     echo   4. Stream events to backend
     echo   5. Update all dashboard KPIs in real-time

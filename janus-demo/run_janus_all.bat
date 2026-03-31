@@ -3,8 +3,8 @@
 setlocal
 
 REM ======== CONFIGURE HERE ========
-REM Use 0 for webcam, or put your RTSP URL below (e.g., rtsp://user:pass@CAMERA/stream)
-set RTSP_URL=0
+REM Use 0 for webcam, or put your video file path / RTSP URL below
+set SOURCE=0
 set BACKEND=http://localhost:8000
 set INTERVAL=60
 REM =================================
@@ -41,8 +41,8 @@ call .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-REM 5) Start edge agent in a new window (YOLOv8; ByteTrack; posts avg occupancy every INTERVAL secs)
-set CMD=python edge_agent.py --rtsp "%RTSP_URL%" --backend "%BACKEND%" --interval %INTERVAL%
+REM 5) Start edge agent in a new window (RF-DETR + ByteTrack; posts avg occupancy every INTERVAL secs)
+set CMD=python edge_agent.py --source "%SOURCE%" --backend "%BACKEND%" --interval %INTERVAL%
 start "Janus Edge Agent" cmd /k %CMD%
 popd
 

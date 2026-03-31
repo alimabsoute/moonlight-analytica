@@ -1,14 +1,14 @@
-﻿:: run_counts_only.bat â€” counts-only pipeline (no video UI). Run AFTER backend is up.
+﻿:: run_counts_only.bat — counts-only pipeline (no video UI). Run AFTER backend is up.
 @echo off
 setlocal
 
 REM ======== CONFIGURE ========
-set "RTSP_URL=C:\Path\To\your_demo_video.mp4"   REM use 0 for webcam
-set "BACKEND=http://localhost:8000"
-set "INTERVAL=60"
+set “SOURCE=C:\Path\To\your_demo_video.mp4”   REM use 0 for webcam
+set “BACKEND=http://localhost:8000”
+set “INTERVAL=60”
 REM ===========================
 
-cd /d "%~dp0"
+cd /d “%~dp0”
 
 if not exist .venv (
   where py >nul 2>nul && (
@@ -21,8 +21,8 @@ call .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-echo [counts_only] runningâ€¦ source=%RTSP_URL% interval=%INTERVAL%s
-python edge_agent.py --rtsp "%RTSP_URL%" --backend "%BACKEND%" --interval %INTERVAL%
+echo [counts_only] running... source=%SOURCE% interval=%INTERVAL%s
+python edge_agent.py --source “%SOURCE%” --backend “%BACKEND%” --interval %INTERVAL%
 IF ERRORLEVEL 1 echo [counts_only] edge agent exited with a non-zero code.
 
 echo.

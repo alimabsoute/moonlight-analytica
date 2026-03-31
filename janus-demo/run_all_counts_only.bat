@@ -6,7 +6,7 @@ setlocal
 REM ======== CONFIGURE HERE ========
 set "BACKEND=http://localhost:8000"
 set "INTERVAL=60"
-set "RTSP_URL=0"   REM <-- using webcam (0); change to video file path if needed
+set "SOURCE=0"   REM <-- using webcam (0); change to video file path if needed
 REM =================================
 
 REM Move to repo root (this .bat should live in janus-demo\)
@@ -45,11 +45,11 @@ python -m pip install --upgrade pip >nul
 pip install -r requirements.txt
 
 REM ---------- Start edge agent (counts-only) ----------
-echo [run_all] starting edge agent (source=%RTSP_URL%)...
-start "Janus Edge Agent" cmd /k "cd /d %CD% && .venv\Scripts\python.exe edge_agent.py --rtsp \"%RTSP_URL%\" --backend \"%BACKEND%\" --interval %INTERVAL%"
+echo [run_all] starting edge agent (source=%SOURCE%)...
+start "Janus Edge Agent" cmd /k "cd /d %CD% && .venv\Scripts\python.exe edge_agent.py --source \"%SOURCE%\" --backend \"%BACKEND%\" --interval %INTERVAL%"
 
 REM (Optional alternative) Start with webcam instead of file:
-REM start "Janus Edge Agent (Webcam)" cmd /k "cd /d %CD% && .venv\Scripts\python.exe edge_agent.py --rtsp 0 --backend \"%BACKEND%\" --interval %INTERVAL%"
+REM start "Janus Edge Agent (Webcam)" cmd /k "cd /d %CD% && .venv\Scripts\python.exe edge_agent.py --source 0 --backend \"%BACKEND%\" --interval %INTERVAL%"
 
 REM ---------- Prime a point so 10m KPI always has data immediately ----------
 timeout /t 3 >nul

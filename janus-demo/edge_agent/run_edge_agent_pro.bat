@@ -10,7 +10,7 @@ if "%1"=="" (
     echo.
     echo This will track:
     echo   - Individual person entries/exits
-    echo   - Zone transitions (entrance → main_floor → queue → checkout)
+    echo   - Zone transitions (entrance - main_floor - queue - checkout)
     echo   - Per-person dwell time per zone
     echo   - Complete visitor sessions with conversion tracking
     echo.
@@ -19,7 +19,7 @@ if "%1"=="" (
 )
 
 echo ========================================
-echo  Janus Enhanced Edge Agent Pro
+echo  Janus Enhanced Edge Agent
 echo ========================================
 echo.
 echo Video Source: %1
@@ -29,7 +29,7 @@ echo.
 echo Starting person trajectory tracking...
 echo.
 
-.venv\Scripts\python.exe edge_agent_pro.py --source %1 --backend http://localhost:8000 --config zones.json
+.venv\Scripts\python.exe edge_agent_enhanced.py --source %1 --backend http://localhost:8000 --config zones.json
 
 echo.
 echo ========================================
