@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 """
-Video Streamer with Full Tracking Pipeline
-===========================================
-Streams video frames with bounding boxes, zone overlays, and session
-analytics via HTTP. Uses a separate inference server for detection and
-supervision ByteTrack for tracking.
+Video Streamer — RF-DETR + Supervision Pipeline
+================================================
+Streams video frames with bounding boxes, zone overlays, trajectory trails,
+and session analytics via HTTP. Detection runs in-process (no inference server).
 
 Architecture:
-    Inference Server (:8002) → Detection (bboxes)
-    video_streamer.py (:8001) → ByteTrack → Re-ID → Zones → Sessions → MJPEG
+    RF-DETR-Nano → ByteTrack → Re-ID → Supervision Zones → Sessions → MJPEG
 
-Phases implemented:
-    2. ByteTrack people counting with persistent track IDs
-    3. Zone-based occupancy counting
-    4. Entry/exit detection + session lifecycle
-    5. Re-ID integration for identity persistence through occlusion
-    6. Per-zone dwell time tracking
-    7. Conversion tracking (visited checkout zone)
+Features:
+    - RF-DETR-Nano detection (Apache 2.0, transformer-based)
+    - ByteTrack tracking via Roboflow Trackers (Apache 2.0)
+    - Supervision PolygonZone occupancy + LineZone entry/exit
+    - Supervision annotators (boxes, traces, zones, heatmaps)
+    - Re-ID integration for identity persistence through occlusion
+    - Per-zone dwell time tracking + conversion detection
+    - MJPEG streaming + REST API for stats
 
 Usage:
     python video_streamer.py --source video.mp4 --port 8001
@@ -24,7 +23,6 @@ Usage:
 """
 
 import argparse
-import base64
 import json
 import os
 import sys
@@ -37,11 +35,13 @@ import requests
 import supervision as sv
 from flask import Flask, Response, jsonify
 from flask_cors import CORS
+from rfdetr import RFDETRNano
+from trackers import ByteTrackTracker
 
 from path_utils import normalize_video_path, paths_equal
 from reid_manager import ReIDManager
 
-# Load .env file if present (no extra dependency)
+# Load .env file if present
 _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
 if os.path.exists(_env_path):
     with open(_env_path) as _f:
@@ -56,36 +56,21 @@ CORS(app)
 
 # ── Configuration ─────────────────────────────────────────────────────
 
-# Inference mode: "cloud" (Roboflow API) or "local" (inference server on :8002)
-INFERENCE_MODE = os.environ.get("INFERENCE_MODE", "cloud")
-INFERENCE_URL = os.environ.get("INFERENCE_URL", "http://localhost:8002")
 BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
-
-# Roboflow cloud settings
-ROBOFLOW_API_KEY = os.environ.get("ROBOFLOW_API_KEY", "")
-ROBOFLOW_MODEL = os.environ.get("ROBOFLOW_MODEL", "people-detection-o4rdr/4")
-
-DETECTION_CONF = 0.30           # Lower than before (was 0.35) to catch more people
-EXIT_TIMEOUT_S = 30             # Seconds before a lost track becomes an exit (was 300s)
-REID_SIMILARITY = 0.5           # Re-ID cosine similarity threshold
-REID_MAX_LOST_S = 10.0          # Keep lost tracks in Re-ID gallery for 10s
-POST_INTERVAL_S = 5.0           # How often to post counts to backend
+DETECTION_CONF = 0.40
+EXIT_TIMEOUT_S = 30
+REID_SIMILARITY = 0.5
+REID_MAX_LOST_S = 10.0
+POST_INTERVAL_S = 5.0
 
 # ── Global state ──────────────────────────────────────────────────────
 
 current_frame = None
-tracked_boxes = []              # [{track_id, bbox, confidence, zone}]
-zones = []
+tracked_boxes = []
+zone_data = {}
+line_data = []
 current_source = None
 new_source = None
-# Model switching (proxied to inference server)
-current_model = "yolo11s.pt"
-new_model = None
-AVAILABLE_MODELS = ["yolov8n.pt", "yolo11n.pt", "yolo11s.pt", "yolo11m.pt"]
-# Tracker is now managed locally (ByteTrack via supervision)
-current_tracker = "bytetrack"
-
-# Session & analytics state (updated by tracking thread, read by API)
 session_stats = {
     "total_visitors": 0,
     "peak_occupancy": 0,
@@ -99,116 +84,97 @@ session_stats = {
 }
 
 
-# ── Zone class ────────────────────────────────────────────────────────
+# ── Zone Configuration ───────────────────────────────────────────────
 
-class Zone:
-    def __init__(self, zone_id: int, name: str, x1: int, y1: int,
-                 x2: int, y2: int, zone_type: str = "general"):
-        self.zone_id = zone_id
-        self.name = name
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.zone_type = zone_type
-        self.color = self.get_color()
-
-    def get_color(self):
-        colors = {
-            'entrance': (76, 175, 80),
-            'checkout': (244, 67, 54),
-            'queue': (255, 152, 0),
-            'general': (33, 150, 243),
-        }
-        return colors.get(self.zone_type, (100, 100, 100))
-
-
-def load_zones(config_path: str = "zones.json") -> List[Zone]:
-    """Load zone configuration."""
+def load_zone_config(config_path: str, frame_w: int = 640, frame_h: int = 480):
+    """Load zones and lines from JSON config, scaled to frame dimensions."""
     if not os.path.exists(config_path):
-        return [
-            Zone(1, "entrance", 0, 0, 200, 480, "entrance"),
-            Zone(2, "main_floor", 200, 0, 440, 480, "general"),
-            Zone(3, "queue", 440, 240, 540, 480, "queue"),
-            Zone(4, "checkout", 540, 0, 640, 480, "checkout"),
-        ]
-    with open(config_path, 'r') as f:
-        data = json.load(f)
-    return [Zone(**z) for z in data.get("zones", [])]
+        return _default_zones(frame_w, frame_h), _default_lines(frame_w, frame_h)
+
+    try:
+        with open(config_path, 'r') as f:
+            data = json.load(f)
+
+        ref_w, ref_h = data.get("reference_resolution", [640, 480])
+        sx = frame_w / ref_w
+        sy = frame_h / ref_h
+
+        zones = {}
+        for z in data.get("zones", []):
+            name = z["name"]
+            if "polygon" in z:
+                pts = np.array(z["polygon"], dtype=np.float32)
+            else:
+                x1, y1, x2, y2 = z["x1"], z["y1"], z["x2"], z["y2"]
+                pts = np.array([[x1, y1], [x2, y1], [x2, y2], [x1, y2]], dtype=np.float32)
+            pts[:, 0] *= sx
+            pts[:, 1] *= sy
+            polygon_zone = sv.PolygonZone(polygon=pts.astype(np.int32))
+            zones[name] = {
+                "zone": polygon_zone,
+                "zone_id": z["zone_id"],
+                "zone_type": z.get("zone_type", "general"),
+                "color": _zone_color(z.get("zone_type", "general")),
+            }
+
+        lines = []
+        for ln in data.get("lines", []):
+            start = sv.Point(int(ln["start"][0] * sx), int(ln["start"][1] * sy))
+            end = sv.Point(int(ln["end"][0] * sx), int(ln["end"][1] * sy))
+            lines.append({"name": ln["name"], "line": sv.LineZone(start=start, end=end)})
+
+        return zones, lines
+    except Exception as e:
+        print(f"[ERROR] Failed to load zones: {e}")
+        return _default_zones(frame_w, frame_h), _default_lines(frame_w, frame_h)
 
 
-# ── PersonSession (Phase 4 + 6 + 7) ──────────────────────────────────
-
-class PersonSession:
-    """Tracks a single person's journey through the scene."""
-
-    def __init__(self, track_id: int, entry_time: float, entry_zone: str = ""):
-        self.track_id = track_id
-        self.entry_time = entry_time
-        self.last_seen = entry_time
-        self.zone_history: List[str] = []       # Ordered list of zones visited
-        self.zone_dwell: Dict[str, float] = {}  # {zone_name: seconds_spent}
-        self.current_zone: str = ""
-        self.zone_enter_time: float = entry_time
-        self.converted: bool = False
-
-        if entry_zone:
-            self.zone_history.append(entry_zone)
-            self.current_zone = entry_zone
-            self.zone_dwell[entry_zone] = 0.0
-
-    def update_zone(self, zone_name: str, now: float):
-        """Update zone tracking for this person."""
-        if zone_name == self.current_zone:
-            # Still in same zone — accumulate dwell
-            self.zone_dwell[zone_name] = self.zone_dwell.get(zone_name, 0) + (now - self.last_seen)
-        else:
-            # Zone transition
-            if self.current_zone:
-                self.zone_dwell[self.current_zone] = (
-                    self.zone_dwell.get(self.current_zone, 0) + (now - self.zone_enter_time)
-                )
-            self.current_zone = zone_name
-            self.zone_enter_time = now
-            if zone_name and zone_name not in self.zone_history:
-                self.zone_history.append(zone_name)
-            self.zone_dwell.setdefault(zone_name, 0.0)
-
-        # Check conversion (Phase 7)
-        if zone_name == "checkout":
-            self.converted = True
-
-        self.last_seen = now
-
-    def finalize(self, exit_time: float) -> dict:
-        """Finalize session when person exits."""
-        # Close out current zone dwell
-        if self.current_zone:
-            self.zone_dwell[self.current_zone] = (
-                self.zone_dwell.get(self.current_zone, 0) + (exit_time - self.zone_enter_time)
-            )
-        dwell_s = exit_time - self.entry_time
-        return {
-            "person_id": self.track_id,
-            "entry_time": self.entry_time,
-            "exit_time": exit_time,
-            "dwell_seconds": round(dwell_s, 1),
-            "zone_path": self.zone_history,
-            "zone_dwell": {k: round(v, 1) for k, v in self.zone_dwell.items()},
-            "converted": 1 if self.converted else 0,
-        }
+def _zone_color(zone_type: str) -> sv.Color:
+    colors = {
+        'entrance': sv.Color(76, 175, 80),
+        'checkout': sv.Color(244, 67, 54),
+        'queue': sv.Color(255, 152, 0),
+        'general': sv.Color(33, 150, 243),
+    }
+    return colors.get(zone_type, sv.Color(100, 100, 100))
 
 
-# ── SessionManager ────────────────────────────────────────────────────
+def _default_zones(frame_w, frame_h):
+    sx, sy = frame_w / 640, frame_h / 480
+    defaults = [
+        ("entrance", 1, "entrance", [[0, 0], [200, 0], [200, 480], [0, 480]]),
+        ("main_floor", 2, "general", [[200, 0], [440, 0], [440, 480], [200, 480]]),
+        ("queue", 3, "queue", [[440, 240], [540, 240], [540, 480], [440, 480]]),
+        ("checkout", 4, "checkout", [[540, 0], [640, 0], [640, 480], [540, 480]]),
+    ]
+    zones = {}
+    for name, zid, ztype, pts in defaults:
+        pts_arr = np.array(pts, dtype=np.float32)
+        pts_arr[:, 0] *= sx
+        pts_arr[:, 1] *= sy
+        polygon_zone = sv.PolygonZone(polygon=pts_arr.astype(np.int32))
+        zones[name] = {"zone": polygon_zone, "zone_id": zid, "zone_type": ztype,
+                        "color": _zone_color(ztype)}
+    return zones
+
+
+def _default_lines(frame_w, frame_h):
+    sx, sy = frame_w / 640, frame_h / 480
+    start = sv.Point(int(200 * sx), int(0 * sy))
+    end = sv.Point(int(200 * sx), int(480 * sy))
+    return [{"name": "entry_line", "line": sv.LineZone(start=start, end=end)}]
+
+
+# ── Session Manager ──────────────────────────────────────────────────
 
 class SessionManager:
-    """Manages all active person sessions and posts events to backend."""
+    """Lightweight session tracking using tracker IDs and zone detection."""
 
     def __init__(self, backend_url: str, exit_timeout: float = 30.0):
         self.backend_url = backend_url
         self.exit_timeout = exit_timeout
-        self.sessions: Dict[int, PersonSession] = {}    # {track_id: PersonSession}
-        self.completed: List[dict] = []                  # Completed session records
+        self.sessions: Dict[int, dict] = {}
+        self.completed: List[dict] = []
         self.total_visitors = 0
         self.total_entries = 0
         self.total_exits = 0
@@ -217,84 +183,100 @@ class SessionManager:
         self._last_post_time = time.time()
 
     def on_track_active(self, track_id: int, zone_name: str, now: float):
-        """Called for every active track each frame."""
         if track_id not in self.sessions:
-            # New person — entry event (Phase 4)
-            self.sessions[track_id] = PersonSession(track_id, now, zone_name)
+            self.sessions[track_id] = {
+                "entry_time": now,
+                "last_seen": now,
+                "zone_history": [zone_name] if zone_name else [],
+                "zone_enter_time": now,
+                "current_zone": zone_name,
+                "zone_dwell": {zone_name: 0.0} if zone_name else {},
+                "converted": False,
+            }
             self.total_visitors += 1
             self.total_entries += 1
             self._post_event("entry", track_id, zone_name)
         else:
-            # Update existing session zone tracking (Phase 6)
-            session = self.sessions[track_id]
-            old_zone = session.current_zone
-            session.update_zone(zone_name, now)
-            if old_zone and zone_name != old_zone:
-                self._post_event("zone_change", track_id, zone_name)
+            sess = self.sessions[track_id]
+            old_zone = sess["current_zone"]
+            if zone_name != old_zone:
+                # Close dwell on old zone
+                if old_zone:
+                    sess["zone_dwell"][old_zone] = sess["zone_dwell"].get(old_zone, 0) + (now - sess["zone_enter_time"])
+                sess["current_zone"] = zone_name
+                sess["zone_enter_time"] = now
+                if zone_name and zone_name not in sess["zone_history"]:
+                    sess["zone_history"].append(zone_name)
+                sess["zone_dwell"].setdefault(zone_name, 0.0)
+                if old_zone and zone_name != old_zone:
+                    self._post_event("zone_change", track_id, zone_name)
+            else:
+                # Accumulate dwell in current zone
+                if zone_name:
+                    sess["zone_dwell"][zone_name] = sess["zone_dwell"].get(zone_name, 0) + (now - sess["last_seen"])
 
-        # Update peak
+            if zone_name == "checkout":
+                sess["converted"] = True
+            sess["last_seen"] = now
+
         current = len(self.sessions)
         if current > self.peak_occupancy:
             self.peak_occupancy = current
 
     def check_exits(self, active_ids: set, now: float):
-        """Check for exited people (not seen for exit_timeout)."""
         exited = []
-        for tid, session in list(self.sessions.items()):
-            if tid not in active_ids and (now - session.last_seen) > self.exit_timeout:
+        for tid, sess in list(self.sessions.items()):
+            if tid not in active_ids and (now - sess["last_seen"]) > self.exit_timeout:
                 exited.append(tid)
 
         for tid in exited:
-            session = self.sessions.pop(tid)
-            record = session.finalize(session.last_seen)
+            sess = self.sessions.pop(tid)
+            # Close current zone dwell
+            if sess["current_zone"]:
+                sess["zone_dwell"][sess["current_zone"]] = (
+                    sess["zone_dwell"].get(sess["current_zone"], 0) + (sess["last_seen"] - sess["zone_enter_time"])
+                )
+            dwell_s = sess["last_seen"] - sess["entry_time"]
+            record = {
+                "person_id": tid,
+                "entry_time": sess["entry_time"],
+                "exit_time": sess["last_seen"],
+                "dwell_seconds": round(dwell_s, 1),
+                "zone_path": sess["zone_history"],
+                "zone_dwell": {k: round(v, 1) for k, v in sess["zone_dwell"].items()},
+                "converted": 1 if sess["converted"] else 0,
+            }
             self.completed.append(record)
             self.total_exits += 1
             if record["converted"]:
                 self.total_conversions += 1
-            self._post_event("exit", tid, session.current_zone)
+            self._post_event("exit", tid, sess["current_zone"])
             self._post_session(record)
 
     def periodic_post_counts(self, count: int, now: float):
-        """Post count to backend periodically."""
         if now - self._last_post_time >= POST_INTERVAL_S:
             self._last_post_time = now
             try:
-                requests.post(
-                    f"{self.backend_url}/count",
-                    json={"count_value": count},
-                    timeout=2,
-                )
+                requests.post(f"{self.backend_url}/count",
+                              json={"count_value": count}, timeout=2)
             except Exception:
                 pass
 
     def _post_event(self, event_type: str, person_id: int, zone: str):
-        """Post tracking event to backend."""
         try:
-            requests.post(
-                f"{self.backend_url}/events",
-                json={
-                    "event_type": event_type,
-                    "person_id": person_id,
-                    "zone": zone,
-                },
-                timeout=2,
-            )
+            requests.post(f"{self.backend_url}/events", json={
+                "event_type": event_type, "person_id": person_id, "zone": zone,
+            }, timeout=2)
         except Exception:
             pass
 
     def _post_session(self, record: dict):
-        """Post completed session to backend."""
         try:
-            requests.post(
-                f"{self.backend_url}/sessions",
-                json=record,
-                timeout=2,
-            )
+            requests.post(f"{self.backend_url}/sessions", json=record, timeout=2)
         except Exception:
             pass
 
     def get_stats(self) -> dict:
-        """Get session statistics."""
         dwell_times = [s["dwell_seconds"] for s in self.completed]
         avg_dwell = sum(dwell_times) / len(dwell_times) if dwell_times else 0
         return {
@@ -309,121 +291,9 @@ class SessionManager:
         }
 
 
-# ── Detection (Cloud or Local) ────────────────────────────────────────
-
-def detect_via_roboflow(frame: np.ndarray) -> List[dict]:
-    """Send frame to Roboflow cloud API for person detection.
-
-    Returns list of {bbox: [x1,y1,x2,y2], confidence: float}.
-    """
-    _, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
-    img_b64 = base64.b64encode(buffer.tobytes()).decode("utf-8")
-
-    conf_pct = int(DETECTION_CONF * 100)  # Roboflow expects 0-100
-    url = f"https://detect.roboflow.com/{ROBOFLOW_MODEL}"
-    params = {
-        "api_key": ROBOFLOW_API_KEY,
-        "confidence": conf_pct,
-        "overlap": 50,
-    }
-
-    try:
-        resp = requests.post(
-            url, params=params, data=img_b64,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            timeout=10,
-        )
-        if resp.status_code != 200:
-            print(f"[WARN] Roboflow API error {resp.status_code}: {resp.text[:200]}")
-            return []
-
-        data = resp.json()
-        detections = []
-        for pred in data.get("predictions", []):
-            # Filter for person class (Roboflow returns class name)
-            cls = pred.get("class", "").lower()
-            if cls not in ("person", "people", "human", "pedestrian"):
-                continue
-            # Convert center+size to x1,y1,x2,y2
-            cx, cy = pred["x"], pred["y"]
-            w, h = pred["width"], pred["height"]
-            detections.append({
-                "bbox": [int(cx - w / 2), int(cy - h / 2),
-                         int(cx + w / 2), int(cy + h / 2)],
-                "confidence": round(float(pred["confidence"]), 4),
-            })
-        return detections
-
-    except Exception as e:
-        print(f"[WARN] Roboflow API error: {e}")
-        return []
-
-
-def detect_via_server(frame: np.ndarray) -> List[dict]:
-    """Send frame to local inference server and get detections.
-
-    Returns list of {bbox: [x1,y1,x2,y2], confidence: float}.
-    """
-    _, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
-    try:
-        resp = requests.post(
-            f"{INFERENCE_URL}/detect",
-            files={"file": ("frame.jpg", buffer.tobytes(), "image/jpeg")},
-            params={"conf": DETECTION_CONF},
-            timeout=5,
-        )
-        if resp.status_code == 200:
-            return resp.json().get("detections", [])
-    except Exception as e:
-        print(f"[WARN] Inference server error: {e}")
-    return []
-
-
-def detect(frame: np.ndarray) -> List[dict]:
-    """Run detection using configured mode (cloud or local)."""
-    if INFERENCE_MODE == "cloud":
-        return detect_via_roboflow(frame)
-    else:
-        return detect_via_server(frame)
-
-
-def wait_for_detection_ready(timeout: float = 30):
-    """Verify detection is working (cloud or local)."""
-    if INFERENCE_MODE == "cloud":
-        if not ROBOFLOW_API_KEY:
-            print("[ERROR] ROBOFLOW_API_KEY not set. Add it to .env file.")
-            return False
-        print(f"[INFO] Using Roboflow cloud inference (model: {ROBOFLOW_MODEL})")
-        # Quick test with a small dummy image
-        dummy = np.zeros((100, 100, 3), dtype=np.uint8)
-        try:
-            detect_via_roboflow(dummy)
-            print("[INFO] Roboflow API connection verified")
-            return True
-        except Exception as e:
-            print(f"[ERROR] Roboflow API test failed: {e}")
-            return False
-    else:
-        print(f"[INFO] Using local inference server at {INFERENCE_URL}")
-        start = time.time()
-        while time.time() - start < timeout:
-            try:
-                r = requests.get(f"{INFERENCE_URL}/health", timeout=3)
-                if r.status_code == 200 and r.json().get("status") == "ready":
-                    model = r.json().get("model", "unknown")
-                    print(f"[INFO] Inference server ready (model: {model})")
-                    return True
-            except Exception:
-                pass
-            time.sleep(2)
-        print(f"[ERROR] Inference server not ready after {timeout}s")
-        return False
-
-
-# ── YouTube helper ────────────────────────────────────────────────────
+# ── YouTube helper ───────────────────────────────────────────────────
 
 def get_youtube_stream_url(youtube_url: str) -> str:
-    """Extract direct video stream URL from YouTube."""
     try:
         import yt_dlp
     except ImportError:
@@ -433,13 +303,9 @@ def get_youtube_stream_url(youtube_url: str) -> str:
     print(f"[INFO] Extracting stream URL from: {youtube_url}")
     ydl_opts = {
         'format': 'best[height<=720]/best',
-        'quiet': False,
-        'no_warnings': False,
-        'socket_timeout': 30,
-        'retries': 3,
-        'extractor_retries': 3,
+        'quiet': False, 'no_warnings': False,
+        'socket_timeout': 30, 'retries': 3,
     }
-
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(youtube_url, download=False)
@@ -448,8 +314,7 @@ def get_youtube_stream_url(youtube_url: str) -> str:
                 sys.exit(1)
             stream_url = info.get('url')
             if not stream_url:
-                formats = info.get('formats', [])
-                for fmt in reversed(formats):
+                for fmt in reversed(info.get('formats', [])):
                     if fmt.get('url') and fmt.get('vcodec') != 'none':
                         stream_url = fmt['url']
                         break
@@ -463,132 +328,25 @@ def get_youtube_stream_url(youtube_url: str) -> str:
         sys.exit(1)
 
 
-# ── Drawing helpers ───────────────────────────────────────────────────
+# ── Zone point test helper ───────────────────────────────────────────
 
-def get_color_for_track_id(track_id):
-    """Generate unique color for each track ID."""
-    colors = [
-        (255, 0, 0), (0, 255, 0), (0, 0, 255),
-        (255, 255, 0), (255, 0, 255), (0, 255, 255),
-        (255, 128, 0), (128, 0, 255), (0, 255, 128),
-        (255, 0, 128), (128, 255, 0), (0, 128, 255),
-    ]
-    return colors[track_id % len(colors)]
-
-
-def check_person_in_zone(bbox, zone, frame_width, frame_height):
-    """Check if person's center point is inside a zone."""
-    person_x = (bbox[0] + bbox[2]) / 2
-    person_y = (bbox[1] + bbox[3]) / 2
-    zone_x1 = (zone.x1 / 640) * frame_width
-    zone_y1 = (zone.y1 / 480) * frame_height
-    zone_x2 = (zone.x2 / 640) * frame_width
-    zone_y2 = (zone.y2 / 480) * frame_height
-    return zone_x1 <= person_x <= zone_x2 and zone_y1 <= person_y <= zone_y2
-
-
-def find_zone_for_person(bbox, zones_list, frame_width, frame_height) -> str:
-    """Return the zone name a person is in, or empty string."""
-    for zone in zones_list:
-        if check_person_in_zone(bbox, zone, frame_width, frame_height):
-            return zone.name
+def find_zone_for_point(x: float, y: float, zones: dict) -> str:
+    """Return the zone name containing (x, y), or empty string."""
+    for name, z_info in zones.items():
+        poly = z_info["zone"].polygon
+        if cv2.pointPolygonTest(poly.astype(np.float32), (float(x), float(y)), False) >= 0:
+            return name
     return ""
 
 
-def draw_tracking_overlay(frame, boxes_data, zones_list, stats=None):
-    """Draw bounding boxes, zones, and stats on frame."""
-    overlay = frame.copy()
-    frame_height, frame_width = frame.shape[:2]
-
-    # Scale zones to frame dimensions
-    scaled_zones = []
-    for zone in zones_list:
-        sx1 = int((zone.x1 / 640) * frame_width)
-        sy1 = int((zone.y1 / 480) * frame_height)
-        sx2 = int((zone.x2 / 640) * frame_width)
-        sy2 = int((zone.y2 / 480) * frame_height)
-        scaled_zones.append((zone, sx1, sy1, sx2, sy2))
-
-    # Draw zones with transparency
-    for zone, x1, y1, x2, y2 in scaled_zones:
-        cv2.rectangle(overlay, (x1, y1), (x2, y2), zone.color, -1)
-        cv2.rectangle(frame, (x1, y1), (x2, y2), zone.color, 3)
-        cv2.putText(frame, zone.name.upper(), (x1 + 10, y1 + 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-
-    cv2.addWeighted(overlay, 0.15, frame, 0.85, 0, frame)
-
-    # Zone counts
-    zone_counts = {zone.name: 0 for zone, *_ in scaled_zones}
-    zone_counts["no_zone"] = 0
-
-    # Draw bounding boxes
-    for box in boxes_data:
-        x1, y1, x2, y2 = box['bbox']
-        track_id = box['track_id']
-        zone_name = box.get('zone', '')
-        color = get_color_for_track_id(track_id)
-
-        if zone_name:
-            zone_counts[zone_name] = zone_counts.get(zone_name, 0) + 1
-        else:
-            zone_counts["no_zone"] += 1
-
-        cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 3)
-
-        label = f"ID:{track_id}"
-        if zone_name:
-            label += f" | {zone_name.upper()}"
-        label_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)[0]
-        cv2.rectangle(frame, (int(x1), int(y1) - 30),
-                      (int(x1) + label_size[0] + 10, int(y1)), color, -1)
-        cv2.putText(frame, label, (int(x1) + 5, int(y1) - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-
-    # Stats panel (top-left)
-    active_zones = [n for n, c in zone_counts.items() if c > 0]
-    panel_lines = 1 + len(active_zones)
-    if stats:
-        panel_lines += 3
-    box_h = 10 + panel_lines * 18
-    cv2.rectangle(frame, (5, 5), (220, box_h), (0, 0, 0), -1)
-
-    y_pos = 18
-    cv2.putText(frame, f"PEOPLE: {len(boxes_data)}", (10, y_pos),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 255), 1)
-    y_pos += 18
-
-    for zn in active_zones:
-        cv2.putText(frame, f"{zn.upper()}: {zone_counts[zn]}", (10, y_pos),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
-        y_pos += 18
-
-    if stats:
-        cv2.putText(frame, f"VISITORS: {stats.get('total_visitors', 0)}", (10, y_pos),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 255), 1)
-        y_pos += 18
-        cv2.putText(frame, f"REIDS: {stats.get('total_reids', 0)}", (10, y_pos),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 200), 1)
-        y_pos += 18
-        cv2.putText(frame, f"DWELL: {stats.get('avg_dwell_s', 0):.0f}s", (10, y_pos),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (200, 200, 255), 1)
-
-    return frame
-
-
-# ── MJPEG streaming ───────────────────────────────────────────────────
+# ── MJPEG streaming ──────────────────────────────────────────────────
 
 def generate_frames():
-    """Generate video frames with tracking overlays."""
-    global current_frame, tracked_boxes, zones, session_stats
-
+    global current_frame, tracked_boxes, zone_data, session_stats
     while True:
         if current_frame is not None:
-            frame_with_overlay = draw_tracking_overlay(
-                current_frame.copy(), tracked_boxes, zones, session_stats
-            )
-            ret, buffer = cv2.imencode('.jpg', frame_with_overlay,
-                                       [cv2.IMWRITE_JPEG_QUALITY, 85])
+            frame = current_frame.copy()
+            ret, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
             if ret:
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' +
@@ -596,24 +354,21 @@ def generate_frames():
         time.sleep(0.03)
 
 
-# ── Flask routes ──────────────────────────────────────────────────────
+# ── Flask routes ─────────────────────────────────────────────────────
 
 @app.route('/video_feed')
 def video_feed():
-    """Video streaming route."""
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/health')
 def health():
-    """Health check."""
     return jsonify({"status": "ok", "streaming": current_frame is not None})
 
 
 @app.route('/switch', methods=['POST', 'GET'])
 def switch_video():
-    """Switch to a different video source."""
     global new_source, current_source
     from flask import request
 
@@ -630,123 +385,82 @@ def switch_video():
     if not os.path.exists(normalized_source):
         return jsonify({"error": f"Video file not found: {normalized_source}"}), 404
 
-    print(f"[INFO] Switching to new video source: {normalized_source}")
     new_source = normalized_source
     return jsonify({"ok": True, "source": normalized_source, "previous": current_source})
 
 
-@app.route('/model', methods=['POST', 'GET'])
-def switch_model():
-    """Switch YOLO model (proxied to inference server)."""
-    global new_model, current_model
-    from flask import request
-
-    if request.method == 'GET' and not request.args.get('model'):
-        return jsonify({"current": current_model, "available": AVAILABLE_MODELS})
-
-    model_name = (request.args.get('model') or
-                  (request.json.get('model') if request.is_json else None))
-    if not model_name:
-        return jsonify({"error": "Missing 'model' parameter"}), 400
-    if model_name not in AVAILABLE_MODELS:
-        return jsonify({"error": f"Unknown model: {model_name}"}), 400
-
-    # Proxy to inference server
-    try:
-        r = requests.post(f"{INFERENCE_URL}/model",
-                          json={"model": model_name}, timeout=30)
-        if r.status_code == 200:
-            current_model = model_name
-            return jsonify({"ok": True, "model": model_name})
-        return jsonify(r.json()), r.status_code
-    except Exception as e:
-        return jsonify({"error": f"Inference server error: {e}"}), 502
-
-
-@app.route('/tracker', methods=['POST', 'GET'])
-def switch_tracker():
-    """Get tracker info (ByteTrack is now the only tracker, managed locally)."""
-    return jsonify({
-        "current": current_tracker,
-        "available": ["bytetrack"],
-        "note": "Tracking is now handled by supervision ByteTrack locally"
-    })
-
-
 @app.route('/settings', methods=['GET'])
 def get_settings():
-    """Get current settings."""
     return jsonify({
-        "model": current_model,
-        "tracker": current_tracker,
+        "model": "rf-detr-nano",
+        "tracker": "bytetrack",
         "source": current_source,
-        "available_models": AVAILABLE_MODELS,
+        "available_models": ["rf-detr-nano"],
         "available_trackers": ["bytetrack"],
-        "inference_server": INFERENCE_URL,
     })
 
 
 @app.route('/stats', methods=['GET'])
 def get_stats():
-    """Get session and tracking statistics."""
     return jsonify(session_stats)
 
 
 @app.route('/kpis', methods=['GET'])
 def get_kpis():
-    """Get real-time KPIs from the tracking pipeline."""
     return jsonify(session_stats)
 
 
-# ── Main tracking loop (Phases 2-7 combined) ─────────────────────────
+# ── Main tracking loop ───────────────────────────────────────────────
 
-def run_tracking(source, conf=0.30, backend_url="http://localhost:8000"):
-    """Main tracking loop: detect → track → Re-ID → zones → sessions.
+def run_tracking(source, conf=0.40, backend_url="http://localhost:8000",
+                 zone_config="zones.json"):
+    """Main loop: RF-DETR detect → ByteTrack → Re-ID → Zones → Sessions."""
+    global current_frame, tracked_boxes, zone_data, line_data
+    global current_source, new_source, session_stats
 
-    Args:
-        source: Video source (file path, RTSP, or webcam index)
-        conf: Detection confidence threshold
-        backend_url: Backend API URL for posting events/sessions
-    """
-    global current_frame, tracked_boxes, zones, current_source, new_source
-    global current_model, new_model, session_stats
+    # Initialize RF-DETR
+    model = RFDETRNano()
+    print("[INFO] RF-DETR-Nano loaded")
 
-    # Wait for detection to be ready (cloud or local)
-    if not wait_for_detection_ready(timeout=30):
-        print("[ERROR] Detection not available. Check .env or inference server.")
-        return
-
-    # Initialize ByteTrack (Phase 2)
-    byte_tracker = sv.ByteTrack(
-        track_activation_threshold=0.5,
-        lost_track_buffer=90,               # 3 seconds at 30fps
-        minimum_matching_threshold=0.8,
-        frame_rate=30,
+    # Initialize ByteTrack
+    tracker = ByteTrackTracker(
+        lost_track_buffer=90,
+        minimum_consecutive_frames=3,
     )
-    print("[INFO] ByteTrack initialized (buffer=90 frames, thresh=0.5)")
+    print("[INFO] ByteTrack initialized")
 
-    # Initialize Re-ID Manager (Phase 5)
+    # Initialize Re-ID
     reid = ReIDManager(
         similarity_threshold=REID_SIMILARITY,
-        max_lost_age=int(REID_MAX_LOST_S * 30),  # 300 frames
+        max_lost_age=int(REID_MAX_LOST_S * 30),
         gallery_size=100,
     )
-    print(f"[INFO] Re-ID initialized (threshold={REID_SIMILARITY}, gallery_timeout={REID_MAX_LOST_S}s)")
+    print(f"[INFO] Re-ID initialized (threshold={REID_SIMILARITY})")
 
-    # Initialize Session Manager (Phase 4)
+    # Initialize Session Manager
     session_mgr = SessionManager(backend_url, exit_timeout=EXIT_TIMEOUT_S)
 
-    # Open video source
+    # Open video
     current_source = normalize_video_path(source)
-    print(f"[INFO] Starting tracking on: {current_source}")
     cap = cv2.VideoCapture(current_source)
-
     if not cap.isOpened():
         print(f"[ERROR] Failed to open video source: {source}")
         return
 
-    print("[INFO] Video opened. Tracking pipeline active.")
-    print(f"[INFO] Pipeline: Detect({INFERENCE_URL}) -> ByteTrack -> Re-ID -> Zones -> Sessions")
+    frame_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) or 640
+    frame_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) or 480
+
+    # Load zones
+    zone_data, line_data = load_zone_config(zone_config, frame_w, frame_h)
+    print(f"[INFO] Loaded {len(zone_data)} zones, {len(line_data)} lines")
+
+    # Supervision annotators
+    box_ann = sv.BoxAnnotator(thickness=2)
+    label_ann = sv.LabelAnnotator(text_position=sv.Position.TOP_LEFT)
+    trace_ann = sv.TraceAnnotator(trace_length=90, thickness=2)
+
+    print("[INFO] Tracking pipeline active")
+    print(f"[INFO] Pipeline: RF-DETR → ByteTrack → Re-ID → Zones → Sessions")
 
     frame_num = 0
     prev_track_ids: set = set()
@@ -754,143 +468,150 @@ def run_tracking(source, conf=0.30, backend_url="http://localhost:8000"):
     while True:
         now = time.time()
 
-        # ── Video source switching ────────────────────────────────
+        # Video source switching
         if new_source is not None and not paths_equal(new_source, current_source):
             normalized = normalize_video_path(new_source)
-            print(f"[INFO] Switching source: {current_source} → {normalized}")
             new_cap = cv2.VideoCapture(normalized)
             time.sleep(0.1)
             if new_cap.isOpened():
                 cap.release()
                 cap = new_cap
                 current_source = normalized
-                byte_tracker = sv.ByteTrack(
-                    track_activation_threshold=0.5,
-                    lost_track_buffer=90,
-                    minimum_matching_threshold=0.8,
-                    frame_rate=30,
-                )
+                frame_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) or 640
+                frame_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) or 480
+                zone_data, line_data = load_zone_config(zone_config, frame_w, frame_h)
+                tracker = ByteTrackTracker(lost_track_buffer=90, minimum_consecutive_frames=3)
                 frame_num = 0
                 prev_track_ids.clear()
-                print(f"[INFO] Now playing: {current_source}")
+                print(f"[INFO] Switched to: {current_source}")
             else:
                 new_cap.release()
                 print(f"[ERROR] Failed to open: {normalized}")
             new_source = None
 
-        # ── Model switching (proxied to inference server) ─────────
-        if new_model is not None and new_model != current_model:
-            try:
-                r = requests.post(f"{INFERENCE_URL}/model",
-                                  json={"model": new_model}, timeout=30)
-                if r.status_code == 200:
-                    current_model = new_model
-                    print(f"[INFO] Model switched to: {current_model}")
-            except Exception as e:
-                print(f"[WARN] Model switch failed: {e}")
-            new_model = None
-
-        # ── Read frame ────────────────────────────────────────────
+        # Read frame
         ret, frame = cap.read()
         if not ret:
-            print("[INFO] Video ended, looping...")
             cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             frame_num = 0
-            byte_tracker = sv.ByteTrack(
-                track_activation_threshold=0.5,
-                lost_track_buffer=90,
-                minimum_matching_threshold=0.8,
-                frame_rate=30,
-            )
+            tracker = ByteTrackTracker(lost_track_buffer=90, minimum_consecutive_frames=3)
             prev_track_ids.clear()
             continue
 
-        current_frame = frame
         frame_num += 1
-        frame_h, frame_w = frame.shape[:2]
 
-        # ── Phase 2: Detect via inference server ──────────────────
-        raw_detections = detect(frame)
+        # 1. Detect with RF-DETR
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        detections = model.predict(rgb, threshold=conf)
 
-        if not raw_detections:
-            # No detections — check exits and continue
+        # Filter to person class
+        if detections.class_id is not None and len(detections) > 0:
+            detections = detections[detections.class_id == 0]
+
+        if len(detections) == 0:
             session_mgr.check_exits(set(), now)
             session_mgr.periodic_post_counts(0, now)
             session_stats = {**session_mgr.get_stats(), "total_reids": reid.stats["total_reids"]}
+            current_frame = frame
             continue
 
-        # Build supervision Detections object
-        bboxes = np.array([d["bbox"] for d in raw_detections], dtype=np.float32)
-        confs = np.array([d["confidence"] for d in raw_detections], dtype=np.float32)
+        # 2. Track with ByteTrack
+        detections = tracker.update(detections)
 
-        detections = sv.Detections(
-            xyxy=bboxes,
-            confidence=confs,
-        )
-
-        # ── Phase 2: ByteTrack assigns track IDs ─────────────────
-        tracked = byte_tracker.update_with_detections(detections)
-
-        # ── Phase 5: Re-ID for identity persistence ──────────────
+        # 3. Re-ID + Zone + Session
         current_track_ids = set()
         result_boxes = []
 
-        if tracked.tracker_id is not None and len(tracked.tracker_id) > 0:
-            for i, tracker_id in enumerate(tracked.tracker_id):
-                tracker_id = int(tracker_id)
-                bbox = tracked.xyxy[i].tolist()
-                conf = float(tracked.confidence[i]) if tracked.confidence is not None else 0.5
+        if detections.tracker_id is not None and len(detections.tracker_id) > 0:
+            feet = detections.get_anchors_coordinates(sv.Position.BOTTOM_CENTER)
 
-                # Re-ID check for NEW tracks
+            for i, tracker_id in enumerate(detections.tracker_id):
+                tracker_id = int(tracker_id)
+                bbox = detections.xyxy[i].tolist()
+                det_conf = float(detections.confidence[i]) if detections.confidence is not None else 0.5
+
+                # Re-ID check for new tracks
                 if tracker_id not in prev_track_ids:
                     original_id = reid.try_reidentify(frame, bbox, tracker_id, frame_num)
                     if original_id is not None:
                         tracker_id = original_id
 
-                # Register/update in Re-ID gallery
-                reid.register_track(tracker_id, frame, bbox, conf, frame_num)
+                reid.register_track(tracker_id, frame, bbox, det_conf, frame_num)
                 current_track_ids.add(tracker_id)
 
-                # ── Phase 3: Zone assignment ──────────────────────
-                zone_name = find_zone_for_person(bbox, zones, frame_w, frame_h)
+                # Zone assignment
+                fx, fy = feet[i]
+                zone_name = find_zone_for_point(fx, fy, zone_data)
 
-                # ── Phase 4+6: Session & zone dwell tracking ─────
+                # Session tracking
                 session_mgr.on_track_active(tracker_id, zone_name, now)
 
                 result_boxes.append({
                     'track_id': tracker_id,
                     'bbox': [int(b) for b in bbox],
-                    'confidence': conf,
+                    'confidence': det_conf,
                     'zone': zone_name,
                 })
 
-        # Mark lost tracks in Re-ID gallery
+        # Mark lost tracks
         lost_ids = prev_track_ids - current_track_ids
         for lost_id in lost_ids:
             reid.mark_lost(lost_id, frame_num)
-
         prev_track_ids = current_track_ids
 
-        # ── Phase 4: Check for exits ──────────────────────────────
-        session_mgr.check_exits(current_track_ids, now)
+        # Line crossing
+        for ln in line_data:
+            ln["line"].trigger(detections)
 
-        # ── Post counts periodically ──────────────────────────────
+        # Check exits + post counts
+        session_mgr.check_exits(current_track_ids, now)
         session_mgr.periodic_post_counts(len(result_boxes), now)
 
-        # ── Update global state for MJPEG stream ──────────────────
+        # 4. Annotate frame with Supervision
+        labels = [f"ID:{b['track_id']} {b['zone'].upper()}" if b['zone'] else f"ID:{b['track_id']}"
+                  for b in result_boxes]
+        annotated = box_ann.annotate(scene=frame.copy(), detections=detections)
+        annotated = label_ann.annotate(scene=annotated, detections=detections, labels=labels)
+        annotated = trace_ann.annotate(scene=annotated, detections=detections)
+
+        # Draw zone overlays
+        for name, z_info in zone_data.items():
+            poly = z_info["zone"].polygon
+            color = z_info["color"]
+            overlay = annotated.copy()
+            cv2.fillPoly(overlay, [poly], (color.r, color.g, color.b))
+            cv2.addWeighted(overlay, 0.15, annotated, 0.85, 0, annotated)
+            cv2.polylines(annotated, [poly], True, (color.r, color.g, color.b), 2)
+            # Zone label
+            cx = int(poly[:, 0].mean())
+            cy = int(poly[:, 1].min()) + 20
+            cv2.putText(annotated, name.upper(), (cx - 30, cy),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+        # Stats overlay
+        stats = session_mgr.get_stats()
+        cv2.rectangle(annotated, (5, 5), (220, 90), (0, 0, 0), -1)
+        cv2.putText(annotated, f"PEOPLE: {len(result_boxes)}", (10, 22),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(annotated, f"VISITORS: {stats['total_visitors']}", (10, 42),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 255), 1)
+        cv2.putText(annotated, f"REIDS: {reid.stats['total_reids']}", (10, 58),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 200), 1)
+        cv2.putText(annotated, f"DWELL: {stats['avg_dwell_s']:.0f}s", (10, 74),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (200, 200, 255), 1)
+
+        # Update globals
+        current_frame = annotated
         tracked_boxes = result_boxes
-        session_stats = {
-            **session_mgr.get_stats(),
-            "total_reids": reid.stats["total_reids"],
-        }
+        session_stats = {**stats, "total_reids": reid.stats["total_reids"]}
 
 
-# ── Main entry point ─────────────────────────────────────────────────
+# ── Main ─────────────────────────────────────────────────────────────
 
 def main():
     import threading
 
-    p = argparse.ArgumentParser(description="Video streamer with full tracking pipeline")
+    p = argparse.ArgumentParser(description="Video streamer with RF-DETR tracking pipeline")
 
     source_group = p.add_mutually_exclusive_group(required=True)
     source_group.add_argument("--source", help="Video source (file, rtsp://, or 0 for webcam)")
@@ -898,34 +619,18 @@ def main():
 
     p.add_argument("--port", type=int, default=8001, help="HTTP server port")
     p.add_argument("--config", default="zones.json", help="Zone configuration file")
-    p.add_argument("--conf", type=float, default=0.30, help="Detection confidence")
-    p.add_argument("--mode", choices=["cloud", "local"], default=None,
-                    help="Detection mode: cloud (Roboflow) or local (inference server)")
-    p.add_argument("--inference-url", default="http://localhost:8002",
-                    help="Local inference server URL (only used in local mode)")
-    p.add_argument("--backend-url", default="http://localhost:8000",
-                    help="Backend API URL")
-    p.add_argument("--exit-timeout", type=float, default=30.0,
-                    help="Seconds before lost track counts as exit")
+    p.add_argument("--conf", type=float, default=0.40, help="Detection confidence")
+    p.add_argument("--backend-url", default="http://localhost:8000", help="Backend API URL")
+    p.add_argument("--exit-timeout", type=float, default=30.0, help="Exit timeout seconds")
     args = p.parse_args()
 
-    # Set globals from args (CLI args override .env)
-    global INFERENCE_MODE, INFERENCE_URL, BACKEND_URL, DETECTION_CONF, EXIT_TIMEOUT_S
-    if args.mode:
-        INFERENCE_MODE = args.mode
-    INFERENCE_URL = args.inference_url
+    global BACKEND_URL, DETECTION_CONF, EXIT_TIMEOUT_S
     BACKEND_URL = args.backend_url
     DETECTION_CONF = args.conf
     EXIT_TIMEOUT_S = args.exit_timeout
 
-    # Load zones
-    global zones
-    zones = load_zones(args.config)
-    print(f"[INFO] Loaded {len(zones)} zones")
-
     # Determine video source
     if args.youtube:
-        print(f"[INFO] Processing YouTube video: {args.youtube}")
         video_source = get_youtube_stream_url(args.youtube)
     else:
         video_source = args.source
@@ -933,12 +638,11 @@ def main():
     # Start tracking in background thread
     tracking_thread = threading.Thread(
         target=run_tracking,
-        args=(video_source, args.conf, args.backend_url),
+        args=(video_source, args.conf, args.backend_url, args.config),
         daemon=True,
     )
     tracking_thread.start()
 
-    # Start Flask server
     print(f"[INFO] Starting video server on http://0.0.0.0:{args.port}")
     print(f"[INFO] Stream URL: http://localhost:{args.port}/video_feed")
     app.run(host="0.0.0.0", port=args.port, debug=False, threaded=True)

@@ -2,19 +2,21 @@
 
 Real-time people counting & analytics platform. Computer vision + dashboards for foot traffic in physical spaces (retail, restaurants, venues). Privacy-first: no video/images stored, only counts and journey metadata.
 
-## Current Status: CV Upgrade In Progress
+## Current Status: CV Architecture Upgraded (RF-DETR + Supervision)
 
-**Phase**: Foundation work (Sprint 1) — security fixes, backend split, test infrastructure
+**Phase**: Detection pipeline migrated from YOLO/ultralytics (AGPL) → RF-DETR + Supervision (Apache 2.0/MIT)
 **Branch**: `feature/toolset-enhancement`
 **Reference docs**: `JANUS-AUDIT-REPORT.md`, `JANUS-RESEARCH-REPORT.md`, `JANUS-ARCHITECTURE-DESIGN.md`, `JANUS-TEST-PLAN.md`, `DEVELOPMENT-GATES.md`
 
 ## Architecture
 
 ```
-Frontend (React+Vite :3003)  →  Backend (Flask :8000)  ←  Edge Agent (YOLO, optional)
-                                      ↓                    Inference Server (FastAPI :8002)
-                                 SQLite (janus.db)          Video Streamer (Flask :8001)
+Frontend (React+Vite :3003)  →  Backend (Flask :8000)  ←  Edge Agent (RF-DETR + ByteTrack)
+                                      ↓                    Video Streamer (Flask :8001)
+                                 SQLite (janus.db)
 ```
+
+**Note**: Inference Server (`inference-server/server.py`) is deprecated — detection now runs in-process via RF-DETR.
 
 **Primary frontend**: `frontend-v3/` (Corporate theme, 13 pages)
 **6 legacy themes**: v1-v6 (same backend API, different CSS)
@@ -31,8 +33,8 @@ cd frontend-v3 && npm run dev                   # Port 3003
 # Seed demo data
 curl -X POST http://localhost:8000/seed_demo
 
-# Edge Agent (optional)
-cd edge_agent && python edge_agent.py --rtsp 0  # 0=webcam
+# Edge Agent (optional — requires rfdetr, trackers, supervision)
+cd edge_agent && python edge_agent.py --source 0  # 0=webcam
 ```
 
 ---
@@ -100,23 +102,23 @@ cd backend && python -m pytest tests/ -v && cd ../edge_agent && python -m pytest
 | File | What | Lines |
 |------|------|-------|
 | `backend/main.py` | Monolithic Flask backend — all routes, DB, KPI logic | 2,631 |
-| `edge_agent/edge_agent.py` | Basic YOLO + ByteTrack counter | 117 |
-| `edge_agent/edge_agent_enhanced.py` | Full zone tracking + events + sessions | ~500 |
-| `edge_agent/batch_processor.py` | Offline batch video analysis | ~600 |
-| `edge_agent/video_streamer.py` | MJPEG stream + detection overlay | ~300 |
-| `inference-server/server.py` | FastAPI local YOLO inference | 233 |
+| `edge_agent/edge_agent.py` | RF-DETR + ByteTrack occupancy counter | ~100 |
+| `edge_agent/edge_agent_enhanced.py` | RF-DETR + Supervision polygon zones + sessions | ~290 |
+| `edge_agent/batch_processor.py` | Offline batch analysis (RF-DETR + Supervision) | ~470 |
+| `edge_agent/video_streamer.py` | MJPEG stream + RF-DETR + Supervision annotators | ~450 |
+| `inference-server/server.py` | **DEPRECATED** — FastAPI YOLO inference (kept for reference) | 233 |
 | `shared/RealTimeDetection.jsx` | Browser COCO-SSD + IoU tracker | 797 |
 | `shared/RealTimeDetectionEnhanced.jsx` | Browser COCO-SSD + ByteTrack JS | 936 |
 | `shared/Tracking3DView.jsx` | Simulated isometric 3D (NOT real data) | 558 |
 | `shared/HumanoidTrackingDemo.jsx` | Canvas stick-figure animation | 715 |
-| `edge_agent/zones.json` | Zone definitions (pixel rectangles) | ~20 |
+| `edge_agent/zones.json` | Zone definitions (polygons + lines) | ~40 |
 
 ## Tech Stack
 
 - **Frontend**: React 18, Vite 5, Recharts, Nivo, Framer Motion
 - **Backend**: Flask 3.0, SQLite (WAL mode), Flask-CORS
-- **Edge Agent**: Python, OpenCV, ultralytics (YOLO), supervision (ByteTrack)
-- **Inference Server**: FastAPI, uvicorn, ultralytics
+- **Edge Agent**: Python, OpenCV, rfdetr (RF-DETR), trackers (ByteTrack), supervision (zones/annotators)
+- **Inference Server**: DEPRECATED (detection runs in-process via RF-DETR)
 - **Testing**: pytest (backend + edge), vitest + RTL (frontend), Playwright (E2E)
 
 ## Database (SQLite — auto-created)
@@ -159,20 +161,23 @@ cd backend && python -m pytest tests/ -v && cd ../edge_agent && python -m pytest
 
 **Full gate details**: See `DEVELOPMENT-GATES.md`
 
-## Detection Pipeline (Current)
+## Detection Pipeline (Current — All Apache 2.0 / MIT)
 
 | Pipeline | Model | Tracker | Output |
 |----------|-------|---------|--------|
 | Browser Standard | COCO-SSD lite_mobilenet_v2 | IoU (greedy) | Bboxes |
 | Browser Enhanced | COCO-SSD + ByteTrack JS | Kalman + EMA | Bboxes |
-| Edge Live | yolov8n.pt | ByteTrack | Aggregate count |
-| Batch Offline | yolo11l.pt | BoT-SORT | Events + sessions |
+| Edge Live | **RF-DETR-Nano** (Apache 2.0) | **ByteTrack** (Roboflow Trackers) | Count + zones + events |
+| Edge Enhanced | **RF-DETR-Nano** | **ByteTrack** + Supervision PolygonZone/LineZone | Zones + entry/exit + sessions |
+| Batch Offline | **RF-DETR-Nano** | **ByteTrack** + Supervision | Events + sessions (SQLite) |
+| Video Streamer | **RF-DETR-Nano** | **ByteTrack** + ReID + Supervision annotators | MJPEG + stats |
 
-## Detection Pipeline (Target)
+## Detection Pipeline (Future Upgrades)
 
-| Pipeline | Model | Tracker | Output |
-|----------|-------|---------|--------|
-| Edge Live | **YOLO26s-seg** | **BoT-SORT + ReID (BoxMOT)** | **Masks + world coords + events** |
-| Batch Offline | **YOLO26l-seg** | **BoT-SORT + ReID** | **Masks + world coords + events** |
-| Browser | **YOLO26n-seg (ONNX + WebGPU)** | ByteTrack JS | **Masks + bboxes** |
-| 3D View | N/A (consumes edge data) | N/A | **Real positions via homography** |
+| Upgrade | When | What |
+|---------|------|------|
+| RF-DETR-Small/Medium | NVIDIA GPU deployment | +5 mAP, ~3.5ms T4 latency |
+| OpenVINO INT8 export | Production on Intel Iris Xe | ~35-50 FPS on iGPU |
+| BoxMOT BoostTrack | If ByteTrack accuracy insufficient | +6.5 HOTA (AGPL tradeoff) |
+| Homography calibration | Sprint 3 | Pixel → world coordinates |
+| SAM 3.1 labeling | Fine-tuning on custom camera angles | Auto-label training data |

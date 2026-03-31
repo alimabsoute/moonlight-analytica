@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """
-Enhanced Janus Edge Agent with Zone Tracking
-===========================================
-Tracks people across zones, detects entry/exit, calculates dwell time, and streams events.
+Enhanced Janus Edge Agent — RF-DETR + Supervision Zones
+=======================================================
+Tracks people across polygon zones, detects entry/exit via line crossing,
+calculates dwell time, and streams events to the backend.
 
 Features:
-- Multi-zone tracking (entrance, main_floor, queue, checkout)
-- Entry/exit detection via virtual lines
-- Person re-identification with persistent tracking
-- Session management (entry time -> exit time)
+- RF-DETR detection (Apache 2.0) — transformer-based, global attention
+- ByteTrack tracking via Roboflow Trackers (Apache 2.0)
+- Polygon zones via Supervision PolygonZone (MIT)
+- Entry/exit counting via Supervision LineZone
+- Session management with dwell time tracking
 - Real-time event streaming to backend
-- Zone configuration via JSON file
-- YouTube video support (paste any YouTube URL)
+- Zone configuration via JSON file (polygon + line definitions)
+- YouTube video support via yt-dlp
 
 Usage:
-    python edge_agent_enhanced.py --rtsp 0 --backend http://localhost:8000 --config zones.json
-    python edge_agent_enhanced.py --youtube "https://www.youtube.com/watch?v=VIDEO_ID" --backend http://localhost:8000
+    python edge_agent_enhanced.py --source 0 --backend http://localhost:8000 --config zones.json
+    python edge_agent_enhanced.py --youtube "https://youtube.com/watch?v=..." --backend http://localhost:8000
 """
 
 import argparse
@@ -26,14 +28,15 @@ import sys
 import time
 from collections import defaultdict
 from datetime import datetime, timezone
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
+import cv2
 import numpy as np
 import requests
-from ultralytics import YOLO
+import supervision as sv
+from rfdetr import RFDETRNano
+from trackers import ByteTrackTracker
 
-# Globals
 _RUNNING = True
 
 def _handle_sig(signum, frame):
@@ -44,363 +47,297 @@ signal.signal(signal.SIGINT, _handle_sig)
 signal.signal(signal.SIGTERM, _handle_sig)
 
 
-class Zone:
-    """Represents a physical zone in the tracking area"""
-    def __init__(self, zone_id: int, name: str, x1: int, y1: int, x2: int, y2: int, zone_type: str = "general"):
-        self.zone_id = zone_id
-        self.name = name
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.zone_type = zone_type
+# ── Zone Configuration Loading ───────────────────────────────────────
 
-    def contains_point(self, x: float, y: float) -> bool:
-        """Check if a point (x, y) is inside this zone"""
-        return self.x1 <= x <= self.x2 and self.y1 <= y <= self.y2
-
-    def to_dict(self):
-        return {
-            "zone_id": self.zone_id,
-            "name": self.name,
-            "x1": self.x1,
-            "y1": self.y1,
-            "x2": self.x2,
-            "y2": self.y2,
-            "zone_type": self.zone_type
-        }
-
-
-class PersonTracker:
-    """Tracks a single person's session across zones"""
-    def __init__(self, person_id: str, entry_time: datetime, initial_zone: Optional[Zone] = None):
-        self.person_id = person_id
-        self.entry_time = entry_time
-        self.exit_time: Optional[datetime] = None
-        self.current_zone: Optional[Zone] = initial_zone
-        self.zone_history: List[str] = [initial_zone.name] if initial_zone else []
-        self.last_seen = entry_time
-        self.converted = False  # Did they reach checkout?
-
-    def update_zone(self, new_zone: Optional[Zone], timestamp: datetime):
-        """Update person's current zone"""
-        self.last_seen = timestamp
-        if new_zone and (not self.current_zone or new_zone.zone_id != self.current_zone.zone_id):
-            self.current_zone = new_zone
-            if new_zone.name not in self.zone_history:
-                self.zone_history.append(new_zone.name)
-
-            # Check for conversion (reached checkout)
-            if new_zone.zone_type == "checkout":
-                self.converted = True
-
-    def mark_exit(self, timestamp: datetime):
-        """Mark this person as having exited"""
-        self.exit_time = timestamp
-
-    def get_dwell_seconds(self) -> Optional[int]:
-        """Get total dwell time in seconds"""
-        if self.exit_time:
-            return int((self.exit_time - self.entry_time).total_seconds())
-        return None
-
-    def is_active(self, current_time: datetime, timeout_seconds: int = 300) -> bool:
-        """Check if this person is still being tracked (seen within timeout)"""
-        return (current_time - self.last_seen).total_seconds() < timeout_seconds
-
-
-class EventStream:
-    """Handles streaming events to backend"""
-    def __init__(self, backend_url: str):
-        self.backend_url = backend_url.rstrip('/')
-
-    def post_event(self, event_type: str, person_id: str, zone_id: Optional[int] = None,
-                   direction: Optional[str] = None, confidence: float = 1.0) -> bool:
-        """Post a single event to backend"""
-        url = f"{self.backend_url}/events"
-        payload = {
-            "event_type": event_type,  # entry, exit, zone_change
-            "person_id": person_id,
-            "zone_id": zone_id,
-            "direction": direction,  # in, out, lateral
-            "confidence": confidence,
-            "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds")
-        }
-
-        try:
-            r = requests.post(url, json=payload, timeout=5)
-            r.raise_for_status()
-            return True
-        except Exception as e:
-            print(f"[WARN] POST /events failed: {e}", file=sys.stderr)
-            return False
-
-    def post_session(self, tracker: PersonTracker) -> bool:
-        """Post a completed session to backend"""
-        url = f"{self.backend_url}/sessions"
-
-        dwell_seconds = tracker.get_dwell_seconds()
-        if dwell_seconds is None:
-            return False
-
-        payload = {
-            "person_id": tracker.person_id,
-            "entry_time": tracker.entry_time.isoformat(timespec="seconds"),
-            "exit_time": tracker.exit_time.isoformat(timespec="seconds") if tracker.exit_time else None,
-            "dwell_seconds": dwell_seconds,
-            "zone_path": json.dumps(tracker.zone_history),
-            "converted": 1 if tracker.converted else 0
-        }
-
-        try:
-            r = requests.post(url, json=payload, timeout=5)
-            r.raise_for_status()
-            return True
-        except Exception as e:
-            print(f"[WARN] POST /sessions failed: {e}", file=sys.stderr)
-            return False
-
-
-class ZoneTracker:
-    """Main tracking coordinator"""
-    def __init__(self, zones: List[Zone], backend_url: str):
-        self.zones = zones
-        self.active_trackers: Dict[int, PersonTracker] = {}  # track_id -> PersonTracker
-        self.completed_sessions: List[PersonTracker] = []
-        self.event_stream = EventStream(backend_url)
-        self.person_id_map: Dict[int, str] = {}  # track_id -> persistent person_id
-        self.next_person_id = 1
-
-    def get_zone_at_point(self, x: float, y: float) -> Optional[Zone]:
-        """Find which zone contains this point"""
-        for zone in self.zones:
-            if zone.contains_point(x, y):
-                return zone
-        return None
-
-    def get_or_create_person_id(self, track_id: int) -> str:
-        """Get persistent person ID for this track_id"""
-        if track_id not in self.person_id_map:
-            self.person_id_map[track_id] = f"P{self.next_person_id:06d}"
-            self.next_person_id += 1
-        return self.person_id_map[track_id]
-
-    def update(self, track_id: int, bbox: Tuple[float, float, float, float], timestamp: datetime):
-        """Update tracking state for a detected person"""
-        x1, y1, x2, y2 = bbox
-        center_x = (x1 + x2) / 2
-        center_y = (y1 + y2) / 2
-
-        current_zone = self.get_zone_at_point(center_x, center_y)
-        person_id = self.get_or_create_person_id(track_id)
-
-        # New person entering
-        if track_id not in self.active_trackers:
-            tracker = PersonTracker(person_id, timestamp, current_zone)
-            self.active_trackers[track_id] = tracker
-
-            # Post entry event
-            if current_zone:
-                self.event_stream.post_event("entry", person_id, current_zone.zone_id, "in")
-                print(f"[ENTRY] {person_id} -> {current_zone.name}")
-
-        # Existing person
-        else:
-            tracker = self.active_trackers[track_id]
-            old_zone = tracker.current_zone
-
-            # Zone change detected
-            if current_zone and old_zone and current_zone.zone_id != old_zone.zone_id:
-                tracker.update_zone(current_zone, timestamp)
-                self.event_stream.post_event("zone_change", person_id, current_zone.zone_id, "lateral")
-                print(f"[ZONE_CHANGE] {person_id}: {old_zone.name} -> {current_zone.name}")
-
-            # Update last seen time
-            tracker.last_seen = timestamp
-
-    def cleanup_inactive(self, current_time: datetime, timeout_seconds: int = 300):
-        """Remove inactive trackers and mark as exited"""
-        to_remove = []
-
-        for track_id, tracker in self.active_trackers.items():
-            if not tracker.is_active(current_time, timeout_seconds):
-                # Mark as exit
-                tracker.mark_exit(current_time)
-
-                # Post exit event
-                if tracker.current_zone:
-                    self.event_stream.post_event("exit", tracker.person_id, tracker.current_zone.zone_id, "out")
-
-                # Post session
-                self.event_stream.post_session(tracker)
-
-                dwell = tracker.get_dwell_seconds()
-                print(f"[EXIT] {tracker.person_id} | Dwell: {dwell}s | Zones: {' -> '.join(tracker.zone_history)}")
-
-                self.completed_sessions.append(tracker)
-                to_remove.append(track_id)
-
-        for track_id in to_remove:
-            del self.active_trackers[track_id]
-
-
-def load_zone_config(config_path: str) -> List[Zone]:
-    """Load zone configuration from JSON file"""
+def load_zone_config(config_path: str, frame_w: int = 640, frame_h: int = 480):
+    """Load zones and lines from JSON config, scaled to frame dimensions."""
     if not os.path.exists(config_path):
-        print(f"[WARN] Config file not found: {config_path}, using defaults")
-        return get_default_zones()
+        print(f"[WARN] Config not found: {config_path}, using defaults")
+        return _default_zones(frame_w, frame_h), _default_lines(frame_w, frame_h)
 
     try:
         with open(config_path, 'r') as f:
             data = json.load(f)
 
-        zones = []
-        for z in data.get("zones", []):
-            zones.append(Zone(
-                zone_id=z["zone_id"],
-                name=z["name"],
-                x1=z["x1"],
-                y1=z["y1"],
-                x2=z["x2"],
-                y2=z["y2"],
-                zone_type=z.get("zone_type", "general")
-            ))
+        ref_w, ref_h = data.get("reference_resolution", [640, 480])
+        sx = frame_w / ref_w
+        sy = frame_h / ref_h
 
-        print(f"[INFO] Loaded {len(zones)} zones from {config_path}")
-        return zones
+        zones = {}
+        for z in data.get("zones", []):
+            name = z["name"]
+            # Use polygon if available, otherwise derive from AABB
+            if "polygon" in z:
+                pts = np.array(z["polygon"], dtype=np.float32)
+            else:
+                x1, y1, x2, y2 = z["x1"], z["y1"], z["x2"], z["y2"]
+                pts = np.array([[x1, y1], [x2, y1], [x2, y2], [x1, y2]], dtype=np.float32)
+
+            # Scale to actual frame
+            pts[:, 0] *= sx
+            pts[:, 1] *= sy
+            pts = pts.astype(np.int32)
+
+            polygon_zone = sv.PolygonZone(polygon=pts)
+            zones[name] = {
+                "zone": polygon_zone,
+                "zone_id": z["zone_id"],
+                "zone_type": z.get("zone_type", "general"),
+            }
+
+        lines = []
+        for ln in data.get("lines", []):
+            start = sv.Point(int(ln["start"][0] * sx), int(ln["start"][1] * sy))
+            end = sv.Point(int(ln["end"][0] * sx), int(ln["end"][1] * sy))
+            line_zone = sv.LineZone(start=start, end=end)
+            lines.append({"name": ln["name"], "line": line_zone})
+
+        print(f"[INFO] Loaded {len(zones)} zones, {len(lines)} lines from {config_path}")
+        return zones, lines
 
     except Exception as e:
         print(f"[ERROR] Failed to load config: {e}, using defaults")
-        return get_default_zones()
+        return _default_zones(frame_w, frame_h), _default_lines(frame_w, frame_h)
 
 
-def get_default_zones() -> List[Zone]:
-    """Get default zone configuration for 640x480 frame"""
-    return [
-        Zone(1, "entrance", 0, 0, 200, 480, "entrance"),
-        Zone(2, "main_floor", 200, 0, 440, 480, "general"),
-        Zone(3, "queue", 440, 240, 540, 480, "queue"),
-        Zone(4, "checkout", 540, 0, 640, 480, "checkout")
+def _default_zones(frame_w: int, frame_h: int):
+    sx, sy = frame_w / 640, frame_h / 480
+    defaults = [
+        ("entrance", 1, "entrance", [[0, 0], [200, 0], [200, 480], [0, 480]]),
+        ("main_floor", 2, "general", [[200, 0], [440, 0], [440, 480], [200, 480]]),
+        ("queue", 3, "queue", [[440, 240], [540, 240], [540, 480], [440, 480]]),
+        ("checkout", 4, "checkout", [[540, 0], [640, 0], [640, 480], [540, 480]]),
     ]
+    zones = {}
+    for name, zid, ztype, pts in defaults:
+        pts_arr = np.array(pts, dtype=np.float32)
+        pts_arr[:, 0] *= sx
+        pts_arr[:, 1] *= sy
+        polygon_zone = sv.PolygonZone(polygon=pts_arr.astype(np.int32))
+        zones[name] = {"zone": polygon_zone, "zone_id": zid, "zone_type": ztype}
+    return zones
 
+
+def _default_lines(frame_w: int, frame_h: int):
+    sx, sy = frame_w / 640, frame_h / 480
+    start = sv.Point(int(200 * sx), int(0 * sy))
+    end = sv.Point(int(200 * sx), int(480 * sy))
+    return [{"name": "entry_line", "line": sv.LineZone(start=start, end=end)}]
+
+
+# ── Event Posting ────────────────────────────────────────────────────
+
+def post_event(backend_url: str, event_type: str, person_id: str,
+               zone_id: Optional[int] = None, direction: Optional[str] = None):
+    try:
+        requests.post(f"{backend_url}/events", json={
+            "event_type": event_type,
+            "person_id": person_id,
+            "zone_id": zone_id,
+            "direction": direction,
+            "confidence": 1.0,
+            "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        }, timeout=2)
+    except Exception:
+        pass
+
+
+def post_session(backend_url: str, person_id: str, entry_time: datetime,
+                 exit_time: datetime, zone_history: list, converted: bool):
+    dwell = int((exit_time - entry_time).total_seconds())
+    try:
+        requests.post(f"{backend_url}/sessions", json={
+            "person_id": person_id,
+            "entry_time": entry_time.isoformat(timespec="seconds"),
+            "exit_time": exit_time.isoformat(timespec="seconds"),
+            "dwell_seconds": dwell,
+            "zone_path": json.dumps(zone_history),
+            "converted": 1 if converted else 0,
+        }, timeout=2)
+    except Exception:
+        pass
+
+
+# ── YouTube Helper ───────────────────────────────────────────────────
 
 def get_youtube_stream_url(youtube_url: str) -> str:
-    """Extract direct video stream URL from YouTube using yt-dlp"""
     try:
         import yt_dlp
     except ImportError:
         print("[ERROR] yt-dlp not installed. Run: pip install yt-dlp")
         sys.exit(1)
 
-    ydl_opts = {
-        'format': 'best[height<=720]',  # Get 720p or lower for performance
-        'quiet': True,
-        'no_warnings': True
-    }
-
+    ydl_opts = {'format': 'best[height<=720]', 'quiet': True, 'no_warnings': True}
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(youtube_url, download=False)
             return info['url']
     except Exception as e:
         print(f"[ERROR] Failed to extract YouTube URL: {e}")
-        print("[HINT] Make sure the YouTube URL is valid and accessible")
         sys.exit(1)
 
 
+# ── Main Pipeline ────────────────────────────────────────────────────
+
 def main():
-    p = argparse.ArgumentParser(description="Enhanced edge tracker with zone detection")
+    p = argparse.ArgumentParser(description="Enhanced edge tracker with RF-DETR + Supervision zones")
 
-    # Video source options (mutually exclusive)
     source_group = p.add_mutually_exclusive_group(required=True)
-    source_group.add_argument("--rtsp", help="Video source (rtsp://, file path, or 0 for webcam)")
-    source_group.add_argument("--youtube", help="YouTube video URL (e.g., https://www.youtube.com/watch?v=...)")
+    source_group.add_argument("--source", help="Video source (rtsp://, file path, or 0 for webcam)")
+    source_group.add_argument("--youtube", help="YouTube video URL")
 
-    p.add_argument("--backend", default=os.getenv("JANUS_BACKEND", "http://localhost:8000"),
-                   help="Backend URL")
+    p.add_argument("--backend", default=os.getenv("JANUS_BACKEND", "http://localhost:8000"))
     p.add_argument("--config", default="zones.json", help="Zone configuration file")
-    p.add_argument("--model", default="yolov8n.pt", help="YOLO model")
-    p.add_argument("--conf", type=float, default=0.35, help="Detection confidence")
-    p.add_argument("--device", default="cpu", help="Inference device")
-    p.add_argument("--timeout", type=int, default=30, help="Person timeout in seconds")
+    p.add_argument("--conf", type=float, default=0.40, help="Detection confidence")
+    p.add_argument("--timeout", type=int, default=30, help="Person exit timeout in seconds")
     args = p.parse_args()
 
     # Determine video source
     if args.youtube:
         print(f"[INFO] Processing YouTube video: {args.youtube}")
-        print("[INFO] Extracting stream URL (this may take a moment)...")
         video_source = get_youtube_stream_url(args.youtube)
-        print(f"[INFO] Stream URL obtained successfully")
     else:
-        video_source = args.rtsp
+        video_source = int(args.source) if args.source.isdigit() else args.source
+
+    # Open video to get dimensions
+    cap = cv2.VideoCapture(video_source)
+    if not cap.isOpened():
+        print(f"[ERROR] Failed to open: {video_source}")
+        sys.exit(1)
+
+    frame_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) or 640
+    frame_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) or 480
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
 
     print(f"[enhanced_edge_agent] Starting...")
-    print(f"  Source: {args.youtube if args.youtube else args.rtsp}")
+    print(f"  Source: {args.youtube or args.source}")
+    print(f"  Resolution: {frame_w}x{frame_h} @ {fps:.1f} FPS")
     print(f"  Backend: {args.backend}")
-    print(f"  Config: {args.config}")
 
-    # Load zones
-    zones = load_zone_config(args.config)
-    for zone in zones:
-        print(f"  Zone: {zone.name} ({zone.x1},{zone.y1})->({zone.x2},{zone.y2}) [{zone.zone_type}]")
+    # Load zones scaled to frame dimensions
+    zones, lines = load_zone_config(args.config, frame_w, frame_h)
+    for name, z in zones.items():
+        print(f"  Zone: {name} [{z['zone_type']}]")
 
-    # Initialize tracker
-    zone_tracker = ZoneTracker(zones, args.backend)
+    # Initialize detection + tracking
+    model = RFDETRNano()
+    tracker = ByteTrackTracker(
+        lost_track_buffer=int(fps * 3),
+        minimum_consecutive_frames=3,
+    )
+    print("[INFO] RF-DETR-Nano + ByteTrack initialized")
 
-    # Load YOLO model
-    model = YOLO(args.model)
-
-    # Start tracking
+    # Session tracking state
+    sessions: Dict[int, dict] = {}  # tracker_id -> {entry_time, zone_history, converted}
     last_cleanup = time.time()
-    cleanup_interval = 10  # seconds
+    cleanup_interval = 10
 
     try:
-        results_gen = model.track(
-            source=video_source,
-            stream=True,
-            device=args.device,
-            conf=args.conf,
-            iou=0.5,
-            classes=[0],  # person class
-            tracker="bytetrack.yaml",
-            verbose=False
-        )
-
-        for res in results_gen:
-            if not _RUNNING:
-                break
+        while _RUNNING:
+            ret, frame = cap.read()
+            if not ret:
+                cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                continue
 
             timestamp = datetime.now(timezone.utc)
-            boxes = getattr(res, "boxes", None)
 
-            if boxes is not None and boxes.shape[0] > 0:
-                ids = boxes.id
-                xyxy = boxes.xyxy
+            # 1. Detect with RF-DETR
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            detections = model.predict(rgb, threshold=args.conf)
 
-                if ids is not None:
-                    for i, track_id in enumerate(ids.cpu().numpy().astype(int)):
-                        bbox = xyxy[i].cpu().numpy()
-                        zone_tracker.update(track_id, tuple(bbox), timestamp)
+            # Filter to person class only
+            if detections.class_id is not None and len(detections) > 0:
+                detections = detections[detections.class_id == 0]
 
-            # Periodic cleanup of inactive trackers
+            # 2. Track with ByteTrack
+            detections = tracker.update(detections)
+
+            # 3. Zone analytics
+            for name, z_info in zones.items():
+                z_info["zone"].trigger(detections)
+
+            # 4. Line crossing (entry/exit)
+            for ln in lines:
+                ln["line"].trigger(detections)
+
+            # 5. Session tracking
+            if detections.tracker_id is not None:
+                active_ids = set()
+                for i, track_id in enumerate(detections.tracker_id):
+                    track_id = int(track_id)
+                    active_ids.add(track_id)
+
+                    # Determine zone from bottom-center anchor
+                    feet = detections.get_anchors_coordinates(sv.Position.BOTTOM_CENTER)
+                    fx, fy = feet[i]
+                    current_zone = None
+                    for name, z_info in zones.items():
+                        poly = z_info["zone"].polygon
+                        if cv2.pointPolygonTest(poly.astype(np.float32), (float(fx), float(fy)), False) >= 0:
+                            current_zone = name
+                            break
+
+                    person_id = f"P{track_id:06d}"
+
+                    if track_id not in sessions:
+                        sessions[track_id] = {
+                            "entry_time": timestamp,
+                            "last_seen": timestamp,
+                            "zone_history": [current_zone] if current_zone else [],
+                            "converted": False,
+                        }
+                        if current_zone:
+                            post_event(args.backend, "entry", person_id,
+                                       zones[current_zone]["zone_id"], "in")
+                            print(f"[ENTRY] {person_id} -> {current_zone}")
+                    else:
+                        sess = sessions[track_id]
+                        sess["last_seen"] = timestamp
+                        old_zone = sess["zone_history"][-1] if sess["zone_history"] else None
+                        if current_zone and current_zone != old_zone:
+                            if current_zone not in sess["zone_history"]:
+                                sess["zone_history"].append(current_zone)
+                            post_event(args.backend, "zone_change", person_id,
+                                       zones[current_zone]["zone_id"], "lateral")
+                            print(f"[ZONE_CHANGE] {person_id}: {old_zone} -> {current_zone}")
+
+                        # Check conversion
+                        if current_zone and zones.get(current_zone, {}).get("zone_type") == "checkout":
+                            sess["converted"] = True
+
+            # 6. Cleanup inactive sessions
             now = time.time()
             if now - last_cleanup >= cleanup_interval:
-                zone_tracker.cleanup_inactive(timestamp, args.timeout)
-                last_cleanup = now
+                to_remove = []
+                for tid, sess in sessions.items():
+                    elapsed = (timestamp - sess["last_seen"]).total_seconds()
+                    if elapsed > args.timeout:
+                        person_id = f"P{tid:06d}"
+                        post_session(args.backend, person_id, sess["entry_time"],
+                                     sess["last_seen"], sess["zone_history"], sess["converted"])
+                        post_event(args.backend, "exit", person_id, None, "out")
+                        dwell = int((sess["last_seen"] - sess["entry_time"]).total_seconds())
+                        print(f"[EXIT] {person_id} | Dwell: {dwell}s | Zones: {' -> '.join(filter(None, sess['zone_history']))}")
+                        to_remove.append(tid)
 
-                # Status update
-                active = len(zone_tracker.active_trackers)
-                completed = len(zone_tracker.completed_sessions)
-                print(f"[STATUS] Active: {active} | Completed: {completed}")
+                for tid in to_remove:
+                    del sessions[tid]
+
+                last_cleanup = now
+                active = len(sessions)
+                print(f"[STATUS] Active: {active} | Line in: {lines[0]['line'].in_count if lines else 0} out: {lines[0]['line'].out_count if lines else 0}")
 
     except KeyboardInterrupt:
         print("\n[INFO] Shutting down...")
     finally:
-        # Final cleanup
+        # Final cleanup — close all sessions
         timestamp = datetime.now(timezone.utc)
-        zone_tracker.cleanup_inactive(timestamp, timeout_seconds=0)
-
-        print(f"[FINAL] Total sessions: {len(zone_tracker.completed_sessions)}")
+        for tid, sess in sessions.items():
+            person_id = f"P{tid:06d}"
+            post_session(args.backend, person_id, sess["entry_time"],
+                         timestamp, sess["zone_history"], sess["converted"])
+        cap.release()
+        print(f"[FINAL] Total sessions: {len(sessions)}")
 
 
 if __name__ == "__main__":
