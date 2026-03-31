@@ -76,6 +76,11 @@ html { scroll-behavior: smooth; }
 .logo:hover { opacity: 0.85; }
 .logo-icon{width:36px;height:36px;color:#fff;transition:color .3s,filter .3s;filter:drop-shadow(0 0 8px rgba(255,255,255,.25))}
 .navbar.scrolled .logo-icon{color:#111827;filter:none}
+.logo-text{display:flex;flex-direction:column;line-height:1.1}
+.logo-text-top{font-size:1.1rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.logo-text-bot{font-size:.65rem;font-weight:300;letter-spacing:4.5px;text-transform:uppercase;opacity:.7}
+.navbar.scrolled .logo-text-top{color:#111827}
+.navbar.scrolled .logo-text-bot{color:#475569}
 .nav-menu {
   display: flex; list-style: none; gap: 2.2rem; margin-left: auto;
 }
@@ -885,13 +890,13 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="/" class="logo">
-                <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80" fill="none">
-                    <defs><filter id="lglow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-                    <circle cx="40" cy="40" r="28" stroke="currentColor" stroke-width="2"/>
-                    <line x1="8" y1="72" x2="64" y2="16" stroke="currentColor" stroke-width="1.8"/>
-                    <circle cx="10" cy="70" r="3" fill="currentColor" opacity=".6" filter="url(#lglow)"/>
+                <svg class="logo-icon" width="40" height="40" viewBox="0 0 100 100" fill="none">
+                    <defs><filter id="lglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                    <circle cx="52" cy="42" r="28" stroke="currentColor" stroke-width="2.2" filter="url(#lglow)"/>
+                    <line x1="5" y1="95" x2="74" y2="18" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="7" cy="93" r="1.5" fill="currentColor" opacity=".9"/>
                 </svg>
-                Moonlight Analytica
+                <span class="logo-text"><span class="logo-text-top">MOONLIGHT</span><span class="logo-text-bot">ANALYTICA</span></span>
             </a>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="/" class="nav-link">Home</a></li>
