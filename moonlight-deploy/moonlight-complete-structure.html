@@ -229,7 +229,8 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 .fc-up{color:#22c55e}
 .fc-down{color:#ef4444}
 @keyframes floatIn{0%{opacity:0;transform:scale(.8) translateY(16px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-@keyframes floatBob{0%{transform:translateY(0) rotate(0deg) rotateX(0deg) rotateY(0deg)}25%{transform:translateY(-12px) rotate(.5deg) rotateX(2deg) rotateY(-1.5deg)}50%{transform:translateY(-5px) rotate(0deg) rotateX(-1deg) rotateY(1deg)}75%{transform:translateY(-16px) rotate(-.5deg) rotateX(1.5deg) rotateY(-2deg)}100%{transform:translateY(0) rotate(0deg) rotateX(0deg) rotateY(0deg)}}
+@keyframes floatBob{0%{transform:translateY(0) rotate(0deg) rotateX(0deg) rotateY(0deg)}25%{transform:translateY(-18px) rotate(.5deg) rotateX(4deg) rotateY(-2deg)}50%{transform:translateY(-6px) rotate(0deg) rotateX(-2deg) rotateY(1.5deg)}75%{transform:translateY(-16px) rotate(-.5deg) rotateX(3deg) rotateY(-3deg)}100%{transform:translateY(0) rotate(0deg) rotateX(0deg) rotateY(0deg)}}
+@keyframes fcBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 
 /* Dashboard widget shapes for Janus section */
 .dash-widget{
@@ -330,11 +331,11 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 .zviz__scan::before{content:'';position:absolute;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(77,216,230,.5),transparent);animation:zvScan 4s linear infinite}
 @keyframes zvScan{0%{top:-2px}100%{top:100%}}
 /* 3D stage */
-.zviz__stage{position:absolute;top:60px;left:50%;width:90%;height:calc(100% - 90px);transform:translateX(-50%);perspective:1200px;perspective-origin:50% 35%}
+.zviz__stage{position:absolute;top:60px;left:50%;width:90%;height:calc(100% - 90px);transform:translateX(-50%);perspective:1200px;perspective-origin:50% 30%}
 .zviz__scene{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(55deg) rotateZ(-12deg);animation:zvRotate 20s ease-in-out infinite}
 @keyframes zvRotate{0%,100%{transform:rotateX(55deg) rotateZ(-12deg)}50%{transform:rotateX(55deg) rotateZ(-18deg)}}
 /* Floor plane */
-.zviz__floor{position:absolute;left:50%;top:50%;width:420px;height:320px;transform:translate(-50%,-50%) translateZ(0);transform-style:preserve-3d}
+.zviz__floor{position:absolute;left:50%;top:50%;width:480px;height:360px;transform:translate(-50%,-50%) translateZ(0);transform-style:preserve-3d}
 .zviz__floor-surface{position:absolute;inset:0;background:rgba(20,24,36,.9);border:1px solid rgba(77,216,230,.12);border-radius:4px}
 .zviz__floor-surface::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(77,216,230,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(77,216,230,.05) 1px,transparent 1px);background-size:30px 30px}
 /* 3D box zones with 6 faces */
@@ -399,8 +400,15 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 @keyframes capPulse{0%,100%{box-shadow:0 0 0 0 rgba(77,216,230,.15)}50%{box-shadow:0 0 0 8px rgba(77,216,230,0)}}
 @keyframes capCount{0%{transform:translateY(4px);opacity:0}100%{transform:translateY(0);opacity:1}}
 @keyframes capBarWave{0%{transform:scaleY(.3)}50%{transform:scaleY(1)}100%{transform:scaleY(.3)}}
-@keyframes capHeatPulse{0%,100%{opacity:.4;transform:scale(.95)}50%{opacity:.7;transform:scale(1.08)}}
-@keyframes capLineTrace{0%{stroke-dashoffset:300}100%{stroke-dashoffset:0}}
+@keyframes capHeatPulse{0%,100%{opacity:.3;transform:scale(.9)}50%{opacity:.85;transform:scale(1.15)}}
+/* Tab auto-rotate progress bar */
+.ind-tab{position:relative;overflow:hidden}
+.ind-tab::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:#4dd8e6;border-radius:1px}
+.ind-tab.active::after{animation:tabProgress 3s linear forwards}
+@keyframes tabProgress{0%{width:0}100%{width:100%}}
+/* Mannequin 3D improvements */
+.trk-figure .trk-shadow{position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:16px;height:5px;border-radius:50%;background:rgba(0,0,0,.3);filter:blur(2px)}
+@keyframes capLineTrace{0%{stroke-dashoffset:300;opacity:1}45%{stroke-dashoffset:0;opacity:1}55%{opacity:.3}65%{stroke-dashoffset:300;opacity:0}75%{opacity:0}100%{stroke-dashoffset:300;opacity:1}}
 .cap-live-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e;animation:livePulse 1.5s ease-in-out infinite}
 
 
@@ -630,14 +638,31 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
   .footer-links { flex-direction: column; gap: 8px; }
 }
 
-/* ═══ GLASSMORPHISM BETA BUTTON ═══ */
-.beta-invite-btn{position:relative;display:inline-flex;align-items:center;gap:12px;padding:18px 40px;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:#0a0f1a;background:rgba(255,255,255,.82);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);border:1px solid rgba(255,255,255,.35);border-radius:16px;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);box-shadow:0 4px 20px rgba(0,0,0,.12),0 16px 48px rgba(77,216,230,.06),inset 0 1px 0 rgba(255,255,255,.5);overflow:hidden;letter-spacing:-.2px}
-.beta-invite-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 32px rgba(0,0,0,.18),0 24px 64px rgba(77,216,230,.12),inset 0 1px 0 rgba(255,255,255,.8);background:rgba(255,255,255,.94)}
-.beta-invite-btn::before{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(77,216,230,.18),transparent);animation:betaShimmer 3s ease-in-out infinite}
-.beta-invite-btn::after{content:'';position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,rgba(77,216,230,.06),transparent 50%);pointer-events:none}
-@keyframes betaShimmer{0%{left:-100%}100%{left:200%}}
-.beta-invite-btn svg{width:18px;height:18px;transition:transform .3s}
-.beta-invite-btn:hover svg{transform:translateX(4px)}
+/* ═══ HERO CTA ROW ═══ */
+.hero-cta-row{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap}
+.hero-email-group{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.hero-email-label{font-size:.78rem;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.3px}
+.hero-email-field{display:flex;align-items:center;background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.18);border-radius:14px;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.hero-email-field:focus-within{border-color:rgba(77,216,230,.5);box-shadow:0 0 24px rgba(77,216,230,.12)}
+.hero-email-field input{border:none;background:transparent;padding:14px 18px;font-family:'Outfit',sans-serif;font-size:.92rem;color:#fff;outline:none;min-width:240px}
+.hero-email-field input::placeholder{color:rgba(255,255,255,.35)}
+.hero-email-field button{width:44px;height:44px;border:none;border-radius:10px;background:#4dd8e6;color:#0a0f1a;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:4px;flex-shrink:0;transition:background .2s,transform .2s}
+.hero-email-field button:hover{background:#36d6b3;transform:scale(1.05)}
+.hero-learn-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:1px solid rgba(255,255,255,.2);border-radius:60px;color:#fff;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500;text-decoration:none;cursor:pointer;transition:all .3s;background:transparent}
+.hero-learn-btn:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.06)}
+.hero-learn-btn .chevron-bounce{display:inline-block;animation:chevBounce 2s ease-in-out infinite}
+@keyframes chevBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+/* Beta modal overlay */
+.beta-modal{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:rgba(6,8,13,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .35s ease}
+.beta-modal.show{opacity:1;pointer-events:auto}
+.beta-modal__card{background:rgba(14,21,37,.95);border:1px solid rgba(77,216,230,.2);border-radius:20px;padding:48px 40px;text-align:center;max-width:420px;width:90%;transform:translateY(24px);transition:transform .4s cubic-bezier(.16,1,.3,1);box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 40px rgba(77,216,230,.08)}
+.beta-modal.show .beta-modal__card{transform:translateY(0)}
+.beta-modal__check{width:56px;height:56px;border-radius:50%;background:rgba(34,197,94,.12);border:2px solid #22c55e;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:checkPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes checkPop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.beta-modal__title{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:8px}
+.beta-modal__desc{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:24px}
+.beta-modal__close{padding:10px 28px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:transparent;color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.beta-modal__close:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3)}
 
 /* ═══ BULLET ANIMATIONS ═══ */
 .janus-bullet{display:flex;align-items:flex-start;gap:12px;font-size:.88rem;color:#475569;line-height:1.55;opacity:0;transform:translateX(-16px);animation:bulletSlide .5s ease forwards}
@@ -659,69 +684,93 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 .cta-toggle button{padding:12px 28px;border:none;font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .3s;background:transparent;color:#94a3b8}
 .cta-toggle button.active{background:#4dd8e6;color:#0a0f1a;border-radius:10px;box-shadow:0 2px 8px rgba(77,216,230,.25)}
 
-/* ═══ BETA EMAIL SLIDER ═══ */
-.beta-email-wrap{position:relative;display:inline-flex;align-items:center}
-.beta-invite-btn.expanded{padding:0;width:420px;background:rgba(255,255,255,.88);pointer-events:none}
-.beta-email-inner{display:flex;align-items:center;width:100%;padding:6px;gap:6px;opacity:0;transition:opacity .3s ease .1s}
-.beta-invite-btn.expanded .beta-email-inner{opacity:1}
-.beta-email-inner input{flex:1;border:none;background:transparent;font-family:'Outfit',sans-serif;font-size:.92rem;color:#0a0f1a;outline:none;padding:12px 14px}
-.beta-email-inner input::placeholder{color:#94a3b8}
-.beta-email-inner button{width:44px;height:44px;border:none;border-radius:12px;background:#4dd8e6;color:#0a0f1a;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
-.beta-email-inner button:hover{background:#36d6b3}
-.beta-confirm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:600;color:#22c55e;opacity:0;pointer-events:none;transition:opacity .3s}
-.beta-confirm.show{opacity:1}
+/* ═══ (beta email slider removed — replaced by hero-cta-row) ═══ */
 
 /* ═══ PAIN POINTS STRIP ═══ */
 .s-pain{padding:60px 24px;background:#0c1220;font-family:'Outfit',sans-serif;overflow:hidden}
 .s-pain .container{max-width:1160px;margin:0 auto;text-align:center}
-.s-pain h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:.6rem}
+.s-pain h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:.6rem;text-shadow:0 0 40px rgba(255,255,255,.1)}
 .s-pain .pain-sub{font-size:.95rem;color:rgba(255,255,255,.45);max-width:560px;margin:0 auto 2.5rem;line-height:1.7}
-.pain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .pain-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px 20px;text-align:center;opacity:0;transform:translateY(24px);transition:all .5s cubic-bezier(.16,1,.3,1);cursor:default}
 .pain-card.visible{opacity:1;transform:translateY(0)}
 .pain-card:hover{border-color:var(--pain-accent,rgba(255,255,255,.15));box-shadow:0 0 24px var(--pain-glow,rgba(239,68,68,.1));transform:translateY(-4px)}
-.pain-icon{width:56px;height:56px;margin:0 auto 16px;position:relative}
-.pain-stat{font-size:2.5rem;font-weight:800;font-family:'Outfit',sans-serif;color:var(--pain-accent,#ef4444);margin-bottom:6px;line-height:1}
-.pain-label{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.5}
+.pain-icon{width:64px;height:64px;margin:0 auto 16px;position:relative}
+.pain-stat{font-size:3rem;font-weight:800;font-family:'Outfit',sans-serif;color:var(--pain-accent,#ef4444);margin-bottom:6px;line-height:1;text-shadow:0 0 30px var(--pain-accent,rgba(239,68,68,.4))}
+.pain-label{font-size:.95rem;color:rgba(255,255,255,.7);line-height:1.5;opacity:0;animation:painLabelIn .5s ease forwards .8s}
+@keyframes painLabelIn{to{opacity:1}}
 
-/* Pain Icon: Blind Eye */
-.pain-eye{width:48px;height:28px;border:3px solid rgba(239,68,68,.6);border-radius:50%;position:absolute;top:14px;left:4px}
-.pain-eye::before{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:rgba(239,68,68,.5);top:50%;left:50%;transform:translate(-50%,-50%);animation:painEyeBlink 3s ease-in-out infinite}
-.pain-eye::after{content:'';position:absolute;width:56px;height:3px;background:rgba(239,68,68,.7);top:50%;left:-4px;transform:translateY(-50%) rotate(-30deg);border-radius:2px}
-@keyframes painEyeBlink{0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}50%{opacity:.3;transform:translate(-50%,-50%) scale(.6)}}
+/* Pain Icon: Blind Eye — enlarged + blink + slash animates in */
+.pain-eye{width:52px;height:32px;border:3px solid rgba(239,68,68,.6);border-radius:50%;position:absolute;top:12px;left:6px}
+.pain-eye::before{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:rgba(239,68,68,.5);top:50%;left:50%;transform:translate(-50%,-50%);animation:painEyeLook 4s ease-in-out infinite}
+.pain-eye::after{content:'';position:absolute;width:58px;height:3px;background:rgba(239,68,68,.8);top:50%;left:-3px;transform:translateY(-50%) rotate(-30deg) scaleX(0);transform-origin:left;border-radius:2px;animation:painSlashIn 4s ease infinite}
+@keyframes painEyeLook{0%,15%{transform:translate(-50%,-50%) scale(1)}20%{transform:translate(-30%,-50%) scale(1)}40%{transform:translate(-70%,-50%) scale(1)}55%{transform:translate(-50%,-50%) scale(1)}70%,80%{transform:translate(-50%,-50%) scaleY(.1)}85%,100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes painSlashIn{0%,40%{transform:translateY(-50%) rotate(-30deg) scaleX(0)}50%,90%{transform:translateY(-50%) rotate(-30deg) scaleX(1)}100%{transform:translateY(-50%) rotate(-30deg) scaleX(0)}}
 
 /* Pain Icon: Lag Clock */
-.pain-clock{width:44px;height:44px;border:3px solid rgba(245,158,11,.5);border-radius:50%;position:absolute;top:6px;left:6px}
-.pain-clock::before{content:'';position:absolute;width:2.5px;height:14px;background:rgba(245,158,11,.7);top:8px;left:50%;transform-origin:bottom center;transform:translateX(-50%);animation:painClockMin 4s steps(12) infinite}
-.pain-clock::after{content:'';position:absolute;width:2.5px;height:10px;background:rgba(245,158,11,.9);top:12px;left:50%;transform-origin:bottom center;transform:translateX(-50%);animation:painClockHr 8s linear infinite}
+.pain-clock{width:44px;height:44px;border:3px solid rgba(245,158,11,.5);border-radius:50%;position:absolute;top:10px;left:10px}
+.pain-clock::before{content:'';position:absolute;width:2.5px;height:14px;background:rgba(245,158,11,.8);top:8px;left:50%;transform-origin:bottom center;transform:translateX(-50%);animation:painClockMin 4s steps(12) infinite}
+.pain-clock::after{content:'';position:absolute;width:2.5px;height:10px;background:rgba(245,158,11,1);top:12px;left:50%;transform-origin:bottom center;transform:translateX(-50%);animation:painClockHr 8s linear infinite}
 @keyframes painClockMin{0%{transform:translateX(-50%) rotate(0deg)}100%{transform:translateX(-50%) rotate(360deg)}}
 @keyframes painClockHr{0%{transform:translateX(-50%) rotate(0deg)}50%{transform:translateX(-50%) rotate(170deg)}55%{transform:translateX(-50%) rotate(168deg)}60%{transform:translateX(-50%) rotate(180deg)}100%{transform:translateX(-50%) rotate(360deg)}}
 
-/* Pain Icon: Dollar Tally */
-.pain-dollar{font-size:2rem;font-weight:800;color:rgba(217,119,6,.6);position:absolute;top:8px;left:50%;transform:translateX(-50%)}
-.pain-tally{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:3px}
-.pain-tally span{width:2px;height:16px;background:rgba(217,119,6,.4);border-radius:1px;animation:painStrike 4s ease infinite}
-.pain-tally span:nth-child(5){transform:rotate(-30deg);margin-left:-14px}
-@keyframes painStrike{0%,70%{opacity:.4}80%{opacity:1}100%{opacity:.4}}
+/* Pain Icon: Dollar Tally — staggered appearance + strike-through */
+.pain-dollar{font-size:2rem;font-weight:800;color:rgba(217,119,6,.6);position:absolute;top:6px;left:50%;transform:translateX(-50%);animation:painDollarPulse 4s ease-in-out infinite}
+@keyframes painDollarPulse{0%,100%{text-shadow:none}50%{text-shadow:0 0 12px rgba(217,119,6,.4)}}
+.pain-tally{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:3px}
+.pain-tally span{width:2.5px;height:18px;background:rgba(217,119,6,.5);border-radius:1px;opacity:0;animation:painTallyIn 4s ease infinite}
+.pain-tally span:nth-child(1){animation-delay:0s}
+.pain-tally span:nth-child(2){animation-delay:.2s}
+.pain-tally span:nth-child(3){animation-delay:.4s}
+.pain-tally span:nth-child(4){animation-delay:.6s}
+.pain-tally span:nth-child(5){transform:rotate(-30deg);margin-left:-14px;animation-delay:.9s}
+@keyframes painTallyIn{0%,10%{opacity:0}15%,85%{opacity:1}90%,100%{opacity:0}}
 
-/* Pain Icon: Ghost Zero */
-.pain-zero{font-size:2.8rem;font-weight:800;color:rgba(156,163,175,.4);position:absolute;top:2px;left:50%;transform:translateX(-50%);animation:painPulseZero 3s ease-in-out infinite}
-.pain-ghost-chart{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:40px;height:20px;display:flex;align-items:flex-end;gap:3px}
-.pain-ghost-chart span{flex:1;background:rgba(156,163,175,.15);border-radius:1px 1px 0 0}
-@keyframes painPulseZero{0%,100%{opacity:.4;text-shadow:none}50%{opacity:.8;text-shadow:0 0 20px rgba(156,163,175,.3)}}
+/* Pain Icon: Ghost Zero — dramatic entrance */
+.pain-zero{font-size:2.8rem;font-weight:800;color:rgba(156,163,175,.4);position:absolute;top:2px;left:50%;transform:translateX(-50%);animation:painZeroDrama 3.5s ease-in-out infinite}
+.pain-ghost-chart{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:44px;height:22px;display:flex;align-items:flex-end;gap:3px}
+.pain-ghost-chart span{flex:1;border-radius:1px 1px 0 0;animation:painGhostBar 3.5s ease-in-out infinite}
+.pain-ghost-chart span:nth-child(1){animation-delay:0s}
+.pain-ghost-chart span:nth-child(2){animation-delay:.15s}
+.pain-ghost-chart span:nth-child(3){animation-delay:.3s}
+.pain-ghost-chart span:nth-child(4){animation-delay:.45s}
+.pain-ghost-chart span:nth-child(5){animation-delay:.6s}
+@keyframes painZeroDrama{0%{opacity:.2;transform:translateX(-50%) scale(2.5);filter:blur(4px);text-shadow:none}20%{opacity:.7;transform:translateX(-50%) scale(1);filter:blur(0)}50%{opacity:.9;text-shadow:0 0 20px rgba(239,68,68,.4)}100%{opacity:.2;transform:translateX(-50%) scale(2.5);filter:blur(4px)}}
+@keyframes painGhostBar{0%,20%{height:0;background:rgba(156,163,175,.25)}40%{height:var(--bar-h,30%);background:rgba(156,163,175,.25)}60%,100%{height:0;background:rgba(156,163,175,.08)}}
 
-/* ═══ HOW IT WORKS ═══ */
-.hiw-flow{margin-top:28px;position:relative;padding-left:32px}
-.hiw-line{position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,rgba(77,216,230,.3),rgba(77,216,230,.15));overflow:hidden}
-.hiw-line::before{content:'';position:absolute;width:100%;height:20px;background:linear-gradient(180deg,#4dd8e6,transparent);animation:hiwPulse 2.5s ease-in-out infinite}
-@keyframes hiwPulse{0%{top:-20px}100%{top:calc(100% + 20px)}}
-.hiw-step{display:flex;gap:14px;margin-bottom:20px;position:relative}
+/* Pain Icon: Broken Funnel (card 5) */
+.pain-funnel{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:40px;height:48px}
+.pain-funnel::before{content:'';position:absolute;top:0;left:0;width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:32px solid rgba(139,92,246,.25);border-radius:2px}
+.pain-funnel::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:10px;height:14px;background:rgba(139,92,246,.3);border-radius:0 0 3px 3px}
+.pain-funnel-dots{position:absolute;top:0;left:50%;transform:translateX(-50%);width:36px;height:48px;overflow:hidden}
+.pain-funnel-dots span{position:absolute;width:4px;height:4px;border-radius:50%;background:#8b5cf6;animation:funnelDrop 3s ease-in infinite}
+.pain-funnel-dots span:nth-child(1){left:20%;animation-delay:0s}
+.pain-funnel-dots span:nth-child(2){left:50%;animation-delay:.4s}
+.pain-funnel-dots span:nth-child(3){left:80%;animation-delay:.8s}
+.pain-funnel-dots span:nth-child(4){left:35%;animation-delay:1.2s}
+.pain-funnel-dots span:nth-child(5){left:65%;animation-delay:1.6s}
+@keyframes funnelDrop{0%{top:0;opacity:1}50%{opacity:.6}70%{opacity:0}100%{top:100%;opacity:0}}
+
+/* Pain Icon: Split Staff Bars (card 6) */
+.pain-split-bars{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;align-items:flex-end;height:44px}
+.pain-split-bar{width:14px;border-radius:2px 2px 0 0;position:relative}
+.pain-split-bar--traffic{background:rgba(244,63,94,.4);animation:painBarTraffic 4s ease-in-out infinite}
+.pain-split-bar--staff{background:rgba(244,63,94,.2);border:1px dashed rgba(244,63,94,.4);animation:painBarStaff 4s ease-in-out infinite}
+@keyframes painBarTraffic{0%,100%{height:35px}50%{height:15px}}
+@keyframes painBarStaff{0%,100%{height:15px}50%{height:38px}}
+
+/* ═══ HOW IT WORKS — HORIZONTAL ═══ */
+.hiw-flow{margin-top:28px;position:relative;display:flex;gap:20px;align-items:flex-start}
+.hiw-line{position:absolute;top:14px;left:28px;right:28px;height:2px;background:linear-gradient(90deg,rgba(77,216,230,.3),rgba(77,216,230,.15));overflow:hidden;z-index:0}
+.hiw-line::before{content:'';position:absolute;width:20px;height:100%;background:linear-gradient(90deg,#4dd8e6,transparent);animation:hiwPulseH 2.5s ease-in-out infinite}
+@keyframes hiwPulseH{0%{left:-20px}100%{left:calc(100% + 20px)}}
+.hiw-step{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;position:relative;gap:10px}
 .hiw-step:last-child{margin-bottom:0}
-.hiw-num{position:absolute;left:-32px;width:28px;height:28px;border-radius:50%;background:#4dd8e6;color:#0a0f1a;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 0 10px rgba(77,216,230,.3)}
+.hiw-num{width:28px;height:28px;border-radius:50%;background:#4dd8e6;color:#0a0f1a;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 0 10px rgba(77,216,230,.3);flex-shrink:0}
+.hiw-icon{width:80px;height:80px;flex-shrink:0;position:relative;border-radius:14px;background:rgba(77,216,230,.06);border:1px solid rgba(77,216,230,.12);overflow:hidden}
 .hiw-content{flex:1}
 .hiw-title{font-size:.88rem;font-weight:700;color:#111827;margin-bottom:3px}
 .hiw-desc{font-size:.78rem;color:#64748b;line-height:1.55}
-.hiw-icon{width:56px;height:56px;flex-shrink:0;position:relative;border-radius:10px;background:rgba(77,216,230,.06);border:1px solid rgba(77,216,230,.12);overflow:hidden}
 
 /* HIW Icon: Camera with WiFi */
 .hiw-cam{position:absolute;top:16px;left:12px;width:28px;height:20px;border:2px solid #4dd8e6;border-radius:4px}
@@ -755,10 +804,10 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 @keyframes indTabIn{0%{opacity:0;transform:perspective(800px) rotateX(15deg) translateY(12px)}100%{opacity:1;transform:perspective(800px) rotateX(5deg) translateY(0)}}
 
 /* ═══ ENHANCED TRACKING CARD (walking mannequins) ═══ */
-@keyframes walkPath1{0%{transform:translate(0,0)}25%{transform:translate(30px,-8px)}50%{transform:translate(60px,4px)}75%{transform:translate(20px,10px)}100%{transform:translate(0,0)}}
-@keyframes walkPath2{0%{transform:translate(0,0)}25%{transform:translate(-20px,12px)}50%{transform:translate(-45px,0)}75%{transform:translate(-15px,-10px)}100%{transform:translate(0,0)}}
-@keyframes walkPath3{0%{transform:translate(0,0)}25%{transform:translate(15px,15px)}50%{transform:translate(40px,8px)}75%{transform:translate(10px,-5px)}100%{transform:translate(0,0)}}
-@keyframes walkPath4{0%{transform:translate(0,0)}33%{transform:translate(-25px,5px)}66%{transform:translate(10px,15px)}100%{transform:translate(0,0)}}
+@keyframes walkPath1{0%{transform:translate(0,0)}25%{transform:translate(50px,-12px)}50%{transform:translate(80px,6px)}75%{transform:translate(30px,14px)}100%{transform:translate(0,0)}}
+@keyframes walkPath2{0%{transform:translate(0,0)}25%{transform:translate(-35px,16px)}50%{transform:translate(-65px,0)}75%{transform:translate(-20px,-14px)}100%{transform:translate(0,0)}}
+@keyframes walkPath3{0%{transform:translate(0,0)}25%{transform:translate(25px,20px)}50%{transform:translate(55px,10px)}75%{transform:translate(15px,-8px)}100%{transform:translate(0,0)}}
+@keyframes walkPath4{0%{transform:translate(0,0)}33%{transform:translate(-40px,8px)}66%{transform:translate(15px,20px)}100%{transform:translate(0,0)}}
 .trk-figure{position:absolute;display:flex;flex-direction:column;align-items:center;transition:none}
 .trk-bbox{position:absolute;border:2px dashed #22c55e;border-radius:3px;box-shadow:0 0 8px rgba(34,197,94,.3);pointer-events:none}
 .trk-bbox::before,.trk-bbox::after{content:'';position:absolute;width:5px;height:5px;border:1.5px solid #22c55e}
@@ -779,22 +828,25 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
   .eco-card-grid{grid-template-columns:repeat(3,1fr) !important}
 }
 @media(max-width:768px){
-  .beta-invite-btn{padding:14px 28px;font-size:.9rem}
-  .beta-invite-btn.expanded{width:320px !important}
+  .hero-cta-row{flex-direction:column;gap:12px}
+  .hero-email-field input{min-width:200px}
   .eco-card-grid{grid-template-columns:repeat(2,1fr) !important}
   .cap-card-3d{transform:none !important}
   .cap-card-3d:hover{transform:translateY(-4px) !important}
   .pain-grid{grid-template-columns:1fr 1fr !important}
   .ind-tabs{justify-content:center}
-  .hiw-flow{margin-top:20px}
+  .hiw-flow{flex-direction:column;margin-top:20px}
+  .hiw-line{display:none}
+  .hiw-step{flex-direction:row;text-align:left}
+  .hiw-icon{width:56px;height:56px}
   .s-janus .container > div{grid-template-columns:1fr !important}
 }
 @media(max-width:480px){
   .eco-card-grid{grid-template-columns:1fr !important}
   .pain-grid{grid-template-columns:1fr !important}
-  .beta-invite-btn.expanded{width:280px !important}
-  .pain-stat{font-size:2rem}
+  .pain-stat{font-size:2.2rem}
   .ind-tab{padding:6px 12px;font-size:.65rem}
+  .hero-email-field input{min-width:180px}
 }
 
     </style>
@@ -1549,7 +1601,7 @@ function mkTrackingMockup() {
           <span class="cap-live-dot"></span>
         </div>
         <div class="anim-spark" style="height:45px"><svg viewBox="0 0 100 40" style="width:100%;height:100%" preserveAspectRatio="none">
-          <path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3" fill="none" stroke="#4dd8e6" stroke-width="2" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 2s ease forwards"/>
+          <path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3" fill="none" stroke="#4dd8e6" stroke-width="2" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 4s ease infinite"/>
           <path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3 L100,3 L100,40 L0,40Z" fill="url(#trkGrad)" opacity=".12"/>
           <defs><linearGradient id="trkGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4dd8e6"/><stop offset="1" stop-color="#4dd8e6" stop-opacity="0"/></linearGradient></defs>
         </svg></div>
@@ -1625,7 +1677,7 @@ function mkForecastMockup() {
         ${['8AM','10AM','12PM','2PM','4PM','6PM','8PM','10PM'].map((t,i)=>`<div style="position:absolute;bottom:-14px;left:${i*100/7}%;font-size:.38rem;color:#94a3b8;transform:translateX(-50%)">${t}</div>`).join('')}
         <svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none">
           <rect x="55" y="0" width="45" height="100" fill="#4dd8e604" stroke="none"/>
-          <polyline points="${toPath(pts)}" fill="none" stroke="#4dd8e6" stroke-width="2.5" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 2s ease forwards"/>
+          <polyline points="${toPath(pts)}" fill="none" stroke="#4dd8e6" stroke-width="2.5" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 4s ease infinite"/>
           <polyline points="${toPath(forecast, pts.length-1)}" fill="none" stroke="#4dd8e6" stroke-width="2" stroke-dasharray="4 3" vector-effect="non-scaling-stroke" opacity=".5"/>
           <polygon points="${toPath(pts)},${(pts.length-1)*w},100 0,100" fill="url(#fGrad2)" opacity=".12"/>
           <defs><linearGradient id="fGrad2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4dd8e6"/><stop offset="1" stop-color="#4dd8e6" stop-opacity="0"/></linearGradient></defs>
@@ -2089,16 +2141,18 @@ function renderCTA(cfg) {
       {t:20,l:93,sz:.75,pose:'crouch',walk:1,d:12,id:'P-013'}
     ];
     function person(s) {
-      var h=Math.round(10*s.sz),b=Math.round(20*s.sz),lg=Math.round(12*s.sz),w=Math.round(14*s.sz);
+      var h=Math.round(12*s.sz),b=Math.round(22*s.sz),lg=Math.round(14*s.sz),w=Math.round(16*s.sz);
       var tilt=s.pose==='walk'?'transform:rotateY(8deg)':'';
-      var armW=s.pose==='arms'?Math.round(6*s.sz):0;
-      var bH=s.pose==='crouch'?Math.round(14*s.sz):b;
-      var figH=h+bH+lg+2;
-      var armHtml=armW?'<div style="position:absolute;top:'+(h+2)+'px;left:-'+(armW+2)+'px;width:'+armW+'px;height:3px;background:rgba(220,235,255,.3);border-radius:2px"></div><div style="position:absolute;top:'+(h+2)+'px;right:-'+(armW+2)+'px;width:'+armW+'px;height:3px;background:rgba(220,235,255,.3);border-radius:2px"></div>':'';
+      var armW=s.pose==='arms'?Math.round(7*s.sz):0;
+      var bH=s.pose==='crouch'?Math.round(16*s.sz):b;
+      var armHtml=armW?'<div style="position:absolute;top:2px;left:-'+(armW+2)+'px;width:'+armW+'px;height:3px;background:rgba(220,235,255,.35);border-radius:2px;transform:rotate(-8deg)"></div><div style="position:absolute;top:2px;right:-'+(armW+2)+'px;width:'+armW+'px;height:3px;background:rgba(220,235,255,.25);border-radius:2px;transform:rotate(8deg)"></div>':'';
+      var legAngle=s.pose==='walk'?'transform:rotate(-6deg)':'';
+      var legAngle2=s.pose==='walk'?'transform:rotate(6deg)':'';
       return '<div style="display:flex;flex-direction:column;align-items:center;position:relative;'+tilt+'">' +
-        '<div style="width:'+h+'px;height:'+h+'px;border-radius:50%;background:linear-gradient(135deg,rgba(240,245,255,.55),rgba(200,215,240,.35));margin-bottom:1px;box-shadow:0 0 8px rgba(255,255,255,.15)"></div>' +
-        '<div style="width:'+w+'px;height:'+bH+'px;border-radius:'+(w/2)+'px '+(w/2)+'px 3px 3px;background:linear-gradient(180deg,rgba(230,240,255,.42),rgba(200,220,250,.28));box-shadow:0 2px 8px rgba(255,255,255,.08);position:relative">'+armHtml+'</div>' +
-        '<div style="display:flex;gap:2px;margin-top:1px"><div style="width:4px;height:'+lg+'px;border-radius:2px;background:rgba(220,235,255,.3)"></div><div style="width:4px;height:'+lg+'px;border-radius:2px;background:rgba(220,235,255,.3)"></div></div></div>';
+        '<div style="width:'+h+'px;height:'+h+'px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(245,248,255,.6),rgba(190,210,240,.3));margin-bottom:1px;box-shadow:0 0 10px rgba(255,255,255,.18)"></div>' +
+        '<div style="width:'+w+'px;height:'+bH+'px;clip-path:polygon(10% 0,90% 0,100% 100%,0 100%);background:linear-gradient(90deg,rgba(230,240,255,.48),rgba(200,220,250,.25));box-shadow:0 2px 10px rgba(255,255,255,.1);position:relative">'+armHtml+'</div>' +
+        '<div style="display:flex;gap:3px;margin-top:1px"><div style="width:4px;height:'+lg+'px;border-radius:2px;background:rgba(220,235,255,.32);'+legAngle+'"></div><div style="width:4px;height:'+lg+'px;border-radius:2px;background:rgba(220,235,255,.28);'+legAngle2+'"></div></div>' +
+        '<div class="trk-shadow"></div></div>';
     }
     var walkAnims=['walkPath1','walkPath2','walkPath3','walkPath4'];
     var walkDurs=[10,12,9,14];
@@ -2129,13 +2183,13 @@ function renderCTA(cfg) {
         '</div>' +
         '<div style="flex:1;padding:10px 12px">' +
           '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:.5rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Traffic Trend</span><span class="cap-live-dot"></span></div>' +
-          '<div class="anim-spark" style="height:45px"><svg viewBox="0 0 100 40" style="width:100%;height:100%" preserveAspectRatio="none"><path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3" fill="none" stroke="#4dd8e6" stroke-width="2" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 2s ease forwards"/><path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3 L100,3 L100,40 L0,40Z" fill="url(#trkG2)" opacity=".12"/><defs><linearGradient id="trkG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4dd8e6"/><stop offset="1" stop-color="#4dd8e6" stop-opacity="0"/></linearGradient></defs></svg></div>' +
+          '<div class="anim-spark" style="height:45px"><svg viewBox="0 0 100 40" style="width:100%;height:100%" preserveAspectRatio="none"><path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3" fill="none" stroke="#4dd8e6" stroke-width="2" vector-effect="non-scaling-stroke" style="stroke-dasharray:300;animation:capLineTrace 4s ease infinite"/><path d="M0,35 L8,30 L16,32 L24,25 L32,20 L40,22 L48,15 L56,10 L64,12 L72,8 L80,5 L88,7 L96,3 L100,3 L100,40 L0,40Z" fill="url(#trkG2)" opacity=".12"/><defs><linearGradient id="trkG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4dd8e6"/><stop offset="1" stop-color="#4dd8e6" stop-opacity="0"/></linearGradient></defs></svg></div>' +
           '<div style="display:flex;gap:6px;margin-top:4px"><span style="font-size:.45rem;padding:2px 6px;border-radius:3px;background:#fbbf2410;color:#fbbf24;font-weight:600">Peak: 2:30PM</span><span style="font-size:.45rem;padding:2px 6px;border-radius:3px;background:rgba(77,216,230,.1);color:#4dd8e6;font-weight:600">Avg: 1,890</span></div>' +
         '</div>' +
       '</div></div>';
   }
 
-  /* ── HERO (with email slider button) ── */
+  /* ── HERO (clean email + learn more) ── */
   var hero = '<div class="s-hero" style="min-height:100vh">' +
     '<div class="video-bg"><video autoplay muted loop playsinline><source src="hero-bg.mp4" type="video/mp4"></video></div>' +
     '<div class="overlay"></div>' +
@@ -2143,19 +2197,18 @@ function renderCTA(cfg) {
       '<div class="tag"><span class="tag-dot"></span> Now in Beta</div>' +
       '<h1>See Everything. Miss Nothing.</h1>' +
       '<p class="sub">Capture the operational metrics others miss. Unify physical and digital data into one source of truth.</p>' +
-      '<div class="beta-email-wrap">' +
-        '<button class="beta-invite-btn" id="betaBtn" onclick="expandBetaEmail(this)">' +
-          '<span class="beta-btn-text">Request an Invite to the Beta ' + ARROW_SVG + '</span>' +
-          '<div class="beta-email-inner">' +
-            '<input type="email" id="betaEmailInput" placeholder="your@email.com" onclick="event.stopPropagation()">' +
-            '<button onclick="event.stopPropagation();submitBetaEmail()" aria-label="Submit">' +
-              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>' +
-            '</button>' +
+      '<div class="hero-cta-row">' +
+        '<div class="hero-email-group">' +
+          '<span class="hero-email-label">Sign up for Janus beta. Free.</span>' +
+          '<div class="hero-email-field">' +
+            '<input type="email" id="heroEmailInput" placeholder="Enter your email">' +
+            '<button onclick="submitHeroEmail()" aria-label="Submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>' +
           '</div>' +
-          '<div class="beta-confirm" id="betaConfirm">&#10003; You\'re on the list!</div>' +
-        '</button>' +
+        '</div>' +
+        '<a class="hero-learn-btn" href="#janusSection"><span class="chevron-bounce"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span> Learn More</a>' +
       '</div>' +
-    '</div></div>';
+    '</div></div>' +
+    '<div class="beta-modal" id="betaModal"><div class="beta-modal__card"><div class="beta-modal__check"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div class="beta-modal__title">Thank you \u2014 you\'re on the waitlist.</div><div class="beta-modal__desc">We\'ll send your access code shortly.</div><button class="beta-modal__close" onclick="closeModal()">Close</button></div></div>';
 
   /* ── BRIDGE ── */
   var bridge = '<div class="section-bridge-dark-to-light"></div>';
@@ -2168,23 +2221,33 @@ function renderCTA(cfg) {
     '<div class="pain-grid">' +
       '<div class="pain-card" style="--pain-accent:#ef4444;--pain-glow:rgba(239,68,68,.15);animation-delay:.1s">' +
         '<div class="pain-icon"><div class="pain-eye"></div></div>' +
-        '<div class="pain-stat"><span class="count-up" data-target="67">0</span>%</div>' +
-        '<div class="pain-label">of in-store behavior goes unmeasured</div>' +
+        '<div class="pain-stat"><span class="count-up" data-target="90">0</span>%</div>' +
+        '<div class="pain-label">of in-store behavior goes untracked</div>' +
       '</div>' +
-      '<div class="pain-card" style="--pain-accent:#f59e0b;--pain-glow:rgba(245,158,11,.15);animation-delay:.3s">' +
+      '<div class="pain-card" style="--pain-accent:#f59e0b;--pain-glow:rgba(245,158,11,.15);animation-delay:.2s">' +
         '<div class="pain-icon"><div class="pain-clock"></div></div>' +
-        '<div class="pain-stat"><span class="count-up" data-target="3">0</span> days</div>' +
-        '<div class="pain-label">average lag from ad spend to foot traffic data</div>' +
+        '<div class="pain-stat"><span class="count-up" data-target="5">0</span>\u201335 day</div>' +
+        '<div class="pain-label">delay from ad spend to foot traffic attribution</div>' +
       '</div>' +
-      '<div class="pain-card" style="--pain-accent:#d97706;--pain-glow:rgba(217,119,6,.15);animation-delay:.5s">' +
+      '<div class="pain-card" style="--pain-accent:#d97706;--pain-glow:rgba(217,119,6,.15);animation-delay:.3s">' +
         '<div class="pain-icon"><div class="pain-dollar">$</div><div class="pain-tally"><span></span><span></span><span></span><span></span><span></span></div></div>' +
-        '<div class="pain-stat">$<span class="count-up" data-target="40">0</span>K/yr</div>' +
-        '<div class="pain-label">spent on manual headcounts per location</div>' +
+        '<div class="pain-stat">$<span class="count-up" data-target="47">0</span>K/yr</div>' +
+        '<div class="pain-label">wasted on misaligned staffing per location</div>' +
       '</div>' +
-      '<div class="pain-card" style="--pain-accent:#9ca3af;--pain-glow:rgba(156,163,175,.12);animation-delay:.7s">' +
-        '<div class="pain-icon"><div class="pain-zero">0</div><div class="pain-ghost-chart"><span style="height:30%"></span><span style="height:20%"></span><span style="height:40%"></span><span style="height:15%"></span><span style="height:25%"></span></div></div>' +
+      '<div class="pain-card" style="--pain-accent:#9ca3af;--pain-glow:rgba(156,163,175,.12);animation-delay:.4s">' +
+        '<div class="pain-icon"><div class="pain-zero">0</div><div class="pain-ghost-chart"><span style="--bar-h:30%"></span><span style="--bar-h:20%"></span><span style="--bar-h:40%"></span><span style="--bar-h:15%"></span><span style="--bar-h:25%"></span></div></div>' +
         '<div class="pain-stat" style="color:#9ca3af"><span class="count-up" data-target="0" data-show-zero="true">0</span></div>' +
         '<div class="pain-label">zone-level insights from traditional analytics</div>' +
+      '</div>' +
+      '<div class="pain-card" style="--pain-accent:#8b5cf6;--pain-glow:rgba(139,92,246,.15);animation-delay:.5s">' +
+        '<div class="pain-icon"><div class="pain-funnel"></div><div class="pain-funnel-dots"><span></span><span></span><span></span><span></span><span></span></div></div>' +
+        '<div class="pain-stat" style="color:#8b5cf6">&lt;<span class="count-up" data-target="25">0</span>%</div>' +
+        '<div class="pain-label">of retailers can calculate true conversion rate</div>' +
+      '</div>' +
+      '<div class="pain-card" style="--pain-accent:#f43f5e;--pain-glow:rgba(244,63,94,.15);animation-delay:.6s">' +
+        '<div class="pain-icon"><div class="pain-split-bars"><div class="pain-split-bar pain-split-bar--traffic"></div><div class="pain-split-bar pain-split-bar--staff"></div></div></div>' +
+        '<div class="pain-stat" style="color:#f43f5e"><span class="count-up" data-target="86">0</span>%</div>' +
+        '<div class="pain-label">of the time, stores are over- or under-staffed</div>' +
       '</div>' +
     '</div>' +
   '</div></div>';
@@ -2225,12 +2288,12 @@ function renderCTA(cfg) {
   var industries = ['Retail','Restaurant','Hotel','Gym','Grocery','Events'];
   var industryKeys = ['retail','restaurant','hotel','gym','retail','retail'];
   var indTabs = '<div class="ind-tabs">' +
-    industries.map(function(b,i){return '<div class="ind-tab'+(i===0?' active':'')+'" style="animation-delay:'+i*.08+'s" onclick="switchZoneViz(\''+industryKeys[i]+'\',this)">'+b+'</div>';}).join('') +
+    industries.map(function(b,i){return '<div class="ind-tab'+(i===0?' active':'')+'" style="animation-delay:'+i*.08+'s" onclick="switchZoneViz(\''+industryKeys[i]+'\',this,true)">'+b+'</div>';}).join('') +
   '</div>';
 
-  var janus = '<div class="s-janus" style="background:#f8f7f4"><div class="container">' +
+  var janus = '<div class="s-janus" id="janusSection" style="background:#f8f7f4"><div class="container">' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start">' +
-      '<div>' +
+      '<div style="padding-top:16px">' +
         '<div style="font-size:.72rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#4dd8e6;margin-bottom:1rem;display:flex;align-items:center;gap:10px"><span style="width:20px;height:1px;background:#4dd8e6"></span> Core Product</div>' +
         '<h2 style="font-family:\'Outfit\',sans-serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:700;color:#111827;letter-spacing:-1.2px;line-height:1.1;margin-bottom:1.2rem">Meet Janus.</h2>' +
         '<p style="font-size:1.02rem;color:#475569;line-height:1.85;margin-bottom:1rem">Janus bridges the blind spot between your digital campaigns and physical storefronts. It captures what happens after the click \u2014 foot traffic patterns, zone dwell times, queue lengths, and conversion events \u2014 then unifies that data with your existing analytics stack in real time.</p>' +
@@ -2238,20 +2301,21 @@ function renderCTA(cfg) {
         '<div style="display:flex;flex-direction:column;gap:12px">' +
           bullets.map(function(f,i){return '<div class="janus-bullet" style="animation-delay:'+i*.1+'s"><span class="bullet-dot"></span><span>'+f+'</span></div>';}).join('') +
         '</div>' +
-        howItWorks +
         indTabs +
         '<div style="margin-top:20px;display:flex;gap:16px;flex-wrap:wrap">' +
           [{v:'50K+',l:'events processed daily',c:'#22c55e',i:'&#9889;'},{v:'16',l:'zones per location',c:'#4dd8e6',i:'&#128205;'},{v:'99.1%',l:'detection accuracy',c:'#8b5cf6',i:'&#128640;'}].map(function(m){return '<div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;border-radius:8px;background:'+m.c+'12;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:'+m.c+'">'+m.i+'</span><div><div style="font-size:.95rem;font-weight:700;color:#111827">'+m.v+'</div><div style="font-size:.6rem;color:#94a3b8">'+m.l+'</div></div></div>';}).join('') +
         '</div>' +
       '</div>' +
-      '<div>' +
+      '<div style="padding-top:16px">' +
         '<div style="position:relative;padding:25px 15px;margin-bottom:16px">' +
           mkFloatingMetrics() +
           mkBrowserChrome('safari', '<div style="position:relative">' + vid + mkTrackingOverlay() + mkDashboardOverlay() + '</div>') +
         '</div>' +
         '<div id="zoneVizContainer">' + mkZoneViz('restaurant') + '</div>' +
       '</div>' +
-    '</div></div></div>';
+    '</div>' +
+    howItWorks +
+  '</div></div>';
 
   /* ── CAPABILITIES (v19 — warm number grid with 3D cards) ── */
   var capsCards = [
@@ -2311,43 +2375,38 @@ function switchCTA(mode) {
   }
 }
 
-/* ── Beta Email Slider ── */
-function expandBetaEmail(btn) {
-  if (btn.classList.contains('expanded')) return;
-  btn.classList.add('expanded');
-  var text = btn.querySelector('.beta-btn-text');
-  if (text) text.style.cssText = 'opacity:0;position:absolute;pointer-events:none';
-  btn.style.cssText += ';width:420px;max-width:90vw;transition:width .4s cubic-bezier(.16,1,.3,1);pointer-events:auto';
-  var inner = btn.querySelector('.beta-email-inner');
-  if (inner) inner.style.opacity = '1';
-  setTimeout(function(){
-    var input = document.getElementById('betaEmailInput');
-    if (input) input.focus();
-  }, 400);
-}
-function submitBetaEmail() {
-  var input = document.getElementById('betaEmailInput');
+/* ── Hero Email Submit + Modal ── */
+function submitHeroEmail() {
+  var input = document.getElementById('heroEmailInput');
   var email = input ? input.value.trim() : '';
-  if (!email || !email.includes('@')) { if(input) input.style.borderBottom='2px solid #ef4444'; return; }
-  var confirm = document.getElementById('betaConfirm');
-  var inner = document.getElementById('betaBtn').querySelector('.beta-email-inner');
-  if (inner) inner.style.opacity = '0';
-  if (confirm) confirm.classList.add('show');
-  setTimeout(function(){
-    var btn = document.getElementById('betaBtn');
-    if (!btn) return;
-    btn.classList.remove('expanded');
-    btn.style.cssText = '';
-    var text = btn.querySelector('.beta-btn-text');
-    if (text) text.style.cssText = '';
-    if (inner) inner.style.opacity = '0';
-    if (confirm) confirm.classList.remove('show');
-    if (input) input.value = '';
-  }, 2500);
+  if (!email || !email.includes('@')) { if(input){input.style.borderBottom='2px solid #ef4444';input.focus();} return; }
+  if(input) input.style.borderBottom='';
+  var modal = document.getElementById('betaModal');
+  if (modal) modal.classList.add('show');
+  if(input) input.value = '';
+}
+function closeModal() {
+  var modal = document.getElementById('betaModal');
+  if (modal) modal.classList.remove('show');
 }
 
+/* ── Industry Tab Auto-Rotate ── */
+var autoRotateTimer = null;
+var currentIndustryIdx = 0;
+var autoRotateDelay = null;
+function startAutoRotate() {
+  autoRotateTimer = setInterval(function(){
+    currentIndustryIdx = (currentIndustryIdx + 1) % industryKeys.length;
+    var tab = document.querySelectorAll('.ind-tab')[currentIndustryIdx];
+    switchZoneViz(industryKeys[currentIndustryIdx], tab);
+  }, 3000);
+}
+function stopAutoRotate() { clearInterval(autoRotateTimer); clearTimeout(autoRotateDelay); }
+function restartAutoRotateAfterDelay() { autoRotateDelay = setTimeout(startAutoRotate, 10000); }
+startAutoRotate();
+
 /* ── Switch Zone Viz (industry tabs) ── */
-function switchZoneViz(industry, tabEl) {
+function switchZoneViz(industry, tabEl, isManual) {
   var container = document.getElementById('zoneVizContainer');
   if (!container) return;
   container.style.opacity = '0';
@@ -2355,6 +2414,12 @@ function switchZoneViz(industry, tabEl) {
   var tabs = document.querySelectorAll('.ind-tab');
   tabs.forEach(function(t){ t.classList.remove('active'); });
   if (tabEl) tabEl.classList.add('active');
+  /* Track index */
+  var allTabs = Array.prototype.slice.call(tabs);
+  var idx = allTabs.indexOf(tabEl);
+  if (idx >= 0) currentIndustryIdx = idx;
+  /* Manual click stops auto-rotate, restarts after 10s */
+  if (isManual) { stopAutoRotate(); restartAutoRotateAfterDelay(); }
   setTimeout(function(){
     container.innerHTML = mkZoneViz(industry);
     container.style.opacity = '1';
