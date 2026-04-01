@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForkFox UI Mockups — Design Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:#111114;color:#fff;font-family:'Inter',sans-serif;line-height:1.6}
+h1,h2,h3,h4,h5,h6{font-family:'Geologica',sans-serif;font-weight:800;line-height:1.1}
+
+/* ===== STICKY NAV ===== */
+.mockup-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(17,17,20,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06);padding:.6rem 1rem;display:flex;align-items:center;gap:1rem;overflow-x:auto;white-space:nowrap}
+.mockup-nav::-webkit-scrollbar{height:0}
+.mockup-nav a{color:rgba(255,255,255,.4);text-decoration:none;font-size:.72rem;font-weight:500;padding:.4rem .8rem;border-radius:8px;transition:all .3s;flex-shrink:0;letter-spacing:.02em}
+.mockup-nav a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.mockup-nav a.active{color:#f97316;background:rgba(249,115,22,.1)}
+.nav-title{font-family:'Geologica',sans-serif;font-weight:800;font-size:.85rem;color:#fff;flex-shrink:0;padding-right:.5rem;border-right:1px solid rgba(255,255,255,.1);margin-right:.5rem}
+.nav-title .fox{color:#ea580c}
+
+/* ===== MOCKUP SECTIONS ===== */
+.mockup-section{min-height:100vh;padding:100px 24px 80px;border-bottom:1px solid rgba(255,255,255,.04)}
+.mockup-section:last-child{border-bottom:none}
+.mockup-header{max-width:900px;margin:0 auto 3rem;text-align:center}
+.mockup-number{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f97316,#fb923c);font-family:'Geologica',sans-serif;font-weight:800;font-size:.9rem;color:#fff;margin-bottom:.8rem}
+.mockup-header h2{font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:.5rem}
+.mockup-header p{color:rgba(255,255,255,.4);font-size:.9rem;max-width:600px;margin:0 auto}
+
+/* ===== DEMO CONTAINER ===== */
+.demo-wrap{max-width:1000px;margin:0 auto;position:relative}
+
+/* ===== SHARED: ForkFox brand tokens ===== */
+:root{
+ --ff-orange:#f97316;
+ --ff-amber:#fbbf24;
+ --ff-orange-light:#fb923c;
+ --ff-dark:#1a1a1f;
+ --ff-body:rgba(255,255,255,.45);
+ --ff-radius-sm:12px;
+ --ff-radius-md:16px;
+ --ff-radius-lg:24px;
+}
+
+/* ==========================================================================
+   MOCKUP 1 — HOW IT WORKS: GLASS CARD STEPS
+   ========================================================================== */
+.m1-section{background:var(--ff-dark)}
+.m1-heading{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
+.m1-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;position:relative}
+.m1-connector{position:absolute;top:50px;left:15%;right:15%;height:2px;background:linear-gradient(90deg,transparent,rgba(249,115,22,.15),rgba(249,115,22,.15),transparent)}
+.m1-card{
+ position:relative;z-index:1;
+ padding:2rem 1.5rem 1.8rem;
+ border-radius:var(--ff-radius-lg);
+ background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+ backdrop-filter:blur(20px) saturate(1.4);
+ -webkit-backdrop-filter:blur(20px) saturate(1.4);
+ border:1px solid rgba(255,255,255,.08);
+ text-align:center;
+ opacity:0;transform:translateY(40px);
+ transition:all .8s cubic-bezier(.25,.46,.45,.94),box-shadow .3s,border-color .3s;
+}
+.m1-card.visible{opacity:1;transform:translateY(0)}
+.m1-card:nth-child(3){transition-delay:.2s}
+.m1-card:nth-child(4){transition-delay:.4s}
+.m1-card:hover{border-color:rgba(249,115,22,.2);box-shadow:0 8px 40px rgba(249,115,22,.08);transform:translateY(-4px)}
+.m1-badge{
+ position:absolute;top:-14px;left:20px;
+ width:28px;height:28px;border-radius:50%;
+ background:linear-gradient(135deg,#f97316,#fb923c);
+ display:flex;align-items:center;justify-content:center;
+ font-family:'Geologica',sans-serif;font-weight:800;font-size:.75rem;color:#fff;
+ box-shadow:0 4px 12px rgba(249,115,22,.3);
+}
+.m1-icon{
+ width:64px;height:64px;border-radius:50%;
+ background:rgba(249,115,22,.08);border:2px solid rgba(249,115,22,.15);
+ display:flex;align-items:center;justify-content:center;
+ margin:0 auto 1.2rem;font-size:1.5rem;
+ transition:border-color .3s,background .3s;
+}
+.m1-card:hover .m1-icon{border-color:rgba(249,115,22,.35);background:rgba(249,115,22,.12)}
+.m1-card h3{font-size:1.1rem;margin-bottom:.5rem}
+.m1-card p{color:var(--ff-body);font-size:.88rem;line-height:1.6;max-width:280px;margin:0 auto}
+/* Glass card shimmer border */
+.m1-card::before{
+ content:'';position:absolute;inset:-1.5px;border-radius:25px;
+ background:conic-gradient(from var(--shimmer-angle,0deg),transparent 0%,rgba(249,115,22,.15) 10%,transparent 20%,transparent 80%,rgba(255,255,255,.05) 90%,transparent 100%);
+ animation:shimmerSpin 6s linear infinite;z-index:-1;
+ mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;padding:1.5px;
+ opacity:0;transition:opacity .4s;
+}
+.m1-card:hover::before{opacity:1}
+@property --shimmer-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes shimmerSpin{to{--shimmer-angle:360deg}}
+
+@media(max-width:768px){
+ .m1-steps{grid-template-columns:1fr;max-width:360px;margin:0 auto}
+ .m1-connector{display:none}
+}
+
+/* ==========================================================================
+   MOCKUP 2 — HOW IT WORKS: GRADIENT BORDER CARDS
+   ========================================================================== */
+.m2-section{background:linear-gradient(180deg,#1a1a1f 0%,#1e1814 50%,#1a1a1f 100%)}
+.m2-heading{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
+.m2-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;position:relative}
+.m2-path{position:absolute;top:46px;left:16%;right:16%;height:2px;background:repeating-linear-gradient(90deg,rgba(249,115,22,.3) 0,rgba(249,115,22,.3) 8px,transparent 8px,transparent 16px);animation:m2Dash 1.5s linear infinite}
+@keyframes m2Dash{to{background-position:16px 0}}
+.m2-card{
+ position:relative;text-align:center;padding:2rem 1.5rem 1.8rem;
+ border-radius:var(--ff-radius-lg);
+ background:rgba(26,26,31,.9);
+ opacity:0;transform:translateY(40px);
+ transition:all .8s cubic-bezier(.25,.46,.45,.94),transform .3s;
+}
+.m2-card.visible{opacity:1;transform:translateY(0)}
+.m2-card:nth-child(3){transition-delay:.2s}
+.m2-card:nth-child(4){transition-delay:.4s}
+.m2-card:hover{transform:translateY(-6px)}
+/* Animated gradient border */
+.m2-card::before{
+ content:'';position:absolute;inset:-2px;border-radius:26px;
+ background:conic-gradient(from var(--shimmer-angle,0deg),#f97316,#fbbf24,#f97316,transparent,transparent,#f97316);
+ animation:shimmerSpin 3s linear infinite;z-index:-1;
+ mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;padding:2px;
+}
+.m2-badge{
+ width:36px;height:36px;border-radius:50%;
+ background:linear-gradient(135deg,#f97316,#fbbf24);
+ display:flex;align-items:center;justify-content:center;
+ margin:0 auto 1rem;
+ font-family:'Geologica',sans-serif;font-weight:800;font-size:.95rem;color:#fff;
+ box-shadow:0 0 20px rgba(249,115,22,.3);
+}
+.m2-card h3{font-size:1.1rem;margin-bottom:.5rem}
+.m2-card p{color:var(--ff-body);font-size:.88rem;line-height:1.6;max-width:280px;margin:0 auto}
+
+@media(max-width:768px){
+ .m2-steps{grid-template-columns:1fr;max-width:360px;margin:0 auto}
+ .m2-path{display:none}
+}
+
+/* ==========================================================================
+   MOCKUP 3 — HOW IT WORKS: TIMELINE LAYOUT
+   ========================================================================== */
+.m3-section{background:var(--ff-dark)}
+.m3-heading{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
+.m3-timeline{position:relative;max-width:800px;margin:0 auto}
+.m3-spine{position:absolute;top:0;bottom:0;left:50%;width:2px;background:linear-gradient(180deg,transparent,rgba(249,115,22,.3) 10%,rgba(249,115,22,.3) 90%,transparent);transform:translateX(-50%)}
+.m3-dot{
+ position:absolute;left:50%;width:16px;height:16px;border-radius:50%;
+ background:linear-gradient(135deg,#f97316,#fbbf24);
+ transform:translate(-50%,-50%);
+ box-shadow:0 0 16px rgba(249,115,22,.4);z-index:2;
+ animation:m3Pulse 2s ease-in-out infinite;
+}
+.m3-dot:nth-child(2){top:0}
+.m3-dot:nth-child(3){top:50%}
+.m3-dot:nth-child(4){top:100%}
+@keyframes m3Pulse{0%,100%{box-shadow:0 0 16px rgba(249,115,22,.4)}50%{box-shadow:0 0 24px rgba(249,115,22,.6)}}
+.m3-items{position:relative;display:flex;flex-direction:column;gap:3rem}
+.m3-item{
+ display:flex;align-items:flex-start;gap:2rem;
+ opacity:0;transform:translateX(-60px);
+ transition:all .8s cubic-bezier(.25,.46,.45,.94);
+}
+.m3-item.visible{opacity:1;transform:translateX(0)}
+.m3-item:nth-child(even){flex-direction:row-reverse;transform:translateX(60px)}
+.m3-item:nth-child(even).visible{transform:translateX(0)}
+.m3-item-card{
+ flex:1;padding:1.8rem;border-radius:var(--ff-radius-md);
+ background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+ border:1px solid rgba(255,255,255,.08);
+ transition:border-color .3s,box-shadow .3s;
+}
+.m3-item-card:hover{border-color:rgba(249,115,22,.2);box-shadow:0 8px 30px rgba(249,115,22,.06)}
+.m3-item-num{
+ font-family:'Geologica',sans-serif;font-size:3rem;font-weight:900;
+ background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+ line-height:1;margin-bottom:.5rem;
+}
+.m3-item-card h3{font-size:1.1rem;margin-bottom:.4rem}
+.m3-item-card p{color:var(--ff-body);font-size:.88rem;line-height:1.6}
+.m3-spacer{flex:1}
+
+@media(max-width:768px){
+ .m3-spine,.m3-dot{display:none}
+ .m3-item,.m3-item:nth-child(even){flex-direction:column;transform:translateY(30px) !important}
+ .m3-item.visible,.m3-item:nth-child(even).visible{transform:translateY(0) !important}
+ .m3-spacer{display:none}
+}
+
+/* ==========================================================================
+   MOCKUP 4 — HOW IT WORKS: LARGE ICON PANELS
+   ========================================================================== */
+.m4-section{background:var(--ff-dark)}
+.m4-heading{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
+.m4-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:var(--ff-radius-lg);overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.m4-panel{
+ position:relative;padding:3rem 2rem;text-align:center;overflow:hidden;
+ background:rgba(255,255,255,.02);
+ border-right:1px solid rgba(255,255,255,.06);
+ transition:background .3s;
+}
+.m4-panel:last-child{border-right:none}
+.m4-panel:hover{background:rgba(249,115,22,.04)}
+.m4-watermark{
+ position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+ font-family:'Geologica',sans-serif;font-size:10rem;font-weight:900;
+ color:rgba(249,115,22,.04);pointer-events:none;line-height:1;
+}
+.m4-svg-icon{
+ width:80px;height:80px;margin:0 auto 1.5rem;position:relative;z-index:1;
+ display:flex;align-items:center;justify-content:center;
+}
+.m4-svg-icon svg{width:100%;height:100%}
+.m4-panel h3{font-size:1.2rem;margin-bottom:.5rem;position:relative;z-index:1}
+.m4-panel p{color:var(--ff-body);font-size:.88rem;line-height:1.6;position:relative;z-index:1;max-width:260px;margin:0 auto}
+
+@media(max-width:768px){
+ .m4-panels{grid-template-columns:1fr}
+ .m4-panel{border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}
+ .m4-panel:last-child{border-bottom:none}
+}
+
+/* ==========================================================================
+   MOCKUP 5 — HOW IT WORKS: WARM BACKGROUND BREAK
+   ========================================================================== */
+.m5-section{background:#f8f7f4;color:#111}
+.m5-heading{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:.5rem;color:#111}
+.m5-sub{text-align:center;color:#888;font-size:.95rem;margin-bottom:3.5rem}
+.m5-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.m5-card{
+ background:#fff;border-radius:var(--ff-radius-md);padding:2rem 1.5rem;text-align:center;
+ box-shadow:0 2px 20px rgba(0,0,0,.06);
+ border:1px solid rgba(0,0,0,.04);
+ opacity:0;transform:translateY(30px);
+ transition:all .8s cubic-bezier(.25,.46,.45,.94),box-shadow .3s,transform .3s;
+}
+.m5-card.visible{opacity:1;transform:translateY(0)}
+.m5-card:nth-child(2){transition-delay:.15s}
+.m5-card:nth-child(3){transition-delay:.3s}
+.m5-card:hover{box-shadow:0 8px 40px rgba(0,0,0,.1);transform:translateY(-4px)}
+.m5-num{
+ width:40px;height:40px;border-radius:var(--ff-radius-sm);
+ background:linear-gradient(135deg,#f97316,#fb923c);
+ display:flex;align-items:center;justify-content:center;
+ margin:0 auto 1.2rem;
+ font-family:'Geologica',sans-serif;font-weight:800;font-size:1rem;color:#fff;
+}
+.m5-card h3{font-size:1.1rem;margin-bottom:.5rem;color:#111}
+.m5-card p{color:#666;font-size:.88rem;line-height:1.6;max-width:280px;margin:0 auto}
+
+@media(max-width:768px){
+ .m5-steps{grid-template-columns:1fr;max-width:360px;margin:0 auto}
+}
+
+/* ==========================================================================
+   MOCKUP 6 — TRACTION: ANIMATED COUNTER CARDS
+   ========================================================================== */
+.m6-section{background:linear-gradient(180deg,#1a1a1f,#1f1810,#1a1a1f)}
+.m6-heading{text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem}
+.m6-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem}
+.m6-card{
+ text-align:center;padding:2rem 1rem;
+ border-radius:var(--ff-radius-md);
+ background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+ border:1px solid rgba(255,255,255,.08);
+ opacity:0;transform:translateY(30px);
+ transition:all .8s cubic-bezier(.25,.46,.45,.94),box-shadow .3s,transform .3s,border-color .3s;
+}
+.m6-card.visible{opacity:1;transform:translateY(0)}
+.m6-card:nth-child(1){transition-delay:0s}
+.m6-card:nth-child(2){transition-delay:.15s}
+.m6-card:nth-child(3){transition-delay:.3s}
+.m6-card:nth-child(4){transition-delay:.45s}
+.m6-card:nth-child(5){transition-delay:.6s}
+.m6-card:hover{
+ border-color:rgba(249,115,22,.2);
+ box-shadow:0 8px 40px rgba(249,115,22,.08);
+ transform:translateY(-4px);
+}
+.m6-number{
+ font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;
+ background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+ line-height:1.1;font-family:'Geologica',sans-serif;
+ text-shadow:0 0 40px rgba(249,115,22,.15);
+ filter:drop-shadow(0 0 20px rgba(249,115,22,.1));
+}
+.m6-label{color:var(--ff-body);font-size:.82rem;margin-top:.5rem;text-transform:uppercase;letter-spacing:.1em}
+
+@media(max-width:768px){.m6-metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.m6-metrics{grid-template-columns:1fr}}
+
+/* ==========================================================================
+   MOCKUP 7 — COLOR TONE REFINEMENTS
+   ========================================================================== */
+.m7-section{background:var(--ff-dark)}
+.m7-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem}
+.m7-fix{padding:2rem;border-radius:var(--ff-radius-md);border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+.m7-fix h3{font-size:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.m7-fix h3 .tag{font-size:.65rem;padding:.2rem .6rem;border-radius:6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.m7-fix h3 .tag-before{background:rgba(239,68,68,.15);color:#ef4444}
+.m7-fix h3 .tag-after{background:rgba(34,197,94,.15);color:#22c55e}
+.m7-swatch-row{display:flex;gap:.8rem;margin-bottom:1rem;flex-wrap:wrap}
+.m7-swatch{width:48px;height:48px;border-radius:var(--ff-radius-sm);border:2px solid rgba(255,255,255,.1);position:relative;overflow:hidden}
+.m7-swatch span{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:.5rem;color:rgba(255,255,255,.6);font-weight:600}
+.m7-code{font-family:monospace;font-size:.78rem;color:rgba(255,255,255,.5);background:rgba(0,0,0,.3);padding:.6rem .8rem;border-radius:8px;margin-top:.5rem;line-height:1.8}
+.m7-code .old{text-decoration:line-through;color:rgba(239,68,68,.6)}
+.m7-code .new{color:#22c55e}
+/* Ripple comparison */
+.m7-ripple-demo{display:flex;gap:2rem;align-items:center;justify-content:center;margin-top:1rem}
+.m7-ripple-circle{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;position:relative}
+.m7-ripple-circle.bad{background:rgba(34,197,94,.4);color:#fff}
+.m7-ripple-circle.good{background:rgba(249,115,22,.4);color:#fff}
+.m7-arrow{color:rgba(255,255,255,.3);font-size:1.5rem}
+/* Radius scale */
+.m7-radius-demo{display:flex;gap:1.5rem;align-items:flex-end;margin-top:1rem;flex-wrap:wrap}
+.m7-radius-box{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--ff-body)}
+.m7-radius-box.sm{width:60px;height:40px;border-radius:12px}
+.m7-radius-box.md{width:80px;height:50px;border-radius:16px}
+.m7-radius-box.lg{width:100px;height:60px;border-radius:24px}
+
+@media(max-width:768px){.m7-grid{grid-template-columns:1fr}}
+
+/* ==========================================================================
+   MOCKUP 8 — PROBLEM SECTION: ENHANCED PAIN POINTS
+   ========================================================================== */
+.m8-section{background:linear-gradient(180deg,transparent,#1a1a1f 5%)}
+.m8-heading{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:4rem;max-width:700px}
+.m8-heading span{background:linear-gradient(135deg,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.m8-pain{
+ display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:2.5rem;
+ padding:1.5rem;border-radius:var(--ff-radius-md);
+ background:rgba(255,255,255,.02);
+ border:1px solid rgba(255,255,255,.04);
+ border-left:3px solid transparent;
+ opacity:0;transform:translateX(-60px);
+ transition:all .8s cubic-bezier(.25,.46,.45,.94),border-color .3s,background .3s,box-shadow .3s;
+}
+.m8-pain.visible{opacity:1;transform:translateX(0);border-left-color:rgba(239,68,68,.4)}
+.m8-pain:nth-child(2){transition-delay:.15s}
+.m8-pain:nth-child(3){transition-delay:.3s}
+.m8-pain:hover{background:rgba(255,255,255,.04);border-left-color:#ef4444;box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(-2px)}
+.m8-num{
+ width:32px;height:32px;border-radius:8px;flex-shrink:0;
+ background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);
+ display:flex;align-items:center;justify-content:center;
+ font-family:'Geologica',sans-serif;font-weight:800;font-size:.8rem;
+ color:#ef4444;margin-top:.2rem;
+}
+.m8-pain h3{font-size:1.15rem;font-weight:700;margin-bottom:.3rem}
+.m8-pain p{color:var(--ff-body);font-size:.9rem;line-height:1.7}
+
+/* ==========================================================================
+   MOCKUP 9 — FOUNDERS: CARD POLISH
+   ========================================================================== */
+.m9-section{background:var(--ff-dark)}
+.m9-heading{text-align:center;font-size:clamp(1.1rem,2.5vw,1.4rem);color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.2em;margin-bottom:3rem}
+.m9-grid{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
+.m9-card{
+ text-align:center;max-width:300px;
+ padding:2.5rem 2rem;border-radius:var(--ff-radius-lg);
+ background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+ border:1px solid rgba(255,255,255,.08);
+ opacity:0;transform:translateY(30px);
+ transition:all .8s cubic-bezier(.25,.46,.45,.94),border-color .3s,box-shadow .3s;
+}
+.m9-card.visible{opacity:1;transform:translateY(0)}
+.m9-card:nth-child(2){transition-delay:.2s}
+.m9-card:hover{border-color:rgba(249,115,22,.15);box-shadow:0 8px 40px rgba(249,115,22,.06);transform:translateY(-4px)}
+.m9-avatar{
+ width:88px;height:88px;border-radius:50%;
+ background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(251,191,36,.08));
+ display:flex;align-items:center;justify-content:center;
+ margin:0 auto 1rem;font-size:2rem;color:rgba(249,115,22,.6);
+ position:relative;
+}
+.m9-avatar::before{
+ content:'';position:absolute;inset:-4px;border-radius:50%;
+ border:2px solid rgba(249,115,22,.15);
+ animation:m9Ring 3s ease-in-out infinite;
+}
+@keyframes m9Ring{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.08);opacity:1}}
+.m9-card h3{font-size:1.1rem;margin-bottom:.2rem}
+.m9-card .m9-role{font-size:.82rem;color:#f97316;margin-bottom:.5rem;font-weight:500}
+.m9-card p{color:rgba(255,255,255,.4);font-size:.85rem;line-height:1.6}
+
+/* ==========================================================================
+   MOCKUP 10 — FULL PAGE: ALL REFINEMENTS COMBINED
+   ========================================================================== */
+.m10-section{background:var(--ff-dark)}
+.m10-label{
+ text-align:center;font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;
+ color:rgba(249,115,22,.5);margin-bottom:1rem;font-weight:600;
+}
+.m10-divider{
+ max-width:600px;margin:4rem auto;height:1px;
+ background:linear-gradient(90deg,transparent,rgba(249,115,22,.15),transparent);
+}
+
+/* ===== OBSERVATION ANIMATIONS ===== */
+.observe-reveal{opacity:0;transform:translateY(30px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.observe-reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ===== FOOTER BADGE ===== */
+.mockup-footer{text-align:center;padding:4rem 24px;color:rgba(255,255,255,.2);font-size:.75rem}
+.mockup-footer a{color:#f97316;text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav class="mockup-nav" id="mockupNav">
+ <span class="nav-title">Fork<span class="fox">Fox</span> UI</span>
+ <a href="#m1" data-nav>1 Glass Cards</a>
+ <a href="#m2" data-nav>2 Gradient Border</a>
+ <a href="#m3" data-nav>3 Timeline</a>
+ <a href="#m4" data-nav>4 Icon Panels</a>
+ <a href="#m5" data-nav>5 Warm Break</a>
+ <a href="#m6" data-nav>6 Traction</a>
+ <a href="#m7" data-nav>7 Color Fixes</a>
+ <a href="#m8" data-nav>8 Pain Points</a>
+ <a href="#m9" data-nav>9 Founders</a>
+ <a href="#m10" data-nav>10 Combined</a>
+</nav>
+
+<!-- ===== MOCKUP 1: GLASS CARD STEPS ===== -->
+<section class="mockup-section m1-section" id="m1">
+ <div class="mockup-header">
+  <div class="mockup-number">1</div>
+  <h2>How It Works — Glass Card Steps</h2>
+  <p>Glassmorphism treatment matching the hero waitlist card. Step number badges, frosted backgrounds, staggered entrance, and hover glow.</p>
+ </div>
+ <div class="demo-wrap">
+  <h2 class="m1-heading">How it works.</h2>
+  <div class="m1-steps">
+   <div class="m1-connector"></div>
+   <div class="m1-card" data-reveal>
+    <div class="m1-badge">1</div>
+    <div class="m1-icon">🍽️</div>
+    <h3>Set your taste</h3>
+    <p>Tell ForkFox what you love — flavor profiles, spice tolerance, dietary needs, portion size, price range. 30 seconds and it knows you.</p>
+   </div>
+   <div class="m1-card" data-reveal>
+    <div class="m1-badge">2</div>
+    <div class="m1-icon">🔎</div>
+    <h3>Find your dish</h3>
+    <p>Every dish near you scored 0–100 based on your palate — not the crowd's. Your #1 pick is waiting before you even open a menu.</p>
+   </div>
+   <div class="m1-card" data-reveal>
+    <div class="m1-badge">3</div>
+    <div class="m1-icon">🌟</div>
+    <h3>Order it instantly</h3>
+    <p>One tap sends your top-scored dish straight to DoorDash, Uber Eats, or wherever you order. No more guessing, no more wasted meals.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 2: GRADIENT BORDER CARDS ===== -->
+<section class="mockup-section m2-section" id="m2">
+ <div class="mockup-header">
+  <div class="mockup-number">2</div>
+  <h2>How It Works — Gradient Border Cards</h2>
+  <p>Animated gradient borders like the waitlist shimmer. Warm gradient background strip. Animated dashed connector path between steps.</p>
+ </div>
+ <div class="demo-wrap">
+  <h2 class="m2-heading">How it works.</h2>
+  <div class="m2-steps">
+   <div class="m2-path"></div>
+   <div class="m2-card" data-reveal>
+    <div class="m2-badge">1</div>
+    <h3>Set your taste</h3>
+    <p>Tell ForkFox what you love — flavor profiles, spice tolerance, dietary needs, portion size, price range. 30 seconds and it knows you.</p>
+   </div>
+   <div class="m2-card" data-reveal>
+    <div class="m2-badge">2</div>
+    <h3>Find your dish</h3>
+    <p>Every dish near you scored 0–100 based on your palate — not the crowd's. Your #1 pick is waiting before you even open a menu.</p>
+   </div>
+   <div class="m2-card" data-reveal>
+    <div class="m2-badge">3</div>
+    <h3>Order it instantly</h3>
+    <p>One tap sends your top-scored dish straight to DoorDash, Uber Eats, or wherever you order. No more guessing, no more wasted meals.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 3: TIMELINE LAYOUT ===== -->
+<section class="mockup-section m3-section" id="m3">
+ <div class="mockup-header">
+  <div class="mockup-number">3</div>
+  <h2>How It Works — Timeline Layout</h2>
+  <p>Vertical timeline with alternating left/right cards on desktop. Center spine with animated dot progression. Stacks vertically on mobile.</p>
+ </div>
+ <div class="demo-wrap">
+  <h2 class="m3-heading">How it works.</h2>
+  <div class="m3-timeline">
+   <div class="m3-spine"></div>
+   <div class="m3-dot" style="top:8%"></div>
+   <div class="m3-dot" style="top:48%"></div>
+   <div class="m3-dot" style="top:88%"></div>
+   <div class="m3-items">
+    <div class="m3-item" data-reveal>
+     <div class="m3-item-card">
+      <div class="m3-item-num">01</div>
+      <h3>Set your taste</h3>
+      <p>Tell ForkFox what you love — flavor profiles, spice tolerance, dietary needs, portion size, price range. 30 seconds and it knows you.</p>
+     </div>
+     <div class="m3-spacer"></div>
+    </div>
+    <div class="m3-item" data-reveal>
+     <div class="m3-item-card">
+      <div class="m3-item-num">02</div>
+      <h3>Find your dish</h3>
+      <p>Every dish near you scored 0–100 based on your palate — not the crowd's. Your #1 pick is waiting before you even open a menu.</p>
+     </div>
+     <div class="m3-spacer"></div>
+    </div>
+    <div class="m3-item" data-reveal>
+     <div class="m3-item-card">
+      <div class="m3-item-num">03</div>
+      <h3>Order it instantly</h3>
+      <p>One tap sends your top-scored dish straight to DoorDash, Uber Eats, or wherever you order. No more guessing, no more wasted meals.</p>
+     </div>
+     <div class="m3-spacer"></div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 4: LARGE ICON PANELS ===== -->
+<section class="mockup-section m4-section" id="m4">
+ <div class="mockup-header">
+  <div class="mockup-number">4</div>
+  <h2>How It Works — Large Icon Panels</h2>
+  <p>Full-width panels with custom SVG icons. Oversized watermark step numbers behind each panel. Clean dividers.</p>
+ </div>
+ <div class="demo-wrap">
+  <h2 class="m4-heading" style="text-align:center;font-size:clamp(2rem,4vw,3rem);margin-bottom:4rem">How it works.</h2>
+  <div class="m4-panels">
+   <div class="m4-panel">
+    <div class="m4-watermark">1</div>
+    <div class="m4-svg-icon">
+     <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="30" r="16" stroke="#f97316" stroke-width="2" fill="none" opacity=".6"/>
+      <path d="M24 58c0-8.8 7.2-16 16-16s16 7.2 16 16" stroke="#f97316" stroke-width="2" fill="none" opacity=".6"/>
+      <circle cx="56" cy="22" r="5" fill="#f97316" opacity=".3"/>
+      <path d="M52 22l3 3 5-6" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+     </svg>
+    </div>
+    <h3>Set your taste</h3>
+    <p>Build your flavor profile in 30 seconds. Spice, portions, price, dietary — ForkFox learns what you actually like.</p>
+   </div>
+   <div class="m4-panel">
+    <div class="m4-watermark">2</div>
+    <div class="m4-svg-icon">
+     <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="24" stroke="#f97316" stroke-width="2" fill="none" opacity=".4"/>
+      <circle cx="40" cy="40" r="12" stroke="#fbbf24" stroke-width="2" fill="none" opacity=".6"/>
+      <circle cx="40" cy="40" r="4" fill="#f97316"/>
+      <line x1="40" y1="8" x2="40" y2="16" stroke="#f97316" stroke-width="1.5" opacity=".5"/>
+      <line x1="40" y1="64" x2="40" y2="72" stroke="#f97316" stroke-width="1.5" opacity=".5"/>
+      <line x1="8" y1="40" x2="16" y2="40" stroke="#f97316" stroke-width="1.5" opacity=".5"/>
+      <line x1="64" y1="40" x2="72" y2="40" stroke="#f97316" stroke-width="1.5" opacity=".5"/>
+     </svg>
+    </div>
+    <h3>Find your dish</h3>
+    <p>Every dish scored 0–100 for your palate. Browse by cuisine, location, or mood — your perfect meal is already ranked.</p>
+   </div>
+   <div class="m4-panel">
+    <div class="m4-watermark">3</div>
+    <div class="m4-svg-icon">
+     <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="16" y="20" width="48" height="36" rx="6" stroke="#f97316" stroke-width="2" fill="none" opacity=".5"/>
+      <path d="M28 42l6 6 12-14" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M32 60l8 8 8-8" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/>
+     </svg>
+    </div>
+    <h3>Order it instantly</h3>
+    <p>One tap to DoorDash, Uber Eats, or dine-in. No menus, no guessing — your top-scored dish, delivered.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 5: WARM BACKGROUND BREAK ===== -->
+<section class="mockup-section m5-section" id="m5">
+ <div class="mockup-header" style="color:#111">
+  <div class="mockup-number">5</div>
+  <h2 style="color:#111">How It Works — Warm Background Break</h2>
+  <p style="color:#888">Light `#f8f7f4` background to break dark-on-dark monotony. Clean white cards with shadow depth and orange accents.</p>
+ </div>
+ <div class="demo-wrap">
+  <h2 class="m5-heading">How it works.</h2>
+  <p class="m5-sub">Three steps to your perfect dish.</p>
+  <div class="m5-steps">
+   <div class="m5-card" data-reveal>
+    <div class="m5-num">1</div>
+    <h3>Set your taste</h3>
+    <p>Tell ForkFox what you love — flavor profiles, spice tolerance, dietary needs, portion size, price range. 30 seconds and it knows you.</p>
+   </div>
+   <div class="m5-card" data-reveal>
+    <div class="m5-num">2</div>
+    <h3>Find your dish</h3>
+    <p>Every dish near you scored 0–100 based on your palate — not the crowd's. Your #1 pick is waiting before you even open a menu.</p>
+   </div>
+   <div class="m5-card" data-reveal>
+    <div class="m5-num">3</div>
+    <h3>Order it instantly</h3>
+    <p>One tap sends your top-scored dish straight to DoorDash, Uber Eats, or wherever you order. No more guessing, no more wasted meals.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 6: TRACTION ANIMATED COUNTERS ===== -->
+<section class="mockup-section m6-section" id="m6">
+ <div class="mockup-header">
+  <div class="mockup-number">6</div>
+  <h2>Traction — Animated Counter Cards</h2>
+  <p>Glass card treatment on metrics. Staggered entrance (each 150ms apart). Hover lift + glow on numbers. Warm gradient center background.</p>
+ </div>
+ <div class="demo-wrap">
+  <h2 class="m6-heading">Built and live.</h2>
+  <div class="m6-metrics">
+   <div class="m6-card" data-reveal>
+    <div class="m6-number" data-count="2490">0</div>
+    <div class="m6-label">Dishes Scored</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number" data-count="9">0</div>
+    <div class="m6-label">Cuisine Verticals</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number" data-count="4">0</div>
+    <div class="m6-label">Cities in Pipeline</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number">✓</div>
+    <div class="m6-label">Patent Pending</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number">✓</div>
+    <div class="m6-label">App Store Live</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 7: COLOR TONE REFINEMENTS ===== -->
+<section class="mockup-section m7-section" id="m7">
+ <div class="mockup-header">
+  <div class="mockup-number">7</div>
+  <h2>Color Tone Refinements</h2>
+  <p>Fix the green ripple, match canvas/body bg, standardize border-radius scale, and normalize text opacity levels.</p>
+ </div>
+ <div class="demo-wrap">
+  <div class="m7-grid">
+   <!-- Fix 1: Green Ripple -->
+   <div class="m7-fix">
+    <h3>Submit Ripple <span class="tag tag-before">Before</span> <span class="tag tag-after">After</span></h3>
+    <div class="m7-ripple-demo">
+     <div class="m7-ripple-circle bad">Green<br>Off-brand</div>
+     <div class="m7-arrow">→</div>
+     <div class="m7-ripple-circle good">Orange<br>On-brand</div>
+    </div>
+    <div class="m7-code">
+     <span class="old">rgba(34,197,94,.4)</span> → <span class="new">rgba(249,115,22,.4)</span>
+    </div>
+   </div>
+   <!-- Fix 2: Canvas BG -->
+   <div class="m7-fix">
+    <h3>Canvas / Body Match <span class="tag tag-before">Before</span> <span class="tag tag-after">After</span></h3>
+    <div class="m7-swatch-row">
+     <div class="m7-swatch" style="background:#141418"><span>#141418</span></div>
+     <div class="m7-arrow" style="padding-top:10px">≠</div>
+     <div class="m7-swatch" style="background:#1a1a1f"><span>#1a1a1f</span></div>
+    </div>
+    <div class="m7-code">
+     Canvas fill: <span class="old">#141418</span> → <span class="new">#1a1a1f</span><br>
+     Now matches body background everywhere
+    </div>
+   </div>
+   <!-- Fix 3: Border Radius Scale -->
+   <div class="m7-fix">
+    <h3>Border Radius System <span class="tag tag-after">Standardized</span></h3>
+    <div class="m7-radius-demo">
+     <div class="m7-radius-box sm">12px</div>
+     <div class="m7-radius-box md">16px</div>
+     <div class="m7-radius-box lg">24px</div>
+    </div>
+    <div class="m7-code">
+     Small: 12px (inputs, badges)<br>
+     Medium: 16px (cards, metrics)<br>
+     Large: 24px (glass cards, CTA)
+    </div>
+   </div>
+   <!-- Fix 4: Text Opacity -->
+   <div class="m7-fix">
+    <h3>Text Opacity Levels <span class="tag tag-after">Consistent</span></h3>
+    <div style="margin-top:.5rem">
+     <p style="color:rgba(255,255,255,1);font-size:.85rem;margin-bottom:.3rem">■ 100% — Headings</p>
+     <p style="color:rgba(255,255,255,.6);font-size:.85rem;margin-bottom:.3rem">■ 60% — Body text</p>
+     <p style="color:rgba(255,255,255,.45);font-size:.85rem;margin-bottom:.3rem">■ 45% — Descriptions</p>
+     <p style="color:rgba(255,255,255,.35);font-size:.85rem;margin-bottom:.3rem">■ 35% — Captions, labels</p>
+     <p style="color:rgba(255,255,255,.2);font-size:.85rem">■ 20% — Placeholders</p>
+    </div>
+    <div class="m7-code">
+     Removes arbitrary values like .3, .4, .5<br>
+     Uses only 5 defined opacity stops
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 8: ENHANCED PAIN POINTS ===== -->
+<section class="mockup-section m8-section" id="m8">
+ <div class="mockup-header">
+  <div class="mockup-number">8</div>
+  <h2>Problem Section — Enhanced Pain Points</h2>
+  <p>Hover lift with animated left border. Numbered badges. Card background on hover. Staggered entrance animations.</p>
+ </div>
+ <div class="demo-wrap" style="max-width:800px">
+  <h2 class="m8-heading">Restaurant ratings are <span>broken.</span></h2>
+  <div class="m8-pain" data-reveal>
+   <div class="m8-num">1</div>
+   <div class="pain-text">
+    <h3>A 4.5-star restaurant can serve a 2-star dish.</h3>
+    <p>Restaurant ratings are averages of averages. The sushi might be incredible but the pasta is terrible. A single star rating can't tell you what to actually order.</p>
+   </div>
+  </div>
+  <div class="m8-pain" data-reveal>
+   <div class="m8-num">2</div>
+   <div class="pain-text">
+    <h3>You've ordered the wrong thing. Everyone has.</h3>
+    <p>You pick a great restaurant, sit down, and choose the wrong dish off a 40-item menu. You leave disappointed — not because the restaurant was bad, but because nobody told you what was actually good there.</p>
+   </div>
+  </div>
+  <div class="m8-pain" data-reveal>
+   <div class="m8-num">3</div>
+   <div class="pain-text">
+    <h3>Yelp reviews are everyone else's opinion.</h3>
+    <p>You like extra spice. You hate cilantro. You care about portion size. But aggregate ratings don't know that. Every review you read is someone else's taste — not yours.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 9: FOUNDER CARD POLISH ===== -->
+<section class="mockup-section m9-section" id="m9">
+ <div class="mockup-header">
+  <div class="mockup-number">9</div>
+  <h2>Founders Section — Card Polish</h2>
+  <p>Glass background on cards. Animated ring around avatars. Hover glow. Staggered reveal animation.</p>
+ </div>
+ <div class="demo-wrap">
+  <h2 class="m9-heading">Who's building this</h2>
+  <div class="m9-grid">
+   <div class="m9-card" data-reveal>
+    <div class="m9-avatar">N</div>
+    <h3>Nik Amin</h3>
+    <div class="m9-role">CEO · Bay Area</div>
+    <p>Product and engineering lead. Building the AI scoring engine and platform infrastructure.</p>
+   </div>
+   <div class="m9-card" data-reveal>
+    <div class="m9-avatar">A</div>
+    <h3>Ali Mabsoute</h3>
+    <div class="m9-role">CMO · Philadelphia</div>
+    <p>Growth, brand, and go-to-market strategy. Turning dish intelligence into a consumer movement.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== MOCKUP 10: ALL REFINEMENTS COMBINED ===== -->
+<section class="mockup-section m10-section" id="m10">
+ <div class="mockup-header">
+  <div class="mockup-number">10</div>
+  <h2>Full Page — All Refinements Combined</h2>
+  <p>Best of all mockups in one view. Glass step cards with stagger, polished traction, color fixes, consistent radius, and hover states everywhere.</p>
+ </div>
+ <div class="demo-wrap">
+
+  <!-- Problem (Mockup 8 style) -->
+  <div class="m10-label">Problem Section (Mockup 8)</div>
+  <div style="max-width:800px;margin:0 auto">
+   <h2 class="m8-heading" style="font-size:clamp(1.6rem,4vw,2.4rem)">Restaurant ratings are <span>broken.</span></h2>
+   <div class="m8-pain" data-reveal>
+    <div class="m8-num">1</div>
+    <div class="pain-text">
+     <h3>A 4.5-star restaurant can serve a 2-star dish.</h3>
+     <p>Restaurant ratings are averages of averages. A single star rating can't tell you what to actually order.</p>
+    </div>
+   </div>
+   <div class="m8-pain" data-reveal>
+    <div class="m8-num">2</div>
+    <div class="pain-text">
+     <h3>You've ordered the wrong thing. Everyone has.</h3>
+     <p>You pick a great restaurant and choose the wrong dish off a 40-item menu. Nobody told you what was actually good there.</p>
+    </div>
+   </div>
+   <div class="m8-pain" data-reveal>
+    <div class="m8-num">3</div>
+    <div class="pain-text">
+     <h3>Yelp reviews are everyone else's opinion.</h3>
+     <p>Aggregate ratings don't know your taste. Every review you read is someone else's preferences — not yours.</p>
+    </div>
+   </div>
+  </div>
+
+  <div class="m10-divider"></div>
+
+  <!-- How It Works (Mockup 1 style) -->
+  <div class="m10-label">How It Works (Mockup 1 — Glass Cards)</div>
+  <h2 class="m1-heading" style="font-size:clamp(1.6rem,4vw,2.4rem)">How it works.</h2>
+  <div class="m1-steps">
+   <div class="m1-connector"></div>
+   <div class="m1-card" data-reveal>
+    <div class="m1-badge">1</div>
+    <div class="m1-icon">🍽️</div>
+    <h3>Set your taste</h3>
+    <p>Tell ForkFox what you love — 30 seconds and it knows your palate.</p>
+   </div>
+   <div class="m1-card" data-reveal>
+    <div class="m1-badge">2</div>
+    <div class="m1-icon">🔎</div>
+    <h3>Find your dish</h3>
+    <p>Every dish scored 0–100 for your taste. Your #1 pick is ready.</p>
+   </div>
+   <div class="m1-card" data-reveal>
+    <div class="m1-badge">3</div>
+    <div class="m1-icon">🌟</div>
+    <h3>Order it instantly</h3>
+    <p>One tap to DoorDash, Uber Eats, or dine-in. No more guessing.</p>
+   </div>
+  </div>
+
+  <div class="m10-divider"></div>
+
+  <!-- Traction (Mockup 6 style) -->
+  <div class="m10-label">Traction (Mockup 6 — Glass Counters)</div>
+  <h2 class="m6-heading" style="font-size:clamp(1.6rem,4vw,2.4rem)">Built and live.</h2>
+  <div class="m6-metrics">
+   <div class="m6-card" data-reveal>
+    <div class="m6-number" data-count="2490">0</div>
+    <div class="m6-label">Dishes Scored</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number" data-count="9">0</div>
+    <div class="m6-label">Cuisine Verticals</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number" data-count="4">0</div>
+    <div class="m6-label">Cities in Pipeline</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number">✓</div>
+    <div class="m6-label">Patent Pending</div>
+   </div>
+   <div class="m6-card" data-reveal>
+    <div class="m6-number">✓</div>
+    <div class="m6-label">App Store Live</div>
+   </div>
+  </div>
+
+  <div class="m10-divider"></div>
+
+  <!-- Founders (Mockup 9 style) -->
+  <div class="m10-label">Founders (Mockup 9 — Glass + Ring)</div>
+  <h2 class="m9-heading">Who's building this</h2>
+  <div class="m9-grid">
+   <div class="m9-card" data-reveal>
+    <div class="m9-avatar">N</div>
+    <h3>Nik Amin</h3>
+    <div class="m9-role">CEO · Bay Area</div>
+    <p>Product and engineering lead. Building the AI scoring engine.</p>
+   </div>
+   <div class="m9-card" data-reveal>
+    <div class="m9-avatar">A</div>
+    <h3>Ali Mabsoute</h3>
+    <div class="m9-role">CMO · Philadelphia</div>
+    <p>Growth, brand, and go-to-market strategy.</p>
+   </div>
+  </div>
+
+ </div>
+</section>
+
+<!-- FOOTER -->
+<div class="mockup-footer">
+ <p>ForkFox UI Review — April 2026 · <a href="preview-redesign.html">View Live Site →</a></p>
+</div>
+
+<script>
+// ===== INTERSECTION OBSERVER FOR REVEALS =====
+const revealObserver = new IntersectionObserver((entries) => {
+ entries.forEach(e => {
+  if (e.isIntersecting) e.target.classList.add('visible');
+ });
+}, {threshold: 0.15});
+document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+// ===== COUNT-UP ANIMATION (staggered) =====
+const countObserver = new IntersectionObserver((entries) => {
+ entries.forEach(e => {
+  if (e.isIntersecting && e.target.dataset.count) {
+   const target = parseInt(e.target.dataset.count);
+   const duration = 2000;
+   const start = performance.now();
+   const el = e.target;
+   function tick(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(eased * target);
+    el.textContent = val.toLocaleString() + (target > 100 ? '+' : '');
+    if (progress < 1) requestAnimationFrame(tick);
+   }
+   requestAnimationFrame(tick);
+   countObserver.unobserve(e.target);
+  }
+ });
+}, {threshold: 0.5});
+document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+
+// ===== STICKY NAV — ACTIVE LINK HIGHLIGHT =====
+const navLinks = document.querySelectorAll('.mockup-nav a[data-nav]');
+const sections = [];
+navLinks.forEach(link => {
+ const id = link.getAttribute('href').slice(1);
+ const sec = document.getElementById(id);
+ if (sec) sections.push({el: sec, link: link});
+});
+
+function updateActiveNav() {
+ let current = sections[0];
+ const scrollY = window.scrollY + 120;
+ sections.forEach(s => {
+  if (s.el.offsetTop <= scrollY) current = s;
+ });
+ navLinks.forEach(l => l.classList.remove('active'));
+ if (current) current.link.classList.add('active');
+}
+window.addEventListener('scroll', updateActiveNav);
+updateActiveNav();
+</script>
+</body>
+</html>
