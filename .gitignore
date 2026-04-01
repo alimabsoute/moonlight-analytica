@@ -15,7 +15,8 @@ Application Data/
 # Cache & Temp Files
 .cache/
 .vscode/
-.claude/
+.claude/*
+!.claude/agents/
 node_modules/
 *.log
 *.tmp
