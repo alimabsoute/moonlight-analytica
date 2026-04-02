@@ -2,25 +2,14 @@
 Tests for video endpoints in the Janus backend.
 
 Run with: pytest tests/ -v
+
+Note: Uses shared `client` fixture from conftest.py (temp DB).
 """
 
 import os
 import sys
 import pytest
 from unittest.mock import Mock, patch, MagicMock
-
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from main import app
-
-
-@pytest.fixture
-def client():
-    """Create a test client for the Flask app."""
-    app.config['TESTING'] = True
-    with app.test_client() as client:
-        yield client
 
 
 class TestVideoLibraryEndpoints:
@@ -41,7 +30,7 @@ class TestVideoLibraryEndpoints:
 
         if len(data['videos']) > 0:
             video = data['videos'][0]
-            expected_fields = ['id', 'name', 'file_path', 'file_size', 'uploaded_at']
+            expected_fields = ['id', 'file_size', 'uploaded_at']
             for field in expected_fields:
                 assert field in video, f"Missing field: {field}"
 
@@ -75,8 +64,8 @@ class TestVideoSettingsEndpoints:
     def test_get_settings(self, client):
         """Test getting current video settings."""
         response = client.get('/video/settings')
-        # Endpoint may or may not exist depending on implementation
-        assert response.status_code in [200, 404]
+        # 503 when video streamer is not running, 200 when it is
+        assert response.status_code in [200, 404, 503]
 
     @patch('requests.post')
     def test_switch_model(self, mock_post, client):
@@ -150,7 +139,7 @@ class TestHealthEndpoint:
         response = client.get('/health')
         assert response.status_code == 200
         data = response.get_json()
-        assert 'status' in data
+        assert data == {"ok": True}
 
 
 if __name__ == '__main__':

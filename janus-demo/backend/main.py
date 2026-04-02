@@ -17,6 +17,7 @@ DB = "janus.db"
 INFERENCE_URL = os.environ.get("INFERENCE_URL", "http://localhost:8002")
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB upload limit
 # Allow Vite on 5173/5174 (localhost & 127.0.0.1)
 CORS(
     app,
@@ -38,10 +39,15 @@ def db():
     con = sqlite3.connect(DB)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA busy_timeout = 5000")
+    con.execute("PRAGMA foreign_keys = ON")
     try:
         yield con
-    finally:
+    except Exception:
+        con.rollback()
+        raise
+    else:
         con.commit()
+    finally:
         con.close()
 
 
@@ -2628,4 +2634,4 @@ def hourly_comparison():
 if __name__ == "__main__":
     # Dev server
     import sys
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=False)
