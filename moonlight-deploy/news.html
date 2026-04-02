@@ -245,11 +245,14 @@
         }
         
         .logo-icon {
-            width: 50px;
-            height: 50px;
-            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            animation: iconPulse 3s ease-in-out infinite 1.5s;
+            width: 48px;
+            height: 48px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,.3));
         }
+        
+        .logo-text{display:flex;flex-direction:column;line-height:1.1}
+        .logo-text-top{font-size:1.2rem;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+        .logo-text-bot{font-size:.65rem;font-weight:300;letter-spacing:4.5px;text-transform:uppercase;opacity:.7}
         
         @keyframes logoPulse {
             0%, 100% {
@@ -414,7 +417,36 @@
             letter-spacing: 1px;
             font-weight: 600;
         }
-        
+
+        /* Navigation Status Badges */
+        .nav-badge {
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-left: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge.live {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .nav-badge.beta {
+            background: rgba(0, 191, 255, 0.2);
+            color: #00bfff;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .nav-badge.soon {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
         /* Main Content */
         .main-content {
             padding-top: 120px;
@@ -982,67 +1014,41 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" width="50" height="50" viewBox="0 0 80 80">
+            <a href="/" class="logo">
+                <svg class="logo-icon" width="48" height="48" viewBox="0 0 100 100" fill="none">
                     <defs>
-                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffffff">
-                                <animate attributeName="stop-color" values="#ffffff;#00bfff;#ffffff" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                            </stop>
-                            <stop offset="50%" style="stop-color:#e5e7eb">
-                                <animate attributeName="stop-color" values="#e5e7eb;#87ceeb;#e5e7eb" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                            </stop>
-                            <stop offset="100%" style="stop-color:#9ca3af">
-                                <animate attributeName="stop-color" values="#9ca3af;#4682b4;#9ca3af" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                            </stop>
-                        </linearGradient>
-                        <filter id="glowFilter">
-                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                            <feMerge> 
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                            <animate attributeName="stdDeviation" values="3;8;3" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </filter>
+                        <filter id="lglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <filter id="flare" x="-300%" y="-300%" width="700%" height="700%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                     </defs>
-                    <g transform="translate(40, 40)" filter="url(#glowFilter)">
-                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.8;1.0;0.8" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.9;1.0;0.9" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.6;1.0;0.6" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.7;1.0;0.7" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
-                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
-                        </path>
-                    </g>
+                    <circle cx="48" cy="46" r="28" stroke="currentColor" stroke-width="1.8" fill="none" filter="url(#lglow)"/>
+                    <line x1="3" y1="95" x2="93" y2="5" stroke="currentColor" stroke-width="1.4"/>
+                    <circle cx="4" cy="94" r="2.5" fill="white" opacity="1" filter="url(#flare)"/>
                 </svg>
-                Moonlight Analytica
+                <span class="logo-text"><span class="logo-text-top">MOONLIGHT</span><span class="logo-text-bot">ANALYTICA</span></span>
             </a>
             <ul class="nav-menu">
-                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
-                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
+                <li><a href="/" class="nav-link">Home</a></li>
                 <li class="nav-dropdown">
-                    <a href="#" class="nav-dropdown-toggle active">Content Hub</a>
+                    <a href="#" class="nav-dropdown-toggle">Products</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-label">Our Solutions</span>
+                        <a href="solutions.html" class="dropdown-item">All Products</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="solutions.html#janus" class="dropdown-item">Janus - Vision AI <span class="nav-badge beta">Beta</span></a>
+                        <a href="https://phynxtimer.com" target="_blank" class="dropdown-item">PhynxTimer <span class="nav-badge live">Live</span></a>
+                        <a href="solutions.html#ats" class="dropdown-item">ATS Resume Helper <span class="nav-badge beta">Beta</span></a>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-label">Coming Soon</span>
+                        <a href="#" class="dropdown-item">More Products <span class="nav-badge soon">Soon</span></a>
+                    </div>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle active">Pulse</a>
                     <div class="dropdown-menu">
                         <a href="news.html" class="dropdown-item active">News</a>
                         <a href="insights.html" class="dropdown-item">Insights</a>
+                        <a href="spotlight.html" class="dropdown-item">Spotlight</a>
                         <a href="trends.html" class="dropdown-item">Trends</a>
-                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
                     </div>
                 </li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
@@ -1074,40 +1080,70 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 <!-- Featured Article - Google Nano Banana vs Adobe -->
                 <article class="featured-article">
                     <div class="featured-content" style="display: block;">
-                        <!-- Large Google Logo at Top -->
+                        <!-- Claude Sonnet 4.5 Featured Article -->
                         <div class="featured-image" style="background: transparent; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 1.5rem; height: auto;">
-                            <svg viewBox="0 0 272 92" style="width: 250px; height: auto;">
-                                <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335"/>
-                                <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#FBBC04"/>
-                                <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#4285F4"/>
-                                <path d="M225 3v65h-9.5V3h9.5z" fill="#34A853"/>
-                                <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
-                                <path d="M35.29 41.41V32H67.8c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
-                            </svg>
+                            <img src="sonnet-4.5.png" alt="Claude Sonnet 4.5" loading="lazy" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px;">
                         </div>
-                        
+
                         <!-- Article Preview Content -->
                         <div class="featured-info" style="text-align: left; padding: 0 1rem;">
                             <span class="featured-badge">AI & ML</span>
-                            <h2 class="featured-title" style="color: #1f2937;">The 'Photoshop Killer' That Went Viral Before Google Even Announced It</h2>
+                            <h2 class="featured-title" style="color: #1f2937;">Claude Sonnet 4.5: The AI Model That Just Made Every Competitor Nervous</h2>
                             <p class="featured-excerpt" style="color: #6b7280;">
-                                How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing. A mysterious AI model nicknamed "Nano Banana" has been quietly dominating image editing benchmarks for weeks, leaving the creative industry buzzing with speculation.
+                                Anthropic's latest release crushes benchmarks with 61.4% OSWorld success (up from 42.2%), state-of-the-art SWE-bench performance, and introduces revolutionary features like Claude Code, Agent SDK, and 30+ hour task focus—all while maintaining the same $3/$15 pricing. This comprehensive review reveals why Sonnet 4.5 is setting a new standard for AI capabilities.
                             </p>
-                            
+
                             <div class="featured-meta">
-                                <span class="meta-item">📅 September 3, 2025</span>
-                                <span class="meta-item">⏱️ 12 min read</span>
+                                <span class="meta-item">📅 January 21, 2025</span>
+                                <span class="meta-item">⏱️ 15 min read</span>
                                 <span class="meta-item">👤 Tech Analysis Team</span>
                             </div>
-                            <a href="google-nano-banana-photoshop-killer.html" class="read-more">Read Full Article →</a>
+                            <a href="claude-sonnet-4-5-review.html" class="read-more">Read Full Article →</a>
                         </div>
                     </div>
                 </article>
                 
                 <!-- News Cards -->
+                <article class="news-card" onclick="window.open('google-nano-banana-photoshop-killer.html', '_blank')">
+                    <div class="card-image" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                        <svg viewBox="0 0 272 92" style="width: 200px; height: auto;">
+                            <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335"/>
+                            <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#FBBC04"/>
+                            <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#4285F4"/>
+                            <path d="M225 3v65h-9.5V3h9.5z" fill="#34A853"/>
+                            <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
+                            <path d="M35.29 41.41V32H67.8c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">AI & ML</span>
+                        <h3 class="card-title">The 'Photoshop Killer' That Went Viral Before Google Even Announced It</h3>
+                        <p class="card-excerpt">Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing. This mysterious model dominated benchmarks before official announcement...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 September 3, 2025</span>
+                            <span class="card-read-time">⏱️ 12 min</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card" onclick="window.open('ghost-of-yotei-review.html', '_blank')">
+                    <div class="card-image">
+                        <img src="ghost-of-yotei-review.png" alt="Ghost of Yotei" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-category">🎮 Gaming</span>
+                        <h3 class="card-title">Ghost of Yotei Review: A Masterful Return to Feudal Japan</h3>
+                        <p class="card-excerpt">Sucker Punch delivers a stunning sequel with breathtaking Hokkaido landscapes, refined combat, and an epic story. Our comprehensive review with detailed scores across 6 categories - 8.5/10 overall...</p>
+                        <div class="card-meta">
+                            <span class="card-date">📅 January 20, 2025</span>
+                            <span class="card-read-time">⏱️ 12 min</span>
+                        </div>
+                    </div>
+                </article>
+
                 <article class="news-card" onclick="window.open('deepseek-code-tsunami-chinese-ai-revolution.html', '_blank')">
                     <div class="card-image">
-                        <img src="deepseek-logo.png" alt="DeepSeek Logo">
+                        <img src="deepseek-logo.png" alt="DeepSeek Logo" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">AI & ML</span>
@@ -1122,7 +1158,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
 
                 <article class="news-card" onclick="window.open('test-article-examples/codex-vs-claude-code-analysis.html', '_blank')">
                     <div class="card-image">
-                        <img src="claude-vs-codex-comparison.png" alt="OpenAI Codex vs Claude Code Analysis">
+                        <img src="claude-vs-codex-comparison.png" alt="OpenAI Codex vs Claude Code Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">AI Tools</span>
@@ -1137,7 +1173,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
 
                 <article class="news-card" onclick="window.open('openai-o1-refusal-pattern-analysis.html', '_blank')">
                     <div class="card-image">
-                        <img src="1a.png" alt="OpenAI o1 Analysis">
+                        <img src="1a.png" alt="OpenAI o1 Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">AI Analysis</span>
@@ -1152,7 +1188,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('iphone-17-ai-demo-failure-analysis.html', '_blank')">
                     <div class="card-image">
-                        <img src="2a.png" alt="iPhone 17 Demo Analysis">
+                        <img src="2a.png" alt="iPhone 17 Demo Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">Mobile Technology</span>
@@ -1167,7 +1203,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('big-tech-50m-lobbying-california-ai-bill.html', '_blank')">
                     <div class="card-image">
-                        <img src="3a.png" alt="AI Lobbying Analysis">
+                        <img src="3a.png" alt="AI Lobbying Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">Policy & Regulation</span>
@@ -1182,7 +1218,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('amazon-shadow-workforce-purge-10000-contractors.html', '_blank')">
                     <div class="card-image">
-                        <img src="4a.png" alt="Amazon Workforce Analysis">
+                        <img src="4a.png" alt="Amazon Workforce Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">Corporate Strategy</span>
@@ -1197,7 +1233,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('nvidia-blackwell-chips-sold-out-2027.html', '_blank')">
                     <div class="card-image">
-                        <img src="5a.png" alt="NVIDIA Blackwell Analysis">
+                        <img src="5a.png" alt="NVIDIA Blackwell Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">Hardware</span>
@@ -1212,7 +1248,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('intel-secret-plan-split-500b-semiconductor-war.html', '_blank')">
                     <div class="card-image">
-                        <img src="7a.png" alt="Intel Split Analysis">
+                        <img src="7a.png" alt="Intel Split Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">Semiconductors</span>
@@ -1227,7 +1263,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('10-million-token-arms-race-chatgpt-calculator.html', '_blank')">
                     <div class="card-image">
-                        <img src="10av2.png" alt="Token Arms Race Analysis">
+                        <img src="10av2.png" alt="Token Arms Race Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">AI & ML</span>
@@ -1242,7 +1278,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('ai-eating-own-tail-chatgpt-dumber-2026.html', '_blank')">
                     <div class="card-image">
-                        <img src="6a.png" alt="AI Quality Analysis">
+                        <img src="6a.png" alt="AI Quality Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">AI Research</span>
@@ -1257,7 +1293,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('meta-google-apple-twitter-killers-march-2026.html', '_blank')">
                     <div class="card-image">
-                        <img src="6a.png" alt="Social Media Evolution">
+                        <img src="6a.png" alt="Social Media Evolution" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">Social Media</span>
@@ -1272,7 +1308,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
                 
                 <article class="news-card" onclick="window.open('vision-pro-2-ditching-500-feature-wanted.html', '_blank')">
                     <div class="card-image">
-                        <img src="10av2.png" alt="Vision Pro Analysis">
+                        <img src="10av2.png" alt="Vision Pro Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">VR/AR Technology</span>
@@ -1287,7 +1323,7 @@ prometheus --config.file=<span class="glow-8">analytics.yml</span></div>
 
                 <article class="news-card" onclick="window.open('gemini-cli-ghost-in-shell-analysis.html', '_blank')">
                     <div class="card-image">
-                        <img src="gemini.png" alt="Google Gemini CLI Analysis">
+                        <img src="gemini.png" alt="Google Gemini CLI Analysis" loading="lazy">
                     </div>
                     <div class="card-content">
                         <span class="card-category">Developer Tools</span>
