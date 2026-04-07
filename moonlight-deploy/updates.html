@@ -31,6 +31,70 @@
             --bg-card: rgba(255, 255, 255, 0.03);
             --backdrop-blur: blur(24px);
         }
+/* ═══ NAVBAR — Premium Halo Left ═══ */
+.navbar {
+  position: sticky; top: 0; left: 0; right: 0; z-index: 1000;
+  height: 130px;
+  background:
+    radial-gradient(ellipse 400px 200px at 120px 50%, rgba(77,130,180,0.07) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(12,16,28,0.98) 0%, rgba(6,8,13,0.97) 40%, rgba(6,8,13,0.96) 100%);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.navbar.scrolled {
+  height: 110px;
+  background:
+    radial-gradient(ellipse 300px 150px at 120px 50%, rgba(77,130,180,0.04) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(6,8,13,0.72) 0%, rgba(6,8,13,0.68) 100%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.nav-container {
+  max-width: 100%; margin: 0; height: 100%;
+  display: flex; align-items: center; padding: 0 32px;
+}
+.logo {
+  display: flex; align-items: center; flex-shrink: 0;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.logo:hover { opacity: 0.85; }
+.logo img {
+  display: block; height: 106px; width: auto; object-fit: contain; margin-top: -28px;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.navbar.scrolled .logo img {
+  height: 86px; margin-top: -22px;
+}
+.nav-menu {
+  display: flex; list-style: none; gap: 2.8rem; margin-left: auto;
+  align-items: center;
+}
+.nav-link {
+  color: rgba(180,195,215,0.75); text-decoration: none; font-weight: 500;
+  font-size: 0.875rem; letter-spacing: 0.4px;
+  transition: color 0.3s ease; position: relative;
+}
+.nav-link:hover { color: rgba(255,255,255,0.95); }
+.nav-link::after {
+  content: ''; position: absolute; bottom: -5px; left: 0;
+  width: 0; height: 1px; border-radius: 0.5px;
+  background: rgba(77,170,210,0.6); transition: width 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.nav-link:hover::after { width: 100%; }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer;
+  padding: 8px; margin-left: auto;
+}
+.hamburger span {
+  width: 22px; height: 2px; background: rgba(180,195,215,0.6);
+  border-radius: 2px; transition: all 0.3s ease;
+}
+
         
         body {
             font-family: 'Inter', sans-serif;
@@ -72,66 +136,7 @@
             0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
             50% { transform: translateY(-40px) scale(1.5); opacity: 0.8; }
         }
-        
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px 0;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: var(--backdrop-blur);
-            border-bottom: 1px solid var(--glass-border);
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        
-        .logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            text-decoration: none;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-        }
-        
-        .nav-link {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        
+
         /* Main Content */
         .main-content {
             padding-top: 120px;
@@ -401,6 +406,12 @@
         
         /* Responsive */
         @media (max-width: 768px) {
+  /* Logo responsive scaling */
+  .navbar { height: 80px; }
+  .navbar.scrolled { height: 68px; }
+  .logo img { height: 56px !important; margin-top: -14px !important; }
+  .navbar.scrolled .logo img { height: 48px !important; margin-top: -12px !important; }
+  .nav-container { padding: 0 16px; }
             .updates-grid {
                 grid-template-columns: 1fr;
             }
@@ -437,37 +448,8 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80">
-                    <defs>
-                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffffff"/>
-                            <stop offset="50%" style="stop-color:#e5e7eb"/>
-                            <stop offset="100%" style="stop-color:#9ca3af"/>
-                        </linearGradient>
-                    </defs>
-                    <g transform="translate(40, 40)">
-                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                        </circle>
-                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
-                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
-                        </path>
-                    </g>
-                </svg>
-                Moonlight Analytica
+            <a href="/" class="logo" aria-label="Moonlight Analytica">
+                <img src="/branding/moonlight-analytica-logo-transparent.png" alt="Moonlight Analytica" draggable="false">
             </a>
             <ul class="nav-menu">
                 <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
@@ -721,5 +703,13 @@
             </div>
         </div>
     </main>
+    <script>
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 40);
+            }, { passive: true });
+        }
+    </script>
 </body>
 </html>

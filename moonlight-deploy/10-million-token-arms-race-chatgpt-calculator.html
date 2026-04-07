@@ -22,6 +22,70 @@
             --border-neon: rgba(0, 191, 255, 0.3);
             --shadow-neon: 0 0 20px rgba(0, 191, 255, 0.3);
         }
+/* ═══ NAVBAR — Premium Halo Left ═══ */
+.navbar {
+  position: sticky; top: 0; left: 0; right: 0; z-index: 1000;
+  height: 130px;
+  background:
+    radial-gradient(ellipse 400px 200px at 120px 50%, rgba(77,130,180,0.07) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(12,16,28,0.98) 0%, rgba(6,8,13,0.97) 40%, rgba(6,8,13,0.96) 100%);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.navbar.scrolled {
+  height: 110px;
+  background:
+    radial-gradient(ellipse 300px 150px at 120px 50%, rgba(77,130,180,0.04) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(6,8,13,0.72) 0%, rgba(6,8,13,0.68) 100%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.nav-container {
+  max-width: 100%; margin: 0; height: 100%;
+  display: flex; align-items: center; padding: 0 32px;
+}
+.logo {
+  display: flex; align-items: center; flex-shrink: 0;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.logo:hover { opacity: 0.85; }
+.logo img {
+  display: block; height: 106px; width: auto; object-fit: contain; margin-top: -28px;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.navbar.scrolled .logo img {
+  height: 86px; margin-top: -22px;
+}
+.nav-menu {
+  display: flex; list-style: none; gap: 2.8rem; margin-left: auto;
+  align-items: center;
+}
+.nav-link {
+  color: rgba(180,195,215,0.75); text-decoration: none; font-weight: 500;
+  font-size: 0.875rem; letter-spacing: 0.4px;
+  transition: color 0.3s ease; position: relative;
+}
+.nav-link:hover { color: rgba(255,255,255,0.95); }
+.nav-link::after {
+  content: ''; position: absolute; bottom: -5px; left: 0;
+  width: 0; height: 1px; border-radius: 0.5px;
+  background: rgba(77,170,210,0.6); transition: width 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.nav-link:hover::after { width: 100%; }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer;
+  padding: 8px; margin-left: auto;
+}
+.hamburger span {
+  width: 22px; height: 2px; background: rgba(180,195,215,0.6);
+  border-radius: 2px; transition: all 0.3s ease;
+}
+
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -32,33 +96,9 @@
             line-height: 1.6;
         }
         
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-neon);
-            z-index: 1000;
-        }
-        
         .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-neon);
-            text-decoration: none;
-            text-shadow: 0 0 10px var(--primary-neon);
+          max-width: 1200px; margin: 0 auto; height: 100%;
+          display: flex; align-items: center; padding: 0 36px;
         }
 
         .nav-links {
@@ -67,17 +107,6 @@
             gap: 2rem;
         }
 
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-neon);
-            text-shadow: 0 0 5px var(--primary-neon);
-        }
 
         /* Dropdown Navigation */
         .nav-dropdown {
@@ -85,7 +114,7 @@
         }
 
         .nav-dropdown-toggle {
-            color: var(--text-secondary);
+            color: #a0aec0;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
@@ -93,7 +122,7 @@
         }
 
         .nav-dropdown-toggle:hover {
-            color: var(--primary-neon);
+            color: #ffffff;
             text-shadow: 0 0 5px var(--primary-neon);
         }
 
@@ -365,6 +394,12 @@
         }
         
         @media (max-width: 768px) {
+  /* Logo responsive scaling */
+  .navbar { height: 80px; }
+  .navbar.scrolled { height: 68px; }
+  .logo img { height: 56px !important; margin-top: -14px !important; }
+  .navbar.scrolled .logo img { height: 48px !important; margin-top: -12px !important; }
+  .nav-container { padding: 0 16px; }
             .timeline-race {
                 flex-direction: column;
                 align-items: center;
@@ -385,7 +420,9 @@
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <a href="moonlight-complete-structure.html" class="logo">Moonlight Analytica</a>
+            <a href="/" class="logo" aria-label="Moonlight Analytica">
+                <img src="/branding/moonlight-analytica-logo-transparent.png" alt="Moonlight Analytica" draggable="false">
+            </a>
             <ul class="nav-links">
                 <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
                 <li><a href="solutions.html" class="nav-link">Solutions</a></li>
@@ -538,5 +575,6 @@
             <p><strong>The race isn't just about technical achievement—it's about who controls the first AI systems that never forget.</strong></p>
         </div>
     </div>
+<script>(function(){var nb=document.getElementById("navbar");if(nb)window.addEventListener("scroll",function(){nb.classList.toggle("scrolled",window.scrollY>10)},{passive:true})})();</script>
 </body>
 </html>

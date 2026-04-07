@@ -50,50 +50,59 @@
   --font-display: 'Outfit', sans-serif;
 }
 html { scroll-behavior: smooth; }
+/* ═══ NAVBAR — Premium Halo Left ═══ */
 .navbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  padding: 18px 0;
-  background: rgba(6, 8, 13, 0.6);
-  backdrop-filter: blur(30px) saturate(160%);
-  border-bottom: 1px solid var(--border);
-  transition: all 0.4s ease;
+  position: sticky; top: 0; left: 0; right: 0; z-index: 1000;
+  height: 130px;
+  background:
+    radial-gradient(ellipse 400px 200px at 120px 50%, rgba(77,130,180,0.07) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(12,16,28,0.98) 0%, rgba(6,8,13,0.97) 40%, rgba(6,8,13,0.96) 100%);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .navbar.scrolled {
-  padding: 12px 0;
-  background: rgba(6, 8, 13, 0.92);
-  border-bottom-color: rgba(77, 216, 230, 0.08);
+  height: 110px;
+  background:
+    radial-gradient(ellipse 300px 150px at 120px 50%, rgba(77,130,180,0.04) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(6,8,13,0.72) 0%, rgba(6,8,13,0.68) 100%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .nav-container {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: center; padding: 0 24px; gap: 3rem;
+  max-width: 100%; margin: 0; height: 100%;
+  display: flex; align-items: center; padding: 0 32px;
 }
 .logo {
-  font-family: var(--font-display); font-size: 1.45rem; font-weight: 700;
-  color: var(--text); text-decoration: none;
-  display: flex; align-items: center; gap: 12px;
-  letter-spacing: -0.5px;
+  display: flex; align-items: center; flex-shrink: 0;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 .logo:hover { opacity: 0.85; }
-.logo-icon{width:36px;height:36px;color:#fff;transition:color .3s,filter .3s;filter:drop-shadow(0 0 8px rgba(255,255,255,.25))}
-.navbar.scrolled .logo-icon{color:#111827;filter:none}
-.logo-text{display:flex;flex-direction:column;line-height:1.1}
-.logo-text-top{font-size:1.1rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.logo-text-bot{font-size:.65rem;font-weight:300;letter-spacing:4.5px;text-transform:uppercase;opacity:.7}
-.navbar.scrolled .logo-text-top{color:#111827}
-.navbar.scrolled .logo-text-bot{color:#475569}
+.logo img {
+  display: block; height: 106px; width: auto; object-fit: contain; margin-top: -28px;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.navbar.scrolled .logo img {
+  height: 86px; margin-top: -22px;
+}
 .nav-menu {
-  display: flex; list-style: none; gap: 2.2rem; margin-left: auto;
+  display: flex; list-style: none; gap: 2.8rem; margin-left: auto;
+  align-items: center;
 }
 .nav-link {
-  color: var(--text-2); text-decoration: none; font-weight: 500;
-  font-size: 0.88rem; letter-spacing: 0.2px;
-  transition: color 0.25s ease; position: relative;
+  color: rgba(180,195,215,0.75); text-decoration: none; font-weight: 500;
+  font-size: 0.875rem; letter-spacing: 0.4px;
+  transition: color 0.3s ease; position: relative;
 }
-.nav-link:hover { color: #fff; }
+.nav-link:hover { color: rgba(255,255,255,0.95); }
 .nav-link::after {
-  content: ''; position: absolute; bottom: -4px; left: 0;
-  width: 0; height: 1.5px; border-radius: 1px;
-  background: var(--cyan); transition: width 0.3s ease;
+  content: ''; position: absolute; bottom: -5px; left: 0;
+  width: 0; height: 1px; border-radius: 0.5px;
+  background: rgba(77,170,210,0.6); transition: width 0.35s cubic-bezier(0.16,1,0.3,1);
 }
 .nav-link:hover::after { width: 100%; }
 .hamburger {
@@ -101,9 +110,10 @@ html { scroll-behavior: smooth; }
   padding: 8px; margin-left: auto;
 }
 .hamburger span {
-  width: 22px; height: 2px; background: var(--text-2);
+  width: 22px; height: 2px; background: rgba(180,195,215,0.6);
   border-radius: 2px; transition: all 0.3s ease;
 }
+
 
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -338,7 +348,7 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 .zviz__scan::before{content:'';position:absolute;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(77,216,230,.5),transparent);animation:zvScan 4s linear infinite}
 @keyframes zvScan{0%{top:-2px}100%{top:100%}}
 /* 3D stage */
-.zviz__stage{position:absolute;top:60px;left:50%;width:90%;height:calc(100% - 90px);transform:translateX(-50%);perspective:1200px;perspective-origin:50% 30%}
+.zviz__stage{position:absolute;top: 0;left:50%;width:90%;height:calc(100% - 90px);transform:translateX(-50%);perspective:1200px;perspective-origin:50% 30%}
 .zviz__scene{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(55deg) rotateZ(-12deg);animation:zvRotate 20s ease-in-out infinite}
 @keyframes zvRotate{0%,100%{transform:rotateX(55deg) rotateZ(-12deg)}50%{transform:rotateX(55deg) rotateZ(-18deg)}}
 /* Floor plane */
@@ -486,6 +496,12 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
+  /* Logo responsive scaling */
+  .navbar { height: 80px; }
+  .navbar.scrolled { height: 68px; }
+  .logo img { height: 56px !important; margin-top: -14px !important; }
+  .navbar.scrolled .logo img { height: 48px !important; margin-top: -12px !important; }
+  .nav-container { padding: 0 16px; }
   /* Nav mobile menu */
   .nav-menu {
     display: none; position: fixed;
@@ -889,14 +905,8 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
     <!-- NAV -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/" class="logo">
-                <svg class="logo-icon" width="40" height="40" viewBox="0 0 100 100" fill="none">
-                    <defs><filter id="lglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-                    <circle cx="52" cy="42" r="28" stroke="currentColor" stroke-width="2.2" filter="url(#lglow)"/>
-                    <line x1="5" y1="95" x2="74" y2="18" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="7" cy="93" r="1.5" fill="currentColor" opacity=".9"/>
-                </svg>
-                <span class="logo-text"><span class="logo-text-top">MOONLIGHT</span><span class="logo-text-bot">ANALYTICA</span></span>
+            <a href="/" class="logo" aria-label="Moonlight Analytica">
+                <img src="/branding/moonlight-analytica-logo-transparent.png" alt="Moonlight Analytica" draggable="false">
             </a>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="/" class="nav-link">Home</a></li>
@@ -924,11 +934,13 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 
     <script>
 
-    // ── Nav scroll behavior ──
+    // ── Nav scroll behavior — smooth premium transition ──
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-        navbar.classList.toggle('scrolled', window.scrollY > 60);
-    }, { passive: true });
+    const scrollHandler = () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 40);
+    };
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    scrollHandler();
 
     // ── Hamburger menu ──
     const hamburger = document.getElementById('hamburger');
@@ -2450,6 +2462,7 @@ function closeModal() {
 var autoRotateTimer = null;
 var currentIndustryIdx = 0;
 var autoRotateDelay = null;
+var industryKeys = ['retail','restaurant','hotel','gym'];
 function startAutoRotate() {
   autoRotateTimer = setInterval(function(){
     currentIndustryIdx = (currentIndustryIdx + 1) % industryKeys.length;

@@ -96,6 +96,70 @@
             --neon-purple: #9945ff;
             --neon-cyan: #87ceeb;
         }
+/* ═══ NAVBAR — Premium Halo Left ═══ */
+.navbar {
+  position: sticky; top: 0; left: 0; right: 0; z-index: 1000;
+  height: 130px;
+  background:
+    radial-gradient(ellipse 400px 200px at 120px 50%, rgba(77,130,180,0.07) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(12,16,28,0.98) 0%, rgba(6,8,13,0.97) 40%, rgba(6,8,13,0.96) 100%);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.navbar.scrolled {
+  height: 110px;
+  background:
+    radial-gradient(ellipse 300px 150px at 120px 50%, rgba(77,130,180,0.04) 0%, transparent 70%),
+    linear-gradient(90deg, rgba(6,8,13,0.72) 0%, rgba(6,8,13,0.68) 100%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.nav-container {
+  max-width: 100%; margin: 0; height: 100%;
+  display: flex; align-items: center; padding: 0 32px;
+}
+.logo {
+  display: flex; align-items: center; flex-shrink: 0;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.logo:hover { opacity: 0.85; }
+.logo img {
+  display: block; height: 106px; width: auto; object-fit: contain; margin-top: -28px;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.navbar.scrolled .logo img {
+  height: 86px; margin-top: -22px;
+}
+.nav-menu {
+  display: flex; list-style: none; gap: 2.8rem; margin-left: auto;
+  align-items: center;
+}
+.nav-link {
+  color: rgba(180,195,215,0.75); text-decoration: none; font-weight: 500;
+  font-size: 0.875rem; letter-spacing: 0.4px;
+  transition: color 0.3s ease; position: relative;
+}
+.nav-link:hover { color: rgba(255,255,255,0.95); }
+.nav-link::after {
+  content: ''; position: absolute; bottom: -5px; left: 0;
+  width: 0; height: 1px; border-radius: 0.5px;
+  background: rgba(77,170,210,0.6); transition: width 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.nav-link:hover::after { width: 100%; }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer;
+  padding: 8px; margin-left: auto;
+}
+.hamburger span {
+  width: 22px; height: 2px; background: rgba(180,195,215,0.6);
+  border-radius: 2px; transition: all 0.3s ease;
+}
+
         
         body {
             font-family: 'Inter', sans-serif;
@@ -105,58 +169,7 @@
             color: #1f2937;
             min-height: 100vh;
         }
-        
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: var(--backdrop-blur);
-            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 0 10px;
-            gap: 3rem;
-        }
-        
-        .logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
-            animation: logoPulse 3s ease-in-out infinite;
-        }
-        
-        .logo:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
-            animation-duration: 1.5s;
-        }
-        
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            animation: iconPulse 3s ease-in-out infinite 1.5s;
-        }
-        
+
         @keyframes logoPulse {
             0%, 100% {
                 text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
@@ -177,27 +190,8 @@
             }
         }
         
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-            margin-left: auto;
-        }
         
-        .nav-link {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
         
-        .nav-link:hover {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
-            transform: translateY(-2px);
-        }
 
         /* Dropdown Navigation */
         .nav-dropdown {
@@ -428,6 +422,12 @@
         
         /* Mobile-responsive infographic styles */
         @media (max-width: 768px) {
+  /* Logo responsive scaling */
+  .navbar { height: 80px; }
+  .navbar.scrolled { height: 68px; }
+  .logo img { height: 56px !important; margin-top: -14px !important; }
+  .navbar.scrolled .logo img { height: 48px !important; margin-top: -12px !important; }
+  .nav-container { padding: 0 16px; }
             .article-container {
                 padding: 120px 20px 40px;
             }
@@ -470,56 +470,8 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" width="50" height="50" viewBox="0 0 80 80">
-                    <defs>
-                        <linearGradient id="gradientPhase" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffffff">
-                                <animate attributeName="stop-color" values="#ffffff;#00bfff;#ffffff" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                            </stop>
-                            <stop offset="50%" style="stop-color:#e5e7eb">
-                                <animate attributeName="stop-color" values="#e5e7eb;#87ceeb;#e5e7eb" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                            </stop>
-                            <stop offset="100%" style="stop-color:#9ca3af">
-                                <animate attributeName="stop-color" values="#9ca3af;#4682b4;#9ca3af" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                            </stop>
-                        </linearGradient>
-                        <filter id="glowFilter">
-                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                            <feMerge> 
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                            <animate attributeName="stdDeviation" values="3;8;3" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </filter>
-                    </defs>
-                    <g transform="translate(40, 40)" filter="url(#glowFilter)">
-                        <circle cx="0" cy="0" r="35" fill="none" stroke="url(#gradientPhase)" stroke-width="1" opacity="0.2">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="30s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="-20" r="6" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.8">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.8;1.0;0.8" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="-20" r="3" fill="url(#gradientPhase)" opacity="0.9">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;360 0 0" dur="8s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.9;1.0;0.9" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="4" fill="none" stroke="url(#gradientPhase)" stroke-width="1.5" opacity="0.6">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.6;1.0;0.6" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="0" cy="25" r="2" fill="url(#gradientPhase)" opacity="0.7">
-                            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-360 0 0" dur="12s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.7;1.0;0.7" dur="3s" begin="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <path d="M -15,-10 A 20,20 0 0,1 15,-10" fill="none" stroke="url(#gradientPhase)" stroke-width="2" opacity="0.4">
-                            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
-                        </path>
-                    </g>
-                </svg>
-                Moonlight Analytica
+            <a href="/" class="logo" aria-label="Moonlight Analytica">
+                <img src="/branding/moonlight-analytica-logo-transparent.png" alt="Moonlight Analytica" draggable="false">
             </a>
             <ul class="nav-menu">
                 <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
@@ -1055,5 +1007,10 @@
             </p>
         </div>
     </div>
+
+    <footer style="background: #f6f9fc; padding: 48px; text-align: center; margin-top: 80px;">
+        <p style="font-size: 14px; color: #6b7c93;">&copy; 2025 <a href="/" style="color: #635bff; text-decoration: none;">Moonlight Analytica</a>. All rights reserved.</p>
+    </footer>
+<script>(function(){var nb=document.getElementById("navbar");if(nb)window.addEventListener("scroll",function(){nb.classList.toggle("scrolled",window.scrollY>10)},{passive:true})})();</script>
 </body>
 </html>
