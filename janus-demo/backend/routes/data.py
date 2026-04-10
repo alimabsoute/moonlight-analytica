@@ -303,20 +303,25 @@ def post_event():
     event_type = body.get("event_type")  # entry, exit, zone_change
     person_id = body.get("person_id")
     zone_id = body.get("zone_id")
+    zone_name = body.get("zone")  # streamer sends zone name; look up id
     direction = body.get("direction")  # in, out, lateral
     confidence = body.get("confidence", 1.0)
     timestamp = body.get("timestamp") or datetime.now(timezone.utc).isoformat(timespec="seconds")
 
-    if not event_type or not person_id:
+    if not event_type or person_id is None:
         return jsonify({"error": "event_type and person_id required"}), 400
 
     with db() as con:
+        if zone_id is None and zone_name:
+            row = con.execute("SELECT id FROM zones WHERE zone_name = ?", (zone_name,)).fetchone()
+            if row:
+                zone_id = row["id"]
         con.execute(
             """
             INSERT INTO events (timestamp, person_id, event_type, zone_id, direction, confidence)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (timestamp, person_id, event_type, zone_id, direction, confidence),
+            (timestamp, str(person_id), event_type, zone_id, direction, confidence),
         )
 
     return jsonify({"ok": True, "event_type": event_type, "person_id": person_id})

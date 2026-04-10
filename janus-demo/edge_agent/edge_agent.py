@@ -102,9 +102,13 @@ def main():
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             detections = model.predict(rgb, threshold=args.conf)
 
-            # Filter to person class only (class_id 0 in COCO)
+            # Filter to person class only (class_id 1 in RF-DETR's COCO map)
             if detections.class_id is not None and len(detections) > 0:
-                person_mask = detections.class_id == 0
+                # RF-DETR stuffs the raw frame into data['source_image'];
+                # supervision's boolean indexing fails on it. Strip before filter.
+                detections.data.pop("source_image", None)
+                detections.data.pop("source_shape", None)
+                person_mask = detections.class_id == 1
                 detections = detections[person_mask]
 
             # Track with ByteTrack

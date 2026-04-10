@@ -440,9 +440,11 @@ class VideoAnalyzer:
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 detections = model.predict(rgb, threshold=self.config.confidence)
 
-                # Filter to person class
+                # Filter to person class (class_id 1 in RF-DETR's COCO map)
                 if detections.class_id is not None and len(detections) > 0:
-                    detections = detections[detections.class_id == 0]
+                    detections.data.pop("source_image", None)
+                    detections.data.pop("source_shape", None)
+                    detections = detections[detections.class_id == 1]
 
                 # Track
                 detections = tracker.update(detections)

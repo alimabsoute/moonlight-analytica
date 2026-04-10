@@ -245,9 +245,11 @@ def main():
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             detections = model.predict(rgb, threshold=args.conf)
 
-            # Filter to person class only
+            # Filter to person class only (class_id 1 in RF-DETR's COCO map)
             if detections.class_id is not None and len(detections) > 0:
-                detections = detections[detections.class_id == 0]
+                detections.data.pop("source_image", None)
+                detections.data.pop("source_shape", None)
+                detections = detections[detections.class_id == 1]
 
             # 2. Track with ByteTrack
             detections = tracker.update(detections)

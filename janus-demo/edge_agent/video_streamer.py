@@ -356,6 +356,15 @@ def generate_frames():
 
 # ── Flask routes ─────────────────────────────────────────────────────
 
+@app.route('/')
+def index():
+    viewer_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'viewer.html')
+    if os.path.exists(viewer_path):
+        with open(viewer_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    return '<html><body><img src="/video_feed" style="width:100%"/></body></html>'
+
+
 @app.route('/video_feed')
 def video_feed():
     return Response(generate_frames(),
@@ -449,10 +458,12 @@ def run_tracking(source, conf=0.40, backend_url="http://localhost:8000",
 
     frame_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) or 640
     frame_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) or 480
+    video_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    frame_time_s = 1.0 / video_fps
 
     # Load zones
     zone_data, line_data = load_zone_config(zone_config, frame_w, frame_h)
-    print(f"[INFO] Loaded {len(zone_data)} zones, {len(line_data)} lines")
+    print(f"[INFO] Loaded {len(zone_data)} zones, {len(line_data)} lines (video {video_fps:.0f} FPS)")
 
     # Supervision annotators
     box_ann = sv.BoxAnnotator(thickness=2)
@@ -460,13 +471,25 @@ def run_tracking(source, conf=0.40, backend_url="http://localhost:8000",
     trace_ann = sv.TraceAnnotator(trace_length=90, thickness=2)
 
     print("[INFO] Tracking pipeline active")
-    print(f"[INFO] Pipeline: RF-DETR → ByteTrack → Re-ID → Zones → Sessions")
+    print("[INFO] Pipeline: RF-DETR -> ByteTrack -> Re-ID -> Zones -> Sessions")
 
     frame_num = 0
     prev_track_ids: set = set()
+    last_iter_start = time.time()
 
     while True:
-        now = time.time()
+        iter_start = time.time()
+        now = iter_start
+
+        # Real-time playback: skip video frames to match wall-clock pacing.
+        # If last iteration took 330ms and video is 30 FPS, skip ~9 frames.
+        iter_elapsed = iter_start - last_iter_start
+        frames_to_skip = max(0, int(iter_elapsed / frame_time_s) - 1)
+        for _ in range(frames_to_skip):
+            if not cap.grab():
+                cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                break
+        last_iter_start = iter_start
 
         # Video source switching
         if new_source is not None and not paths_equal(new_source, current_source):
@@ -504,9 +527,11 @@ def run_tracking(source, conf=0.40, backend_url="http://localhost:8000",
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         detections = model.predict(rgb, threshold=conf)
 
-        # Filter to person class
+        # Filter to person class (class_id 1 in RF-DETR's COCO map)
         if detections.class_id is not None and len(detections) > 0:
-            detections = detections[detections.class_id == 0]
+            detections.data.pop("source_image", None)
+            detections.data.pop("source_shape", None)
+            detections = detections[detections.class_id == 1]
 
         if len(detections) == 0:
             session_mgr.check_exits(set(), now)
