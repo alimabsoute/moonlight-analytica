@@ -1,4 +1,5 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect, lazy, Suspense, useMemo } from 'react'
+import ZoneOverlay from '../components/ZoneOverlay'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, TrendingUp, TrendingDown, Clock, AlertTriangle,
@@ -287,13 +288,21 @@ export default function LiveMonitor() {
   const queueWaitTime = apiData.queue?.avg_wait_time ?? apiData.queue?.avgWaitTime ?? apiData.queue?.wait_time ?? '--'
 
   // Prepare zone data for bar chart
-  const zoneChartData = apiData.zones
-    ? (Array.isArray(apiData.zones) ? apiData.zones : apiData.zones?.data || apiData.zones?.zones || []).map(z => ({
-        name: z.name || z.zone_name || z.zone || z.label || 'Zone',
-        occupancy: z.occupancy ?? z.count ?? z.current ?? 0,
-        capacity: z.capacity ?? z.max ?? 100
-      }))
+  const rawZones = apiData.zones
+    ? (Array.isArray(apiData.zones) ? apiData.zones : apiData.zones?.data || apiData.zones?.zones || [])
     : []
+
+  const zoneChartData = rawZones.map(z => ({
+    name: z.name || z.zone_name || z.zone || z.label || 'Zone',
+    occupancy: z.occupancy ?? z.count ?? z.current ?? 0,
+    capacity: z.capacity ?? z.max ?? 100
+  }))
+
+  // Zones with polygon_image for the overlay (only those that have geometry)
+  const overlayZones = useMemo(() =>
+    rawZones.filter(z => Array.isArray(z.polygon_image) && z.polygon_image.length >= 3),
+    [rawZones]
+  )
 
   return (
     <div className="page-container">
@@ -611,6 +620,10 @@ export default function LiveMonitor() {
               )}
               {viewMode === 'ml' && (
                 <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '400px' }}>
+                  {/* Zone polygon overlay — rendered on top of the camera/detection feed */}
+                  {overlayZones.length > 0 && (
+                    <ZoneOverlay zones={overlayZones} width={640} height={480} alpha={0.2} />
+                  )}
                   {/* Render appropriate tracking view based on pipeline version */}
                   {pipelineVersion === 'A' ? (
                     /* Standard tracking - TensorFlow.js + COCO-SSD */
