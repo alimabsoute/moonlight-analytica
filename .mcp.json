@@ -2,28 +2,22 @@
   "mcpServers": {
     "filesystem": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\alima"],
-      "env": {}
-    },
-    "puppeteer-standard": {
-      "type": "stdio",
-      "command": "npx -y puppeteer-mcp-server",
-      "args": [],
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\alima"],
       "env": {}
     },
     "brave-search": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@brave/brave-search-mcp-server", "--transport", "stdio"],
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@brave/brave-search-mcp-server", "--transport", "stdio"],
       "env": {
         "BRAVE_API_KEY": "BSA5cK5ZYURpBc1Gm-oQcHKht3MJple"
       }
     },
     "reddit": {
       "type": "stdio",
-      "command": "npx -y reddit-mcp",
-      "args": [],
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "reddit-mcp"],
       "env": {
         "REDDIT_CLIENT_ID": "YOUR_REDDIT_CLIENT_ID_HERE",
         "REDDIT_CLIENT_SECRET": "YOUR_REDDIT_CLIENT_SECRET_HERE"
@@ -31,15 +25,79 @@
     },
     "github": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@cyanheads/git-mcp-server"],
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@cyanheads/git-mcp-server"],
       "env": {}
     },
     "sequential-thinking": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
       "env": {}
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@playwright/mcp@latest"],
+      "env": {}
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp"
+    },
+    "stripe": {
+      "type": "http",
+      "url": "https://mcp.stripe.com"
+    },
+    "slack": {
+      "type": "http",
+      "url": "https://mcp.slack.com/mcp",
+      "oauth": {
+        "clientId": "1601185624273.8899143856786",
+        "callbackPort": 3118
+      }
+    },
+    "excalidraw": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "excalidraw-mcp"]
+    },
+    "github-api": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "REDACTED_GITHUB_PAT"
+      }
+    },
+    "docker": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-docker"]
+    },
+    "sentry": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@sentry/mcp-server"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "YOUR_SENTRY_AUTH_TOKEN_HERE"
+      }
+    },
+    "notion": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-notion"],
+      "env": {
+        "NOTION_API_KEY": "YOUR_NOTION_API_KEY_HERE"
+      }
+    },
+    "figma": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@anthropics/figma-mcp-server"],
+      "env": {
+        "FIGMA_PERSONAL_ACCESS_TOKEN": "YOUR_FIGMA_TOKEN_HERE"
+      }
     }
   }
 }
