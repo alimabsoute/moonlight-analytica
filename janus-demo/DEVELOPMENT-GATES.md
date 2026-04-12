@@ -110,29 +110,35 @@ Each gate has: (1) tasks, (2) tests to write, (3) pass criteria, (4) checkpoint 
 
 ## Sprint 2: Detection Upgrade + Zone System
 
-### Gate 2.1 — Model Swap (Edge Agent)
+### Gate 2.1 — Validate RF-DETR + ByteTrack Pipeline (Edge Agent)
+**Note:** YOLO → RF-DETR migration was completed in the 2026-03-31 session. This gate
+validates the new pipeline with proper tests. RF-DETR is detection-only (no masks);
+Gate 2.3 is updated accordingly.
+
 **Tasks:**
-- [ ] Change edge_agent model: `yolov8n.pt` → `yolo26s-seg.pt`
-- [ ] Change batch_processor model: `yolo11l.pt` → `yolo26l-seg.pt`
-- [ ] Verify `results[0].boxes` still works (backward-compatible)
-- [ ] Verify `results[0].masks.xy` returns polygon contours
-- [ ] Add supervision `MaskAnnotator` for visual overlay
+- [x] Migrate edge_agent to RF-DETR-Nano + ByteTrackTracker (done 2026-03-31)
+- [x] Migrate batch_processor to RF-DETR-Nano + ByteTrack (done 2026-03-31)
+- [x] Migrate video_streamer to RF-DETR + Supervision annotators (done 2026-03-31)
+- [ ] Create `edge_agent/tests/conftest.py` with test fixtures
+- [ ] Write RF-DETR pipeline tests
 
 **Tests to write:**
-- `test_detection.py::test_seg_model_loads` — Model loads without error
-- `test_detection.py::test_seg_outputs_masks` — results have masks.data and masks.xy
-- `test_detection.py::test_seg_still_outputs_boxes` — boxes.xyxy still present
-- `test_detection.py::test_person_detection_on_sample` — Detects person in test frame
+- `test_detection.py::test_model_loads` — RFDETRNano() loads without error
+- `test_detection.py::test_detections_have_xyxy` — Output has xyxy bounding boxes
+- `test_detection.py::test_detections_have_class_id` — Output has class_id array
+- `test_detection.py::test_person_class_filter` — class_id==1 filter returns only persons
+- `test_tracking.py::test_tracker_assigns_ids` — ByteTrackTracker assigns tracker_id
+- `test_tracking.py::test_tracker_deduplicates` — Same person counts once not twice
 
-**Pass criteria:** 4 new tests green + all Sprint 1 tests still green.
-**Tag:** `gate-2.1-model-swap`
+**Pass criteria:** 6 new edge agent tests green + all Sprint 1 backend tests still green.
+**Tag:** `gate-2.1-rfdetr-validated`
 
 ---
 
 ### Gate 2.2 — Zone System Upgrade (Backend)
 **Tasks:**
 - [ ] Add `polygon_world`, `polygon_image`, `color` columns to zones table
-- [ ] Add `world_x`, `world_y`, `mask_polygon` columns to events table
+- [ ] Add `world_x`, `world_y` columns to events table (no mask_polygon — RF-DETR is bbox-only)
 - [ ] Add `trajectory` column to sessions table
 - [ ] Add versioned migration system (`backend/models/migrations.py`)
 - [ ] Implement point-in-polygon (ray casting) in shared zone engine
@@ -151,19 +157,23 @@ Each gate has: (1) tasks, (2) tests to write, (3) pass criteria, (4) checkpoint 
 
 ---
 
-### Gate 2.3 — Mask Rendering (Frontend)
+### Gate 2.3 — Zone Overlay (Frontend)
+**Note:** RF-DETR produces bboxes, not segmentation masks. This gate replaces "mask
+rendering" with zone polygon visualization — drawing configurable zone boundaries on the
+canvas feed with per-zone occupancy labels.
+
 **Tasks:**
-- [ ] Create `MaskRenderer.jsx` — draws filled polygon contours on canvas
-- [ ] Integrate with camera feed overlay in LiveMonitor
-- [ ] Semi-transparent colored fills per person (unique color by track_id)
-- [ ] Toggle between bbox mode and mask mode
+- [ ] Create `ZoneOverlay.jsx` — draws named polygon zones on canvas
+- [ ] Integrate with LiveMonitor camera feed overlay
+- [ ] Per-zone color fills (semi-transparent) with zone name + count labels
+- [ ] Loads zone definitions from backend `/api/zones` endpoint
 
 **Tests to write:**
-- `MaskRenderer.test.jsx::renders_canvas` — Component renders without crash
-- `MaskRenderer.test.jsx::accepts_contour_data` — Props validation
+- `ZoneOverlay.test.jsx::renders_without_crash` — Component renders without error
+- `ZoneOverlay.test.jsx::renders_zone_polygons` — Given zone data, draws polygons
 
 **Pass criteria:** 2 new tests green + ALL prior tests green.
-**Tag:** `gate-2.3-mask-rendering`
+**Tag:** `gate-2.3-zone-overlay`
 
 ---
 
@@ -187,7 +197,7 @@ Each gate has: (1) tasks, (2) tests to write, (3) pass criteria, (4) checkpoint 
 **Tasks:**
 - [ ] Run FULL test suite
 - [ ] Test detection on 3 YouTube videos (eye-level, angled, crowded)
-- [ ] Verify mask overlays render correctly in browser
+- [ ] Verify zone overlays render correctly in browser
 - [ ] Record: detection FPS, mask quality assessment, test counts
 
 **Pass criteria:** ALL tests green. Detection works on test videos. Masks visible.
