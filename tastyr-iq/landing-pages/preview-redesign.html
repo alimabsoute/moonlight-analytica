@@ -37,20 +37,13 @@ h1,h2,h3,h4,h5,h6{font-family:'Geologica',sans-serif;font-weight:800;line-height
 
 /* ===== HERO ===== */
 .hero{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:1;overflow:hidden;background:transparent !important}
-#bokeh-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;transition:opacity .6s ease}
-.hero-content{position:relative;z-index:2;text-align:center;margin-top:clamp(80px,12vh,140px)}
+#three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;transition:opacity .6s ease}
+.hero-content{position:relative;z-index:2;text-align:center;margin-top:clamp(180px,28vh,320px)}
 
 /* V13-style stacked logo */
-.hero-brand{display:flex;flex-direction:column;align-items:center;gap:.8rem;margin-bottom:1.5rem;opacity:0;transform:translateY(40px);animation:brandReveal 1.2s cubic-bezier(.25,.46,.45,.94) .3s forwards}
+.hero-brand{display:flex;flex-direction:column;align-items:center;gap:.6rem;margin-bottom:1.5rem;opacity:0;transform:translateY(40px);animation:brandReveal 1.2s cubic-bezier(.25,.46,.45,.94) .3s forwards}
 @keyframes brandReveal{to{opacity:1;transform:translateY(0)}}
-.hero-logo-wrap{position:relative;width:clamp(160px,28vw,320px);height:clamp(160px,28vw,320px);display:flex;align-items:center;justify-content:center}
-.hero-logo-wrap .logo-shadow{position:absolute;width:100%;height:100%;object-fit:contain;pointer-events:none}
-.hero-logo-wrap .logo-shadow.s1{filter:blur(3px) brightness(.25);transform:translate(4px,6px);opacity:.5}
-.hero-logo-wrap .logo-shadow.s2{filter:blur(8px) brightness(.15);transform:translate(8px,14px);opacity:.35}
-.hero-logo-wrap .logo-shadow.s3{filter:blur(18px) brightness(.1);transform:translate(12px,22px);opacity:.2}
-.hero-logo-wrap .logo-glow{position:absolute;width:110%;height:110%;top:-5%;left:-5%;object-fit:contain;filter:blur(25px) saturate(1.6);opacity:.25;animation:logoGlowPulse 4s ease-in-out infinite;pointer-events:none}
-@keyframes logoGlowPulse{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.35;transform:scale(1.06)}}
-.hero-logo{position:relative;z-index:4;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5)) drop-shadow(0 0 30px rgba(249,115,22,.2));transition:transform .2s ease-out}
+.hero-logo{width:clamp(72px,12vw,110px);height:clamp(72px,12vw,110px);filter:drop-shadow(0 8px 30px rgba(249,115,22,.3))}
 .hero-wordmark{font-family:'Geologica',sans-serif;font-size:clamp(2.8rem,7vw,4.5rem);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1}
 .hero-wordmark .fox{color:#ea580c}
 .hero-tagline-sub{font-family:'Inter',sans-serif;font-size:clamp(.7rem,1.5vw,.85rem);font-weight:500;color:rgba(255,255,255,.35);letter-spacing:.2em;text-transform:uppercase;margin-top:.3rem}
@@ -359,20 +352,13 @@ footer p{color:rgba(255,255,255,.2);font-size:.72rem}
  </div>
 </nav>
 
-<!-- Bokeh Depth Canvas -->
-<canvas id="bokeh-canvas"></canvas>
+<!-- Three.js Canvas -->
+<canvas id="three-canvas"></canvas>
 
 <!-- HERO -->
 <section class="hero">
  <div class="hero-content">
   <div class="hero-brand">
-   <div class="hero-logo-wrap" id="heroLogoWrap">
-    <img src="forkfox-logo.png" alt="" class="logo-shadow s3">
-    <img src="forkfox-logo.png" alt="" class="logo-shadow s2">
-    <img src="forkfox-logo.png" alt="" class="logo-shadow s1">
-    <img src="forkfox-logo.png" alt="" class="logo-glow">
-    <img src="forkfox-logo.png" alt="ForkFox" class="hero-logo" id="heroLogo">
-   </div>
    <div class="hero-wordmark">Fork<span class="fox">Fox</span></div>
    <div class="hero-tagline-sub">Your Taste. Your Scores. In Real Time.</div>
   </div>
@@ -578,217 +564,303 @@ footer p{color:rgba(255,255,255,.2);font-size:.72rem}
  <p>&copy; 2026 ForkFox, Inc. All rights reserved.</p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ===== BOKEH DEPTH HERO — Premium Camera-Like Depth of Field =====
+// ===== THREE.JS SCENE — REALISTIC FORK + PARTICLES =====
 (function(){
- const canvas = document.getElementById('bokeh-canvas');
- const ctx = canvas.getContext('2d');
+ const canvas = document.getElementById('three-canvas');
+ let renderer;
+ try {
+  renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
+ } catch(e) { console.error('WebGL init failed:', e); return; }
+
+ renderer.setSize(window.innerWidth, window.innerHeight);
  const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+ renderer.setClearColor(0x141418, 1);
+ renderer.toneMapping = THREE.ACESFilmicToneMapping;
+ renderer.toneMappingExposure = 1.2;
 
- // Mouse parallax
- const mouse = {x: 0, y: 0, tx: 0, ty: 0};
+ const scene = new THREE.Scene();
+ const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+ camera.position.set(0, 0, 32);
+ camera.lookAt(0, 0, 0);
+
+ // Mouse tracking — fork follows cursor
+ const mouse = {x:0, y:0, tx:0, ty:0};
+ let isDragging = false;
+ let dragStart = {x:0, y:0};
+ let forkRotOffset = {x:0, y:0};
+
  document.addEventListener('mousemove', e => {
-  mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
-  mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+  mouse.tx = (e.clientX/window.innerWidth - 0.5) * 2;
+  mouse.ty = (e.clientY/window.innerHeight - 0.5) * 2;
  });
 
- function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+ // Click + drag for direct fork control
+ canvas.addEventListener('mousedown', e => {
+  isDragging = true;
+  dragStart.x = e.clientX;
+  dragStart.y = e.clientY;
+  canvas.style.cursor = 'grabbing';
+ });
+ document.addEventListener('mouseup', () => {
+  isDragging = false;
+  canvas.style.cursor = 'grab';
+ });
+ document.addEventListener('mousemove', e => {
+  if(!isDragging) return;
+  const dx = (e.clientX - dragStart.x) * 0.008;
+  const dy = (e.clientY - dragStart.y) * 0.008;
+  forkRotOffset.y = dx;
+  forkRotOffset.x = dy;
+ });
+ canvas.style.cursor = 'grab';
+
+ // Colors
+ const C_ORANGE = new THREE.Color(0xf97316);
+ const C_AMBER  = new THREE.Color(0xfbbf24);
+ const C_WHITE  = new THREE.Color(0xffffff);
+
+ // ====== LIGHTING ======
+ scene.add(new THREE.AmbientLight(0xd0d4de, 0.5));
+ const keyLight = new THREE.DirectionalLight(0xfff8f0, 1.5);
+ keyLight.position.set(5, 10, 12);
+ scene.add(keyLight);
+ const accentLight = new THREE.PointLight(0xf97316, 1.2, 60);
+ accentLight.position.set(3, 2, 10);
+ scene.add(accentLight);
+
+ // ====== FLOATING 3D LOGO ======
+ const logoGroup = new THREE.Group();
+ const textureLoader = new THREE.TextureLoader();
+
+ // Load logo as texture
+ const logoTex = textureLoader.load('forkfox-logo.png', function(tex){
+  tex.encoding = THREE.sRGBEncoding;
+ });
+
+ // Front face — logo on a plane, full color, no lighting dependency
+ const logoGeo = new THREE.PlaneGeometry(12, 12);
+ const logoMat = new THREE.MeshBasicMaterial({
+  map: logoTex,
+  transparent: true,
+  alphaTest: 0.05,
+  side: THREE.DoubleSide
+ });
+ const logoFront = new THREE.Mesh(logoGeo, logoMat);
+ logoGroup.add(logoFront);
+
+ // Subtle glow ring — very thin, soft
+ const glowRingGeo = new THREE.TorusGeometry(6.3, 0.03, 8, 64);
+ const glowRingMat = new THREE.MeshBasicMaterial({
+  color: 0xf97316, transparent: true, opacity: 0.15
+ });
+ const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
+ glowRing.position.z = -0.15;
+ logoGroup.add(glowRing);
+
+ // Position logo — centered above the text
+ logoGroup.position.set(0, 6, -5);
+ logoGroup.scale.setScalar(0.85);
+ scene.add(logoGroup);
+
+ // ====== ORBITING PARTICLES around the logo ======
+ const ORBIT_COUNT = isMobile ? 30 : 80;
+ const orbitGeo = new THREE.BufferGeometry();
+ const orbitPos = new Float32Array(ORBIT_COUNT * 3);
+ const orbitCol = new Float32Array(ORBIT_COUNT * 3);
+ const orbitSize = new Float32Array(ORBIT_COUNT);
+ const orbitAngle = new Float32Array(ORBIT_COUNT);
+ const orbitRadius = new Float32Array(ORBIT_COUNT);
+ const orbitSpeed = new Float32Array(ORBIT_COUNT);
+ const orbitYOff = new Float32Array(ORBIT_COUNT);
+ for(let i = 0; i < ORBIT_COUNT; i++){
+  orbitAngle[i] = Math.random() * Math.PI * 2;
+  orbitRadius[i] = 7 + Math.random() * 4;
+  orbitSpeed[i] = (0.15 + Math.random() * 0.3) * (Math.random() < 0.5 ? 1 : -1);
+  orbitYOff[i] = (Math.random() - 0.5) * 5;
+  const c = Math.random() < 0.5 ? C_ORANGE : C_AMBER;
+  orbitCol[i*3] = c.r; orbitCol[i*3+1] = c.g; orbitCol[i*3+2] = c.b;
+  orbitSize[i] = Math.random() * 3 + 1.5;
  }
- resize();
+ orbitGeo.setAttribute('position', new THREE.BufferAttribute(orbitPos, 3));
+ orbitGeo.setAttribute('color', new THREE.BufferAttribute(orbitCol, 3));
+ orbitGeo.setAttribute('size', new THREE.BufferAttribute(orbitSize, 1));
+ const orbitMat = new THREE.ShaderMaterial({
+  vertexShader:`
+   attribute float size;
+   varying vec3 vColor;
+   void main(){
+    vColor = color;
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    gl_PointSize = size * (120.0 / -mv.z);
+    gl_Position = projectionMatrix * mv;
+   }`,
+  fragmentShader:`
+   varying vec3 vColor;
+   void main(){
+    float d = length(gl_PointCoord - vec2(0.5));
+    if(d > 0.5) discard;
+    float glow = 1.0 - smoothstep(0.0, 0.5, d);
+    float core = 1.0 - smoothstep(0.0, 0.15, d);
+    gl_FragColor = vec4(vColor * (core * 2.0 + glow * 0.5), glow * 0.9);
+   }`,
+  transparent: true, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false
+ });
+ const orbitPoints = new THREE.Points(orbitGeo, orbitMat);
+ orbitPoints.position.copy(logoGroup.position);
+ scene.add(orbitPoints);
 
- // ====== BOKEH CIRCLES — 3 depth layers ======
- const BOKEH_COUNT = isMobile ? 20 : 45;
- const bokeh = [];
- for (let i = 0; i < BOKEH_COUNT; i++) {
-  const layer = Math.random(); // 0=far back, 1=near foreground
-  bokeh.push({
-   x: Math.random() * canvas.width,
-   y: Math.random() * canvas.height,
-   r: layer < 0.3 ? (30 + Math.random() * 60) : layer < 0.7 ? (12 + Math.random() * 25) : (4 + Math.random() * 12),
-   vx: (Math.random() - 0.5) * (0.15 + layer * 0.25),
-   vy: (Math.random() - 0.5) * (0.1 + layer * 0.15),
-   alpha: layer < 0.3 ? (0.015 + Math.random() * 0.025) : layer < 0.7 ? (0.025 + Math.random() * 0.04) : (0.04 + Math.random() * 0.06),
-   ringAlpha: layer < 0.3 ? (0.03 + Math.random() * 0.03) : layer < 0.7 ? (0.04 + Math.random() * 0.04) : (0.06 + Math.random() * 0.05),
-   color: Math.random() < 0.55 ? [249,115,22] : Math.random() < 0.7 ? [251,191,36] : [255,240,220],
-   layer: layer,
-   phase: Math.random() * Math.PI * 2,
-   pulseSpeed: 0.3 + Math.random() * 0.7
-  });
+ // ====== SPARKLE PARTICLES ======
+ const SPARK_COUNT = isMobile ? 120 : 400;
+ const sGeo = new THREE.BufferGeometry();
+ const sPos = new Float32Array(SPARK_COUNT*3);
+ const sCol = new Float32Array(SPARK_COUNT*3);
+ const sSize = new Float32Array(SPARK_COUNT);
+ const sSpeed = new Float32Array(SPARK_COUNT);
+ const sPhase = new Float32Array(SPARK_COUNT);
+ for(let i=0;i<SPARK_COUNT;i++){
+  sPos[i*3]=(Math.random()-.5)*55;
+  sPos[i*3+1]=(Math.random()-.5)*45;
+  sPos[i*3+2]=(Math.random()-.5)*30;
+  const c=Math.random()<.35?C_ORANGE:Math.random()<.5?C_AMBER:C_WHITE;
+  sCol[i*3]=c.r; sCol[i*3+1]=c.g; sCol[i*3+2]=c.b;
+  sSize[i]=Math.random()*2.5+.6;
+  sSpeed[i]=Math.random()*1.5+.4;
+  sPhase[i]=Math.random()*Math.PI*2;
  }
+ sGeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));
+ sGeo.setAttribute('color',new THREE.BufferAttribute(sCol,3));
+ sGeo.setAttribute('size',new THREE.BufferAttribute(sSize,1));
+ sGeo.setAttribute('aSpeed',new THREE.BufferAttribute(sSpeed,1));
+ sGeo.setAttribute('aPhase',new THREE.BufferAttribute(sPhase,1));
 
- // ====== SPARKLE DOTS — tiny sharp points ======
- const SPARK_COUNT = isMobile ? 50 : 150;
- const sparks = [];
- for (let i = 0; i < SPARK_COUNT; i++) {
-  sparks.push({
-   x: Math.random() * canvas.width,
-   y: Math.random() * canvas.height,
-   r: Math.random() * 1.5 + 0.5,
-   alpha: Math.random() * 0.4 + 0.1,
-   phase: Math.random() * Math.PI * 2,
-   speed: 0.5 + Math.random() * 2,
-   color: Math.random() < 0.4 ? [249,115,22] : Math.random() < 0.6 ? [251,191,36] : [255,255,255]
-  });
+ const sMat = new THREE.ShaderMaterial({
+  vertexShader:`
+   attribute float size; attribute float aSpeed; attribute float aPhase;
+   varying vec3 vColor; varying float vAlpha;
+   uniform float uTime;
+   void main(){
+    vColor=color;
+    vAlpha=.25+.75*abs(sin(uTime*aSpeed+aPhase));
+    vec4 mv=modelViewMatrix*vec4(position,1.0);
+    gl_PointSize=size*(150.0/-mv.z)*vAlpha;
+    gl_Position=projectionMatrix*mv;
+   }`,
+  fragmentShader:`
+   varying vec3 vColor; varying float vAlpha;
+   void main(){
+    float d=length(gl_PointCoord-vec2(.5));
+    if(d>.5)discard;
+    float glow=1.-smoothstep(0.,.5,d);
+    float core=1.-smoothstep(0.,.12,d);
+    gl_FragColor=vec4(vColor*(core*1.5+glow*.4),glow*vAlpha*.85);
+   }`,
+  transparent:true, vertexColors:true, blending:THREE.AdditiveBlending, depthWrite:false,
+  uniforms:{uTime:{value:0}}
+ });
+ const sparkles = new THREE.Points(sGeo, sMat);
+ scene.add(sparkles);
+
+ // ====== EMBERS — warm floating particles ======
+ const EMBER=isMobile?10:30;
+ const eGeo=new THREE.BufferGeometry();
+ const ePos=new Float32Array(EMBER*3), eCol=new Float32Array(EMBER*3), eSize=new Float32Array(EMBER);
+ for(let i=0;i<EMBER;i++){
+  ePos[i*3]=(Math.random()-.5)*25+5;
+  ePos[i*3+1]=(Math.random()-.5)*25;
+  ePos[i*3+2]=(Math.random()-.5)*10;
+  const c=Math.random()<.5?C_ORANGE:C_AMBER;
+  eCol[i*3]=c.r;eCol[i*3+1]=c.g;eCol[i*3+2]=c.b;
+  eSize[i]=Math.random()*4+2;
  }
+ eGeo.setAttribute('position',new THREE.BufferAttribute(ePos,3));
+ eGeo.setAttribute('color',new THREE.BufferAttribute(eCol,3));
+ eGeo.setAttribute('size',new THREE.BufferAttribute(eSize,1));
+ const eMat=new THREE.ShaderMaterial({
+  vertexShader:`attribute float size;varying vec3 vColor;void main(){vColor=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(150./-mv.z);gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vColor;void main(){float d=length(gl_PointCoord-vec2(.5));if(d>.5)discard;float a=1.-smoothstep(0.,.5,d);gl_FragColor=vec4(vColor,a*.4);}`,
+  transparent:true,vertexColors:true,blending:THREE.AdditiveBlending,depthWrite:false
+ });
+ scene.add(new THREE.Points(eGeo,eMat));
 
- // ====== RISING EMBERS ======
- const embers = [];
- function spawnEmber() {
-  embers.push({
-   x: canvas.width * 0.15 + Math.random() * canvas.width * 0.7,
-   y: canvas.height + 5,
-   vx: (Math.random() - 0.5) * 0.6,
-   vy: -(0.5 + Math.random() * 1.5),
-   size: Math.random() * 2.5 + 0.8,
-   life: 1,
-   decay: 0.001 + Math.random() * 0.003,
-   color: Math.random() > 0.4 ? [249,115,22] : [251,191,36]
-  });
- }
+ // ====== SUBTLE ORBITAL RINGS ======
+ const rMat=new THREE.MeshBasicMaterial({color:0xf97316,wireframe:true,transparent:true,opacity:.08});
+ const r1=new THREE.Mesh(new THREE.TorusGeometry(16,.04,6,90),rMat);
+ const r2=new THREE.Mesh(new THREE.TorusGeometry(20,.03,6,110),rMat.clone());
+ r2.material.opacity=.05;r2.material.color=C_AMBER;
+ scene.add(r1,r2);
 
- // ====== RENDER LOOP ======
- let t = 0;
- function draw() {
-  requestAnimationFrame(draw);
-  t += 0.016;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+ // ====== ANIMATE ======
+ const clock=new THREE.Clock();
+ function animate(){
+  requestAnimationFrame(animate);
+  const t=clock.getElapsedTime();
 
-  // Background fill
-  ctx.fillStyle = '#141418';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Smooth mouse follow
+  mouse.x+=(mouse.tx-mouse.x)*.035;
+  mouse.y+=(mouse.ty-mouse.y)*.035;
+  camera.position.x=mouse.x*2.5;
+  camera.position.y=mouse.y*-1.8;
+  camera.lookAt(0,0,0);
 
-  // Smooth mouse
-  mouse.x += (mouse.tx - mouse.x) * 0.03;
-  mouse.y += (mouse.ty - mouse.y) * 0.03;
+  // Logo — slow continuous rotation + gentle float at y=6
+  const mouseInfluenceX = mouse.x * 0.3;
+  const mouseInfluenceY = mouse.y * -0.2;
+  logoGroup.rotation.y = t * 0.08 + mouseInfluenceX + forkRotOffset.y;
+  logoGroup.rotation.x = Math.sin(t*.1)*.05 + mouseInfluenceY + forkRotOffset.x;
+  logoGroup.position.y = 6 + Math.sin(t*.25)*.4;
 
-  // Subtle center vignette glow
-  const vGrad = ctx.createRadialGradient(
-   canvas.width/2, canvas.height * 0.38, 0,
-   canvas.width/2, canvas.height * 0.38, canvas.width * 0.5
-  );
-  vGrad.addColorStop(0, 'rgba(249,115,22,0.04)');
-  vGrad.addColorStop(0.4, 'rgba(251,191,36,0.015)');
-  vGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = vGrad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Glow ring pulses
+  glowRing.scale.setScalar(1 + Math.sin(t*1.5)*.04);
+  glowRingMat.opacity = 0.2 + Math.sin(t*2)*.08;
 
-  // Draw bokeh circles — back to front
-  bokeh.sort((a, b) => a.layer - b.layer);
-  bokeh.forEach(b => {
-   // Parallax based on layer depth
-   const px = mouse.x * (b.layer < 0.3 ? -8 : b.layer < 0.7 ? -3 : 2);
-   const py = mouse.y * (b.layer < 0.3 ? -6 : b.layer < 0.7 ? -2 : 1.5);
-   const bx = b.x + px;
-   const by = b.y + py;
-
-   // Pulse alpha
-   const pulse = 1 + Math.sin(t * b.pulseSpeed + b.phase) * 0.2;
-
-   // Filled bokeh disc
-   const grad = ctx.createRadialGradient(bx, by, 0, bx, by, b.r);
-   const a = b.alpha * pulse;
-   grad.addColorStop(0, `rgba(${b.color[0]},${b.color[1]},${b.color[2]},${a * 1.8})`);
-   grad.addColorStop(0.4, `rgba(${b.color[0]},${b.color[1]},${b.color[2]},${a})`);
-   grad.addColorStop(1, `rgba(${b.color[0]},${b.color[1]},${b.color[2]},0)`);
-   ctx.beginPath();
-   ctx.arc(bx, by, b.r, 0, Math.PI * 2);
-   ctx.fillStyle = grad;
-   ctx.fill();
-
-   // Bokeh ring edge highlight
-   ctx.beginPath();
-   ctx.arc(bx, by, b.r * 0.85, 0, Math.PI * 2);
-   ctx.strokeStyle = `rgba(${b.color[0]},${b.color[1]},${b.color[2]},${b.ringAlpha * pulse})`;
-   ctx.lineWidth = b.r > 30 ? 1.5 : 1;
-   ctx.stroke();
-
-   // Move
-   b.x += b.vx;
-   b.y += b.vy;
-   if (b.x < -b.r * 2) b.x = canvas.width + b.r * 2;
-   if (b.x > canvas.width + b.r * 2) b.x = -b.r * 2;
-   if (b.y < -b.r * 2) b.y = canvas.height + b.r * 2;
-   if (b.y > canvas.height + b.r * 2) b.y = -b.r * 2;
-  });
-
-  // Draw sparks — twinkling points
-  sparks.forEach(s => {
-   const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(t * s.speed + s.phase));
-   ctx.beginPath();
-   ctx.arc(s.x + mouse.x * 1, s.y + mouse.y * 0.8, s.r, 0, Math.PI * 2);
-   ctx.fillStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${s.alpha * twinkle})`;
-   ctx.fill();
-  });
-
-  // Embers
-  if (Math.random() < 0.12) spawnEmber();
-  for (let i = embers.length - 1; i >= 0; i--) {
-   const e = embers[i];
-   e.x += e.vx + Math.sin(e.y * 0.015) * 0.25;
-   e.y += e.vy;
-   e.life -= e.decay;
-   if (e.life <= 0) { embers.splice(i, 1); continue; }
-   // Core
-   ctx.beginPath();
-   ctx.arc(e.x, e.y, e.size * e.life, 0, Math.PI * 2);
-   ctx.fillStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${e.life * 0.6})`;
-   ctx.fill();
-   // Soft glow
-   ctx.beginPath();
-   ctx.arc(e.x, e.y, e.size * e.life * 3.5, 0, Math.PI * 2);
-   ctx.fillStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${e.life * 0.08})`;
-   ctx.fill();
+  // Update orbiting particles
+  const op = orbitGeo.attributes.position.array;
+  for(let i = 0; i < ORBIT_COUNT; i++){
+   orbitAngle[i] += orbitSpeed[i] * 0.016;
+   op[i*3] = Math.cos(orbitAngle[i]) * orbitRadius[i];
+   op[i*3+1] = orbitYOff[i] + Math.sin(t*.5+i)*.3;
+   op[i*3+2] = Math.sin(orbitAngle[i]) * orbitRadius[i];
   }
+  orbitGeo.attributes.position.needsUpdate = true;
+  orbitPoints.position.copy(logoGroup.position);
+
+  // Accent light orbits
+  accentLight.position.x=Math.cos(t*.4)*5+5;
+  accentLight.position.z=Math.sin(t*.4)*5+8;
+  accentLight.position.y=2+Math.sin(t*.6)*2;
+
+  // Sparkle time
+  sMat.uniforms.uTime.value=t;
+  sparkles.rotation.y=t*.015;
+  sparkles.rotation.x=t*.006;
+
+  // Ember drift
+  const ep=eGeo.attributes.position.array;
+  for(let i=0;i<EMBER;i++){
+   ep[i*3+1]+=.008;ep[i*3]+=Math.sin(t+i)*.002;
+   if(ep[i*3+1]>14){ep[i*3+1]=-12;ep[i*3]=(Math.random()-.5)*25+5;}
+  }
+  eGeo.attributes.position.needsUpdate=true;
+
+  // Rings rotate
+  r1.rotation.x=t*.12;r1.rotation.z=t*.06;
+  r2.rotation.y=t*.1;r2.rotation.x=Math.PI/4+t*.04;
+
+  renderer.render(scene,camera);
  }
- draw();
+ animate();
 
- window.addEventListener('resize', () => {
-  resize();
-  // Redistribute bokeh to new canvas size
-  bokeh.forEach(b => { b.x = Math.random() * canvas.width; b.y = Math.random() * canvas.height; });
-  sparks.forEach(s => { s.x = Math.random() * canvas.width; s.y = Math.random() * canvas.height; });
+ window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
  });
- window.addEventListener('scroll', () => {
-  const o = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.8));
-  canvas.style.opacity = o;
- });
-})();
-
-// ===== HERO LOGO — PARALLAX TILT ON MOUSE =====
-(function(){
- const wrap = document.getElementById('heroLogoWrap');
- const logo = document.getElementById('heroLogo');
- if (!wrap || !logo) return;
- const shadows = wrap.querySelectorAll('.logo-shadow');
- const glow = wrap.querySelector('.logo-glow');
-
- document.addEventListener('mousemove', e => {
-  const rect = wrap.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-  const dx = (e.clientX - cx) / (window.innerWidth / 2);
-  const dy = (e.clientY - cy) / (window.innerHeight / 2);
-
-  // Logo lifts toward cursor
-  logo.style.transform = `translate(${dx * 6}px, ${dy * 5}px) scale(1.01)`;
-
-  // Shadows shift opposite for depth
-  shadows.forEach((s, i) => {
-   const mult = (i + 1) * 5;
-   s.style.transform = `translate(${4 + dx * -mult}px, ${6 + (i * 8) + dy * -mult}px)`;
-  });
-
-  // Glow follows cursor slightly
-  if (glow) glow.style.transform = `translate(${dx * 8}px, ${dy * 6}px) scale(1.05)`;
- });
-
- // Reset on leave
- document.addEventListener('mouseleave', () => {
-  logo.style.transform = '';
-  shadows.forEach(s => s.style.transform = '');
-  if (glow) glow.style.transform = '';
+ window.addEventListener('scroll',()=>{
+  const o=Math.max(0,1-window.scrollY/(window.innerHeight*.8));
+  canvas.style.opacity=o;
  });
 })();
 

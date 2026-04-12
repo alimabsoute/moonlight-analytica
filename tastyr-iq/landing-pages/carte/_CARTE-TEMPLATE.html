@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- SEO — filled by Python generator -->
+<title>{{ seo_title }} — Carte by ForkFox</title>
+<meta name="description" content="{{ seo_description }}">
+<meta property="og:title" content="{{ seo_title }}">
+<meta property="og:description" content="{{ seo_description }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://forkfox.ai/carte/{{ city_slug }}/{{ cuisine_slug }}/">
+<meta property="og:image" content="{{ image_1_src }}">
+<meta property="article:published_time" content="{{ date_iso }}">
+<meta property="article:section" content="Carte">
+<link rel="canonical" href="https://forkfox.ai/carte/{{ city_slug }}/{{ cuisine_slug }}/">
+<link rel="icon" type="image/png" href="/forkfox-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CARTE TEMPLATE — Daily Programmatic Atlas Pages
+   Single 960px column · header strip · two-column below
+   Left (65%) = content · Right (35%) = sticky rankings
+   Background: #0a0a0a dark · Header has faint image bg
+   ============================================================
+
+   PYTHON JINJA2 VARIABLES:
+   {{ city }}               — e.g. "Philadelphia"
+   {{ city_slug }}          — e.g. "philadelphia"
+   {{ cuisine }}            — e.g. "Ramen"
+   {{ cuisine_slug }}       — e.g. "ramen"
+   {{ date }}               — e.g. "April 8, 2026"
+   {{ date_iso }}           — e.g. "2026-04-08"
+   {{ dish_count }}         — e.g. "47"
+   {{ seo_title }}          — e.g. "Best Ramen in Philadelphia"
+   {{ seo_description }}    — e.g. "We scored 47 ramen dishes…"
+   {{ intro_text }}         — 2-3 sentence intro paragraph
+   {{ analysis_text }}      — 2-3 sentence analysis paragraph
+   {{ findings_list }}      — list of strings, 3-5 key findings
+   {{ image_1_src }}        — primary dish image URL (required)
+   {{ image_1_alt }}        — alt text for image 1
+   {{ image_2_src }}        — optional second image URL (use "" to omit)
+   {{ image_2_alt }}        — alt text for image 2
+   {{ top_dish_name }}      — name of #1 scored dish
+   {{ top_dish_score }}     — score of #1 dish (integer)
+   {{ top_dish_spot }}      — restaurant name for #1 dish
+   {{ score_dimensions }}   — list of {label, score} dicts for score card bars
+   {{ rankings_list }}      — list of {rank, name, spot, score} dicts
+   {{ related_pages }}      — list of {title, slug, cuisine} dicts (3 items)
+   {{ cuisine_wiki_url }}   — Wikipedia URL for this cuisine
+   {{ city_wiki_url }}      — Wikipedia URL for this city
+   ============================================================ */
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
+h1,h2,h3,h4,h5,h6{font-family:'Geologica',sans-serif;font-weight:700;line-height:1.15}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+/* ── NAV (same as site) ──────────────────────────────────── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(10,10,10,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-brand{display:flex;align-items:center;gap:.6rem;min-height:44px}
+.nav-logo{width:30px;height:30px;border-radius:7px;background:#FA2A52;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.nav-logo img{width:22px;height:22px;object-fit:contain}
+.nav-wordmark{font-family:'Geologica',sans-serif;font-size:1.05rem;font-weight:800}
+.nav-wordmark .fox{color:#F97316}
+.nav-divider{width:1px;height:14px;background:rgba(255,255,255,.12);margin:0 .6rem}
+.nav-section{font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.nav-right{display:flex;align-items:center;gap:1.25rem}
+.nav-carte{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:500;transition:color .2s}
+.nav-carte:hover{color:rgba(255,255,255,.8)}
+.nav-cta{padding:.5rem 1.1rem;border-radius:100px;background:#FA2A52;color:#fff;font-weight:700;font-size:.73rem;font-family:'Geologica',sans-serif;transition:background .2s;min-height:36px;display:inline-flex;align-items:center}
+.nav-cta:hover{background:#e0234a}
+
+/* ── HEADER BAND (~28vh, faint image bg) ─────────────────── */
+.header-band{position:relative;min-height:28vh;max-height:200px;display:flex;align-items:flex-end;margin-top:60px;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.07)}
+.header-bg{position:absolute;inset:0}
+.header-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.22)}
+.header-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,#0a0a0a 0%,rgba(10,10,10,.5) 60%,rgba(10,10,10,.3) 100%)}
+.header-content{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:1.75rem 2rem;width:100%}
+.breadcrumb{font-size:.68rem;color:rgba(255,255,255,.28);font-weight:500;letter-spacing:.04em;margin-bottom:.55rem}
+.breadcrumb a{color:rgba(255,255,255,.28);transition:color .2s}
+.breadcrumb a:hover{color:rgba(255,255,255,.6)}
+.breadcrumb span{margin:0 .35rem;color:rgba(255,255,255,.15)}
+.header-h1{font-size:clamp(1.35rem,3vw,1.8rem);font-weight:900;letter-spacing:-.04em;color:#fff;margin-bottom:.45rem}
+.header-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.header-meta-text{font-size:.72rem;color:rgba(255,255,255,.32)}
+.header-meta-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.18);flex-shrink:0}
+.header-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .55rem;border-radius:100px;background:rgba(250,42,82,.12);border:1px solid rgba(250,42,82,.22);font-size:.62rem;font-weight:700;color:#FA2A52;letter-spacing:.05em;text-transform:uppercase}
+
+/* ── MAIN CONTENT (two-column) ───────────────────────────── */
+.main{max-width:960px;margin:0 auto;padding:2.75rem 2rem 5rem;display:grid;grid-template-columns:1fr 300px;gap:3rem;align-items:start}
+
+/* ── LEFT COLUMN ─────────────────────────────────────────── */
+.content{}
+
+/* Intro paragraph */
+.intro-text{font-family:'Lora',serif;font-size:1.04rem;line-height:1.88;color:rgba(255,255,255,.65);margin-bottom:2rem}
+.intro-text a{color:#FA2A52;font-weight:600}
+.intro-text a:hover{color:#ff4d6d}
+
+/* Image 1 — full width of left col, max-height 50vh, contain */
+.dish-image-1{margin-bottom:2rem}
+.dish-image-1 img{width:100%;max-height:50vh;object-fit:contain;border-radius:10px;background:rgba(255,255,255,.03)}
+.img-caption{font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.5rem;font-style:italic}
+
+/* Score card for #1 dish */
+.score-card{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.35rem 1.45rem;margin-bottom:2rem}
+.score-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.2rem}
+.score-card-name{font-family:'Geologica',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-.02em}
+.score-card-sub{font-size:.73rem;color:rgba(255,255,255,.28);margin-top:.2rem}
+.score-badge{flex-shrink:0;width:54px;height:54px;border-radius:11px;background:linear-gradient(135deg,#FA2A52,#c0203e);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-badge-num{font-family:'Geologica',sans-serif;font-size:1.3rem;font-weight:900;line-height:1;color:#fff}
+.score-badge-label{font-size:.46rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.score-bars{display:flex;flex-direction:column;gap:.5rem}
+.score-row{display:flex;align-items:center;gap:.65rem}
+.score-row-label{font-size:.7rem;color:rgba(255,255,255,.3);width:90px;flex-shrink:0}
+.score-track{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#FA2A52,#F97316)}
+.score-row-val{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.4);width:24px;text-align:right;flex-shrink:0}
+
+/* Analysis text */
+.analysis-text{font-family:'Lora',serif;font-size:1.02rem;line-height:1.86;color:rgba(255,255,255,.58);margin-bottom:2rem}
+
+/* Image 2 — optional, max-height 30vh, contain */
+.dish-image-2{margin-bottom:2rem}
+.dish-image-2 img{width:100%;max-height:30vh;object-fit:contain;border-radius:10px;background:rgba(255,255,255,.03)}
+
+/* Key findings list */
+.findings{margin-bottom:2rem}
+.findings-label{font-size:.63rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:.85rem}
+.findings-list{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.findings-list li{display:flex;align-items:flex-start;gap:.65rem;font-size:.9rem;line-height:1.6;color:rgba(255,255,255,.55)}
+.findings-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:#FA2A52;flex-shrink:0;margin-top:.42rem}
+
+/* App CTA */
+.app-cta{background:linear-gradient(135deg,rgba(250,42,82,.08),rgba(249,115,22,.04));border:1px solid rgba(250,42,82,.12);border-radius:12px;padding:1.25rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.app-cta-text{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.5}
+.app-cta-text strong{color:rgba(255,255,255,.82);font-weight:700;display:block;margin-bottom:.2rem}
+.app-cta-btn{padding:.6rem 1.2rem;border-radius:100px;background:#FA2A52;color:#fff;font-weight:700;font-size:.76rem;font-family:'Geologica',sans-serif;transition:background .2s;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center}
+.app-cta-btn:hover{background:#e0234a}
+
+/* ── RIGHT COLUMN (sticky rankings) ─────────────────────── */
+.sidebar{position:relative}
+.sidebar-inner{position:sticky;top:80px}
+.rankings-card{background:#111;border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden}
+.rankings-header{padding:.85rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+.rankings-label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.22)}
+.rankings-count{font-size:.62rem;color:rgba(255,255,255,.2)}
+.rankings-list{padding:.5rem 0}
+.rank-item{display:flex;align-items:center;gap:.7rem;padding:.55rem 1.2rem;transition:background .15s}
+.rank-item:hover{background:rgba(255,255,255,.03)}
+.rank-num{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.18);width:16px;flex-shrink:0;text-align:center}
+.rank-num.top{color:#FA2A52}
+.rank-info{flex:1;min-width:0}
+.rank-dish{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.78);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-spot{font-size:.68rem;color:rgba(255,255,255,.28);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-score{flex-shrink:0;font-family:'Geologica',sans-serif;font-size:.82rem;font-weight:900;color:rgba(255,255,255,.45)}
+.rank-score.top{color:#FA2A52}
+
+/* ── RELATED PAGES ───────────────────────────────────────── */
+.related{border-top:1px solid rgba(255,255,255,.06);max-width:960px;margin:0 auto;padding:2.5rem 2rem 4rem}
+.related-heading{font-size:.63rem;text-transform:uppercase;letter-spacing:.18em;color:rgba(255,255,255,.2);font-weight:700;margin-bottom:1.25rem}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.06)}
+.related-card{background:#0a0a0a;padding:1.3rem;display:flex;flex-direction:column;gap:.4rem;transition:background .18s}
+.related-card:hover{background:#0d0d0d}
+.related-card-city{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.22)}
+.related-card-title{font-size:.9rem;font-weight:700;letter-spacing:-.02em;line-height:1.3;color:rgba(255,255,255,.75)}
+.related-card-meta{font-size:.7rem;color:rgba(255,255,255,.2);margin-top:auto;padding-top:.35rem}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.footer-wrap{border-top:1px solid rgba(255,255,255,.05)}
+.footer{max-width:960px;margin:0 auto;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.footer-brand{font-size:.78rem;font-weight:700;font-family:'Geologica',sans-serif;color:rgba(255,255,255,.2)}
+.footer-brand span{color:#F97316}
+.footer-links{display:flex;gap:1.4rem}
+.footer-links a{font-size:.73rem;color:rgba(255,255,255,.2);transition:color .2s}
+.footer-links a:hover{color:rgba(255,255,255,.45)}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:820px){
+  .main{grid-template-columns:1fr;gap:0}
+  .sidebar{margin-top:3rem}
+  .sidebar-inner{position:static}
+  .related-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .nav-carte{display:none}
+  .main{padding:2rem 1.25rem 4rem}
+  .related{padding:2rem 1.25rem 3rem}
+  .related-grid{grid-template-columns:1fr}
+  .footer{flex-direction:column;align-items:flex-start;gap:.65rem}
+  .app-cta{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo"><img src="/forkfox-logo.png" alt="ForkFox"></div>
+    <span class="nav-wordmark">Fork<span class="fox">Fox</span></span>
+    <div class="nav-divider"></div>
+    <span class="nav-section">Carte</span>
+  </a>
+  <div class="nav-right">
+    <a href="/the-dish" class="nav-carte">The Dish</a>
+    <a href="/" class="nav-cta">Get Beta Access</a>
+  </div>
+</nav>
+
+<!-- ── HEADER BAND ────────────────────────────────────────────── -->
+<div class="header-band">
+  <div class="header-bg">
+    <!-- Faint header bg = same as image_1_src, very dark overlay -->
+    <img src="{{ image_1_src }}" alt="">
+  </div>
+  <div class="header-content">
+    <div class="breadcrumb">
+      <a href="/carte/">Carte</a>
+      <span>›</span>
+      <a href="/carte/{{ city_slug }}/">{{ city }}</a>
+      <span>›</span>
+      {{ cuisine }}
+    </div>
+    <h1 class="header-h1">Best {{ cuisine }} in {{ city }}</h1>
+    <div class="header-meta">
+      <span class="header-meta-text">{{ dish_count }} dishes scored</span>
+      <div class="header-meta-dot"></div>
+      <span class="header-meta-text">{{ date }}</span>
+      <div class="header-meta-dot"></div>
+      <div class="header-badge">ForkFox Scored</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN TWO-COLUMN LAYOUT ────────────────────────────────── -->
+<div class="main">
+
+  <!-- ── LEFT: CONTENT ──────────────────────────────────────── -->
+  <div class="content">
+
+    <!-- INTRO (2-3 sentences) -->
+    <!-- Generator auto-links first mention of cuisine → cuisine_wiki_url -->
+    <!-- Generator auto-links first mention of city → city_wiki_url -->
+    <p class="intro-text">{{ intro_text }}</p>
+
+    <!-- IMAGE 1 (required, max-height 50vh, object-fit:contain) -->
+    <div class="dish-image-1">
+      <img src="{{ image_1_src }}" alt="{{ image_1_alt }}" loading="lazy">
+      {% if image_1_caption %}<p class="img-caption">{{ image_1_caption }}</p>{% endif %}
+    </div>
+
+    <!-- SCORE CARD for #1 dish -->
+    <div class="score-card">
+      <div class="score-card-top">
+        <div>
+          <div class="score-card-name">{{ top_dish_name }}</div>
+          <div class="score-card-sub">{{ top_dish_spot }}</div>
+        </div>
+        <div class="score-badge">
+          <div class="score-badge-num">{{ top_dish_score }}</div>
+          <div class="score-badge-label">Score</div>
+        </div>
+      </div>
+      <div class="score-bars">
+        {% for dim in score_dimensions %}
+        <div class="score-row">
+          <span class="score-row-label">{{ dim.label }}</span>
+          <div class="score-track"><div class="score-fill" style="width:{{ dim.score }}%"></div></div>
+          <span class="score-row-val">{{ dim.score }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ANALYSIS (2-3 sentences) -->
+    <p class="analysis-text">{{ analysis_text }}</p>
+
+    <!-- IMAGE 2 (optional, max-height 30vh, object-fit:contain) -->
+    {% if image_2_src %}
+    <div class="dish-image-2">
+      <img src="{{ image_2_src }}" alt="{{ image_2_alt }}" loading="lazy">
+      {% if image_2_caption %}<p class="img-caption">{{ image_2_caption }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <!-- KEY FINDINGS -->
+    <div class="findings">
+      <div class="findings-label">Key Findings</div>
+      <ul class="findings-list">
+        {% for finding in findings_list %}
+        <li>{{ finding }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- APP CTA (links to homepage) -->
+    <div class="app-cta">
+      <div class="app-cta-text">
+        <strong>Find the best {{ cuisine }} near you</strong>
+        ForkFox scores every dish — not just the restaurant. Now in TestFlight beta.
+      </div>
+      <a href="/" class="app-cta-btn">Get Beta Access</a>
+    </div>
+
+  </div>
+  <!-- /content -->
+
+  <!-- ── RIGHT: STICKY RANKINGS ─────────────────────────────── -->
+  <div class="sidebar">
+    <div class="sidebar-inner">
+      <div class="rankings-card">
+        <div class="rankings-header">
+          <span class="rankings-label">{{ city }} Rankings</span>
+          <span class="rankings-count">{{ dish_count }} scored</span>
+        </div>
+        <div class="rankings-list">
+          {% for item in rankings_list %}
+          <div class="rank-item">
+            <span class="rank-num {% if item.rank <= 3 %}top{% endif %}">{{ item.rank }}</span>
+            <div class="rank-info">
+              <div class="rank-dish">{{ item.name }}</div>
+              <div class="rank-spot">{{ item.spot }}</div>
+            </div>
+            <span class="rank-score {% if item.rank == 1 %}top{% endif %}">{{ item.score }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /sidebar -->
+
+</div>
+<!-- /main -->
+
+<!-- ── RELATED PAGES (same city, adjacent cuisines) ──────────── -->
+<div class="related">
+  <div class="related-heading">More {{ city }} Carte Pages</div>
+  <div class="related-grid">
+    {% for page in related_pages %}
+    <a href="/carte/{{ city_slug }}/{{ page.slug }}/" class="related-card">
+      <div class="related-card-city">{{ city }}</div>
+      <div class="related-card-title">{{ page.title }}</div>
+      <div class="related-card-meta">{{ page.dish_count }} dishes · {{ page.date }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────── -->
+<div class="footer-wrap">
+  <div class="footer">
+    <div class="footer-brand">Fork<span>Fox</span> · Carte</div>
+    <div class="footer-links">
+      <a href="/the-dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/support">Support</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

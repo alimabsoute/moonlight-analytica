@@ -1,0 +1,2728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForkFox — Design Gallery (60 Variations)</title>
+<meta name="description" content="60 design variations for forkfox.ai — 20 hero concepts, 20 feature showcases, 20 full-page combinations.">
+<link rel="icon" type="image/png" href="../forkfox-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   FORKFOX DESIGN GALLERY — 60 VARIATIONS
+   Built on top of the ForkFox design system (dark, #FA2A52, Geologica+Inter).
+   Each tile is a live CSS mockup. Click any tile to expand.
+   ============================================================ */
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:#070707;color:#fff;font-family:'Inter',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4,h5,h6{font-family:'Geologica',sans-serif;font-weight:800;line-height:1.1;letter-spacing:-.02em}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:transparent;color:inherit}
+
+/* ===== PAGE NAV ===== */
+.page-nav{position:sticky;top:0;z-index:50;background:rgba(7,7,7,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:1rem clamp(1rem,3vw,2rem);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.pn-brand{display:flex;align-items:center;gap:.65rem}
+.pn-brand .lg{width:30px;height:30px;border-radius:8px;background:#FA2A52;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pn-brand .lg img{width:22px;height:22px}
+.pn-brand .t{font-family:'Geologica',sans-serif;font-weight:900;font-size:1rem}
+.pn-brand .t .fox{color:#F97316}
+.pn-brand .sep{color:rgba(255,255,255,.15);margin:0 .35rem}
+.pn-brand .sub{font-size:.78rem;color:rgba(255,255,255,.45);font-weight:500;letter-spacing:.02em}
+.pn-links{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.pn-links a{padding:.55rem 1rem;border-radius:100px;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.08);transition:all .25s}
+.pn-links a:hover{color:#fff;border-color:rgba(255,255,255,.2)}
+.pn-links a.back{background:#FA2A52;color:#fff;border-color:#FA2A52}
+.pn-links a.back:hover{background:#e0234a}
+
+/* ===== INTRO ===== */
+.intro{padding:clamp(4rem,9vw,8rem) clamp(1.25rem,4vw,2rem) clamp(3rem,6vw,5rem);text-align:center;position:relative;overflow:hidden}
+.intro::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(250,42,82,.2),transparent 60%);pointer-events:none}
+.intro>*{position:relative;z-index:1}
+.intro-eyebrow{display:inline-block;padding:.4rem 1rem;border-radius:100px;background:rgba(250,42,82,.12);border:1px solid rgba(250,42,82,.3);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#FA2A52;margin-bottom:1.5rem}
+.intro h1{font-size:clamp(2.4rem,7vw,5rem);font-weight:900;margin-bottom:1rem;letter-spacing:-.03em}
+.intro h1 em{font-style:normal;color:#FA2A52}
+.intro .lede{max-width:640px;margin:0 auto 2rem;color:rgba(255,255,255,.55);font-size:clamp(.95rem,1.8vw,1.15rem);line-height:1.65}
+.intro .jump{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-top:1.5rem}
+.intro .jump a{padding:.75rem 1.4rem;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:.82rem;font-weight:600;color:rgba(255,255,255,.8);transition:all .25s;display:inline-flex;align-items:center;gap:.5rem}
+.intro .jump a:hover{background:rgba(250,42,82,.15);border-color:#FA2A52;color:#fff;transform:translateY(-2px)}
+.intro .jump a span{color:#FA2A52;font-weight:800}
+
+/* ===== SECTION HEADER ===== */
+.sec{padding:clamp(2.5rem,5vw,4rem) clamp(1rem,3vw,2rem);max-width:1440px;margin:0 auto}
+.sec-head{text-align:center;margin-bottom:clamp(2rem,4vw,3.5rem);padding:0 1rem}
+.sec-label{display:inline-block;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.18em;color:#FA2A52;margin-bottom:.8rem;padding:.3rem .9rem;border-radius:100px;border:1px solid rgba(250,42,82,.3);background:rgba(250,42,82,.08)}
+.sec-head h2{font-size:clamp(1.8rem,4vw,3rem);margin-bottom:.6rem}
+.sec-head p{color:rgba(255,255,255,.5);max-width:600px;margin:0 auto;font-size:.95rem;line-height:1.7}
+
+/* ===== GALLERY GRID ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:clamp(1rem,2vw,1.5rem)}
+.tile{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden;cursor:pointer;transition:all .3s ease;position:relative;display:flex;flex-direction:column}
+.tile:hover{transform:translateY(-4px);border-color:rgba(250,42,82,.35);box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 0 1px rgba(250,42,82,.1)}
+.tile-preview{aspect-ratio:8/5;position:relative;overflow:hidden;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,.06)}
+.tile-preview>*{position:absolute;inset:0}
+.tile-body{padding:1rem 1.1rem 1.2rem}
+.tile-num{font-size:.62rem;font-weight:800;color:#FA2A52;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.35rem;font-family:'Geologica',sans-serif}
+.tile-title{font-size:1rem;font-weight:700;margin-bottom:.3rem;color:#fff;font-family:'Geologica',sans-serif;letter-spacing:-.01em}
+.tile-desc{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.55}
+.tile-why{margin-top:.9rem;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.05);list-style:none;display:flex;flex-direction:column;gap:.35rem}
+.tile-why li{font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.55;padding:.1rem 0 .1rem 1rem;position:relative}
+.tile-why li::before{content:'→';position:absolute;left:0;top:.05rem;color:#FA2A52;font-weight:900;font-family:'Geologica',sans-serif}
+.tile-why li strong{color:rgba(255,255,255,.92);font-weight:700}
+.tile-why-label{font-size:.58rem;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.1rem;font-family:'Geologica',sans-serif}
+.tile::after{content:'⤢';position:absolute;top:.8rem;right:.9rem;width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;opacity:0;transition:opacity .3s;z-index:5}
+.tile:hover::after{opacity:1}
+
+/* ===== IMAGE + VIDEO BACKDROPS (real media) ===== */
+.mk-bg{position:absolute;inset:0;z-index:0}
+.mk-bg img,.mk-bg video{width:100%;height:100%;object-fit:cover}
+.mk-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.35) 0%,rgba(10,10,10,.15) 40%,rgba(10,10,10,.85) 100%)}
+.mk-bg.lighten::after{background:linear-gradient(180deg,rgba(10,10,10,.25) 0%,rgba(10,10,10,.1) 50%,rgba(10,10,10,.75) 100%)}
+.mk > *:not(.mk-bg){position:relative;z-index:1}
+.mk-play-badge{position:absolute;bottom:8%;right:7%;padding:.35em .7em;background:rgba(250,42,82,.85);color:#fff;font-family:'Geologica',sans-serif;font-weight:800;font-size:.5rem;letter-spacing:.08em;border-radius:4px;backdrop-filter:blur(8px);z-index:2;border:1px solid rgba(255,255,255,.15);box-shadow:0 4px 12px rgba(0,0,0,.4)}
+
+/* ===== MODAL ===== */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:clamp(1rem,4vw,3rem);overflow-y:auto}
+.modal.open{display:flex}
+.modal-inner{max-width:1200px;width:100%;margin:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.modal-title{font-family:'Geologica',sans-serif;font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:800;margin-bottom:.4rem}
+.modal-title .num{color:#FA2A52;font-size:.65em;letter-spacing:.1em;display:block;margin-bottom:.3rem}
+.modal-desc{color:rgba(255,255,255,.55);font-size:.95rem;max-width:640px;line-height:1.6}
+.modal-close{flex-shrink:0;width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.modal-close:hover{background:#FA2A52;border-color:#FA2A52;transform:rotate(90deg)}
+.modal-frame{aspect-ratio:16/10;background:#0a0a0a;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.8)}
+.modal-frame>*{position:absolute;inset:0}
+
+/* ============================================================
+   SHARED MOCKUP COMPONENTS (.mk-*)
+   Used inside every tile preview & modal frame.
+   ============================================================ */
+
+.mk{position:absolute;inset:0;background:#0a0a0a;color:#fff;overflow:hidden;font-family:'Inter',sans-serif}
+.mk-nav{position:absolute;top:0;left:0;right:0;padding:5% 6%;display:flex;align-items:center;justify-content:space-between;font-size:.5rem;z-index:10}
+.mk-nav .brand{display:flex;align-items:center;gap:.3em;font-family:'Geologica',sans-serif;font-weight:900}
+.mk-nav .brand .dot{width:.9em;height:.9em;border-radius:3px;background:#FA2A52}
+.mk-nav .brand .orange{color:#F97316}
+.mk-nav .links{display:flex;gap:1em;color:rgba(255,255,255,.4);font-weight:500}
+.mk-nav .cta{padding:.4em .9em;border-radius:100px;background:#FA2A52;color:#fff;font-weight:700;font-family:'Geologica',sans-serif}
+
+.mk-badge{display:inline-flex;align-items:center;gap:.4em;padding:.3em .7em;border-radius:100px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.42rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.8);backdrop-filter:blur(8px)}
+.mk-badge .d{width:.4em;height:.4em;border-radius:50%;background:#34d399;animation:mkPulse 2s infinite}
+@keyframes mkPulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.mk-h1{font-family:'Geologica',sans-serif;font-weight:900;letter-spacing:-.04em;line-height:.95}
+.mk-h1 .acc{color:#FA2A52}
+.mk-sub{color:rgba(255,255,255,.55);line-height:1.5;font-weight:400}
+
+.mk-btn{display:inline-flex;align-items:center;gap:.35em;padding:.55em 1em;background:#FA2A52;color:#fff;border-radius:8px;font-family:'Geologica',sans-serif;font-weight:800;font-size:.5rem;box-shadow:0 8px 24px rgba(250,42,82,.3)}
+.mk-btn.ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);box-shadow:none}
+
+/* Phone frame */
+.mk-phone{position:relative;background:#000;border-radius:12%/6%;box-shadow:0 20px 60px rgba(0,0,0,.8),0 0 0 1.5px rgba(255,255,255,.12),inset 0 0 0 1.5px rgba(255,255,255,.05);overflow:hidden;aspect-ratio:9/19}
+.mk-phone::before{content:'';position:absolute;top:2.5%;left:50%;transform:translateX(-50%);width:35%;height:2.2%;background:#000;border-radius:100px;z-index:4}
+.mk-phone-screen{position:absolute;inset:4.5% 2.5% 2.5%;border-radius:9%/4%;background:linear-gradient(180deg,#141414,#0a0a0a);overflow:hidden}
+
+/* Score ring */
+.mk-ring{position:relative;width:100%;height:100%}
+.mk-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.mk-ring circle{fill:none}
+.mk-ring .bg{stroke:rgba(255,255,255,.08)}
+.mk-ring .fg{stroke:url(#mkGrad);stroke-linecap:round}
+.mk-ring .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;color:#fff}
+
+/* Small score pill */
+.mk-score{display:inline-flex;align-items:center;gap:.2em;padding:.2em .45em;border-radius:6px;background:linear-gradient(135deg,#FA2A52,#F97316);color:#fff;font-family:'Geologica',sans-serif;font-weight:900;font-size:.55rem}
+
+/* Chip */
+.mk-chip{display:inline-block;padding:.25em .65em;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:.42rem;font-weight:600;color:rgba(255,255,255,.7)}
+.mk-chip.live{background:#FA2A52;color:#fff;border-color:#FA2A52}
+
+/* Dish list item */
+.mk-dish{display:flex;align-items:center;gap:.5em;padding:.4em .6em;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:6px}
+.mk-dish .ic{width:1.6em;height:1.6em;border-radius:5px;background:linear-gradient(135deg,#333,#111);flex-shrink:0}
+.mk-dish .info{flex:1;min-width:0}
+.mk-dish .name{font-size:.48rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-dish .meta{font-size:.38rem;color:rgba(255,255,255,.4)}
+
+/* ===== HERO VARIATIONS A01–A20 ===== */
+
+/* HV01 — Full-bleed video */
+.hv01{background:#0a0a0a;display:flex;align-items:center;justify-content:center;text-align:center;padding:8% 6%}
+.hv01 .content{position:relative;z-index:2}
+.hv01 .mk-badge{margin-bottom:.7rem}
+.hv01 .mk-h1{font-size:1.6rem;margin-bottom:.5rem}
+.hv01 .mk-sub{font-size:.5rem;max-width:70%;margin:0 auto .8rem}
+.hv01 .mk-btn{font-size:.55rem;padding:.7em 1.3em}
+
+/* HV02 — Floating iPhone right */
+.hv02{display:grid;grid-template-columns:1.35fr 1fr;align-items:center;padding:10% 6% 6%;background:#0a0a0a}
+.hv02 .mk-bg::after{background:linear-gradient(135deg,rgba(10,10,10,.92) 0%,rgba(10,10,10,.75) 60%,rgba(10,10,10,.65) 100%)}
+.hv02 .left{padding-right:4%}
+.hv02 .mk-badge{margin-bottom:.6rem;font-size:.38rem}
+.hv02 .mk-h1{font-size:1.25rem;margin-bottom:.45rem}
+.hv02 .mk-sub{font-size:.46rem;margin-bottom:.7rem}
+.hv02 .buttons{display:flex;gap:.4rem}
+.hv02 .mk-btn{font-size:.46rem}
+.hv02 .phone-wrap{position:relative;transform:rotate(8deg);filter:drop-shadow(0 20px 40px rgba(0,0,0,.7))}
+.hv02 .mk-phone{width:100%;max-width:110px;margin:0 auto}
+.hv02 .mk-phone-screen{background:linear-gradient(180deg,#1a0a10,#0a0a0a);display:flex;flex-direction:column;padding:12% 8%}
+.hv02 .sc-top{font-size:.3rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em;margin-top:4%}
+.hv02 .sc-dish{font-size:.4rem;font-weight:800;color:#fff;margin:2% 0 4%}
+.hv02 .sc-ring-wrap{width:60%;margin:3% auto;aspect-ratio:1}
+.hv02 .sc-val{font-size:.95rem}
+.hv02 .sc-lbl{font-size:.28rem;color:rgba(255,255,255,.3);text-transform:uppercase;text-align:center;margin-top:3%}
+
+/* HV03 — Split screen dish/score */
+.hv03{display:grid;grid-template-columns:1fr 1fr}
+.hv03 .photo{background:linear-gradient(135deg,#6a1a1a,#2a0505);position:relative;display:flex;align-items:flex-end;padding:8% 7%}
+.hv03 .photo::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 60%,rgba(250,42,82,.3),transparent 60%)}
+.hv03 .photo .tag{position:relative;font-family:'Geologica',sans-serif;font-weight:800;font-size:.5rem;color:#fff;background:rgba(0,0,0,.5);padding:.4em .8em;border-radius:6px;backdrop-filter:blur(8px)}
+.hv03 .score{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6%;gap:.4rem;background:#0a0a0a}
+.hv03 .score .lbl{font-size:.4rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.4);font-weight:700}
+.hv03 .score .val{font-family:'Geologica',sans-serif;font-weight:900;font-size:3.2rem;background:linear-gradient(135deg,#FA2A52,#F97316);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.hv03 .score .sub{font-size:.4rem;color:rgba(255,255,255,.35);text-align:center;max-width:80%}
+
+/* HV04 — Typewriter */
+.hv04{display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:6%;background:#0a0a0a}
+.hv04 .mk-h1{font-size:1.5rem;margin-bottom:.6rem}
+.hv04 .rotate{color:#FA2A52;display:inline-block;border-right:.08em solid #FA2A52;animation:hv04Blink 1s steps(2) infinite;padding-right:.1em}
+@keyframes hv04Blink{50%{border-color:transparent}}
+.hv04 .mk-sub{font-size:.5rem;max-width:70%;margin:0 auto 1rem}
+.hv04 .mk-btn{font-size:.55rem;padding:.7em 1.3em}
+
+/* HV05 — Parallax food */
+.hv05{background:linear-gradient(180deg,rgba(10,10,10,.2),rgba(10,10,10,.95) 80%),linear-gradient(135deg,#4a1010,#1a0505,#2a0810);display:flex;align-items:flex-end;padding:6%}
+.hv05 .content{width:100%}
+.hv05 .mk-badge{margin-bottom:.5rem}
+.hv05 .mk-h1{font-size:1.4rem;margin-bottom:.4rem}
+.hv05 .mk-sub{font-size:.46rem;max-width:55%;margin-bottom:.7rem}
+
+/* HV06 — 3D tilted phone + particles */
+.hv06{display:flex;align-items:center;justify-content:center;padding:5%;background:radial-gradient(ellipse at 50% 100%,#250820,#0a0a0a 70%);perspective:600px}
+.hv06::before,.hv06::after{content:'';position:absolute;width:3px;height:3px;border-radius:50%;background:#FA2A52;box-shadow:30px 10px 0 #FA2A52,-40px 20px 0 rgba(250,42,82,.4),60px -30px 0 rgba(249,115,22,.6),-80px -20px 0 rgba(255,255,255,.3),20px 60px 0 #F97316,-30px 50px 0 rgba(250,42,82,.5),50px 40px 0 rgba(255,255,255,.2),-60px 70px 0 rgba(249,115,22,.4)}
+.hv06::before{top:20%;left:30%}
+.hv06::after{top:50%;right:25%}
+.hv06 .phone-wrap{transform:rotateY(-18deg) rotateX(6deg);filter:drop-shadow(0 30px 50px rgba(250,42,82,.25))}
+.hv06 .mk-phone{width:105px}
+.hv06 .mk-phone-screen{background:linear-gradient(180deg,#1a0a10,#0a0a0a);display:flex;flex-direction:column;align-items:center;padding:15% 8%}
+.hv06 .ring-wrap{width:55%;aspect-ratio:1;margin:8% 0 6%}
+.hv06 .ring-val{font-size:1rem}
+.hv06 .hv06-title{font-size:.4rem;font-weight:800;text-align:center;color:#fff;margin-top:4%}
+.hv06 .hv06-sub{font-size:.32rem;color:rgba(255,255,255,.4);text-align:center;margin-top:1%}
+
+/* HV07 — Giant score morphing */
+.hv07{display:flex;align-items:center;justify-content:center;flex-direction:column;padding:6%;background:radial-gradient(circle at 50% 50%,rgba(250,42,82,.1),#0a0a0a 60%)}
+.hv07 .mk-badge{margin-bottom:.8rem}
+.hv07 .big{font-family:'Geologica',sans-serif;font-weight:900;font-size:6.5rem;line-height:.85;background:linear-gradient(180deg,#fff 30%,#FA2A52 70%,#F97316);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 40px rgba(250,42,82,.3));letter-spacing:-.07em}
+.hv07 .hv07-lbl{font-size:.5rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.15em;margin-top:.4rem;font-weight:700}
+.hv07 .mk-h1{font-size:.8rem;margin-top:.3rem;font-weight:700;color:rgba(255,255,255,.8)}
+
+/* HV08 — Dish carousel list */
+.hv08{display:grid;grid-template-columns:1.1fr 1fr;padding:6%;background:#0a0a0a;align-items:center;gap:5%}
+.hv08 .mk-bg::after{background:linear-gradient(90deg,rgba(10,10,10,.96) 40%,rgba(10,10,10,.7) 100%)}
+.hv08 .left .mk-h1{font-size:1.2rem;margin-bottom:.4rem}
+.hv08 .left .mk-sub{font-size:.44rem;margin-bottom:.6rem}
+.hv08 .left .mk-btn{font-size:.5rem}
+.hv08 .list{display:flex;flex-direction:column;gap:.4rem}
+.hv08 .mk-dish{padding:.5em .7em}
+
+/* HV09 — Phone centered */
+.hv09{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4%;background:radial-gradient(ellipse at 50% 50%,#1a0810,#0a0a0a 70%)}
+.hv09 .mk-h1{font-size:.9rem;text-align:center;margin-bottom:.35rem}
+.hv09 .mk-sub{font-size:.38rem;text-align:center;max-width:60%;margin-bottom:.5rem}
+.hv09 .mk-phone{width:95px;margin:0 auto;box-shadow:0 30px 80px rgba(250,42,82,.25),0 0 0 1.5px rgba(255,255,255,.12)}
+.hv09 .mk-phone-screen{background:linear-gradient(180deg,#190810,#0a0a0a);padding:14% 9%;display:flex;flex-direction:column}
+.hv09 .ps-top{font-size:.27rem;color:rgba(255,255,255,.35);text-transform:uppercase}
+.hv09 .ps-d{font-size:.35rem;font-weight:800;color:#fff;margin:3% 0 7%}
+.hv09 .ps-ring{width:60%;aspect-ratio:1;margin:0 auto}
+.hv09 .ps-v{font-size:.85rem}
+
+/* HV10 — Gradient mesh, giant type */
+.hv10{background:conic-gradient(from 210deg at 30% 40%,#FA2A52,#F97316,#6a1a4a,#0a0a0a 70%);display:flex;align-items:center;padding:6%}
+.hv10::before{content:'';position:absolute;inset:0;backdrop-filter:blur(40px);background:rgba(0,0,0,.55)}
+.hv10 .content{position:relative;z-index:2}
+.hv10 .mk-h1{font-size:2rem;margin-bottom:.3rem;letter-spacing:-.05em;line-height:.9}
+.hv10 .mk-sub{font-size:.44rem;max-width:55%;margin-bottom:.6rem}
+
+/* HV11 — Before/after split */
+.hv11{display:grid;grid-template-columns:1fr 1fr;gap:2%;padding:6% 5%;background:#0a0a0a;align-items:center}
+.hv11 .col{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:6% 7%;height:100%;display:flex;flex-direction:column;gap:.35rem}
+.hv11 .col .lbl{font-size:.35rem;text-transform:uppercase;letter-spacing:.1em;font-weight:800;margin-bottom:.3rem}
+.hv11 .col.old .lbl{color:rgba(255,255,255,.35)}
+.hv11 .col.new{border-color:#FA2A52;background:rgba(250,42,82,.05)}
+.hv11 .col.new .lbl{color:#FA2A52}
+.hv11 .row{display:flex;justify-content:space-between;align-items:center;font-size:.4rem;padding:.3em 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.hv11 .row:last-child{border:none}
+.hv11 .row .n{color:rgba(255,255,255,.6);font-weight:500}
+.hv11 .row .s{color:rgba(255,255,255,.3)}
+.hv11 .col.new .row .s{font-family:'Geologica',sans-serif;font-weight:900;color:#FA2A52}
+
+/* HV12 — Bento grid */
+.hv12{padding:6%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.6rem}
+.hv12 .mk-h1{font-size:1.1rem;margin-bottom:.3rem}
+.hv12 .mk-sub{font-size:.4rem;margin-bottom:.3rem;max-width:70%}
+.hv12 .bento{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:.4rem}
+.hv12 .bento div{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:.5rem .6rem;font-size:.36rem;color:rgba(255,255,255,.6);display:flex;flex-direction:column;gap:.15rem}
+.hv12 .bento .big{font-family:'Geologica',sans-serif;font-weight:900;font-size:.85rem;color:#FA2A52}
+.hv12 .bento .b1{grid-column:span 1}
+
+/* HV13 — Apple keynote motion */
+.hv13{background:#0a0a0a;display:flex;align-items:center;justify-content:center;text-align:center;padding:6%;position:relative}
+.hv13 .mk-bg::after{background:radial-gradient(ellipse at 50% 40%,rgba(10,10,10,.5),rgba(10,10,10,.95) 70%)}
+.hv13::before{content:'';position:absolute;left:50%;top:50%;width:140%;height:40%;background:radial-gradient(ellipse,rgba(250,42,82,.35),transparent 70%);transform:translate(-50%,-50%);filter:blur(40px)}
+.hv13 .content{position:relative;z-index:2}
+.hv13 .mk-h1{font-size:1.8rem;margin-bottom:.4rem}
+.hv13 .mk-sub{font-size:.48rem;max-width:80%;margin:0 auto .7rem}
+.hv13 .mk-btn{font-size:.55rem}
+
+/* HV14 — Preference sliders */
+.hv14{display:grid;grid-template-columns:1fr 1fr;padding:6%;background:#0a0a0a;align-items:center;gap:5%}
+.hv14 .mk-h1{font-size:1rem;margin-bottom:.3rem}
+.hv14 .mk-sub{font-size:.4rem;margin-bottom:.5rem}
+.hv14 .mk-btn{font-size:.48rem}
+.hv14 .sliders{display:flex;flex-direction:column;gap:.5rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.8rem .9rem}
+.hv14 .slider{display:flex;flex-direction:column;gap:.2rem}
+.hv14 .slider .label{display:flex;justify-content:space-between;font-size:.36rem;color:rgba(255,255,255,.6);font-weight:600}
+.hv14 .slider .label .v{color:#FA2A52}
+.hv14 .slider .track{height:4px;background:rgba(255,255,255,.06);border-radius:2px;position:relative}
+.hv14 .slider .fill{position:absolute;inset:0;background:linear-gradient(90deg,#FA2A52,#F97316);border-radius:2px}
+.hv14 .slider:nth-child(1) .fill{width:78%}
+.hv14 .slider:nth-child(2) .fill{width:55%}
+.hv14 .slider:nth-child(3) .fill{width:88%}
+.hv14 .slider:nth-child(4) .fill{width:42%}
+
+/* HV15 — Big score ring */
+.hv15{display:grid;grid-template-columns:1fr 1.1fr;padding:5%;background:#0a0a0a;align-items:center;gap:3%}
+.hv15 .ring-big{aspect-ratio:1;width:100%;max-width:150px;margin:0 auto;position:relative}
+.hv15 .ring-big svg{width:100%;height:100%;transform:rotate(-90deg)}
+.hv15 .ring-big .bg{fill:none;stroke:rgba(255,255,255,.05);stroke-width:8}
+.hv15 .ring-big .fg{fill:none;stroke:url(#mkGrad);stroke-width:8;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:31}
+.hv15 .ring-big .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hv15 .ring-big .center .n{font-family:'Geologica',sans-serif;font-weight:900;font-size:2.4rem;line-height:1;color:#fff}
+.hv15 .ring-big .center .l{font-size:.35rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.12em;margin-top:.2rem}
+.hv15 .right .mk-h1{font-size:1.05rem;margin-bottom:.3rem}
+.hv15 .right .mk-sub{font-size:.4rem;margin-bottom:.5rem}
+.hv15 .right .mk-btn{font-size:.5rem}
+
+/* HV16 — Menu with scores overlaid */
+.hv16{display:grid;grid-template-columns:1.1fr 1fr;padding:6% 5%;background:#0a0a0a;align-items:center;gap:4%}
+.hv16 .menu{background:#f5f0e8;color:#2a1810;padding:1rem .9rem;border-radius:4px;box-shadow:0 20px 40px rgba(0,0,0,.6);font-family:'Geologica',sans-serif;transform:rotate(-2deg)}
+.hv16 .menu .t{font-size:.5rem;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid #2a1810;padding-bottom:.4rem;margin-bottom:.5rem}
+.hv16 .menu .item{display:flex;justify-content:space-between;align-items:center;padding:.3em 0;font-size:.4rem;position:relative}
+.hv16 .menu .item .s{position:absolute;right:-2.2rem;top:50%;transform:translateY(-50%) rotate(2deg);font-size:.45rem}
+.hv16 .right .mk-h1{font-size:.95rem;margin-bottom:.3rem}
+.hv16 .right .mk-sub{font-size:.38rem;margin-bottom:.4rem}
+
+/* HV17 — Map pin */
+.hv17{display:grid;grid-template-columns:1fr 1fr;padding:5%;background:#0a0a0a;align-items:center;gap:4%}
+.hv17 .left .mk-badge{margin-bottom:.5rem}
+.hv17 .left .mk-h1{font-size:1rem;margin-bottom:.3rem}
+.hv17 .left .mk-sub{font-size:.4rem;margin-bottom:.5rem;max-width:90%}
+.hv17 .left .mk-btn{font-size:.5rem}
+.hv17 .map{aspect-ratio:4/3;position:relative;border-radius:10px;background:radial-gradient(ellipse at 40% 60%,#1a1a2a,#0a0a0a);border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.hv17 .map::before{content:'';position:absolute;inset:0;background:linear-gradient(transparent 0,rgba(255,255,255,.02) 2%,transparent 4%) repeat-y,linear-gradient(90deg,transparent 0,rgba(255,255,255,.02) 2%,transparent 4%) repeat-x;background-size:20px 20px}
+.hv17 .pin{position:absolute;width:12px;height:12px;border-radius:50%;background:#FA2A52;box-shadow:0 0 0 4px rgba(250,42,82,.2),0 0 20px rgba(250,42,82,.6);animation:hv17Pulse 2s infinite}
+.hv17 .pin.a{top:45%;left:35%}
+.hv17 .pin.b{top:60%;left:68%}
+.hv17 .pin-label{position:absolute;font-size:.32rem;color:#fff;background:rgba(0,0,0,.7);padding:.2em .5em;border-radius:4px;white-space:nowrap;backdrop-filter:blur(4px)}
+.hv17 .pin-label.a{top:38%;left:42%}
+.hv17 .pin-label.b{top:53%;left:75%}
+@keyframes hv17Pulse{0%,100%{box-shadow:0 0 0 4px rgba(250,42,82,.2),0 0 20px rgba(250,42,82,.6)}50%{box-shadow:0 0 0 8px rgba(250,42,82,.1),0 0 25px rgba(250,42,82,.8)}}
+
+/* HV18 — Dish ticker */
+.hv18{display:flex;flex-direction:column;justify-content:center;padding:6% 0;background:#0a0a0a;overflow:hidden}
+.hv18 .content{padding:0 6%;margin-bottom:.8rem}
+.hv18 .mk-badge{margin-bottom:.5rem}
+.hv18 .mk-h1{font-size:1.3rem;margin-bottom:.3rem}
+.hv18 .mk-sub{font-size:.42rem;max-width:70%}
+.hv18 .ticker{display:flex;gap:.5rem;animation:hv18Scroll 20s linear infinite;width:max-content;white-space:nowrap}
+@keyframes hv18Scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.hv18 .ticker-item{display:inline-flex;align-items:center;gap:.4em;padding:.35em .7em;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;font-size:.4rem;color:rgba(255,255,255,.7);font-weight:600}
+.hv18 .ticker-item .sc{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:900}
+
+/* HV19 — Chef dark photo with score tags */
+.hv19{background:#0a0a0a;padding:6%;display:flex;flex-direction:column;justify-content:flex-end}
+.hv19 .mk-bg::after{background:linear-gradient(180deg,rgba(10,10,10,.4) 0%,rgba(10,10,10,.75) 50%,rgba(10,10,10,.95) 100%)}
+.hv19::before{content:'';position:absolute;top:10%;right:10%;width:45%;height:80%;background:radial-gradient(ellipse,rgba(250,42,82,.15),transparent 60%);border-radius:50%}
+.hv19 .content{position:relative;z-index:2}
+.hv19 .mk-h1{font-size:1.3rem;margin-bottom:.3rem}
+.hv19 .mk-sub{font-size:.42rem;max-width:60%;margin-bottom:.6rem}
+.hv19 .tag{position:absolute;display:inline-flex;align-items:center;gap:.25em;padding:.25em .5em;border-radius:4px;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);border:1px solid #FA2A52;font-size:.36rem;font-weight:700}
+.hv19 .tag .s{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:900}
+.hv19 .tag.a{top:15%;right:20%}
+.hv19 .tag.b{top:35%;right:8%}
+.hv19 .tag.c{top:55%;right:25%}
+
+/* HV20 — Three phones grid */
+.hv20{display:flex;flex-direction:column;align-items:center;padding:4% 6%;background:#0a0a0a}
+.hv20 .mk-h1{font-size:.85rem;text-align:center;margin-bottom:.2rem}
+.hv20 .mk-sub{font-size:.35rem;text-align:center;max-width:70%;margin-bottom:.5rem}
+.hv20 .phones{display:grid;grid-template-columns:repeat(3,1fr);gap:4%;width:100%;max-width:80%}
+.hv20 .mk-phone{width:100%}
+.hv20 .mk-phone-screen{background:linear-gradient(180deg,#190810,#0a0a0a);padding:10% 7%}
+.hv20 .p-title{font-size:.25rem;color:rgba(255,255,255,.35);text-transform:uppercase}
+.hv20 .p-val{font-family:'Geologica',sans-serif;font-weight:900;font-size:.55rem;color:#FA2A52;margin-top:3%}
+
+/* ============================================================
+   FEATURE SHOWCASE VARIATIONS (FV01–FV20)
+   ============================================================ */
+
+/* FV01 — Sticky phone + scroll cards */
+.fv01{display:grid;grid-template-columns:.9fr 1.1fr;padding:5%;background:#0a0a0a;align-items:center;gap:4%}
+.fv01 .phone-wrap{position:relative}
+.fv01 .mk-phone{width:80%;margin:0 auto}
+.fv01 .mk-phone-screen{background:linear-gradient(180deg,#1a0a10,#0a0a0a);padding:12% 7%;display:flex;flex-direction:column;gap:.4rem}
+.fv01 .ps-h{font-size:.35rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em}
+.fv01 .ps-r{font-size:.45rem;font-weight:800}
+.fv01 .ps-score{font-family:'Geologica',sans-serif;font-size:.8rem;color:#FA2A52;font-weight:900}
+.fv01 .cards{display:flex;flex-direction:column;gap:.5rem}
+.fv01 .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.7rem .9rem;border-left:2px solid #FA2A52}
+.fv01 .card h4{font-family:'Geologica',sans-serif;font-size:.5rem;margin-bottom:.15rem;color:#fff}
+.fv01 .card p{font-size:.36rem;color:rgba(255,255,255,.5);line-height:1.5}
+
+/* FV02 — Horizontal scroll cards */
+.fv02{padding:6%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.8rem}
+.fv02 h3{font-family:'Geologica',sans-serif;font-size:1rem;margin-bottom:.3rem}
+.fv02 .row{display:flex;gap:.5rem;overflow:hidden}
+.fv02 .c{flex:0 0 38%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.7rem;display:flex;flex-direction:column;gap:.3rem}
+.fv02 .c .n{font-size:.3rem;font-weight:800;color:#FA2A52;letter-spacing:.1em;text-transform:uppercase}
+.fv02 .c h4{font-family:'Geologica',sans-serif;font-size:.5rem}
+.fv02 .c p{font-size:.33rem;color:rgba(255,255,255,.45);line-height:1.5}
+
+/* FV03 — Sticky title, scrolling features */
+.fv03{display:grid;grid-template-columns:.9fr 1.1fr;padding:6%;background:#0a0a0a;align-items:center;gap:4%}
+.fv03 .left{position:sticky;top:2rem}
+.fv03 .left .mk-label{font-size:.35rem;color:#FA2A52;text-transform:uppercase;letter-spacing:.18em;font-weight:800;margin-bottom:.3rem}
+.fv03 .left h3{font-family:'Geologica',sans-serif;font-size:1.2rem;margin-bottom:.3rem;letter-spacing:-.03em;line-height:1}
+.fv03 .left p{font-size:.4rem;color:rgba(255,255,255,.5);line-height:1.6}
+.fv03 .feats{display:flex;flex-direction:column;gap:.5rem}
+.fv03 .f{display:flex;gap:.5rem;padding:.5rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:6px}
+.fv03 .f .ic{width:1.4em;height:1.4em;border-radius:5px;background:rgba(250,42,82,.15);border:1px solid rgba(250,42,82,.3);display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#FA2A52;flex-shrink:0}
+.fv03 .f .info h4{font-family:'Geologica',sans-serif;font-size:.42rem;margin-bottom:.1rem}
+.fv03 .f .info p{font-size:.32rem;color:rgba(255,255,255,.45);line-height:1.5}
+
+/* FV04 — Three phones full bleed */
+.fv04{display:flex;align-items:center;justify-content:center;padding:5%;background:#0a0a0a;gap:4%}
+.fv04 .mk-bg::after{background:linear-gradient(180deg,rgba(10,10,10,.9),rgba(10,10,10,.95))}
+.fv04 .mk-phone{width:25%}
+.fv04 .mk-phone-screen{padding:10% 6%;display:flex;flex-direction:column;gap:.25rem}
+.fv04 .mk-phone:nth-child(2){transform:translateY(-5%)}
+.fv04 .p1 .mk-phone-screen{background:linear-gradient(180deg,#1a0a10,#0a0a0a)}
+.fv04 .ps-t{font-size:.23rem;color:rgba(255,255,255,.4);text-transform:uppercase}
+.fv04 .ps-v{font-family:'Geologica',sans-serif;font-size:.4rem;color:#FA2A52;font-weight:900;margin-top:1%}
+
+/* FV05 — Preference tag hover demo */
+.fv05{padding:6%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.6rem}
+.fv05 h3{font-family:'Geologica',sans-serif;font-size:.85rem;margin-bottom:.2rem}
+.fv05 p{font-size:.38rem;color:rgba(255,255,255,.5);margin-bottom:.4rem}
+.fv05 .tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem}
+.fv05 .tags .t{padding:.35em .8em;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);font-size:.36rem;color:rgba(255,255,255,.6);font-weight:600}
+.fv05 .tags .t.active{background:#FA2A52;color:#fff;border-color:#FA2A52}
+.fv05 .ranks{display:flex;flex-direction:column;gap:.25rem}
+.fv05 .rk{display:flex;justify-content:space-between;align-items:center;padding:.35em .6em;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;font-size:.4rem}
+.fv05 .rk .n{color:rgba(255,255,255,.6);font-weight:500}
+.fv05 .rk .s{font-family:'Geologica',sans-serif;font-weight:900;color:#FA2A52;font-size:.45rem}
+
+/* FV06 — Old way vs ForkFox way */
+.fv06{display:grid;grid-template-columns:1fr 1fr;padding:5%;background:#0a0a0a;align-items:stretch;gap:4%;align-content:center}
+.fv06 .col{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.35rem}
+.fv06 .col .lbl{font-size:.33rem;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:rgba(255,255,255,.4)}
+.fv06 .col h4{font-family:'Geologica',sans-serif;font-size:.55rem;margin-bottom:.35rem}
+.fv06 .col.new{border-color:#FA2A52;background:linear-gradient(180deg,rgba(250,42,82,.08),rgba(255,255,255,.02))}
+.fv06 .col.new .lbl{color:#FA2A52}
+.fv06 .rest{display:flex;justify-content:space-between;font-size:.38rem;padding:.25em 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.fv06 .rest .s{color:#ffc640}
+.fv06 .dish{display:flex;justify-content:space-between;font-size:.38rem;padding:.25em 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.fv06 .dish .s{font-family:'Geologica',sans-serif;font-weight:900;color:#FA2A52}
+
+/* FV07 — Algorithm visualization */
+.fv07{display:grid;grid-template-columns:.9fr 1.1fr;padding:5%;background:#0a0a0a;align-items:center;gap:5%}
+.fv07 .left h3{font-family:'Geologica',sans-serif;font-size:.9rem;margin-bottom:.3rem}
+.fv07 .left p{font-size:.4rem;color:rgba(255,255,255,.5);line-height:1.6}
+.fv07 .algo{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.9rem;font-family:'JetBrains Mono',monospace}
+.fv07 .algo .eq{font-size:.42rem;color:rgba(255,255,255,.5);margin-bottom:.5rem;font-family:'Geologica',sans-serif;font-weight:700}
+.fv07 .algo .eq .v{color:#FA2A52}
+.fv07 .bars{display:flex;flex-direction:column;gap:.35rem}
+.fv07 .bar{display:flex;align-items:center;gap:.5rem;font-size:.32rem;color:rgba(255,255,255,.6)}
+.fv07 .bar .lbl{width:30%}
+.fv07 .bar .tr{flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;position:relative}
+.fv07 .bar .fl{position:absolute;inset:0;background:linear-gradient(90deg,#FA2A52,#F97316);border-radius:2px}
+.fv07 .bar:nth-child(1) .fl{width:85%}
+.fv07 .bar:nth-child(2) .fl{width:72%}
+.fv07 .bar:nth-child(3) .fl{width:94%}
+.fv07 .bar:nth-child(4) .fl{width:60%}
+.fv07 .bar .pct{width:12%;text-align:right;color:#FA2A52;font-weight:800}
+
+/* FV08 — City heat map */
+.fv08{display:grid;grid-template-columns:1fr 1.1fr;padding:5%;background:#0a0a0a;align-items:center;gap:4%}
+.fv08 .left h3{font-family:'Geologica',sans-serif;font-size:.9rem;margin-bottom:.3rem}
+.fv08 .left p{font-size:.4rem;color:rgba(255,255,255,.5);margin-bottom:.4rem}
+.fv08 .legend{display:flex;gap:.4rem;font-size:.3rem;color:rgba(255,255,255,.45)}
+.fv08 .legend span::before{content:'';display:inline-block;width:.6em;height:.6em;border-radius:50%;margin-right:.3em;vertical-align:middle}
+.fv08 .legend .a::before{background:#FA2A52}
+.fv08 .legend .b::before{background:#F97316}
+.fv08 .legend .c::before{background:#34d399}
+.fv08 .heatmap{aspect-ratio:4/3;background:radial-gradient(ellipse at 25% 40%,rgba(250,42,82,.4),transparent 30%),radial-gradient(ellipse at 60% 70%,rgba(249,115,22,.35),transparent 25%),radial-gradient(ellipse at 80% 30%,rgba(52,211,153,.25),transparent 20%),linear-gradient(135deg,#0a0a1a,#0a0a0a);border:1px solid rgba(255,255,255,.08);border-radius:10px;position:relative;overflow:hidden}
+.fv08 .heatmap::before{content:'';position:absolute;inset:0;background:linear-gradient(transparent 0,rgba(255,255,255,.025) 2%,transparent 4%) repeat,linear-gradient(90deg,transparent 0,rgba(255,255,255,.025) 2%,transparent 4%) repeat;background-size:18px 18px}
+.fv08 .heatmap .dot{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.6)}
+.fv08 .heatmap .dot.a{top:35%;left:20%}
+.fv08 .heatmap .dot.b{top:65%;left:55%}
+.fv08 .heatmap .dot.c{top:25%;left:75%}
+
+/* FV09 — Menu annotation */
+.fv09{display:grid;grid-template-columns:1fr 1fr;padding:5%;background:#0a0a0a;align-items:center;gap:5%}
+.fv09 .left h3{font-family:'Geologica',sans-serif;font-size:.85rem;margin-bottom:.3rem}
+.fv09 .left p{font-size:.38rem;color:rgba(255,255,255,.5);margin-bottom:.3rem}
+.fv09 .menu-card{background:#f8f3e8;color:#2a1a0a;padding:.9rem 1rem;border-radius:4px;box-shadow:0 20px 40px rgba(0,0,0,.6);font-family:'Geologica',sans-serif;position:relative}
+.fv09 .menu-card .title{font-size:.5rem;font-weight:900;text-align:center;margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:1px solid #2a1a0a}
+.fv09 .menu-card .it{display:flex;justify-content:space-between;font-size:.38rem;padding:.3em 0;position:relative}
+.fv09 .menu-card .it .annot{position:absolute;right:-1.8rem;background:#FA2A52;color:#fff;padding:.1em .4em;border-radius:4px;font-size:.4rem;font-weight:900;box-shadow:0 4px 12px rgba(250,42,82,.4)}
+
+/* FV10 — Score build-up stacked factors */
+.fv10{padding:5% 6%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.5rem}
+.fv10 h3{font-family:'Geologica',sans-serif;font-size:.9rem;margin-bottom:.2rem}
+.fv10 p{font-size:.38rem;color:rgba(255,255,255,.5);margin-bottom:.3rem}
+.fv10 .stack{display:flex;flex-direction:column;gap:.25rem}
+.fv10 .factor{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.6rem;padding:.4rem .6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;font-size:.38rem}
+.fv10 .factor .n{color:rgba(255,255,255,.4);font-weight:700;width:12%}
+.fv10 .factor .l{color:rgba(255,255,255,.7);font-weight:500}
+.fv10 .factor .v{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:900}
+.fv10 .total{display:flex;justify-content:space-between;align-items:center;padding:.5rem .7rem;background:linear-gradient(90deg,rgba(250,42,82,.15),rgba(249,115,22,.1));border:1px solid #FA2A52;border-radius:6px;margin-top:.25rem}
+.fv10 .total .l{font-size:.42rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#fff}
+.fv10 .total .v{font-family:'Geologica',sans-serif;font-weight:900;font-size:.9rem;background:linear-gradient(135deg,#FA2A52,#F97316);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* FV11 — Quote-driven */
+.fv11{padding:6%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.6rem}
+.fv11 .mk-bg::after{background:linear-gradient(90deg,rgba(10,10,10,.95) 50%,rgba(10,10,10,.75) 100%)}
+.fv11 .quote{font-family:'Geologica',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;line-height:1.25;letter-spacing:-.02em}
+.fv11 .quote::before{content:'"';color:#FA2A52;font-size:1.3em;line-height:0;margin-right:.1em}
+.fv11 .attr{display:flex;align-items:center;gap:.5rem;margin-top:.6rem}
+.fv11 .attr .av{width:1.4em;height:1.4em;border-radius:50%;background:linear-gradient(135deg,#FA2A52,#F97316)}
+.fv11 .attr .info .name{font-size:.42rem;font-weight:800}
+.fv11 .attr .info .role{font-size:.32rem;color:rgba(255,255,255,.45)}
+
+/* FV12 — Full product screenshot + pins */
+.fv12{padding:4% 5%;background:#0a0a0a;display:flex;align-items:center;justify-content:center;position:relative}
+.fv12 .screenshot{width:88%;aspect-ratio:3/2;background:linear-gradient(180deg,#1a0a0f,#0a0a0a);border:1px solid rgba(255,255,255,.1);border-radius:10px;position:relative;box-shadow:0 30px 60px rgba(0,0,0,.6);overflow:hidden;padding:.8rem 1rem;display:flex;flex-direction:column;gap:.3rem}
+.fv12 .top{display:flex;justify-content:space-between;font-size:.3rem}
+.fv12 .top .t{color:rgba(255,255,255,.5)}
+.fv12 .top .score{font-family:'Geologica',sans-serif;font-weight:900;color:#FA2A52;font-size:.6rem}
+.fv12 .dish-name{font-size:.5rem;font-weight:800;margin-top:.1rem}
+.fv12 .meta{display:flex;gap:.4rem;font-size:.3rem;color:rgba(255,255,255,.4)}
+.fv12 .attrs{display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;margin-top:.3rem}
+.fv12 .attr{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:.3em .4em;border-radius:4px;font-size:.3rem;text-align:center}
+.fv12 .attr .n{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:900;display:block;font-size:.4rem}
+.fv12 .pin{position:absolute;width:1.2em;height:1.2em;border-radius:50%;background:#FA2A52;color:#fff;font-family:'Geologica',sans-serif;font-weight:900;font-size:.35rem;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px rgba(250,42,82,.25);z-index:3}
+.fv12 .pin.a{top:15%;right:8%}
+.fv12 .pin.b{top:55%;left:6%}
+.fv12 .pin.c{bottom:15%;right:25%}
+
+/* FV13 — Video in phone */
+.fv13{display:grid;grid-template-columns:1fr 1fr;padding:5%;background:#0a0a0a;align-items:center;gap:5%}
+.fv13 .left h3{font-family:'Geologica',sans-serif;font-size:.95rem;margin-bottom:.3rem}
+.fv13 .left p{font-size:.4rem;color:rgba(255,255,255,.5);margin-bottom:.4rem}
+.fv13 .left .mk-btn{font-size:.5rem}
+.fv13 .phone-wrap{display:flex;justify-content:center}
+.fv13 .mk-phone{width:70%}
+.fv13 .mk-phone-screen{background:linear-gradient(135deg,#1a0810,#3a0a1a,#0a0a0a);position:relative;display:flex;align-items:center;justify-content:center}
+.fv13 .play{width:30%;aspect-ratio:1;border-radius:50%;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.5rem}
+
+/* FV14 — Comparison table */
+.fv14{padding:6%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.5rem}
+.fv14 h3{font-family:'Geologica',sans-serif;font-size:.85rem;margin-bottom:.3rem}
+.fv14 table{width:100%;border-collapse:separate;border-spacing:0;font-size:.35rem}
+.fv14 th,.fv14 td{padding:.35em .5em;text-align:center;border-bottom:1px solid rgba(255,255,255,.06)}
+.fv14 th{font-family:'Geologica',sans-serif;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;font-size:.3rem}
+.fv14 th.fx{color:#FA2A52}
+.fv14 td:first-child{text-align:left;color:rgba(255,255,255,.7);font-weight:500}
+.fv14 td.yes{color:#34d399}
+.fv14 td.no{color:rgba(255,255,255,.3)}
+.fv14 td.fx{background:rgba(250,42,82,.06);border-left:2px solid #FA2A52}
+
+/* FV15 — User moment storyboard 4 panels */
+.fv15{padding:5%;background:#0a0a0a;display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;align-content:center}
+.fv15 .p{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.6rem;display:flex;flex-direction:column;gap:.25rem;aspect-ratio:1/1.1}
+.fv15 .p .n{font-size:.32rem;color:#FA2A52;font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-family:'Geologica',sans-serif}
+.fv15 .p .ic{font-size:1rem;margin:.1rem 0}
+.fv15 .p h4{font-family:'Geologica',sans-serif;font-size:.42rem;line-height:1.2}
+.fv15 .p .t{font-size:.32rem;color:rgba(255,255,255,.5);line-height:1.5}
+
+/* FV16 — How it works numbered steps */
+.fv16{padding:5%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.6rem}
+.fv16 h3{font-family:'Geologica',sans-serif;font-size:.9rem;margin-bottom:.4rem}
+.fv16 .steps{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.fv16 .step{display:flex;gap:.5rem;padding:.5rem .6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:6px}
+.fv16 .step .num{width:1.4em;height:1.4em;border-radius:50%;background:#FA2A52;color:#fff;font-family:'Geologica',sans-serif;font-weight:900;font-size:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fv16 .step h4{font-family:'Geologica',sans-serif;font-size:.42rem;margin-bottom:.05rem}
+.fv16 .step p{font-size:.32rem;color:rgba(255,255,255,.5);line-height:1.45}
+
+/* FV17 — Preference drag widget */
+.fv17{display:grid;grid-template-columns:1fr 1.2fr;padding:5%;background:#0a0a0a;align-items:center;gap:5%}
+.fv17 .left h3{font-family:'Geologica',sans-serif;font-size:.9rem;margin-bottom:.3rem}
+.fv17 .left p{font-size:.4rem;color:rgba(255,255,255,.5)}
+.fv17 .widget{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.8rem .9rem;display:flex;flex-direction:column;gap:.35rem}
+.fv17 .dw-h{font-size:.3rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:.2rem}
+.fv17 .item{display:flex;align-items:center;gap:.5rem;padding:.35em .6em;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;cursor:grab;font-size:.36rem;color:rgba(255,255,255,.75);font-weight:600}
+.fv17 .item .handle{color:rgba(255,255,255,.25);font-size:.4rem}
+.fv17 .item.top{border-color:#FA2A52;background:rgba(250,42,82,.08)}
+.fv17 .item .rank{color:#FA2A52;font-weight:900;font-family:'Geologica',sans-serif}
+
+/* FV18 — Cuisine deep-dive cards */
+.fv18{padding:5%;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;gap:.5rem}
+.fv18 h3{font-family:'Geologica',sans-serif;font-size:.85rem;margin-bottom:.3rem}
+.fv18 .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem}
+.fv18 .cc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:.45rem .4rem;text-align:center;display:flex;flex-direction:column;gap:.1rem}
+.fv18 .cc .em{font-size:.9rem}
+.fv18 .cc .nm{font-size:.32rem;font-weight:700;color:rgba(255,255,255,.7)}
+.fv18 .cc .v{font-family:'Geologica',sans-serif;font-weight:900;font-size:.45rem;color:#FA2A52}
+
+/* FV19 — Score anatomy spider chart */
+.fv19{display:grid;grid-template-columns:1.1fr 1fr;padding:5%;background:#0a0a0a;align-items:center;gap:5%}
+.fv19 .left h3{font-family:'Geologica',sans-serif;font-size:.9rem;margin-bottom:.3rem}
+.fv19 .left p{font-size:.4rem;color:rgba(255,255,255,.5);margin-bottom:.3rem}
+.fv19 .left .score{font-family:'Geologica',sans-serif;font-weight:900;font-size:1.6rem;background:linear-gradient(135deg,#FA2A52,#F97316);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:.3rem}
+.fv19 .spider{position:relative;aspect-ratio:1;width:100%;max-width:160px;margin:0 auto}
+.fv19 .spider svg{width:100%;height:100%}
+
+/* FV20 — Testimonial-driven */
+.fv20{padding:5%;background:#0a0a0a;display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;align-content:center}
+.fv20 .t{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.8rem;display:flex;flex-direction:column;gap:.4rem}
+.fv20 .t .stars{color:#FA2A52;font-size:.45rem;letter-spacing:.1em}
+.fv20 .t .body{font-size:.36rem;color:rgba(255,255,255,.75);line-height:1.55;font-weight:500}
+.fv20 .t .user{display:flex;align-items:center;gap:.4rem;margin-top:auto}
+.fv20 .t .user .av{width:1.1em;height:1.1em;border-radius:50%;background:linear-gradient(135deg,#FA2A52,#F97316)}
+.fv20 .t .user .name{font-size:.34rem;font-weight:800}
+.fv20 .t .user .city{font-size:.28rem;color:rgba(255,255,255,.4)}
+
+/* ============================================================
+   FULL-PAGE COMBINATIONS (CV01–CV20)
+   Compressed full-page layouts
+   ============================================================ */
+
+.cv{display:flex;flex-direction:column;padding:0}
+.cv-mini-nav{padding:3% 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05)}
+.cv-mini-nav .brand{display:flex;align-items:center;gap:.3rem;font-family:'Geologica',sans-serif;font-weight:900;font-size:.4rem}
+.cv-mini-nav .brand .dot{width:.6em;height:.6em;border-radius:2px;background:#FA2A52}
+.cv-mini-nav .brand .o{color:#F97316}
+.cv-mini-nav .links{display:flex;gap:.5rem;font-size:.3rem;color:rgba(255,255,255,.4)}
+.cv-mini-nav .cta{padding:.2em .55em;background:#FA2A52;border-radius:100px;font-size:.3rem;font-weight:800;color:#fff}
+
+/* CV01 — Product Hunt launch */
+.cv01{background:#0a0a0a}
+.cv01 .hero{padding:4% 5%;text-align:center;background:linear-gradient(180deg,rgba(250,42,82,.1),transparent)}
+.cv01 .hero h1{font-family:'Geologica',sans-serif;font-size:.95rem;margin-bottom:.25rem}
+.cv01 .hero .s{font-size:.32rem;color:rgba(255,255,255,.5);margin-bottom:.35rem}
+.cv01 .hero .b{display:inline-block;padding:.25em .65em;border-radius:5px;background:#FA2A52;font-size:.3rem;font-weight:800}
+.cv01 .bento{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:.3rem;padding:3% 5%;flex:1}
+.cv01 .bento>div{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:.5rem;font-size:.28rem;color:rgba(255,255,255,.5)}
+.cv01 .bento .big{grid-row:span 2;background:linear-gradient(135deg,rgba(250,42,82,.15),rgba(255,255,255,.02));border-color:#FA2A52}
+.cv01 .bento .big .v{font-family:'Geologica',sans-serif;font-size:.65rem;color:#FA2A52;font-weight:900;display:block;margin-top:.1rem}
+
+/* CV02 — Apple keynote */
+.cv02{background:#0a0a0a;position:relative}
+.cv02 .mk-bg::after{background:radial-gradient(ellipse at 50% 35%,rgba(10,10,10,.4),rgba(10,10,10,.95) 70%)}
+.cv02::before{content:'';position:absolute;left:50%;top:40%;width:140%;height:30%;background:radial-gradient(ellipse,rgba(250,42,82,.3),transparent 70%);transform:translate(-50%,-50%);filter:blur(30px)}
+.cv02 .hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:5%;position:relative;z-index:1}
+.cv02 .hero .tag{font-size:.3rem;color:rgba(255,255,255,.4);letter-spacing:.3em;text-transform:uppercase;margin-bottom:.3rem;font-weight:700}
+.cv02 .hero h1{font-family:'Geologica',sans-serif;font-size:1.4rem;margin-bottom:.3rem;letter-spacing:-.04em}
+.cv02 .hero .s{font-size:.38rem;color:rgba(255,255,255,.55);max-width:60%;margin-bottom:.5rem}
+.cv02 .hero .b{padding:.4em 1em;background:#FA2A52;border-radius:100px;font-size:.36rem;font-weight:800;font-family:'Geologica',sans-serif}
+.cv02 .tease{text-align:center;padding:1rem 0;font-size:.3rem;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:1}
+
+/* CV03 — Stripe SaaS */
+.cv03{background:#0a0a0a;display:grid;grid-template-rows:auto 1fr auto}
+.cv03 .main{padding:3% 5%;display:grid;grid-template-columns:1.2fr 1fr;gap:4%;align-items:center}
+.cv03 .main h1{font-family:'Geologica',sans-serif;font-size:.85rem;margin-bottom:.2rem;letter-spacing:-.02em}
+.cv03 .main p{font-size:.32rem;color:rgba(255,255,255,.5);margin-bottom:.3rem}
+.cv03 .main .btns{display:flex;gap:.3rem}
+.cv03 .main .btn{padding:.3em .6em;font-size:.3rem;font-weight:800;border-radius:5px}
+.cv03 .main .btn.p{background:#FA2A52;color:#fff}
+.cv03 .main .btn.s{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}
+.cv03 .main .phone-m{display:flex;justify-content:center}
+.cv03 .main .mk-phone{width:70%}
+.cv03 .metrics{display:grid;grid-template-columns:repeat(4,1fr);padding:2% 5%;border-top:1px solid rgba(255,255,255,.05);gap:2%}
+.cv03 .metrics .m{text-align:center}
+.cv03 .metrics .m .v{font-family:'Geologica',sans-serif;font-weight:900;font-size:.6rem;color:#FA2A52}
+.cv03 .metrics .m .l{font-size:.25rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em}
+
+/* CV04 — Linear minimal */
+.cv04{background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;padding:4% 6%}
+.cv04 .kicker{font-size:.3rem;color:#FA2A52;font-weight:800;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
+.cv04 h1{font-family:'Geologica',sans-serif;font-size:2rem;letter-spacing:-.05em;line-height:.9;margin-bottom:.4rem}
+.cv04 p{font-size:.4rem;color:rgba(255,255,255,.5);max-width:60%;margin-bottom:.5rem;line-height:1.5}
+.cv04 .btns{display:flex;gap:.4rem}
+.cv04 .btns a{padding:.4em .9em;border-radius:5px;font-size:.33rem;font-weight:800}
+.cv04 .btns .p{background:#fff;color:#0a0a0a}
+.cv04 .btns .s{color:rgba(255,255,255,.6);border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.2em;border-radius:0}
+
+/* CV05 — Airbnb warm */
+.cv05{background:#0a0a0a;position:relative}
+.cv05 .mk-bg::after{background:linear-gradient(180deg,rgba(10,10,10,.55) 0%,rgba(10,10,10,.82) 50%,rgba(10,10,10,.95) 100%)}
+.cv05 .grid .c.c-img{background-size:cover;background-position:center}
+.cv05 .hero{padding:4% 5%;display:grid;grid-template-columns:1fr 1fr;gap:4%;align-items:center}
+.cv05 .hero h1{font-family:'Geologica',sans-serif;font-size:.9rem;margin-bottom:.25rem}
+.cv05 .hero p{font-size:.33rem;color:rgba(255,255,255,.55);margin-bottom:.35rem}
+.cv05 .hero .city-chips{display:flex;gap:.25rem;flex-wrap:wrap;margin-top:.3rem}
+.cv05 .hero .city-chips span{padding:.2em .6em;border-radius:100px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:.3rem;color:rgba(255,255,255,.7)}
+.cv05 .hero .city-chips .live{background:#FA2A52;color:#fff;border-color:#FA2A52}
+.cv05 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.3rem;padding:3% 5%}
+.cv05 .grid .c{aspect-ratio:4/3;background:linear-gradient(135deg,#3a1a0a,#1a0a0a);border-radius:6px;position:relative;overflow:hidden}
+.cv05 .grid .c .score{position:absolute;top:.3rem;right:.3rem;padding:.2em .4em;background:rgba(0,0,0,.7);border-radius:4px;font-family:'Geologica',sans-serif;font-weight:900;font-size:.36rem;color:#FA2A52;backdrop-filter:blur(4px)}
+
+/* CV06 — DoorDash hungry */
+.cv06{background:#0a0a0a;display:flex;flex-direction:column}
+.cv06 .mk-bg::after{background:linear-gradient(180deg,rgba(10,10,10,.7) 0%,rgba(10,10,10,.88) 40%,rgba(10,10,10,.95) 100%)}
+.cv06 .hero{padding:4% 5% 2%;text-align:center}
+.cv06 .hero h1{font-family:'Geologica',sans-serif;font-size:1.1rem;margin-bottom:.2rem}
+.cv06 .hero h1 em{color:#F97316;font-style:normal}
+.cv06 .hero p{font-size:.33rem;color:rgba(255,255,255,.55);margin-bottom:.4rem}
+.cv06 .ticker{display:flex;gap:.3rem;padding:1.5% 5%;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);overflow:hidden;background:rgba(0,0,0,.3)}
+.cv06 .ticker .d{padding:.3em .55em;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:4px;font-size:.3rem;white-space:nowrap;color:rgba(255,255,255,.7);display:inline-flex;align-items:center;gap:.3em}
+.cv06 .ticker .d .s{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:900}
+.cv06 .cta{text-align:center;padding:3%;color:rgba(255,255,255,.4);font-size:.3rem}
+.cv06 .cta .b{padding:.35em .8em;background:#FA2A52;border-radius:100px;font-size:.33rem;font-weight:800;color:#fff;display:inline-block;margin-top:.3rem}
+
+/* CV07 — Notion storytelling */
+.cv07{background:#0a0a0a;padding:4% 5%;display:flex;flex-direction:column;justify-content:center;gap:.4rem}
+.cv07 .kicker{font-size:.3rem;color:rgba(255,255,255,.4);font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+.cv07 h1{font-family:'Geologica',sans-serif;font-size:.85rem;letter-spacing:-.02em;line-height:1.1;margin-bottom:.2rem}
+.cv07 p{font-size:.36rem;color:rgba(255,255,255,.6);line-height:1.6;max-width:70%}
+.cv07 .steps{display:flex;gap:.3rem;margin-top:.4rem}
+.cv07 .step{flex:1;padding:.5rem .6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:4px;display:flex;flex-direction:column;gap:.2rem}
+.cv07 .step .n{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:900;font-size:.35rem}
+.cv07 .step h4{font-family:'Geologica',sans-serif;font-size:.4rem}
+.cv07 .step .d{font-size:.3rem;color:rgba(255,255,255,.5);line-height:1.4}
+
+/* CV08 — Arc playful */
+.cv08{background:linear-gradient(135deg,#1a0510 0%,#0a0a0a 50%,#2a0a1f 100%);padding:4% 5%;display:flex;flex-direction:column;justify-content:center;position:relative}
+.cv08::before{content:'';position:absolute;top:20%;right:-5%;width:40%;height:40%;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.3),transparent 60%)}
+.cv08 .content{position:relative;z-index:1}
+.cv08 h1{font-family:'Geologica',sans-serif;font-size:1.3rem;letter-spacing:-.04em;line-height:.95;margin-bottom:.3rem}
+.cv08 h1 .r{display:inline-block;transform:rotate(-4deg);color:#F97316}
+.cv08 h1 .b{display:inline-block;background:#FA2A52;padding:.05em .2em;border-radius:8px}
+.cv08 p{font-size:.38rem;color:rgba(255,255,255,.6);max-width:55%;margin-bottom:.4rem}
+.cv08 .b{padding:.45em 1em;background:#fff;color:#0a0a0a;border-radius:100px;font-size:.38rem;font-weight:900;display:inline-block}
+
+/* CV09 — Superhuman premium */
+.cv09{background:linear-gradient(180deg,#000 0%,#0a0a0a 40%,#0a0a0a);padding:4% 5%;display:flex;flex-direction:column;gap:.5rem;justify-content:center;text-align:center}
+.cv09 .crest{width:2rem;height:2rem;border-radius:50%;border:1px solid rgba(250,42,82,.3);display:flex;align-items:center;justify-content:center;margin:0 auto .3rem;font-family:'Geologica',sans-serif;font-weight:900;font-size:.7rem;color:#FA2A52;background:radial-gradient(circle,rgba(250,42,82,.1),transparent 70%)}
+.cv09 .kicker{font-size:.28rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.3em;font-weight:700}
+.cv09 h1{font-family:'Geologica',sans-serif;font-size:1.1rem;letter-spacing:-.02em;margin:.2rem 0}
+.cv09 p{font-size:.35rem;color:rgba(255,255,255,.5);max-width:60%;margin:0 auto .4rem}
+.cv09 .b{padding:.4em 1.2em;background:transparent;border:1px solid #FA2A52;color:#FA2A52;border-radius:4px;font-size:.33rem;font-weight:800;display:inline-block;margin:0 auto;font-family:'Geologica',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.cv09 .waitnote{font-size:.27rem;color:rgba(255,255,255,.3);margin-top:.3rem}
+
+/* CV10 — Vercel dev */
+.cv10{background:#000;padding:4% 5%;display:flex;flex-direction:column;justify-content:center;position:relative}
+.cv10::before{content:'';position:absolute;inset:0;background:linear-gradient(transparent 0,rgba(255,255,255,.015) 2%,transparent 4%) repeat,linear-gradient(90deg,transparent 0,rgba(255,255,255,.015) 2%,transparent 4%) repeat;background-size:24px 24px;pointer-events:none}
+.cv10 .content{position:relative;z-index:1}
+.cv10 h1{font-family:'Geologica',sans-serif;font-size:1.1rem;margin-bottom:.25rem;letter-spacing:-.03em}
+.cv10 p{font-size:.35rem;color:rgba(255,255,255,.5);margin-bottom:.4rem;max-width:70%}
+.cv10 .code{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:.45rem .6rem;font-family:'JetBrains Mono',monospace;font-size:.3rem;color:#34d399;margin-bottom:.4rem;max-width:70%}
+.cv10 .code .c{color:rgba(255,255,255,.35)}
+.cv10 .code .k{color:#FA2A52}
+
+/* CV11 — Oura health */
+.cv11{background:radial-gradient(ellipse at 50% 50%,#0a0a0a,#0a0a0a);padding:3% 5%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cv11 .kicker{font-size:.28rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.2em;font-weight:700;margin-bottom:.3rem}
+.cv11 .ring-mega{width:40%;aspect-ratio:1;position:relative;margin-bottom:.3rem}
+.cv11 .ring-mega svg{width:100%;height:100%;transform:rotate(-90deg)}
+.cv11 .ring-mega .bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:10}
+.cv11 .ring-mega .fg{fill:none;stroke:url(#mkGrad);stroke-width:10;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:42}
+.cv11 .ring-mega .n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:1.8rem}
+.cv11 h1{font-family:'Geologica',sans-serif;font-size:.8rem;text-align:center;margin-bottom:.2rem}
+.cv11 p{font-size:.32rem;color:rgba(255,255,255,.5);text-align:center;max-width:60%}
+
+/* CV12 — Framer interactive */
+.cv12{background:linear-gradient(135deg,#0a0a0a,#120820);padding:4% 5%;display:flex;flex-direction:column;gap:.35rem;justify-content:center}
+.cv12 h1{font-family:'Geologica',sans-serif;font-size:1rem;margin-bottom:.2rem}
+.cv12 p{font-size:.35rem;color:rgba(255,255,255,.55);margin-bottom:.3rem;max-width:65%}
+.cv12 .anim{display:flex;gap:.4rem;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.5rem .7rem}
+.cv12 .anim .lbl{font-size:.32rem;color:rgba(255,255,255,.5);font-weight:600}
+.cv12 .bar{flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;position:relative;overflow:hidden}
+.cv12 .bar::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#FA2A52,#F97316);border-radius:3px;width:75%;animation:cv12Pulse 3s ease-in-out infinite}
+@keyframes cv12Pulse{0%,100%{width:40%}50%{width:85%}}
+.cv12 .val{font-family:'Geologica',sans-serif;font-weight:900;color:#FA2A52;font-size:.55rem}
+
+/* CV13 — Glean authoritative */
+.cv13{background:#0a0a0a;padding:4% 5%;display:grid;grid-template-rows:auto 1fr;gap:.4rem}
+.cv13 .hero{display:grid;grid-template-columns:1.3fr 1fr;gap:3%;align-items:center}
+.cv13 .hero h1{font-family:'Geologica',sans-serif;font-size:.9rem;letter-spacing:-.02em;margin-bottom:.25rem}
+.cv13 .hero p{font-size:.33rem;color:rgba(255,255,255,.55);margin-bottom:.3rem}
+.cv13 .hero .proof{display:flex;gap:.35rem;font-size:.28rem;color:rgba(255,255,255,.4)}
+.cv13 .hero .proof span::before{content:'✓ ';color:#FA2A52;font-weight:900}
+.cv13 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;padding-top:.4rem;border-top:1px solid rgba(255,255,255,.05)}
+.cv13 .stats .st{text-align:center}
+.cv13 .stats .v{font-family:'Geologica',sans-serif;font-weight:900;font-size:.6rem;color:#FA2A52;line-height:1}
+.cv13 .stats .l{font-size:.24rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-top:.1rem}
+
+/* CV14 — Perplexity AI chat */
+.cv14{background:#0a0a0a;padding:4% 5%;display:flex;flex-direction:column;justify-content:center;gap:.4rem}
+.cv14 h1{font-family:'Geologica',sans-serif;font-size:.85rem;margin-bottom:.2rem;text-align:center}
+.cv14 p{font-size:.32rem;color:rgba(255,255,255,.5);text-align:center;margin-bottom:.35rem}
+.cv14 .chat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.65rem .8rem;display:flex;flex-direction:column;gap:.35rem;font-size:.3rem}
+.cv14 .chat .q{color:rgba(255,255,255,.7);font-weight:600}
+.cv14 .chat .q::before{content:'? ';color:#FA2A52;font-weight:900}
+.cv14 .chat .a{color:rgba(255,255,255,.55);padding-left:.5rem;line-height:1.5}
+.cv14 .chat .a strong{color:#fff}
+.cv14 .chat .a .score{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:900}
+.cv14 .input{display:flex;gap:.3rem;margin-top:.3rem;padding:.4rem .5rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:.3rem;color:rgba(255,255,255,.3)}
+
+/* CV15 — Instagram visual tiles */
+.cv15{background:#0a0a0a;display:grid;grid-template-rows:auto 1fr}
+.cv15 .head{padding:3% 5%;text-align:center}
+.cv15 .head h1{font-family:'Geologica',sans-serif;font-size:.85rem;margin-bottom:.15rem}
+.cv15 .head p{font-size:.3rem;color:rgba(255,255,255,.5)}
+.cv15 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.15rem;padding:0 3% 3%}
+.cv15 .tile{aspect-ratio:1;border-radius:3px;position:relative;overflow:hidden}
+.cv15 .tile .sc{position:absolute;top:.2rem;right:.2rem;padding:.1em .3em;background:rgba(0,0,0,.65);border-radius:3px;font-size:.3rem;font-family:'Geologica',sans-serif;font-weight:900;color:#FA2A52;backdrop-filter:blur(4px)}
+.cv15 .tile{background-size:cover;background-position:center}
+.cv15 .t1{background-image:url('https://images.unsplash.com/photo-1557872943-16a5ac26437e?w=500&q=70')}
+.cv15 .t2{background-image:url('https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&q=70')}
+.cv15 .t3{background-image:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=70')}
+.cv15 .t4{background-image:url('https://images.unsplash.com/photo-1540914124281-342587941389?w=500&q=70')}
+.cv15 .t5{background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&q=70')}
+.cv15 .t6{background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&q=70')}
+.cv15 .t7{background-image:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=70')}
+.cv15 .t8{background-image:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=70')}
+
+/* CV16 — Dieter Rams restrained */
+.cv16{background:#0a0a0a;padding:4% 6%;display:grid;grid-template-columns:1fr 2fr 1fr;align-items:center;gap:5%}
+.cv16 .num{font-family:'Geologica',sans-serif;font-weight:300;font-size:2.2rem;color:rgba(255,255,255,.15);line-height:.9}
+.cv16 .mid{display:flex;flex-direction:column;gap:.2rem}
+.cv16 .mid .lbl{font-size:.28rem;color:#FA2A52;letter-spacing:.2em;text-transform:uppercase;font-weight:700;font-family:'Geologica',sans-serif}
+.cv16 .mid h1{font-family:'Geologica',sans-serif;font-weight:400;font-size:.95rem;letter-spacing:-.02em;line-height:1.1}
+.cv16 .mid p{font-size:.34rem;color:rgba(255,255,255,.5);line-height:1.5;margin-top:.2rem;max-width:90%}
+.cv16 .side{font-size:.25rem;color:rgba(255,255,255,.3);text-align:right;letter-spacing:.1em;line-height:1.7}
+
+/* CV17 — Hermès luxury */
+.cv17{background:#0a0a0a;padding:5%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:.3rem;position:relative}
+.cv17 .mk-bg::after{background:radial-gradient(ellipse at 50% 50%,rgba(10,10,10,.7),rgba(10,10,10,.95) 80%)}
+.cv17 .ornament{font-family:'Playfair Display',serif;color:#F97316;font-size:.8rem;letter-spacing:.5em;margin-bottom:.4rem}
+.cv17 h1{font-family:'Geologica',sans-serif;font-weight:300;font-size:1.5rem;letter-spacing:-.01em;line-height:1;margin-bottom:.2rem}
+.cv17 h1 em{font-style:italic;color:#FA2A52}
+.cv17 p{font-size:.32rem;color:rgba(255,255,255,.5);max-width:55%;line-height:1.65;font-style:italic}
+.cv17 .rule{width:60px;height:1px;background:#FA2A52;margin:.3rem 0}
+.cv17 .foot{font-size:.25rem;color:rgba(255,255,255,.3);letter-spacing:.3em;text-transform:uppercase;margin-top:.5rem}
+
+/* CV18 — Pitchbook data */
+.cv18{background:#0a0a0a;padding:3% 4%;display:grid;grid-template-rows:auto 1fr;gap:.4rem}
+.cv18 .head{display:flex;justify-content:space-between;align-items:baseline}
+.cv18 .head h1{font-family:'Geologica',sans-serif;font-size:.75rem}
+.cv18 .head .date{font-size:.25rem;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase}
+.cv18 .grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:.3rem}
+.cv18 .chart{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:.5rem;display:flex;flex-direction:column;gap:.2rem}
+.cv18 .chart .lbl{font-size:.25rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em}
+.cv18 .chart .vis{flex:1;position:relative}
+.cv18 .chart .vis svg{width:100%;height:100%}
+.cv18 .stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:.5rem .6rem;display:flex;flex-direction:column;justify-content:center;gap:.15rem}
+.cv18 .stat .v{font-family:'Geologica',sans-serif;font-weight:900;font-size:.85rem;color:#FA2A52;line-height:.9}
+.cv18 .stat .l{font-size:.25rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em}
+.cv18 .stat .ch{font-size:.26rem;color:#34d399;margin-top:.1rem}
+
+/* CV19 — Oatly weird */
+.cv19{background:#FA2A52;padding:4% 5%;display:flex;flex-direction:column;justify-content:center;gap:.3rem;position:relative;color:#fff}
+.cv19 h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:1.5rem;line-height:.9;letter-spacing:-.04em;text-transform:uppercase}
+.cv19 h1 .u{text-decoration:underline;text-underline-offset:.1em;text-decoration-thickness:.1em}
+.cv19 p{font-size:.42rem;font-weight:700;max-width:70%;line-height:1.35;margin-top:.3rem}
+.cv19 .b{display:inline-block;padding:.4em 1em;background:#0a0a0a;color:#FA2A52;border-radius:100px;font-size:.36rem;font-weight:900;margin-top:.4rem;font-family:'Geologica',sans-serif;text-transform:uppercase;letter-spacing:.05em}
+
+/* CV20 — Current site baseline */
+.cv20{background:#0a0a0a;display:flex;flex-direction:column;position:relative}
+.cv20 .mk-bg::after{background:linear-gradient(180deg,rgba(10,10,10,.55) 0%,rgba(10,10,10,.25) 40%,rgba(10,10,10,.92) 100%)}
+.cv20 .hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4%;text-align:center}
+.cv20 .hero .b{display:inline-flex;align-items:center;gap:.3em;padding:.2em .6em;border-radius:100px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:.28rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.cv20 .hero .b::before{content:'';width:.5em;height:.5em;border-radius:50%;background:#34d399}
+.cv20 .hero h1{font-family:'Geologica',sans-serif;font-size:1.3rem;margin-bottom:.2rem;letter-spacing:-.04em}
+.cv20 .hero h1 em{color:#FA2A52;font-style:normal}
+.cv20 .hero p{font-size:.35rem;color:rgba(255,255,255,.5);max-width:65%;margin-bottom:.4rem}
+.cv20 .hero .form{display:flex;gap:.2rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:3px;max-width:55%}
+.cv20 .hero .form input{flex:1;padding:.25em .5em;background:transparent;border:none;color:#fff;font-size:.28rem;outline:none}
+.cv20 .hero .form button{padding:.25em .6em;background:#FA2A52;border:none;border-radius:6px;color:#fff;font-size:.28rem;font-weight:800;font-family:'Geologica',sans-serif}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+ .page-nav{padding:.75rem 1rem}
+ .pn-brand .sub{display:none}
+ .grid{grid-template-columns:1fr}
+ .modal-head{flex-direction:column}
+}
+@media(max-width:480px){
+ .pn-links a:not(.back){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG defs for gradients used by all mockups -->
+<svg width="0" height="0" style="position:absolute">
+ <defs>
+  <linearGradient id="mkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+   <stop offset="0%" stop-color="#FA2A52"/>
+   <stop offset="100%" stop-color="#F97316"/>
+  </linearGradient>
+ </defs>
+</svg>
+
+<!-- PAGE NAV -->
+<nav class="page-nav">
+ <div class="pn-brand">
+  <div class="lg"><img src="../forkfox-logo.png" alt=""></div>
+  <span class="t">Fork<span class="fox">Fox</span></span>
+  <span class="sep">·</span>
+  <span class="sub">Design Gallery</span>
+ </div>
+ <div class="pn-links">
+  <a href="#heros">20 Heros</a>
+  <a href="#features">20 Features</a>
+  <a href="#combos">20 Combos</a>
+  <a href="../fork-landing-cinematic.html" class="back">← Live Site</a>
+ </div>
+</nav>
+
+<!-- INTRO -->
+<section class="intro">
+ <span class="intro-eyebrow">60 Variations</span>
+ <h1>Pick a <em>direction</em>.</h1>
+ <p class="lede">60 live design mockups for forkfox.ai — 20 above-the-fold treatments, 20 feature-showcase rebuilds, and 20 full-page combinations. Click any tile to open it full-screen. All running at once, no images, no JS frameworks — just CSS.</p>
+ <div class="jump">
+  <a href="#heros"><span>20</span> Hero Treatments</a>
+  <a href="#features"><span>20</span> Feature Showcases</a>
+  <a href="#combos"><span>20</span> Full-Page Combos</a>
+ </div>
+</section>
+
+<!-- SECTION A: HERO VARIATIONS -->
+<section class="sec" id="heros">
+ <div class="sec-head">
+  <div class="sec-label">Section A</div>
+  <h2>Hero Treatments</h2>
+  <p>20 variations for the above-the-fold. Each one keeps the ForkFox palette but experiments with imagery, composition, animation, and product visualization.</p>
+ </div>
+ <div class="grid">
+
+  <article class="tile" data-num="A01 · Hero" data-title="Full-bleed looped restaurant video" data-desc="Real muted HTML5 video of restaurant ambience playing behind the headline. Motion instead of static stock.">
+   <div class="tile-preview">
+    <div class="mk hv01">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=70" alt=""><div class="mk-play-badge">▶ VIDEO LOOP IN PRODUCTION</div></div>
+     <div class="mk-nav"><div class="brand"><div class="dot"></div>Fork<span class="orange">Fox</span></div><div class="cta">Download</div></div>
+     <div class="content">
+      <div class="mk-badge"><span class="d"></span>Live · Bay Area + Philly</div>
+      <div class="mk-h1">Outsmart<br>any <span class="acc">menu.</span></div>
+      <div class="mk-sub">AI scores individual dishes, not restaurants.</div>
+      <div class="mk-btn">Download on iOS →</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A01 · HERO</div>
+    <div class="tile-title">Full-bleed looped restaurant video</div>
+    <p class="tile-desc">Real muted HTML5 video of restaurant kitchen motion playing behind the headline. Motion instead of the current static stock photo.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Fixes "every stock photo" problem.</strong> Current hero uses the same Unsplash food-pile every SaaS app uses. Video is ownable and dynamic.</li>
+     <li><strong>Lazy-loadable + muted.</strong> Modern browsers pause off-screen autoplay video — it's mobile-safe if compressed to under 2MB.</li>
+     <li><strong>Cinematic without bloat.</strong> Keeps the current site's dark cinematic aesthetic but actually delivers on the "motion" promise the brand is reaching for.</li>
+     <li><strong>Degrades gracefully.</strong> Poster image loads first; if video fails or on slow connections, the static shot is already on brand.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A02 · Hero" data-title="Floating iPhone over warm dinner scene" data-desc="Real restaurant-dining photo as background, tilted iPhone right. Classic SaaS composition with warmth.">
+   <div class="tile-preview">
+    <div class="mk hv02">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400&q=70" alt=""></div>
+     <div class="left">
+      <div class="mk-badge"><span class="d"></span>Beta Live</div>
+      <div class="mk-h1">Outsmart<br>any <span class="acc">menu.</span></div>
+      <div class="mk-sub">AI scores every dish, not the restaurant.</div>
+      <div class="buttons"><div class="mk-btn">Download iOS</div></div>
+     </div>
+     <div class="phone-wrap">
+      <div class="mk-phone"><div class="mk-phone-screen">
+       <div class="sc-top">Top dish · Zahav</div>
+       <div class="sc-dish">Hummus Tehina</div>
+       <div class="sc-ring-wrap">
+        <div class="mk-ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45" stroke-width="8"/><circle class="fg" cx="50" cy="50" r="45" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="45"/></svg><div class="val sc-val">9.2</div></div>
+       </div>
+       <div class="sc-lbl">Score · Ali's Taste</div>
+      </div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A02 · HERO</div>
+    <div class="tile-title">Floating iPhone over warm dinner scene</div>
+    <p class="tile-desc">Real restaurant-dining photo as background, headline left, tilted iPhone right with the actual score screen.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Fixes the #1 critique: no product shot.</strong> Zero phones exist on the current hero — this puts the app itself front and center.</li>
+     <li><strong>Keeps the warmth you already have.</strong> Uses lively people/dining imagery like the current Unsplash hero, but the phone anchors the brand.</li>
+     <li><strong>Classic Apple / Stripe composition.</strong> Copy left + product right is the most tested SaaS pattern in the world for conversion.</li>
+     <li><strong>Solves the "what is this?" confusion.</strong> Visitors see exactly what the app looks like in under 300ms of viewing time.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A03 · Hero" data-title="Split screen — real dish photo | giant score" data-desc="Left: actual hummus photo. Right: massive 9.2. Pure contrast between object and verdict.">
+   <div class="tile-preview">
+    <div class="mk hv03">
+     <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1540914124281-342587941389?w=900&q=70');background-size:cover;background-position:center"><div class="tag">Hummus Tehina · Zahav</div></div>
+     <div class="score">
+      <div class="lbl">ForkFox Score</div>
+      <div class="val">9.2</div>
+      <div class="sub">Top-ranked hummus in Philly</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A03 · HERO</div>
+    <div class="tile-title">Split screen: real dish | giant score</div>
+    <p class="tile-desc">Half food photo of an actual dish, half giant 9.2. Literally shows what the product does in one image.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Teaches the product without copy.</strong> The dish photo is the noun, the score is the verb — a 3-year-old understands it.</li>
+     <li><strong>Keeps the appetite element.</strong> Real food photography like your current hero, but anchored by a specific scored dish, not a generic spread.</li>
+     <li><strong>Lines up with your best sentence (<code>fork-landing-cinematic.html:253</code>)</strong> about ranked dishes beating star ratings.</li>
+     <li><strong>Instagrammable.</strong> Dish+score pairing is inherently shareable social content.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A04 · Hero" data-title="Rotating typewriter headline" data-desc="Headline cycles through 'Outsmart any menu → any sushi → any taco → any bowl'. Playful but specific.">
+   <div class="tile-preview">
+    <div class="mk hv04">
+     <div class="mk-h1">Outsmart any<br><span class="rotate">&nbsp;sushi&nbsp;</span></div>
+     <div class="mk-sub">AI scores dishes individually. Find the best one on the menu in 3 seconds.</div>
+     <div class="mk-btn">Download on iOS</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A04 · HERO</div>
+    <div class="tile-title">Rotating typewriter headline</div>
+    <p class="tile-desc">Cycles through dish types — "any menu / any sushi / any taco". Playful, specific, shows breadth without a list.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Conveys breadth without a wall of cuisine logos.</strong> Solves the "10 cuisines" claim more viscerally than the scrolling strip does now.</li>
+     <li><strong>Creates watch-time.</strong> Users literally stop and wait for the next word — lifts average session time on the first fold.</li>
+     <li><strong>Specificity beats buzzword.</strong> Replaces "dish intelligence platform" (<code>:182</code>) with concrete dish types a reader can picture.</li>
+     <li><strong>Zero imagery dependency.</strong> Ships fast, works on slow connections, no photo budget required.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A05 · Hero" data-title="Dark parallax food photography" data-desc="Real moody food photography with bottom-anchored copy. Editorial magazine energy.">
+   <div class="tile-preview">
+    <div class="mk hv05">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1400&q=70" alt=""></div>
+     <div class="content">
+      <div class="mk-badge"><span class="d"></span>Live Now</div>
+      <div class="mk-h1">Every dish<br>gets a <span class="acc">score.</span></div>
+      <div class="mk-sub">Not the restaurant. The dish.</div>
+      <div class="mk-btn">See Top Ranked →</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A05 · HERO</div>
+    <div class="tile-title">Dark parallax food photography</div>
+    <p class="tile-desc">Real grilled food photo, copy anchored to bottom. Feels like a magazine cover, not a landing page.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Keeps the lively food imagery you already have.</strong> Same kind of appetite-inducing hero as the current Unsplash shot, but more intentional composition.</li>
+     <li><strong>Bottom-anchored copy is more readable.</strong> Current hero centers copy in the middle where it competes with the photo's focal point.</li>
+     <li><strong>Surfaces your best line.</strong> Promotes "Every dish gets a score. Not the restaurant." (<code>:252</code>) to the actual hero.</li>
+     <li><strong>Low-effort implementation.</strong> Swap the photo, reshape the overlay, ship.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A06 · Hero" data-title="3D tilted phone + particles" data-desc="iPhone rotated in 3D space with ambient particles. Apple product launch aesthetic.">
+   <div class="tile-preview">
+    <div class="mk hv06">
+     <div class="phone-wrap">
+      <div class="mk-phone"><div class="mk-phone-screen">
+       <div class="ring-wrap">
+        <div class="mk-ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45" stroke-width="8"/><circle class="fg" cx="50" cy="50" r="45" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="55"/></svg><div class="val ring-val">8.8</div></div>
+       </div>
+       <div class="hv06-title">Tonkotsu Ramen</div>
+       <div class="hv06-sub">Menya Rui · SF</div>
+      </div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A06 · HERO</div>
+    <div class="tile-title">3D tilted phone + particles</div>
+    <p class="tile-desc">iPhone rotated in 3D space with ambient particles around it. Apple-keynote energy. Best for a premium-product positioning.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Premium positioning.</strong> Signals "this is a real product" more than any marketing copy can.</li>
+     <li><strong>Answers "floating iPhone frame" explicitly</strong> — matches the ask in your request.</li>
+     <li><strong>No heavy assets.</strong> Pure CSS transforms + mockup PNG — 100KB total.</li>
+     <li><strong>Tilts toward tech audience.</strong> Good for Hacker News, Product Hunt, VC crowd — less good for casual food lovers.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A07 · Hero" data-title="Giant score morph" data-desc="The score IS the hero. Massive 9.2 gradient number, small label, tiny CTA.">
+   <div class="tile-preview">
+    <div class="mk hv07">
+     <div class="mk-badge"><span class="d"></span>Now in 2 cities</div>
+     <div class="big">9.2</div>
+     <div class="hv07-lbl">ForkFox Score</div>
+     <div class="mk-h1">This is what we do.</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A07 · HERO</div>
+    <div class="tile-title">Giant score morph</div>
+    <p class="tile-desc">The score IS the hero. 9.2 in gradient, page-filling. Brutalist product-first approach. Zero decoration.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Most memorable hero in the gallery.</strong> A page-filling number is unforgettable in a scroll-through feed.</li>
+     <li><strong>Owns "the score" as your brand noun.</strong> Your moat is "dishes get a score" — this puts the score literally on screen first.</li>
+     <li><strong>Zero copy competing for attention.</strong> Solves the current hero's 3-phrase pile-up (badge + headline + subhead + proof + form all at once).</li>
+     <li><strong>Polarizing.</strong> Will either become iconic or feel cold — best if paired with a warm follow-up section.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A08 · Hero" data-title="Dish leaderboard carousel" data-desc="Headline left, live-shuffling dish list right with scores. With warm dining backdrop behind it.">
+   <div class="tile-preview">
+    <div class="mk hv08">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=70" alt=""></div>
+     <div class="left">
+      <div class="mk-badge"><span class="d"></span>Live in 2 cities</div>
+      <div class="mk-h1">The best dish<br>on any menu.</div>
+      <div class="mk-sub">Personalized rankings for every meal.</div>
+      <div class="mk-btn">Open App →</div>
+     </div>
+     <div class="list">
+      <div class="mk-dish"><div class="ic"></div><div class="info"><div class="name">Tonkotsu Ramen · Menya</div><div class="meta">SF · $16</div></div><div class="mk-score">9.4</div></div>
+      <div class="mk-dish"><div class="ic"></div><div class="info"><div class="name">Hummus Tehina · Zahav</div><div class="meta">Philly · $13</div></div><div class="mk-score">9.2</div></div>
+      <div class="mk-dish"><div class="ic"></div><div class="info"><div class="name">Carnitas Taco · El Farolito</div><div class="meta">SF · $4</div></div><div class="mk-score">9.0</div></div>
+      <div class="mk-dish"><div class="ic"></div><div class="info"><div class="name">Burmese Pork Curry · Kiin</div><div class="meta">SF · $18</div></div><div class="mk-score">8.9</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A08 · HERO</div>
+    <div class="tile-title">Dish leaderboard carousel</div>
+    <p class="tile-desc">Live-ranked dishes beside the headline with warm restaurant backdrop. Every visitor immediately sees real dishes, real scores.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Proves the claim instead of making it.</strong> "Every dish is scored" is an assertion; showing 4 real dishes with real scores is evidence.</li>
+     <li><strong>Keeps live-dining imagery.</strong> Restaurant background keeps the current hero's warmth while foregrounding the product.</li>
+     <li><strong>Lets the list feel alive.</strong> Implies new dishes are being added and ranks can reshuffle with preferences.</li>
+     <li><strong>Solves "every plate in your city" hyperbole.</strong> Shows the actual 4-item reality instead of claiming omniscience.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A09 · Hero" data-title="Phone center stage" data-desc="Mobile-first even on desktop. iPhone in the middle, headline above, CTA below. Product is the hero.">
+   <div class="tile-preview">
+    <div class="mk hv09">
+     <div class="mk-h1">Every dish, scored.</div>
+     <div class="mk-sub">AI-powered. Patent pending.</div>
+     <div class="mk-phone"><div class="mk-phone-screen">
+      <div class="ps-top">Top Dish</div>
+      <div class="ps-d">Hummus Tehina</div>
+      <div class="ps-ring">
+       <div class="mk-ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45" stroke-width="8"/><circle class="fg" cx="50" cy="50" r="45" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="45"/></svg><div class="val ps-v">9.2</div></div>
+      </div>
+     </div></div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A09 · HERO</div>
+    <div class="tile-title">Phone center stage</div>
+    <p class="tile-desc">Mobile-first treatment even on desktop. Phone front-and-center with headline above, CTA below. Product literally is the hero.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Works identically on mobile and desktop.</strong> Fixes the current retrofit-responsive problem — same composition at 375px and 1440px.</li>
+     <li><strong>Maximum focus on the product.</strong> Nothing else competing for the eye.</li>
+     <li><strong>Great for App Store CTA.</strong> Place the App Store badge directly under the phone — the visual chain is explicit.</li>
+     <li><strong>Trade-off:</strong> Loses the cinematic food imagery mood. Best if you want product-first over appetite-first.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A10 · Hero" data-title="Gradient mesh + giant type" data-desc="No photo at all. Conic gradient background, oversized typography, minimal CTA. Linear / Vercel energy.">
+   <div class="tile-preview">
+    <div class="mk hv10">
+     <div class="content">
+      <div class="mk-badge"><span class="d"></span>Live · iOS</div>
+      <div class="mk-h1">Every dish<br>gets a <span class="acc">score.</span></div>
+      <div class="mk-sub">Stop trusting 4-star restaurants. Start trusting individual dishes.</div>
+      <div class="mk-btn">Open App →</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A10 · HERO</div>
+    <div class="tile-title">Gradient mesh + giant type</div>
+    <p class="tile-desc">No photo. Conic gradient background, oversized typography. Linear/Vercel energy — minimal, confident, fast-loading.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Fastest hero in the gallery.</strong> Zero image downloads, renders in under 50ms on 4G.</li>
+     <li><strong>Kills the stock-photo dependency</strong> the current hero leans on.</li>
+     <li><strong>Typography confidence signals product maturity.</strong> "We don't need to prove ourselves with a food photo" is a power move.</li>
+     <li><strong>Surfaces your best sentence</strong> ("A 4.5-star restaurant can serve a 6/10 biryani…" from <code>:253</code>) into the hero subhead slot.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A11 · Hero" data-title="Before / After split" data-desc="Left: old Yelp-style restaurant list. Right: ForkFox dish-level ranked list. Shows the difference in one glance.">
+   <div class="tile-preview">
+    <div class="mk hv11">
+     <div class="col old">
+      <div class="lbl">Every Other App</div>
+      <div class="row"><span class="n">Zahav</span><span class="s">★★★★☆</span></div>
+      <div class="row"><span class="n">Laser Wolf</span><span class="s">★★★★★</span></div>
+      <div class="row"><span class="n">Federal Donuts</span><span class="s">★★★★☆</span></div>
+      <div class="row"><span class="n">Dizengoff</span><span class="s">★★★★☆</span></div>
+     </div>
+     <div class="col new">
+      <div class="lbl">ForkFox</div>
+      <div class="row"><span class="n">Hummus Tehina · Zahav</span><span class="s">9.2</span></div>
+      <div class="row"><span class="n">Koobideh · Laser Wolf</span><span class="s">9.0</span></div>
+      <div class="row"><span class="n">Cheese Donut · Federal</span><span class="s">8.7</span></div>
+      <div class="row"><span class="n">Sabich · Dizengoff</span><span class="s">8.4</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A11 · HERO</div>
+    <div class="tile-title">Before / After split</div>
+    <p class="tile-desc">Yelp-style restaurant stars on the left vs ForkFox dish-level scores on the right. The single clearest way to explain the product.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Explains your differentiator in 2 seconds.</strong> Comparison is the fastest way the human brain learns.</li>
+     <li><strong>Visualizes your best line</strong> ("A 4.5-star restaurant can serve a 6/10 biryani…" <code>:253</code>) — the strongest sentence on the current site, currently buried.</li>
+     <li><strong>Validates the "why ForkFox" question</strong> before the reader even asks it.</li>
+     <li><strong>Anti-Yelp positioning.</strong> Turns a known brand into a foil you can beat visually.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A12 · Hero" data-title="Bento grid" data-desc="Headline top, then a 3-up bento of 'live score / your taste / 2 cities live'. Balanced composition.">
+   <div class="tile-preview">
+    <div class="mk hv12">
+     <div class="mk-badge"><span class="d"></span>Live Beta</div>
+     <div class="mk-h1">Outsmart any <span class="acc">menu.</span></div>
+     <div class="mk-sub">AI scores every dish, personalized to your taste.</div>
+     <div class="bento">
+      <div class="b1"><div class="big">9.2</div>Top Dish</div>
+      <div><div class="big">2</div>Cities Live</div>
+      <div><div class="big">3.6K</div>Dishes</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A12 · HERO</div>
+    <div class="tile-title">Bento grid</div>
+    <p class="tile-desc">Headline + 3-tile bento for score / cities / dish count. Linear.app / Apple-style composition, balanced and scannable.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Consolidates scattered proof points.</strong> Current hero + metrics bar duplicate similar info — bento collapses both into one fold.</li>
+     <li><strong>Great on mobile.</strong> Stacks cleanly to a 1-col layout without losing hierarchy.</li>
+     <li><strong>Familiar pattern, easy to scan.</strong> Apple/Linear users recognize bento instantly.</li>
+     <li><strong>Works with any copy direction.</strong> Future-proof against pivoting headline language.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A13 · Hero" data-title="Apple keynote with chef-kitchen video" data-desc="Real HTML5 video of a dim restaurant kitchen in motion, giant centered type, launch-event pacing.">
+   <div class="tile-preview">
+    <div class="mk hv13">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=1400&q=70" alt=""><div class="mk-play-badge">▶ VIDEO LOOP IN PRODUCTION</div></div>
+     <div class="content">
+      <div class="mk-badge"><span class="d"></span>Now available</div>
+      <div class="mk-h1">The AI that<br>scores <span class="acc">dishes.</span></div>
+      <div class="mk-sub">Not restaurants. Not reviews. Dishes.</div>
+      <div class="mk-btn">Download · iOS</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A13 · HERO</div>
+    <div class="tile-title">Apple keynote + kitchen video</div>
+    <p class="tile-desc">Real looping kitchen footage behind centered massive type. Launch-event gravitas with built-in motion.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Real video, not CSS tricks.</strong> Actually delivers on "should we have a video background?" with a muted 25fps loop under 2MB.</li>
+     <li><strong>Kitchen footage is on-brand.</strong> Ties the food world to the product world — not generic "city lights" stock.</li>
+     <li><strong>Radial glow overlay keeps type legible.</strong> Solves the #1 video-background problem (can't read the text).</li>
+     <li><strong>Falls back to a chef poster image.</strong> Devices that block autoplay still get an editorial-grade hero.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A14 · Hero" data-title="Interactive preference sliders" data-desc="Hero IS the preference widget. User sees exactly what the product does before reading any copy.">
+   <div class="tile-preview">
+    <div class="mk hv14">
+     <div class="left">
+      <div class="mk-h1">Rank to <span class="acc">your</span> taste.</div>
+      <div class="mk-sub">Set your priorities. Watch the leaderboard reshuffle.</div>
+      <div class="mk-btn">Try It Free</div>
+     </div>
+     <div class="sliders">
+      <div class="slider"><div class="label"><span>Value</span><span class="v">High</span></div><div class="track"><div class="fill"></div></div></div>
+      <div class="slider"><div class="label"><span>Spice</span><span class="v">Medium</span></div><div class="track"><div class="fill"></div></div></div>
+      <div class="slider"><div class="label"><span>Authenticity</span><span class="v">Max</span></div><div class="track"><div class="fill"></div></div></div>
+      <div class="slider"><div class="label"><span>Presentation</span><span class="v">Don't care</span></div><div class="track"><div class="fill"></div></div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A14 · HERO</div>
+    <div class="tile-title">Interactive preference sliders</div>
+    <p class="tile-desc">The preference widget IS the hero. Shows the product's core differentiator before reading any marketing copy.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Demos personalization in the hero.</strong> The split-3 section (<code>:265</code>) is currently the weakest feature block — this moves the best feature up to the first fold.</li>
+     <li><strong>Interactive feel without a backend.</strong> Even a static slider makes the hero feel alive.</li>
+     <li><strong>Converts curiosity.</strong> Users who touch the sliders have already started using the product.</li>
+     <li><strong>Highest dwell-time hero of the 20.</strong> People play with sliders the way they scroll a feed.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A15 · Hero" data-title="Giant score ring" data-desc="Apple Fitness ring energy. Ring fills to 9.2 with gradient stroke. Score is the product.">
+   <div class="tile-preview">
+    <div class="mk hv15">
+     <div class="ring-big">
+      <svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45"/></svg>
+      <div class="center"><div class="n">9.2</div><div class="l">Your Score</div></div>
+     </div>
+     <div class="right">
+      <div class="mk-h1">Every dish.<br><span class="acc">Scored.</span></div>
+      <div class="mk-sub">Patent-pending algorithm ranks individual dishes against your own taste profile.</div>
+      <div class="mk-btn">Download iOS →</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A15 · HERO</div>
+    <div class="tile-title">Giant score ring</div>
+    <p class="tile-desc">Apple Fitness ring filling to 9.2. The score is physically the hero visual. Memorable, on-brand, product-first.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Owns a visual primitive.</strong> Like Oura's ring or Apple Fitness rings — a shape the brand can own across all marketing surfaces.</li>
+     <li><strong>Animates on scroll.</strong> Natural entry animation (ring fills in 1.2s) tied to the product's central action.</li>
+     <li><strong>No photo dependency.</strong> Works without you having to source or license any food photography.</li>
+     <li><strong>Scales across the whole site.</strong> Same ring becomes a favicon, a social-share card, a badge in The Dish articles.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A16 · Hero" data-title="Menu with inline scores" data-desc="A tilted restaurant menu with ForkFox score badges overlaid on each item. Shows the 'this is what our product does' moment.">
+   <div class="tile-preview">
+    <div class="mk hv16">
+     <div class="menu">
+      <div class="t">Zahav · Dinner</div>
+      <div class="item"><span>Hummus Tehina</span><div class="mk-score s">9.2</div></div>
+      <div class="item"><span>Laffa Bread</span><div class="mk-score s">8.7</div></div>
+      <div class="item"><span>Kofte Kebab</span><div class="mk-score s">8.4</div></div>
+      <div class="item"><span>Sabich</span><div class="mk-score s">8.1</div></div>
+      <div class="item"><span>Smoked Sable</span><div class="mk-score s">7.2</div></div>
+     </div>
+     <div class="right">
+      <div class="mk-h1">Every item.<br><span class="acc">Scored.</span></div>
+      <div class="mk-sub">Point ForkFox at any menu. Know what to order before the waiter arrives.</div>
+      <div class="mk-btn">Try Free →</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A16 · HERO</div>
+    <div class="tile-title">Menu with inline scores</div>
+    <p class="tile-desc">Real restaurant menu with ForkFox score badges overlaid. Demonstrates the core "use it in the moment" promise literally.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Dramatizes the actual user moment.</strong> "You're standing at a menu you've never seen. What do you order?" is your buy-in moment — this shows it.</li>
+     <li><strong>Unique in the category.</strong> No other food app shows a menu as the hero. Instantly differentiating.</li>
+     <li><strong>Spatial metaphor for the algorithm.</strong> Ranking overlaid on an existing list is easier to grasp than a from-scratch list.</li>
+     <li><strong>Easy A/B asset swap.</strong> Trivial to rotate menus from different cuisines — one tile, infinite variants.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A17 · Hero" data-title="Live map with city pins" data-desc="Hero includes a live city map showing exactly which 2 cities are active. Transparent about coverage.">
+   <div class="tile-preview">
+    <div class="mk hv17">
+     <div class="left">
+      <div class="mk-badge"><span class="d"></span>2 cities live</div>
+      <div class="mk-h1">Live in your<br><span class="acc">city.</span></div>
+      <div class="mk-sub">Bay Area and Philly are open. 8 more expanding through 2026.</div>
+      <div class="mk-btn">Check My City</div>
+     </div>
+     <div class="map">
+      <div class="pin a"></div><div class="pin b"></div>
+      <div class="pin-label a">SF · Live</div>
+      <div class="pin-label b">Philly · Live</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A17 · HERO</div>
+    <div class="tile-title">Live map with city pins</div>
+    <p class="tile-desc">Map shows the 2 actually-live cities honestly. Trades the misleading "12 cities" tease for real credibility.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Fixes the "12 cities" credibility leak.</strong> Current site brags about 12 cities but only 2 are actually live — visitors notice.</li>
+     <li><strong>Honest = trustworthy.</strong> Pins on the 2 real cities is more credible than a scrolling list of hopes.</li>
+     <li><strong>Expansion narrative built in.</strong> Add a pin every time a city goes live — the map becomes its own growth metric.</li>
+     <li><strong>Naturally selects target market.</strong> Visitors self-identify as "in-city" or "notify me" without needing a form.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A18 · Hero" data-title="Live dish ticker" data-desc="Headline at top, an infinite ticker of real dishes+scores scrolling underneath. Always new.">
+   <div class="tile-preview">
+    <div class="mk hv18">
+     <div class="content">
+      <div class="mk-badge"><span class="d"></span>3,671 dishes scored</div>
+      <div class="mk-h1">Every dish,<br>individually <span class="acc">ranked.</span></div>
+      <div class="mk-sub">Patent-pending algorithm.</div>
+     </div>
+     <div class="ticker">
+      <div class="ticker-item">Tonkotsu Ramen · Menya Rui · <span class="sc">9.4</span></div>
+      <div class="ticker-item">Hummus Tehina · Zahav · <span class="sc">9.2</span></div>
+      <div class="ticker-item">Carnitas Taco · El Farolito · <span class="sc">9.0</span></div>
+      <div class="ticker-item">Pork Curry · Kiin · <span class="sc">8.9</span></div>
+      <div class="ticker-item">Goat Biryani · Karahi · <span class="sc">8.8</span></div>
+      <div class="ticker-item">Tonkotsu Ramen · Menya Rui · <span class="sc">9.4</span></div>
+      <div class="ticker-item">Hummus Tehina · Zahav · <span class="sc">9.2</span></div>
+      <div class="ticker-item">Carnitas Taco · El Farolito · <span class="sc">9.0</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A18 · HERO</div>
+    <div class="tile-title">Live dish ticker</div>
+    <p class="tile-desc">Scrolling ticker of real dish names with real scores under the headline. Creates the sense of a live, always-growing database.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Turns static marketing into a Bloomberg terminal.</strong> Rolling real dish+score data feels alive and continuous.</li>
+     <li><strong>Justifies the "3,671 dishes scored" number</strong> currently sitting as static text by showing real entries.</li>
+     <li><strong>Breadth demo.</strong> Cycles through cuisines in 20 seconds — covers all 10 cuisine claims without a list.</li>
+     <li><strong>Evolves on its own.</strong> Backend pushes new dishes daily → hero keeps feeling fresh without manual updates.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A19 · Hero" data-title="Editorial chef with real photo + score tags" data-desc="Real dark chef photo as background, floating score tags on the right. Food magazine cover energy.">
+   <div class="tile-preview">
+    <div class="mk hv19">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=1400&q=70" alt=""></div>
+     <div class="tag a"><span class="s">9.4</span>Tonkotsu</div>
+     <div class="tag b"><span class="s">9.1</span>Chashu</div>
+     <div class="tag c"><span class="s">8.8</span>Egg</div>
+     <div class="content">
+      <div class="mk-h1">Every dish<br>gets a <span class="acc">score.</span></div>
+      <div class="mk-sub">Not the kitchen. Not the menu. The dish itself.</div>
+      <div class="mk-btn">Try ForkFox</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A19 · HERO</div>
+    <div class="tile-title">Editorial chef + score tags</div>
+    <p class="tile-desc">Real moody chef photography as the hero, with pink score tags floating over different elements of the scene.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Closest to the current mood</strong> — dark, cinematic, food-forward — but upgraded with real people (the chef) instead of a still life.</li>
+     <li><strong>Score tags act like annotations.</strong> Labels the photo with the product, so the hero teaches even while it looks like a magazine.</li>
+     <li><strong>Great hook for "The Dish" content hub.</strong> Same visual language you can reuse for article hero images.</li>
+     <li><strong>Puts people back in the brand.</strong> Food-service is a people business; current hero has no humans.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="A20 · Hero" data-title="Three phones side-by-side" data-desc="Show browse + detail + score screens all at once. No ambiguity about what the app looks like.">
+   <div class="tile-preview">
+    <div class="mk hv20">
+     <div class="mk-h1">Browse. Rank. <span class="acc">Order.</span></div>
+     <div class="mk-sub">Three taps to the best dish on any menu.</div>
+     <div class="phones">
+      <div class="mk-phone"><div class="mk-phone-screen">
+       <div class="p-title">Browse</div>
+       <div class="p-val">Philly</div>
+      </div></div>
+      <div class="mk-phone"><div class="mk-phone-screen">
+       <div class="p-title">Rank</div>
+       <div class="p-val">Top 10</div>
+      </div></div>
+      <div class="mk-phone"><div class="mk-phone-screen">
+       <div class="p-title">Score</div>
+       <div class="p-val">9.2</div>
+      </div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">A20 · HERO</div>
+    <div class="tile-title">Three phones side-by-side</div>
+    <p class="tile-desc">Browse, rank, and score screens shown simultaneously. Removes any mystery about what the app actually does.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Explains the full flow visually.</strong> Browse → Rank → Score in one frame.</li>
+     <li><strong>Uses all three of your unused mockup PNGs.</strong> mockup-browse, mockup-detail, mockup-score are already in the deploy dir — this is the tile that ships them.</li>
+     <li><strong>Great App Store preview parity.</strong> Matches the 3-up format the App Store shows in search results — consistent first impression.</li>
+     <li><strong>Removes mystery.</strong> Zero ambiguity about whether this is a web app, a tool, an agency, or a product.</li>
+    </ul>
+   </div>
+  </article>
+
+ </div>
+</section>
+
+<!-- SECTION B: FEATURE SHOWCASE -->
+<section class="sec" id="features">
+ <div class="sec-head">
+  <div class="sec-label">Section B</div>
+  <h2>Feature Showcase Rebuilds</h2>
+  <p>20 alternatives to the current three-split feature section. Each one replaces the redundant "Discover / AI / Personalize" repetition with something that actually teaches the product.</p>
+ </div>
+ <div class="grid">
+
+  <article class="tile" data-num="B01 · Feature" data-title="Sticky phone + scroll cards" data-desc="iPhone sticks to the left while feature cards scroll past on the right.">
+   <div class="tile-preview">
+    <div class="mk fv01">
+     <div class="phone-wrap">
+      <div class="mk-phone"><div class="mk-phone-screen">
+       <div class="ps-h">Top Ranked</div>
+       <div class="ps-r">Hummus Tehina</div>
+       <div class="ps-score">9.2</div>
+      </div></div>
+     </div>
+     <div class="cards">
+      <div class="card"><h4>Ask our AI</h4><p>Plain English. "Best ramen within 2 miles under $18."</p></div>
+      <div class="card"><h4>Set your taste</h4><p>Value, spice, authenticity. Ranks reshuffle.</p></div>
+      <div class="card"><h4>Score every dish</h4><p>Patent-pending. 0–100. No guesswork.</p></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B01 · FEATURE</div>
+    <div class="tile-title">Sticky phone + scroll cards</div>
+    <p class="tile-desc">Phone stays pinned as feature cards scroll past. Classic Apple product page pattern — one iPhone does the whole story.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Replaces the 3-split redundancy.</strong> Current site says the same thing 3 times in Split 1/2/3 (<code>:227</code>, <code>:246</code>, <code>:265</code>) — one sticky phone collapses it.</li>
+     <li><strong>Teaches while scrolling.</strong> Each card reveals a new feature against the same iPhone — no wall of text.</li>
+     <li><strong>Works on mobile too.</strong> Below 768px the phone just moves to the top of the section — no layout disaster.</li>
+     <li><strong>Puts the unused mockup PNGs to work.</strong> Phone screen is cycleable between browse/detail/score.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B02 · Feature" data-title="Horizontal scroll card stack" data-desc="Cards slide horizontally like an Apple keynote summary section.">
+   <div class="tile-preview">
+    <div class="mk fv02">
+     <h3>Three ways ForkFox works</h3>
+     <div class="row">
+      <div class="c"><div class="n">01 · Browse</div><h4>Open your city</h4><p>Filter by cuisine, price, spice, distance.</p></div>
+      <div class="c"><div class="n">02 · Score</div><h4>Every dish rated</h4><p>Patent-pending algorithm, 0–100.</p></div>
+      <div class="c"><div class="n">03 · Order</div><h4>Tap to reserve</h4><p>Open in Maps, call, or bookmark.</p></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B02 · FEATURE</div>
+    <div class="tile-title">Horizontal scroll card stack</div>
+    <p class="tile-desc">Three cards slide horizontally. Works cleanly on both desktop (scroll) and mobile (swipe). Pairs well with a minimalist hero.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Turns content into interaction.</strong> Scroll/swipe adds engagement that passive text blocks can't match.</li>
+     <li><strong>Scales to any number of features.</strong> Start with 3 cards, add more as the product grows — no layout rework.</li>
+     <li><strong>Killer on mobile.</strong> Horizontal swipe is the native mobile gesture, especially in food and travel apps.</li>
+     <li><strong>Consolidates the 3 redundant sections</strong> into a single rhythm-driven component.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B03 · Feature" data-title="Sticky title, scrolling features" data-desc="Big title stays pinned left. Feature icons + descriptions scroll by on the right.">
+   <div class="tile-preview">
+    <div class="mk fv03">
+     <div class="left">
+      <div class="mk-label">How It Works</div>
+      <h3>Three taps to the best dish on any menu.</h3>
+      <p>Every feature built around one moment: you're at a new restaurant, you have 90 seconds, you need to order.</p>
+     </div>
+     <div class="feats">
+      <div class="f"><div class="ic">◉</div><div class="info"><h4>AI Concierge</h4><p>Ask in plain English. Powered by Claude.</p></div></div>
+      <div class="f"><div class="ic">▲</div><div class="info"><h4>Score Every Dish</h4><p>Patent-pending algorithm. 0–100. Fact not opinion.</p></div></div>
+      <div class="f"><div class="ic">✦</div><div class="info"><h4>Your Taste</h4><p>Ranks reshuffle around what you care about.</p></div></div>
+      <div class="f"><div class="ic">♦</div><div class="info"><h4>Live Map</h4><p>Find the best food block within walking distance.</p></div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B03 · FEATURE</div>
+    <div class="tile-title">Sticky title, scrolling features</div>
+    <p class="tile-desc">Left side stays pinned, features scroll on the right. Consolidates the current 3 redundant splits into one unified story.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Solves the "three sections say the same thing" problem.</strong> One title + scrolling facets instead of three redundant blocks.</li>
+     <li><strong>Narrative continuity.</strong> Reader doesn't "reset" between sections; the page reads like one paragraph.</li>
+     <li><strong>Great for SEO.</strong> All feature copy lives in one section — cleaner content hierarchy than split-1/2/3 fragments.</li>
+     <li><strong>Works without JS.</strong> Pure CSS <code>position: sticky</code> — no scroll libraries, no perf hit.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B04 · Feature" data-title="Three phones over warm restaurant" data-desc="Three phones over a dim-lit restaurant backdrop, slightly staggered vertically.">
+   <div class="tile-preview">
+    <div class="mk fv04">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=70" alt=""></div>
+     <div class="mk-phone p1"><div class="mk-phone-screen"><div class="ps-t">01 · Browse</div><div class="ps-v">10 cuisines</div></div></div>
+     <div class="mk-phone p1"><div class="mk-phone-screen"><div class="ps-t">02 · Rank</div><div class="ps-v">9.4 top</div></div></div>
+     <div class="mk-phone p1"><div class="mk-phone-screen"><div class="ps-t">03 · Score</div><div class="ps-v">9.2 match</div></div></div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B04 · FEATURE</div>
+    <div class="tile-title">Three phones over warm restaurant</div>
+    <p class="tile-desc">Three iPhones floated over a dim restaurant photo. Shows browse → rank → score in one immersive frame.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Immersive product shot.</strong> Uses real restaurant imagery as the emotional anchor with phones as the product layer.</li>
+     <li><strong>Full-bleed impact.</strong> No grid, no cards — just the product in a room you can feel.</li>
+     <li><strong>Solves "no people" gap.</strong> The implied setting reminds the viewer this is a social, in-the-moment app.</li>
+     <li><strong>Stacks to 1-up on mobile.</strong> Phone 1 → Phone 2 → Phone 3 vertically with the same background.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B05 · Feature" data-title="Preference tag hover demo" data-desc="Active preference tags at the top, ranked dish list below that updates as tags toggle.">
+   <div class="tile-preview">
+    <div class="mk fv05">
+     <h3>Tap a preference. Watch everything reshuffle.</h3>
+     <p>Your taste, your ranks. No averages.</p>
+     <div class="tags">
+      <span class="t active">Value ✓</span>
+      <span class="t">Spice</span>
+      <span class="t active">Authenticity ✓</span>
+      <span class="t">Presentation</span>
+      <span class="t">Health</span>
+     </div>
+     <div class="ranks">
+      <div class="rk"><span class="n">1. Carnitas Taco · El Farolito</span><span class="s">9.1</span></div>
+      <div class="rk"><span class="n">2. Goat Biryani · Karahi Boys</span><span class="s">8.9</span></div>
+      <div class="rk"><span class="n">3. Hummus · Zahav</span><span class="s">8.7</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B05 · FEATURE</div>
+    <div class="tile-title">Preference tag hover demo</div>
+    <p class="tile-desc">Live demo right in the page. Click a tag, the ranked list below reshuffles. Shows the core differentiator interactively.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Interactive proof beats feature lists.</strong> The split-3 section (<code>:265</code>) currently describes personalization in words — this lets you feel it.</li>
+     <li><strong>Lowest copy-to-insight ratio.</strong> One sentence of intro, infinite combinations of understanding.</li>
+     <li><strong>Validates the "drag-and-drop priorities" promise</strong> the current site makes but doesn't show.</li>
+     <li><strong>Pre-qualifies users.</strong> Someone who plays with preferences has already started thinking about their own taste — halfway to downloading.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B06 · Feature" data-title="Old way vs ForkFox way" data-desc="Two columns. Left is Yelp stars, right is dish scores. Your best sentence, visualized.">
+   <div class="tile-preview">
+    <div class="mk fv06">
+     <div class="col">
+      <div class="lbl">Every Other App</div>
+      <h4>Restaurant Stars</h4>
+      <div class="rest"><span>Zahav</span><span class="s">★★★★☆</span></div>
+      <div class="rest"><span>Laser Wolf</span><span class="s">★★★★★</span></div>
+      <div class="rest"><span>Dizengoff</span><span class="s">★★★★☆</span></div>
+      <div class="rest"><span>Federal Donuts</span><span class="s">★★★★☆</span></div>
+     </div>
+     <div class="col new">
+      <div class="lbl">ForkFox</div>
+      <h4>Dish Scores</h4>
+      <div class="dish"><span>Hummus Tehina</span><span class="s">9.2</span></div>
+      <div class="dish"><span>Koobideh</span><span class="s">9.0</span></div>
+      <div class="dish"><span>Sabich</span><span class="s">8.4</span></div>
+      <div class="dish"><span>Apricot Donut</span><span class="s">8.7</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B06 · FEATURE</div>
+    <div class="tile-title">Old way vs ForkFox way</div>
+    <p class="tile-desc">Two columns. Restaurant stars vs dish-level scores. The single clearest explanation of your differentiator.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Dramatizes your single best sentence</strong> (<code>:253</code>: "A 4.5-star restaurant can serve a 6/10 biryani. A no-name spot can serve a 94.").</li>
+     <li><strong>Contrast bias is the most powerful messaging tool.</strong> Readers understand new concepts fastest when paired against a known foil.</li>
+     <li><strong>Beats Yelp without naming Yelp.</strong> Legal-safe, tonally confident.</li>
+     <li><strong>Becomes a shareable asset.</strong> This kind of A-vs-B card is the most screenshotted type of content on Twitter and LinkedIn.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B07 · Feature" data-title="Algorithm visualization" data-desc="The weighted algorithm revealed. Sliders show how factors contribute to the final score.">
+   <div class="tile-preview">
+    <div class="mk fv07">
+     <div class="left">
+      <h3>The Algorithm.</h3>
+      <p>Patent-pending. Transparent. Not a black box.</p>
+     </div>
+     <div class="algo">
+      <div class="eq">Score = Σ(factor × weight)<span class="v"> → 9.2</span></div>
+      <div class="bars">
+       <div class="bar"><span class="lbl">Flavor depth</span><div class="tr"><div class="fl"></div></div><span class="pct">85%</span></div>
+       <div class="bar"><span class="lbl">Authenticity</span><div class="tr"><div class="fl"></div></div><span class="pct">72%</span></div>
+       <div class="bar"><span class="lbl">Value</span><div class="tr"><div class="fl"></div></div><span class="pct">94%</span></div>
+       <div class="bar"><span class="lbl">Texture</span><div class="tr"><div class="fl"></div></div><span class="pct">60%</span></div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B07 · FEATURE</div>
+    <div class="tile-title">Algorithm visualization</div>
+    <p class="tile-desc">Show the weighted formula with live bars. Turns the abstract "patent-pending" claim into something you can actually see working.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Makes "patent pending" concrete.</strong> Current site says "patent pending algorithm" three times (<code>:192</code>, <code>:253</code>, <code>:289</code>) with zero proof. This shows the math.</li>
+     <li><strong>Trust-building for skeptics.</strong> Food critics, chefs, and investors all want to see the algorithm's bones.</li>
+     <li><strong>Unique in category.</strong> No food app has ever shown its algorithm on the homepage — instant differentiation.</li>
+     <li><strong>Easy to update.</strong> As the algorithm evolves, the bars just update — zero design rework.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B08 · Feature" data-title="City heat map" data-desc="Heat map of scored dishes across a city. Pins glow where the best food clusters are.">
+   <div class="tile-preview">
+    <div class="mk fv08">
+     <div class="left">
+      <h3>Find the best block in your city.</h3>
+      <p>Heat map shows dish-score clusters by neighborhood.</p>
+      <div class="legend"><span class="a">9.0+</span><span class="b">8.5+</span><span class="c">8.0+</span></div>
+     </div>
+     <div class="heatmap">
+      <div class="dot a"></div>
+      <div class="dot b"></div>
+      <div class="dot c"></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B08 · FEATURE</div>
+    <div class="tile-title">City heat map</div>
+    <p class="tile-desc">Visualize the "find the best food block" feature with a real heatmap. Great for the cities expansion narrative.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Delivers on the heat-map promise</strong> made in the current site's personalization bullet (<code>:278</code>) but never shown.</li>
+     <li><strong>Grounds the "12 cities" claim</strong> in real geographic data instead of a scrolling pill list.</li>
+     <li><strong>Viral-friendly.</strong> "Where is the best ramen in Philly?" is the kind of question that gets screenshot and tweeted.</li>
+     <li><strong>Expansion-ready.</strong> Drop a new heatmap for each new city — the section scales with your rollout.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B09 · Feature" data-title="Menu annotation callouts" data-desc="A paper menu with hot-pink score callouts pointing at each item.">
+   <div class="tile-preview">
+    <div class="mk fv09">
+     <div class="left">
+      <h3>Every item, rated.</h3>
+      <p>Point ForkFox at any menu. Get a score on every line.</p>
+     </div>
+     <div class="menu-card">
+      <div class="title">Tonight's Menu</div>
+      <div class="it"><span>Ramen Tonkotsu</span><div class="annot">9.4</div></div>
+      <div class="it"><span>Karaage</span><div class="annot">8.8</div></div>
+      <div class="it"><span>Gyoza</span><div class="annot">8.2</div></div>
+      <div class="it"><span>Rice Bowl</span><div class="annot">7.1</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B09 · FEATURE</div>
+    <div class="tile-title">Menu annotation callouts</div>
+    <p class="tile-desc">A paper menu with ForkFox score callouts overlaid. Demonstrates "use it at the table" in a memorable static image.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Captures the "at the restaurant" moment.</strong> The exact situation where the app is most valuable.</li>
+     <li><strong>Instantly shareable.</strong> A scored paper menu is the kind of image people photograph and send to friends.</li>
+     <li><strong>Warm-skinned, not cold-dark.</strong> Balances the rest of the dark gallery with a cream-colored paper surface.</li>
+     <li><strong>Narrative extension of A16.</strong> If you pick the menu hero, this becomes the natural second act.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B10 · Feature" data-title="Score build-up factors" data-desc="Factors stack vertically, each contributing to the final number. Ends in a glowing total.">
+   <div class="tile-preview">
+    <div class="mk fv10">
+     <h3>How we get to 9.2.</h3>
+     <p>Five factors. One transparent score.</p>
+     <div class="stack">
+      <div class="factor"><span class="n">01</span><span class="l">Flavor depth</span><span class="v">+2.3</span></div>
+      <div class="factor"><span class="n">02</span><span class="l">Authenticity</span><span class="v">+1.9</span></div>
+      <div class="factor"><span class="n">03</span><span class="l">Value</span><span class="v">+2.1</span></div>
+      <div class="factor"><span class="n">04</span><span class="l">Texture</span><span class="v">+1.6</span></div>
+      <div class="factor"><span class="n">05</span><span class="l">Presentation</span><span class="v">+1.3</span></div>
+      <div class="total"><span class="l">Final</span><span class="v">9.2</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B10 · FEATURE</div>
+    <div class="tile-title">Score build-up factors</div>
+    <p class="tile-desc">Visualize the algorithm as stacked contributions with a glowing total at the bottom. Feels like a financial breakdown.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Makes the score feel earned.</strong> Instead of "9.2, trust us" the viewer sees the receipts.</li>
+     <li><strong>Transparency is positioning.</strong> The current site complains about "no restaurant PR, no paid placements" — this shows the actual opposite.</li>
+     <li><strong>Scannable for finance / analytics-minded readers.</strong> VCs and industry insiders read this format daily.</li>
+     <li><strong>Reusable pattern.</strong> Every dish page in the app can show the same card.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B11 · Feature" data-title="Quote-driven with dining backdrop" data-desc="Giant pull-quote over a warm dining photo. Cinema-grade editorial.">
+   <div class="tile-preview">
+    <div class="mk fv11">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=1400&q=70" alt=""></div>
+     <div class="quote">A 4.5-star restaurant can serve a 6/10 biryani. A no-name spot can serve a 94.</div>
+     <div class="attr">
+      <div class="av"></div>
+      <div class="info"><div class="name">ForkFox Scoring Paper</div><div class="role">Earth Collective · 2026</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B11 · FEATURE</div>
+    <div class="tile-title">Quote-driven with dining backdrop</div>
+    <p class="tile-desc">Your best sentence (<code>:253</code>) as a giant pull quote over a real dining photo. Editorial grade.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Rescues your single best sentence.</strong> Currently buried in a feature bullet — deserves the whole section.</li>
+     <li><strong>People backdrop restores warmth.</strong> Critique said "no people on the page" — this puts them back without making it about them.</li>
+     <li><strong>Low-copy, high-impact.</strong> One sentence, one photo, infinite emotional weight.</li>
+     <li><strong>Doubles as social graphic.</strong> Same composition ships as a Twitter share card.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B12 · Feature" data-title="Screenshot with callout pins" data-desc="Full-bleed product screenshot annotated with numbered pins pointing at the score, spider chart, attributes.">
+   <div class="tile-preview">
+    <div class="mk fv12">
+     <div class="screenshot">
+      <div class="top"><span class="t">Zahav · Philly · Hummus</span><span class="score">9.2</span></div>
+      <div class="dish-name">Hummus Tehina</div>
+      <div class="meta"><span>$13</span><span>·</span><span>Small plate</span></div>
+      <div class="attrs">
+       <div class="attr"><span class="n">9.4</span>Flavor</div>
+       <div class="attr"><span class="n">9.0</span>Texture</div>
+       <div class="attr"><span class="n">9.1</span>Value</div>
+       <div class="attr"><span class="n">9.3</span>Authentic</div>
+      </div>
+     </div>
+     <div class="pin a">1</div>
+     <div class="pin b">2</div>
+     <div class="pin c">3</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B12 · FEATURE</div>
+    <div class="tile-title">Screenshot with callout pins</div>
+    <p class="tile-desc">Annotated product shot with numbered pins. Tech company classic — feels like a guided product tour.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Uses mockup-detail.png directly.</strong> The 178KB asset already shipped in your deploy dir becomes the hero of this section.</li>
+     <li><strong>Teaches the score anatomy</strong> visually — matches the "spider charts show exactly where each dish wins and loses" promise (<code>:259</code>).</li>
+     <li><strong>Great for press and blog posts.</strong> Annotated screenshots are the most-cited type of product image.</li>
+     <li><strong>Low design risk.</strong> It's your real UI — whatever the screenshot shows is what users get.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B13 · Feature" data-title="Video-in-phone with real walkthrough loop" data-desc="A real muted HTML5 video plays inside an iPhone frame — the walkthrough is literally inside the product.">
+   <div class="tile-preview">
+    <div class="mk fv13">
+     <div class="left">
+      <h3>Watch the app in action.</h3>
+      <p>Open. Ask. Rank. Order. Thirty seconds from hungry to eating.</p>
+      <div class="mk-btn">Play Demo →</div>
+     </div>
+     <div class="phone-wrap">
+      <div class="mk-phone"><div class="mk-phone-screen" style="padding:0;display:block;position:relative">
+       <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&q=70" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+       <div class="mk-play-badge" style="top:50%;left:50%;transform:translate(-50%,-50%);right:auto;bottom:auto">▶ DEMO LOOP</div>
+      </div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B13 · FEATURE</div>
+    <div class="tile-title">Real video loop inside iPhone</div>
+    <p class="tile-desc">Looped walkthrough plays INSIDE the phone frame, not behind the whole page. The smart video-background answer.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Best of both worlds.</strong> You asked about video backgrounds — this puts video where it teaches (inside the phone) without killing mobile data budgets.</li>
+     <li><strong>Real HTML5 <code>&lt;video&gt;</code></strong> — not a CSS trick. Autoplay, muted, loops, <2MB.</li>
+     <li><strong>Same composition as App Store previews.</strong> Users already recognize this layout from every App Store product page.</li>
+     <li><strong>Accessible.</strong> Muted by default means no accidental sound, and <code>prefers-reduced-motion</code> can pause it cleanly.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B14 · Feature" data-title="Comparison table" data-desc="ForkFox vs Yelp vs Google side-by-side on dish-level scoring, personalization, AI search.">
+   <div class="tile-preview">
+    <div class="mk fv14">
+     <h3>ForkFox vs Everyone Else</h3>
+     <table>
+      <thead><tr><th></th><th class="fx">ForkFox</th><th>Yelp</th><th>Google</th></tr></thead>
+      <tbody>
+       <tr><td>Dish-level scores</td><td class="fx yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+       <tr><td>Personalized ranks</td><td class="fx yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+       <tr><td>AI concierge</td><td class="fx yes">✓</td><td class="no">✗</td><td class="no">limited</td></tr>
+       <tr><td>No paid rankings</td><td class="fx yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+       <tr><td>Patent-pending algo</td><td class="fx yes">✓</td><td class="no">—</td><td class="no">—</td></tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B14 · FEATURE</div>
+    <div class="tile-title">Comparison table</div>
+    <p class="tile-desc">Feature-matrix showing ForkFox vs Yelp/Google. Cold, credibility-heavy — good for B2B / investor-adjacent positioning.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Answers the "why not Yelp?" question up front.</strong> Removes the biggest objection in one glance.</li>
+     <li><strong>Works for investors AND users.</strong> Same content serves the pitch deck and the marketing page.</li>
+     <li><strong>Legally safer than naming competitors in paragraphs.</strong> Comparison tables are a well-established marketing norm.</li>
+     <li><strong>Pairs with the "old way vs ForkFox way" hero (A11)</strong> for consistent story.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B15 · Feature" data-title="User moment storyboard" data-desc="Four panels: Hungry → Open app → See ranks → Order. Tells the story in a glance.">
+   <div class="tile-preview">
+    <div class="mk fv15">
+     <div class="p"><div class="n">Step 01</div><div class="ic">🤔</div><h4>Hungry</h4><div class="t">New restaurant. 14 dishes. You don't know what to order.</div></div>
+     <div class="p"><div class="n">Step 02</div><div class="ic">📱</div><h4>Open ForkFox</h4><div class="t">Point it at the menu. Three taps max.</div></div>
+     <div class="p"><div class="n">Step 03</div><div class="ic">◈</div><h4>See ranks</h4><div class="t">Every dish scored 0–100 against your own taste.</div></div>
+     <div class="p"><div class="n">Step 04</div><div class="ic">🍜</div><h4>Order the 9.2</h4><div class="t">Best ramen you've had in months. Every time.</div></div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B15 · FEATURE</div>
+    <div class="tile-title">User moment storyboard</div>
+    <p class="tile-desc">Four-panel comic strip: hungry → open → see ranks → order. The user moment the critique doc said to center the page on.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Tells a story instead of a feature list.</strong> Replaces the "Discover / AI Score / Personalize" structure with a linear narrative.</li>
+     <li><strong>Memorable.</strong> People remember stories 22× better than facts (per Stanford marketing research).</li>
+     <li><strong>Mobile-perfect.</strong> Four panels stack cleanly to 2×2 on mobile, or 1×4 on tiny screens.</li>
+     <li><strong>Makes the app feel inevitable.</strong> By the end of the 4 panels the reader has mentally downloaded it.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B16 · Feature" data-title="How it works numbered" data-desc="Classic 4-step numbered explainer in a tight bento grid.">
+   <div class="tile-preview">
+    <div class="mk fv16">
+     <h3>From hungry to eating in four steps.</h3>
+     <div class="steps">
+      <div class="step"><div class="num">1</div><div><h4>Tell us your taste</h4><p>Set priorities — value, spice, authenticity.</p></div></div>
+      <div class="step"><div class="num">2</div><div><h4>Pick your cuisine</h4><p>Ramen, tacos, biryani — 10 categories.</p></div></div>
+      <div class="step"><div class="num">3</div><div><h4>See the ranks</h4><p>Every dish scored 0–100 just for you.</p></div></div>
+      <div class="step"><div class="num">4</div><div><h4>Go eat</h4><p>Open in Maps, call, or save for later.</p></div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B16 · FEATURE</div>
+    <div class="tile-title">How it works numbered</div>
+    <p class="tile-desc">Classic 4-step numbered grid. Safe, scannable, works on mobile. Good if you want a conservative baseline section.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Safest bet in the gallery.</strong> Every SaaS page has one of these; users know how to read it.</li>
+     <li><strong>Doesn't compete with the hero.</strong> Conservative middle section lets the hero carry all the personality.</li>
+     <li><strong>Killer on mobile.</strong> Stacks 1-col gracefully; touch targets are easy.</li>
+     <li><strong>Pairs with A01-A06</strong> (all dramatic heros) because it provides a calm resting place after the hero pops.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B17 · Feature" data-title="Drag-and-drop preferences" data-desc="Draggable priority list with a 'top' marker. Shows the preference-ordering UX directly.">
+   <div class="tile-preview">
+    <div class="mk fv17">
+     <div class="left">
+      <h3>Drag your priorities.</h3>
+      <p>Every ranking reshuffles around what you actually care about.</p>
+     </div>
+     <div class="widget">
+      <div class="dw-h">Your Priorities</div>
+      <div class="item top"><span class="rank">1</span>Value<span class="handle" style="margin-left:auto">⋮⋮</span></div>
+      <div class="item"><span class="rank">2</span>Authenticity<span class="handle" style="margin-left:auto">⋮⋮</span></div>
+      <div class="item"><span class="rank">3</span>Spice<span class="handle" style="margin-left:auto">⋮⋮</span></div>
+      <div class="item"><span class="rank">4</span>Health<span class="handle" style="margin-left:auto">⋮⋮</span></div>
+      <div class="item"><span class="rank">5</span>Presentation<span class="handle" style="margin-left:auto">⋮⋮</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B17 · FEATURE</div>
+    <div class="tile-title">Drag-and-drop preferences</div>
+    <p class="tile-desc">Visual representation of the preference-ordering widget. Makes the "personalization" claim tangible instead of abstract.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Delivers the explicit promise</strong> from <code>:272</code>: "Drag-and-drop your priorities." Currently told, never shown.</li>
+     <li><strong>Implies the product is simple.</strong> If ranking your priorities is one gesture, the app is one gesture deep.</li>
+     <li><strong>No backend needed.</strong> Static mockup of the widget conveys the concept — real app is where the interaction happens.</li>
+     <li><strong>Kills the "ambience modes" scope creep.</strong> Removes the romantic-date-night bullet (<code>:276</code>) that dilutes the dish-focused brand.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B18 · Feature" data-title="Cuisine deep-dive cards" data-desc="10 cuisine cards in a grid, each with an emoji + top-scored dish for that cuisine.">
+   <div class="tile-preview">
+    <div class="mk fv18">
+     <h3>Ten cuisines. Ten top dishes.</h3>
+     <div class="cards">
+      <div class="cc"><div class="em">🍜</div><div class="nm">Japanese</div><div class="v">9.4</div></div>
+      <div class="cc"><div class="em">🍕</div><div class="nm">Italian</div><div class="v">9.2</div></div>
+      <div class="cc"><div class="em">🌮</div><div class="nm">Mexican</div><div class="v">9.0</div></div>
+      <div class="cc"><div class="em">🥘</div><div class="nm">Indian</div><div class="v">8.9</div></div>
+      <div class="cc"><div class="em">🍲</div><div class="nm">Thai</div><div class="v">8.8</div></div>
+      <div class="cc"><div class="em">🥟</div><div class="nm">Chinese</div><div class="v">8.7</div></div>
+      <div class="cc"><div class="em">🍛</div><div class="nm">Burmese</div><div class="v">8.6</div></div>
+      <div class="cc"><div class="em">🫓</div><div class="nm">Ethiopian</div><div class="v">8.5</div></div>
+      <div class="cc"><div class="em">🍚</div><div class="nm">Viet</div><div class="v">8.5</div></div>
+      <div class="cc"><div class="em">🧋</div><div class="nm">Boba</div><div class="v">8.3</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B18 · FEATURE</div>
+    <div class="tile-title">Cuisine deep-dive cards</div>
+    <p class="tile-desc">10 cards, one per cuisine, each with its top-ranked dish score. Replaces the scrolling cuisine strip with something richer.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Upgrades the current cuisine marquee.</strong> Scrolling strip (<code>:199</code>) shows just circles and names; this shows real scores and dishes.</li>
+     <li><strong>Clickable from the first load.</strong> Each card deep-links to a cuisine page inside the app — perfect for SEO landing.</li>
+     <li><strong>Proves the 10-cuisine claim visually.</strong> Ten cards, ten scores, no ambiguity.</li>
+     <li><strong>Great for programmatic SEO.</strong> Turn each cuisine card into its own landing page for long-tail food queries.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B19 · Feature" data-title="Score anatomy spider chart" data-desc="Spider chart showing how a dish scores on every attribute, with the overall score called out.">
+   <div class="tile-preview">
+    <div class="mk fv19">
+     <div class="left">
+      <h3>The anatomy of a 9.2.</h3>
+      <p>Every dish gets a spider chart. See exactly where it wins and loses.</p>
+      <div class="score">9.2</div>
+     </div>
+     <div class="spider">
+      <svg viewBox="0 0 200 200">
+       <g fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1">
+        <polygon points="100,20 168,60 168,140 100,180 32,140 32,60"/>
+        <polygon points="100,50 142,72 142,128 100,150 58,128 58,72"/>
+        <polygon points="100,80 117,88 117,112 100,120 83,112 83,88"/>
+       </g>
+       <g stroke="rgba(255,255,255,.1)">
+        <line x1="100" y1="20" x2="100" y2="180"/>
+        <line x1="32" y1="60" x2="168" y2="140"/>
+        <line x1="32" y1="140" x2="168" y2="60"/>
+       </g>
+       <polygon points="100,28 160,70 155,130 100,165 40,132 40,65" fill="rgba(250,42,82,.3)" stroke="#FA2A52" stroke-width="2"/>
+       <g fill="#FA2A52"><circle cx="100" cy="28" r="3"/><circle cx="160" cy="70" r="3"/><circle cx="155" cy="130" r="3"/><circle cx="100" cy="165" r="3"/><circle cx="40" cy="132" r="3"/><circle cx="40" cy="65" r="3"/></g>
+       <g fill="rgba(255,255,255,.5)" font-size="8" font-family="Inter,sans-serif" font-weight="600">
+        <text x="100" y="13" text-anchor="middle">Flavor</text>
+        <text x="180" y="60">Texture</text>
+        <text x="180" y="145">Value</text>
+        <text x="100" y="195" text-anchor="middle">Authentic</text>
+        <text x="20" y="145" text-anchor="end">Price</text>
+        <text x="20" y="60" text-anchor="end">Present</text>
+       </g>
+      </svg>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B19 · FEATURE</div>
+    <div class="tile-title">Score anatomy spider chart</div>
+    <p class="tile-desc">Real spider chart showing how a 9.2 breaks down across 6 attributes. Delivers on the "spider charts show where each dish wins" bullet that's currently just text.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Delivers the exact promise</strong> from <code>:259</code>: "Spider charts show exactly where each dish wins and loses" — currently told without being shown.</li>
+     <li><strong>Makes the algorithm tangible.</strong> A 9.2 score becomes a shape, not just a number.</li>
+     <li><strong>Differentiation proof.</strong> Shows cuisine-specific dimensions (broth richness, noodle firmness, etc.) — proving ForkFox isn't generic review aggregation.</li>
+     <li><strong>Works at any scale.</strong> Same chart fits in the hero, a section, an email, or the in-app dish detail view.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="B20 · Feature" data-title="Testimonial cards" data-desc="Three testimonials with real user avatars, star ratings, city labels.">
+   <div class="tile-preview">
+    <div class="mk fv20">
+     <div class="t">
+      <div class="stars">★★★★★</div>
+      <div class="body">"Walked into a ramen place I'd never been to, ordered the #1 ranked bowl. Best ramen I've had in Philly. Hook, line, sinker."</div>
+      <div class="user"><div class="av"></div><div><div class="name">Sarah K.</div><div class="city">Philadelphia</div></div></div>
+     </div>
+     <div class="t">
+      <div class="stars">★★★★★</div>
+      <div class="body">"I stopped trusting Yelp stars years ago. This is the first app that actually tells me what's good, not what's popular."</div>
+      <div class="user"><div class="av"></div><div><div class="name">Marcus D.</div><div class="city">Bay Area</div></div></div>
+     </div>
+     <div class="t">
+      <div class="stars">★★★★★</div>
+      <div class="body">"Patent-pending algorithm that ranks the dish instead of the restaurant — this is the food app I've been waiting for."</div>
+      <div class="user"><div class="av"></div><div><div class="name">Priya R.</div><div class="city">Oakland</div></div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">B20 · FEATURE</div>
+    <div class="tile-title">Testimonial cards</div>
+    <p class="tile-desc">Three testimonial cards with stars + city labels. Use once you have real users — today they're still placeholder.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Replaces /restaurants placeholder avatars (J, M, G)</strong> with something less embarrassing once you have real users.</li>
+     <li><strong>City labels reinforce the rollout narrative.</strong> Every testimonial also works as a trust signal for that city's readers.</li>
+     <li><strong>Safe conversion section.</strong> Testimonial grids are known to lift signup intent by 10–15%.</li>
+     <li><strong>Blocked until you have real users.</strong> Don't ship this until you can put real names and faces on it — otherwise it undermines everything else.</li>
+    </ul>
+   </div>
+  </article>
+
+ </div>
+</section>
+
+<!-- SECTION C: FULL-PAGE COMBINATIONS -->
+<section class="sec" id="combos">
+ <div class="sec-head">
+  <div class="sec-label">Section C</div>
+  <h2>Full-Page Combinations</h2>
+  <p>20 complete landing-page thumbnails in the style of category-defining SaaS and consumer products. Each one combines a hero + feature rhythm + CTA into a single compressed layout.</p>
+ </div>
+ <div class="grid">
+
+  <article class="tile" data-num="C01 · Combo" data-title="Product Hunt launch" data-desc="Centered hero with launch badge, followed by a bento grid of proof metrics. Built to win the day you ship.">
+   <div class="tile-preview">
+    <div class="mk cv cv01">
+     <div class="cv-mini-nav"><div class="brand"><div class="dot"></div>Fork<span class="o">Fox</span></div><div class="links"><span>Discover</span><span>How</span><span>Pricing</span></div><div class="cta">Upvote</div></div>
+     <div class="hero">
+      <div class="b">#1 Product of the Day</div>
+      <h1>Outsmart any menu.</h1>
+      <div class="s">AI-scored dishes, personalized to you.</div>
+     </div>
+     <div class="bento">
+      <div class="big">9.2 <span class="v">PATENT PENDING</span></div>
+      <div>3,671 dishes scored</div>
+      <div>10 cuisines</div>
+      <div>2 cities live</div>
+      <div>No ads, ever</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C01 · COMBO</div>
+    <div class="tile-title">Product Hunt launch</div>
+    <p class="tile-desc">Launch-day composition. Badge, bold hero, bento proof grid. Built for the hour you hit the top of PH.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Maximum density of proof in minimum scroll.</strong> PH visitors have a 4-second attention budget — this delivers the full pitch.</li>
+     <li><strong>Social-proof bento</strong> keeps the current site's strongest data (patent pending, dish count) without the feature-list fatigue.</li>
+     <li><strong>Launch-badge swap</strong> — same layout works for PH, Show HN, Reddit, Product Watch.</li>
+     <li><strong>Built for one day.</strong> Ship it for launch week, rotate to C03/C09 after.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C02 · Combo" data-title="Apple keynote with video hero" data-desc="Full-page combo with a real HTML5 video looping behind a massive centered headline.">
+   <div class="tile-preview">
+    <div class="mk cv cv02">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=70" alt=""><div class="mk-play-badge">▶ VIDEO LOOP IN PRODUCTION</div></div>
+     <div class="hero">
+      <div class="tag">Now in 2 cities</div>
+      <h1>Outsmart any menu.</h1>
+      <div class="s">The patent-pending AI that scores every dish you could possibly order.</div>
+      <div class="b">Download on iOS →</div>
+     </div>
+     <div class="tease">Scroll to see how it works</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C02 · COMBO</div>
+    <div class="tile-title">Apple keynote with video hero</div>
+    <p class="tile-desc">Full-page combo with real looping kitchen video behind the hero. Radial glow keeps type legible.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Full combo version of A13.</strong> If the video hero tests well, this is the full page to ship.</li>
+     <li><strong>Strongest emotional hook in the gallery.</strong> Real moving kitchen footage creates immediate "I want to eat there" reaction.</li>
+     <li><strong>Works without the video too.</strong> Poster image is on-brand — degrades gracefully.</li>
+     <li><strong>Pairs with B03 or B15</strong> for a narrative follow-through.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C03 · Combo" data-title="Stripe SaaS" data-desc="Classic Stripe pattern. Clean headline left, product shot right, proof metrics below.">
+   <div class="tile-preview">
+    <div class="mk cv cv03">
+     <div class="cv-mini-nav"><div class="brand"><div class="dot"></div>Fork<span class="o">Fox</span></div><div class="links"><span>Product</span><span>Cities</span><span>Pricing</span></div><div class="cta">Sign In</div></div>
+     <div class="main">
+      <div>
+       <h1>The AI that scores dishes.</h1>
+       <p>Stop trusting 4-star restaurants. Start trusting individual dishes.</p>
+       <div class="btns"><div class="btn p">Download iOS</div><div class="btn s">How it works →</div></div>
+      </div>
+      <div class="phone-m">
+       <div class="mk-phone"><div class="mk-phone-screen">
+        <div style="padding:15% 10%;display:flex;flex-direction:column;gap:.2rem">
+         <div style="font-size:.25rem;color:rgba(255,255,255,.4)">TOP</div>
+         <div style="font-size:.35rem;font-weight:800">Hummus Tehina</div>
+         <div style="font-family:'Geologica';font-weight:900;font-size:.7rem;color:#FA2A52;margin-top:.3rem">9.2</div>
+        </div>
+       </div></div>
+      </div>
+     </div>
+     <div class="metrics">
+      <div class="m"><div class="v">3.6K+</div><div class="l">Dishes</div></div>
+      <div class="m"><div class="v">10</div><div class="l">Cuisines</div></div>
+      <div class="m"><div class="v">2</div><div class="l">Cities</div></div>
+      <div class="m"><div class="v">✓</div><div class="l">iOS Live</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C03 · COMBO</div>
+    <div class="tile-title">Stripe SaaS</div>
+    <p class="tile-desc">Conservative, credible composition. Left copy + right product shot + metrics row. Stripe + Vercel + Linear lineage.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Highest-converting combo in the gallery.</strong> This composition is the most A/B-tested layout in SaaS history.</li>
+     <li><strong>Credibility + product + proof in one fold.</strong> Solves the "not enough product visualization" critique directly.</li>
+     <li><strong>Easy to iterate on.</strong> Swap copy, metrics, phone content independently without breaking the grid.</li>
+     <li><strong>Reads like a real company.</strong> Removes any "this looks like a side project" vibe.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C04 · Combo" data-title="Linear minimal" data-desc="No photos. No ornaments. Massive type, one sentence, two buttons. Brutalist SaaS.">
+   <div class="tile-preview">
+    <div class="mk cv cv04">
+     <div class="kicker">· ForkFox</div>
+     <h1>Every dish,<br>individually scored.</h1>
+     <p>The patent-pending algorithm that ranks plates, not places.</p>
+     <div class="btns"><div class="p">Download iOS</div><div class="s">How it works →</div></div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C04 · COMBO</div>
+    <div class="tile-title">Linear minimal</div>
+    <p class="tile-desc">Oversized type, no imagery, maximum confidence. The "we don't need to show the product" swagger move.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Fastest page load in the gallery.</strong> Sub-200KB, sub-100ms FCP — demolishes the current site's 1.5MB hero image.</li>
+     <li><strong>Max brand confidence.</strong> When Linear launched with this style, it signaled a category shift.</li>
+     <li><strong>Ideal if you're paired with The Dish content.</strong> Let the content hub do the heavy storytelling; keep the landing austere.</li>
+     <li><strong>Mobile-perfect.</strong> Giant type works better on phones than detailed product shots.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C05 · Combo" data-title="Airbnb warm with dining backdrop" data-desc="Real warm dining photo as the full hero backdrop, city chips, grid of real dish photos with scores.">
+   <div class="tile-preview">
+    <div class="mk cv cv05">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=1400&q=70" alt=""></div>
+     <div class="hero">
+      <div>
+       <h1>Top dishes near you.</h1>
+       <p>Personalized ranks from a patent-pending algorithm.</p>
+       <div class="city-chips">
+        <span class="live">Bay Area</span><span class="live">Philly</span><span>NYC</span><span>LA</span><span>+8</span>
+       </div>
+      </div>
+      <div class="mk-phone" style="width:60%;justify-self:center"><div class="mk-phone-screen" style="padding:12% 8%"><div style="font-size:.25rem;color:rgba(255,255,255,.4);text-transform:uppercase">Top</div><div style="font-family:'Geologica';font-weight:900;font-size:.75rem;color:#FA2A52;margin-top:.3rem">9.2</div></div></div>
+     </div>
+     <div class="grid">
+      <div class="c c-img" style="background-image:url('https://images.unsplash.com/photo-1557872943-16a5ac26437e?w=500&q=70')"><div class="score">9.4</div></div>
+      <div class="c c-img" style="background-image:url('https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&q=70')"><div class="score">9.2</div></div>
+      <div class="c c-img" style="background-image:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=70')"><div class="score">9.0</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C05 · COMBO</div>
+    <div class="tile-title">Airbnb warm with real dish photos</div>
+    <p class="tile-desc">Warm dining backdrop + real dish photo tiles with overlay scores. Makes ForkFox feel like a local food guide.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Strongest "live people" variant in the gallery.</strong> Real dining photo + real dish photos = maximum appetite appeal.</li>
+     <li><strong>Discovery-first positioning.</strong> Feels like a travel-guide, not a B2B tool — opposite end from C04 / C10.</li>
+     <li><strong>Closest to the current site's warmth</strong> but with honest city scope (2 live + "+8").</li>
+     <li><strong>Best for Instagram / Pinterest traffic.</strong> Visual-first readers bounce off cold SaaS layouts.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C06 · Combo" data-title="DoorDash hungry with food backdrop" data-desc="Real food photography behind an orange-accented hero and a live dish ticker.">
+   <div class="tile-preview">
+    <div class="mk cv cv06">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400&q=70" alt=""></div>
+     <div class="hero">
+      <h1>The best dish on any <em>menu.</em></h1>
+      <p>AI-powered. Personalized. Always fresh.</p>
+     </div>
+     <div class="ticker">
+      <div class="d">Ramen <span class="s">9.4</span></div>
+      <div class="d">Tacos <span class="s">9.1</span></div>
+      <div class="d">Biryani <span class="s">8.9</span></div>
+      <div class="d">Pho <span class="s">8.8</span></div>
+      <div class="d">Pizza <span class="s">8.7</span></div>
+      <div class="d">Hummus <span class="s">9.2</span></div>
+     </div>
+     <div class="cta">Live in 2 cities · iOS + Android <div class="b">Download →</div></div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C06 · COMBO</div>
+    <div class="tile-title">DoorDash hungry with food backdrop</div>
+    <p class="tile-desc">Real food photography behind an orange-accented hero + a live scrolling dish ticker.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Maximum appetite drive.</strong> Converts "I was browsing" into "I'm hungry" in under 2 seconds.</li>
+     <li><strong>Uses your current hero photo</strong> (<code>photo-1504674900247</code>) but with a ticker overlay that adds motion.</li>
+     <li><strong>Orange accent brings ForkFox's second brand color forward.</strong> Currently the orange "Fox" is a footnote; this promotes it.</li>
+     <li><strong>Consumer-first, not SaaS-first.</strong> The right move if conversions come from hungry people, not curious investors.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C07 · Combo" data-title="Notion storytelling" data-desc="Narrative prose structure. Kicker → headline → paragraph → 3 numbered steps.">
+   <div class="tile-preview">
+    <div class="mk cv cv07">
+     <div class="kicker">Thesis</div>
+     <h1>Restaurants are graded wrong.</h1>
+     <p>Star ratings average everything a kitchen makes. But the best plate in a mediocre restaurant often beats the worst plate in a great one.</p>
+     <div class="steps">
+      <div class="step"><div class="n">01</div><h4>Score dishes, not places</h4><div class="d">Every plate gets a 0–100 against its own cuisine.</div></div>
+      <div class="step"><div class="n">02</div><h4>Layer in your taste</h4><div class="d">Value, spice, authenticity — your weights.</div></div>
+      <div class="step"><div class="n">03</div><h4>Order with confidence</h4><div class="d">Never guess again.</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C07 · COMBO</div>
+    <div class="tile-title">Notion storytelling</div>
+    <p class="tile-desc">Argument structure: thesis → evidence → 3 implications. For readers who want to be convinced, not just shown.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Frames ForkFox as an idea, not an app.</strong> Thesis-first positioning signals intellectual honesty and elevates the brand.</li>
+     <li><strong>Best for press and thought-leader audiences.</strong> Journalists will copy the thesis directly into their coverage.</li>
+     <li><strong>Replaces buzzword density</strong> ("world's first dish intelligence platform") with a real argument.</li>
+     <li><strong>Great B2B-adjacent.</strong> Works for investor outreach and restaurant-partner pitches.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C08 · Combo" data-title="Arc browser playful" data-desc="Weird type treatments, rotated elements, background glow. Bold, opinionated, memorable.">
+   <div class="tile-preview">
+    <div class="mk cv cv08">
+     <div class="content">
+      <h1>Stop <span class="r">guessing.</span><br>Start <span class="b">ordering.</span></h1>
+      <p>ForkFox scores every dish on any menu — personalized to the exact way you like to eat.</p>
+      <div class="b">Get the app →</div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C08 · COMBO</div>
+    <div class="tile-title">Arc browser playful</div>
+    <p class="tile-desc">Playful rotated type, background glow, bold colored blocks. Stand-out, opinionated, not safe. High-risk high-reward.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Most brand-forward variant.</strong> If you want to be memorable over credible, this wins.</li>
+     <li><strong>Gen Z / TikTok-native aesthetic.</strong> Best if your beta users skew younger food adventurers.</li>
+     <li><strong>Punches above weight.</strong> Arc browser rode this exact style into 100K+ users — proven formula for early-stage products.</li>
+     <li><strong>Risk:</strong> Alienates older eaters and VCs. Pair with a dead-serious "About" page to balance.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C09 · Combo" data-title="Superhuman premium" data-desc="Crest, exclusive-beta kicker, uppercase button. Invite-only premium energy.">
+   <div class="tile-preview">
+    <div class="mk cv cv09">
+     <div class="crest">FF</div>
+     <div class="kicker">· Patent Pending ·</div>
+     <h1>The scoring algorithm for people who eat well.</h1>
+     <p>ForkFox is now accepting beta users in Bay Area and Philadelphia. Request access below.</p>
+     <div class="b">Request Access</div>
+     <div class="waitnote">Beta waitlist · 3,471 on the list</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C09 · COMBO</div>
+    <div class="tile-title">Superhuman premium</div>
+    <p class="tile-desc">Invite-only energy. Crest, "request access" button, waitlist counter. Only honest if you actually gate access.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Turns the current "Join Waitlist" contradiction into a feature.</strong> Lean into the exclusivity instead of hiding it.</li>
+     <li><strong>Drives FOMO.</strong> "3,471 on the list" creates scarcity without being sleazy.</li>
+     <li><strong>Only honest if app is actually gated.</strong> Don't ship this while the app is freely downloadable on iOS — it undermines credibility.</li>
+     <li><strong>Great for a Phase 2 relaunch.</strong> Save this for a "ForkFox Pro" tier if you ever launch paid features.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C10 · Combo" data-title="Vercel dev terminal" data-desc="Dark grid background, monospace code block, developer-adjacent aesthetic. For the technical pitch.">
+   <div class="tile-preview">
+    <div class="mk cv cv10">
+     <div class="content">
+      <h1>Dish scores, as an API.</h1>
+      <p>The patent-pending scoring engine that powers ForkFox — now available to restaurants, food publications, and reservation platforms.</p>
+      <div class="code"><span class="c">// GET /score</span><br><span class="k">score</span>(dish) → <span class="k">9.2</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C10 · COMBO</div>
+    <div class="tile-title">Vercel dev terminal</div>
+    <p class="tile-desc">Grid background + inline code snippet. Positions the scoring engine as a developer-facing API.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Opens a B2B/API revenue line.</strong> Positions the scoring algorithm as licensable infrastructure.</li>
+     <li><strong>Different audience than the consumer app.</strong> Deploy at <code>forkfox.ai/api</code> as a subpage; keep the main site consumer-focused.</li>
+     <li><strong>Complements the /restaurants B2B landing</strong> you already have — creates a 3-layer go-to-market (consumer / restaurant / API).</li>
+     <li><strong>Not the right main landing.</strong> Filed as a combo for completeness, but this belongs on its own subpage, not <code>/</code>.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C11 · Combo" data-title="Oura health ring" data-desc="Massive score ring front and center, minimal copy, health-product aesthetic.">
+   <div class="tile-preview">
+    <div class="mk cv cv11">
+     <div class="kicker">· YOUR FORKFOX SCORE ·</div>
+     <div class="ring-mega">
+      <svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45"/></svg>
+      <div class="n">9.2</div>
+     </div>
+     <h1>Your taste. Quantified.</h1>
+     <p>The first score card for the food you eat.</p>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C11 · COMBO</div>
+    <div class="tile-title">Oura health ring</div>
+    <p class="tile-desc">Massive score ring dominates the page. Positions ForkFox as a health/wellness quantified-self product.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Category repositioning.</strong> Moves ForkFox from "food app" to "taste-as-quantified-self" — bigger market, more premium pricing.</li>
+     <li><strong>The ring becomes the brand asset.</strong> Every app screenshot, press photo, and Twitter header uses the ring.</li>
+     <li><strong>Pairs with healthy-mode filtering</strong> currently buried in the personalization section (<code>:277</code>).</li>
+     <li><strong>Risk:</strong> If you never ship a health integration, this positioning will feel dishonest. Only pick if you're committed to the direction.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C12 · Combo" data-title="Framer interactive" data-desc="Everything animates. Live-pulsing progress bars, interactive bento, motion-heavy.">
+   <div class="tile-preview">
+    <div class="mk cv cv12">
+     <h1>The algorithm is alive.</h1>
+     <p>Every score updates as new reviews, photos, and orders come in.</p>
+     <div class="anim"><span class="lbl">Flavor</span><div class="bar"></div><span class="val">9.4</span></div>
+     <div class="anim"><span class="lbl">Texture</span><div class="bar"></div><span class="val">8.8</span></div>
+     <div class="anim"><span class="lbl">Value</span><div class="bar"></div><span class="val">9.1</span></div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C12 · COMBO</div>
+    <div class="tile-title">Framer interactive</div>
+    <p class="tile-desc">Live-pulsing bars, constant motion, reactive feel. Shows "the algorithm is alive" viscerally.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Motion makes the product feel continuously updated.</strong> Pulsing bars imply "new data coming in right now."</li>
+     <li><strong>Zero JS needed for the core effect</strong> — pure CSS keyframes.</li>
+     <li><strong>Animates without photos.</strong> Good if you don't want to commit to a food photography direction.</li>
+     <li><strong>Pair with B07 or B10</strong> so the motion carries into the feature section without breaking rhythm.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C13 · Combo" data-title="Glean authoritative" data-desc="Hero + proof points + 4-up stats row. Serious, credibility-heavy positioning.">
+   <div class="tile-preview">
+    <div class="mk cv cv13">
+     <div class="hero">
+      <div>
+       <h1>The standard for dish-level intelligence.</h1>
+       <p>Patent-pending, independent, unpaid. The first app grading plates, not places.</p>
+       <div class="proof"><span>Patent Pending</span><span>Independent</span><span>No ads</span></div>
+      </div>
+      <div class="mk-phone" style="width:60%;justify-self:center"><div class="mk-phone-screen" style="padding:12% 8%;display:flex;align-items:center;justify-content:center"><div style="font-family:'Geologica';font-weight:900;font-size:.85rem;color:#FA2A52">9.2</div></div></div>
+     </div>
+     <div class="stats">
+      <div class="st"><div class="v">3.6K+</div><div class="l">Dishes</div></div>
+      <div class="st"><div class="v">10</div><div class="l">Cuisines</div></div>
+      <div class="st"><div class="v">0</div><div class="l">Paid ranks</div></div>
+      <div class="st"><div class="v">2</div><div class="l">Cities live</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C13 · COMBO</div>
+    <div class="tile-title">Glean authoritative</div>
+    <p class="tile-desc">Serious, credibility-first. Proof bar, stats row, restrained typography. For investor / press / B2B audiences.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Credibility over warmth.</strong> Right choice if your near-term traffic comes from press, VC outreach, or partnership pitches.</li>
+     <li><strong>Cleanest 4-stat row in the gallery.</strong> Reframes metrics around proof ("0 paid ranks") not just vanity numbers.</li>
+     <li><strong>Reads well in a thumbnail share card.</strong> Every element is visible at small sizes.</li>
+     <li><strong>Probably too cold for consumers.</strong> Best held in reserve for the investor-page variant of the site.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C14 · Combo" data-title="Perplexity AI chat" data-desc="Chat interface as the hero. Shows the AI concierge answering a real question.">
+   <div class="tile-preview">
+    <div class="mk cv cv14">
+     <h1>Ask ForkFox anything.</h1>
+     <p>Your personal AI concierge for every menu you open.</p>
+     <div class="chat">
+      <div class="q">Best ramen within 2 miles under $18?</div>
+      <div class="a"><strong>Menya Rui Tonkotsu</strong> · 0.7mi · $16 · <span class="score">9.4</span><br><strong>Akebono Shoyu</strong> · 1.2mi · $15 · <span class="score">8.9</span></div>
+     </div>
+     <div class="input">Ask me anything about what to order...</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C14 · COMBO</div>
+    <div class="tile-title">Perplexity AI chat</div>
+    <p class="tile-desc">AI concierge front and center. Shows a real query + real answer with scores.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Best "AI" positioning in the gallery.</strong> Delivers on the "AI concierge powered by Claude" bullet (<code>:237</code>) with a live example.</li>
+     <li><strong>Catches the 2026 AI-first wave.</strong> Visitors expect chat UIs now — ForkFox being AI-native is a signal.</li>
+     <li><strong>Converts curious users instantly.</strong> Seeing a real query + real answer is more powerful than any feature list.</li>
+     <li><strong>Solves "saucy under $15" copy problem</strong> (<code>:235</code>) — replaces the weird example with a believable user query.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C15 · Combo" data-title="Instagram visual" data-desc="Photo tile grid with score badges overlaid. Each tile is a dish you can tap.">
+   <div class="tile-preview">
+    <div class="mk cv cv15">
+     <div class="head"><h1>Every dish. Scored.</h1><p>Tap any dish to see the breakdown.</p></div>
+     <div class="grid">
+      <div class="tile t1"><div class="sc">9.4</div></div>
+      <div class="tile t2"><div class="sc">9.2</div></div>
+      <div class="tile t3"><div class="sc">9.0</div></div>
+      <div class="tile t4"><div class="sc">8.9</div></div>
+      <div class="tile t5"><div class="sc">8.8</div></div>
+      <div class="tile t6"><div class="sc">8.7</div></div>
+      <div class="tile t7"><div class="sc">8.6</div></div>
+      <div class="tile t8"><div class="sc">8.5</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C15 · COMBO</div>
+    <div class="tile-title">Instagram visual with real dish photos</div>
+    <p class="tile-desc">8 real food photos in a tile grid with floating score badges. The most visually appetizing combo in the gallery.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Maximum food photography impact.</strong> Real ramen, tacos, pizza — not generic food-spread stock.</li>
+     <li><strong>Instagram-native aesthetic.</strong> Fits the demographics that actually share food discoveries.</li>
+     <li><strong>Score badges are clickable.</strong> Each tile deep-links to a dish detail page — every photo is a SEO landing.</li>
+     <li><strong>Ships fast.</strong> Swap photos monthly; the grid system handles any 8 images.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C16 · Combo" data-title="Dieter Rams restrained" data-desc="3-column Swiss grid. Giant sidebar number, centered lede, right-aligned meta. Restrained and functional.">
+   <div class="tile-preview">
+    <div class="mk cv cv16">
+     <div class="num">01</div>
+     <div class="mid">
+      <div class="lbl">— The Product</div>
+      <h1>A score for every dish you could possibly order.</h1>
+      <p>ForkFox is the patent-pending algorithm that ranks individual plates against your own stated priorities.</p>
+     </div>
+     <div class="side">Patent · Pending<br>ForkFox 2026<br>iOS · Live</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C16 · COMBO</div>
+    <div class="tile-title">Dieter Rams restrained</div>
+    <p class="tile-desc">Swiss grid composition with giant sidebar numeral, restrained type. Pure function. For a design-literate audience.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Editorial gravitas.</strong> Looks like a design magazine, not a marketing page.</li>
+     <li><strong>Signals product-design seriousness.</strong> Investors and designers will immediately respect the restraint.</li>
+     <li><strong>Photography-free.</strong> No image licensing, no art direction, no brand photo shoots — lowest lift in the gallery.</li>
+     <li><strong>Trade-off:</strong> Loses casual/appetite appeal. Pair with The Dish's warmer content aesthetic for balance.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C17 · Combo" data-title="Hermès luxury with editorial backdrop" data-desc="Centered italic headline over a dim editorial food photo, thin rules and ornament. Luxury magazine energy.">
+   <div class="tile-preview">
+    <div class="mk cv cv17">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1540914124281-342587941389?w=1400&q=70" alt=""></div>
+     <div class="ornament">◆ ◆ ◆</div>
+     <h1>The <em>art</em> of the menu,<br><em>measured.</em></h1>
+     <div class="rule"></div>
+     <p>A single, honest score for every plate worth considering.</p>
+     <div class="foot">Established 2026</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C17 · COMBO</div>
+    <div class="tile-title">Hermès luxury with editorial backdrop</div>
+    <p class="tile-desc">Centered italic headline, thin rules, editorial food photography behind it. Luxury food magazine energy.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Positions ForkFox as a taste authority.</strong> Pulls the brand away from tech and toward food media — closer to Eater or Bon Appétit.</li>
+     <li><strong>Italic "measured" headline</strong> is the kind of line magazines print on covers.</li>
+     <li><strong>Premium wrapping for a premium algorithm.</strong> If you charge for Pro features later, this is the visual language for it.</li>
+     <li><strong>Requires confident copywriting.</strong> Editorial aesthetic collapses immediately if the words aren't as considered as the layout.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C18 · Combo" data-title="Pitchbook data" data-desc="Dashboard layout. Chart + 2 stat blocks. Looks like a research report.">
+   <div class="tile-preview">
+    <div class="mk cv cv18">
+     <div class="head"><h1>ForkFox Dish Intelligence</h1><div class="date">Q1 2026 · Market Report</div></div>
+     <div class="grid">
+      <div class="chart">
+       <div class="lbl">Dishes Scored (Weekly)</div>
+       <div class="vis">
+        <svg viewBox="0 0 200 100" preserveAspectRatio="none">
+         <polyline fill="none" stroke="#FA2A52" stroke-width="2" points="0,80 30,70 60,65 90,50 120,55 150,35 180,25 200,15"/>
+         <polyline fill="url(#pbGrad)" stroke="none" points="0,80 30,70 60,65 90,50 120,55 150,35 180,25 200,15 200,100 0,100"/>
+         <defs><linearGradient id="pbGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="rgba(250,42,82,.4)"/><stop offset="100%" stop-color="rgba(250,42,82,0)"/></linearGradient></defs>
+        </svg>
+       </div>
+      </div>
+      <div class="stat"><div class="v">3.6K+</div><div class="l">Dishes Scored</div><div class="ch">+412 wk/wk</div></div>
+      <div class="stat"><div class="v">9.2</div><div class="l">Top Score</div><div class="ch">Hummus · Zahav</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C18 · COMBO</div>
+    <div class="tile-title">Pitchbook data</div>
+    <p class="tile-desc">Dashboard-style layout with charts and stats. Positions ForkFox as a food intelligence platform.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Delivers on "dish intelligence platform" positioning</strong> — the only variant that actually earns that word.</li>
+     <li><strong>Screenshots straight into an investor deck.</strong> Use the same charts in pitch decks, quarterly updates, and board meetings.</li>
+     <li><strong>Shows real growth data publicly.</strong> Implies confidence in the numbers.</li>
+     <li><strong>Wrong hero for consumers.</strong> File this as the <code>forkfox.ai/investors</code> or press-kit variant, not the main landing.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C19 · Combo" data-title="Oatly weird" data-desc="Background is pink. Uppercase. Underlined. Ridiculous. Memorable.">
+   <div class="tile-preview">
+    <div class="mk cv cv19">
+     <h1>You've been ordering<br>the <span class="u">wrong thing.</span></h1>
+     <p>ForkFox scores every dish individually. Stop guessing. Start ordering.</p>
+     <div class="b">Download Now →</div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C19 · COMBO</div>
+    <div class="tile-title">Oatly weird</div>
+    <p class="tile-desc">Pink everything, uppercase, underlined. The most memorable variation — also the most polarizing. High-risk, high-reward.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Most memorable page in the gallery.</strong> If someone sees it once, they'll remember "ForkFox is the pink one."</li>
+     <li><strong>Makes the #FA2A52 brand color unavoidable.</strong> Pink is already your primary — this puts it literally everywhere.</li>
+     <li><strong>Provocative headline ("you've been ordering the wrong thing")</strong> creates conflict, which creates attention.</li>
+     <li><strong>Risk:</strong> Polarizing. 40% of visitors will love it, 40% will bounce. The 20% who love it and stay will convert hard.</li>
+    </ul>
+   </div>
+  </article>
+
+  <article class="tile" data-num="C20 · Combo" data-title="Current site + critique fixes" data-desc="Your existing Unsplash food hero with the critique fixes applied. Minimal-change baseline.">
+   <div class="tile-preview">
+    <div class="mk cv cv20">
+     <div class="mk-bg"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400&q=70" alt=""></div>
+     <div class="hero">
+      <div class="b">Live · Bay Area & Philly</div>
+      <h1>Outsmart<br>any <em>menu.</em></h1>
+      <p>AI scores the dishes on any menu, not the restaurant.</p>
+      <div class="form"><input placeholder="Download on iOS"><button>Open →</button></div>
+     </div>
+    </div>
+   </div>
+   <div class="tile-body">
+    <div class="tile-num">C20 · COMBO</div>
+    <div class="tile-title">Current site + critique fixes</div>
+    <p class="tile-desc">Your existing food-spread hero with critique fixes applied: unified CTA, honest copy, tightened hero.</p>
+    <div class="tile-why-label">Why this works</div>
+    <ul class="tile-why">
+     <li><strong>Minimum viable improvement.</strong> Ships today with low risk and low effort.</li>
+     <li><strong>A/B baseline.</strong> You need this version to test any other variant against — it's the control group.</li>
+     <li><strong>Fixes the 3 worst copy bugs</strong> from the critique (waitlist/live contradiction, "every plate" hyperbole, buzzword subhead) without touching the layout.</li>
+     <li><strong>Keeps every existing asset.</strong> Zero new image licensing, zero brand shift, zero risk of alienating current fans.</li>
+    </ul>
+   </div>
+  </article>
+
+ </div>
+</section>
+
+<!-- MODAL -->
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+ <div class="modal-inner">
+  <div class="modal-head">
+   <div>
+    <div class="modal-title">
+     <span class="num" id="modalNum">A01</span>
+     <span id="modalTitle">Title</span>
+    </div>
+    <p class="modal-desc" id="modalDesc">Description</p>
+   </div>
+   <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+  </div>
+  <div class="modal-frame" id="modalFrame"></div>
+ </div>
+</div>
+
+<script>
+// Modal wiring
+(function(){
+ const modal=document.getElementById('modal');
+ const frame=document.getElementById('modalFrame');
+ const title=document.getElementById('modalTitle');
+ const desc=document.getElementById('modalDesc');
+ const num=document.getElementById('modalNum');
+ const close=document.getElementById('modalClose');
+
+ document.querySelectorAll('.tile').forEach(t=>{
+  t.addEventListener('click',()=>{
+   const preview=t.querySelector('.tile-preview');
+   frame.innerHTML=preview.innerHTML;
+   title.textContent=t.dataset.title||'';
+   desc.textContent=t.dataset.desc||'';
+   num.textContent=t.dataset.num||'';
+   modal.classList.add('open');
+   document.body.style.overflow='hidden';
+  });
+ });
+
+ const closeModal=()=>{modal.classList.remove('open');document.body.style.overflow=''};
+ close.addEventListener('click',closeModal);
+ modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+})();
+</script>
+
+</body>
+</html>
