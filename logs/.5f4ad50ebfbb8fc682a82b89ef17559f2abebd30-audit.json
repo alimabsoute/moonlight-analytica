@@ -6,14 +6,59 @@
     "auditLog": "C:\\Users\\alima\\logs\\.5f4ad50ebfbb8fc682a82b89ef17559f2abebd30-audit.json",
     "files": [
         {
-            "date": 1757316688628,
-            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2025-09-08.log",
-            "hash": "410ed50e2c5812b697bff965f72cf0b455f4f30dbb210ad1b14ccd6f01020ba4"
+            "date": 1774116262135,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-21.log",
+            "hash": "0236925f47c7c9fe212a936bc24092830126be1b601855d530e5f673372235d4"
         },
         {
-            "date": 1757398731645,
-            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2025-09-09.log",
-            "hash": "e99a9ebd91be7c4c6f46bfb0d59fae76be95d71603745b1f831a2fb57cf13bdd"
+            "date": 1774178613074,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-22.log",
+            "hash": "67b866c156693c7b643c57579c21f32be64c45893e31ca5444fdcc5a68f4b871"
+        },
+        {
+            "date": 1774296318288,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-23.log",
+            "hash": "3798e3b1f85bb94039a15bc93918c211a29a55cd1890b373e7b4d5d4a043a157"
+        },
+        {
+            "date": 1774360750457,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-24.log",
+            "hash": "7730417938ac6ebc577143f9b5b4349319f0cba6d78d219ea915a2c5ad56faa1"
+        },
+        {
+            "date": 1774575870872,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-26.log",
+            "hash": "038d9fdcd10e0ecd5f6f60c0e659fb43dcae1dc50d571b144398f93dd0a4a061"
+        },
+        {
+            "date": 1774606836203,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-27.log",
+            "hash": "ccaa1b1880a361fb69042a895154cecdb49e29a7409e2e41d6c6439f42790c55"
+        },
+        {
+            "date": 1774703188385,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-28.log",
+            "hash": "2589c1d5aeac6cf6d3dd4f65a43436c5b1f30bb2bde388b32af6dfe731549f37"
+        },
+        {
+            "date": 1774765699012,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-29.log",
+            "hash": "390c8359e6ed0a55d9737ab09c25e65abcb6dcf8f6d2cb2dc72a0c7d1d224bde"
+        },
+        {
+            "date": 1774910946576,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-30.log",
+            "hash": "0e5246e9d3e9d2eef7b262e7525580b38ca4036647eccc5a2f817908422b5d8d"
+        },
+        {
+            "date": 1774988536297,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-03-31.log",
+            "hash": "88d3407def3aa88c3499443693363b811af186ec20bf76d67652f244192702bc"
+        },
+        {
+            "date": 1775016707820,
+            "name": "C:\\Users\\alima\\logs\\mcp-puppeteer-2026-04-01.log",
+            "hash": "fdfb91161ec580cc4b1414d195d8f42e797ee220f888a89d742510a1ea5f765e"
         }
     ],
     "hashType": "sha256"
