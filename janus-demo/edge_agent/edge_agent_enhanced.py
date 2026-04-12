@@ -49,6 +49,49 @@ signal.signal(signal.SIGTERM, _handle_sig)
 
 # ── Zone Configuration Loading ───────────────────────────────────────
 
+def load_zones_from_api(backend_url: str, frame_w: int = 640, frame_h: int = 480):
+    """
+    Fetch zone definitions from the backend API (single source of truth).
+
+    Returns (zones_dict, lines_list) in the same format as load_zone_config.
+    Falls back to (None, None) if the backend is unreachable or has no zones with geometry.
+    """
+    try:
+        resp = requests.get(f"{backend_url}/api/zones/config", timeout=5)
+        resp.raise_for_status()
+        data = resp.json()
+        raw_zones = data.get("zones", [])
+    except Exception as e:
+        print(f"[WARN] Could not fetch zones from API ({e}), falling back to config file")
+        return None, None
+
+    zones_with_geo = [z for z in raw_zones if z.get("polygon_image")]
+    if not zones_with_geo:
+        print("[WARN] API returned no zones with polygon_image geometry, falling back to config file")
+        return None, None
+
+    zones = {}
+    for z in zones_with_geo:
+        name = z.get("zone_name") or z.get("name") or f"zone_{z['id']}"
+        pts = np.array(z["polygon_image"], dtype=np.float32)
+
+        # Scale from config resolution (pixel coords assumed at 640×480)
+        sx, sy = frame_w / 640, frame_h / 480
+        pts[:, 0] *= sx
+        pts[:, 1] *= sy
+        pts = pts.astype(np.int32)
+
+        polygon_zone = sv.PolygonZone(polygon=pts)
+        zones[name] = {
+            "zone": polygon_zone,
+            "zone_id": z["id"],
+            "zone_type": "general",
+        }
+
+    print(f"[INFO] Loaded {len(zones)} zones from backend API ({backend_url}/api/zones/config)")
+    return zones, []   # no line zones from API yet
+
+
 def load_zone_config(config_path: str, frame_w: int = 640, frame_h: int = 480):
     """Load zones and lines from JSON config, scaled to frame dimensions."""
     if not os.path.exists(config_path):
@@ -214,8 +257,10 @@ def main():
     print(f"  Resolution: {frame_w}x{frame_h} @ {fps:.1f} FPS")
     print(f"  Backend: {args.backend}")
 
-    # Load zones scaled to frame dimensions
-    zones, lines = load_zone_config(args.config, frame_w, frame_h)
+    # Load zones: prefer backend API (single source of truth), fall back to config file
+    zones, lines = load_zones_from_api(args.backend, frame_w, frame_h)
+    if zones is None:
+        zones, lines = load_zone_config(args.config, frame_w, frame_h)
     for name, z in zones.items():
         print(f"  Zone: {name} [{z['zone_type']}]")
 

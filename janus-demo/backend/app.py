@@ -12,6 +12,7 @@ from routes.deep_analytics import deep_analytics_bp
 from routes.video import video_bp
 from routes.batch import batch_bp
 from routes.profile import profile_bp
+from routes.zones import zones_bp
 
 
 def create_app():
@@ -41,6 +42,7 @@ def create_app():
     application.register_blueprint(video_bp)
     application.register_blueprint(batch_bp)
     application.register_blueprint(profile_bp)
+    application.register_blueprint(zones_bp)
 
     return application
 
