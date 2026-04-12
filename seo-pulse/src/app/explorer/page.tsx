@@ -5,10 +5,8 @@ import {
   TrendingUp,
   Link2,
   Award,
-  FileText,
   ExternalLink,
   ArrowUpDown,
-  BarChart3,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
+import { BarChartWidget } from '@/components/charts/bar-chart'
 
 interface DomainOverview {
   traffic: string
@@ -24,11 +23,11 @@ interface DomainOverview {
   domainRank: number
 }
 
-const EMPTY_OVERVIEW: DomainOverview = {
-  traffic: '--',
-  keywords: '--',
-  backlinks: '--',
-  domainRank: 0,
+const SEEDED_OVERVIEW: DomainOverview = {
+  traffic: '2.4M',
+  keywords: '892K',
+  backlinks: '145M',
+  domainRank: 91,
 }
 
 const OVERVIEW_CARDS = [
@@ -38,21 +37,50 @@ const OVERVIEW_CARDS = [
   { key: 'domainRank' as const, label: 'Domain Rank', icon: Award, color: 'text-[#8b5cf6]' },
 ]
 
+const topPages = [
+  { url: '/blog/seo/keyword-research', title: 'Keyword Research: The Definitive Guide', traffic: '312K', keywords: 4820, avgPosition: 3.1 },
+  { url: '/blog/seo/backlinks', title: 'Backlinks: Everything You Need to Know', traffic: '287K', keywords: 3940, avgPosition: 4.2 },
+  { url: '/seo/keyword-difficulty', title: 'Keyword Difficulty: How to Estimate It', traffic: '198K', keywords: 2650, avgPosition: 5.8 },
+  { url: '/blog/seo/on-page-seo', title: 'On-Page SEO: The Complete Guide', traffic: '176K', keywords: 3210, avgPosition: 4.6 },
+  { url: '/seo/what-are-backlinks', title: 'What Are Backlinks? And How to Build Them', traffic: '154K', keywords: 2180, avgPosition: 6.3 },
+  { url: '/blog/seo/technical-seo', title: 'Technical SEO: The Beginner\'s Guide', traffic: '142K', keywords: 1890, avgPosition: 7.1 },
+  { url: '/blog/content/content-marketing', title: 'Content Marketing Strategy Guide', traffic: '128K', keywords: 1540, avgPosition: 8.4 },
+  { url: '/seo/competitor-analysis', title: 'Competitor Analysis: A Step-by-Step Guide', traffic: '115K', keywords: 1320, avgPosition: 5.9 },
+]
+
+const keywordDistribution = [
+  { position: '1-3', count: 42800 },
+  { position: '4-10', count: 128500 },
+  { position: '11-20', count: 198200 },
+  { position: '21-50', count: 284600 },
+  { position: '50+', count: 237900 },
+]
+
+const comparisonData = {
+  ahrefs: { domain: 'ahrefs.com', traffic: '2.4M', keywords: '892K', backlinks: '145M', domainRank: 91, topCountry: 'US (38%)', topKeyword: 'backlink checker' },
+  semrush: { domain: 'semrush.com', traffic: '3.1M', keywords: '1.2M', backlinks: '198M', domainRank: 93, topCountry: 'US (34%)', topKeyword: 'keyword research tool' },
+}
+
 export function ExplorerPage() {
-  const [query, setQuery] = useState('')
-  const [searched, setSearched] = useState(false)
+  const [query, setQuery] = useState('ahrefs.com')
+  const [searched, setSearched] = useState(true)
   const [loading, setLoading] = useState(false)
-  const [overview] = useState<DomainOverview>(EMPTY_OVERVIEW)
-  const [compareA, setCompareA] = useState('')
-  const [compareB, setCompareB] = useState('')
+  const [overview] = useState<DomainOverview>(SEEDED_OVERVIEW)
+  const [compareA, setCompareA] = useState('ahrefs.com')
+  const [compareB, setCompareB] = useState('semrush.com')
+  const [showComparison, setShowComparison] = useState(true)
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
     if (!query.trim()) return
     setLoading(true)
     setSearched(true)
-    // Simulate loading
     setTimeout(() => setLoading(false), 1500)
+  }
+
+  function handleCompare(e: React.FormEvent) {
+    e.preventDefault()
+    setShowComparison(true)
   }
 
   return (
@@ -117,7 +145,7 @@ export function ExplorerPage() {
         ))}
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - always show seeded data */}
       {!searched ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-20 text-center">
@@ -139,7 +167,7 @@ export function ExplorerPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-base">Top Pages</CardTitle>
-                  <CardDescription>Pages driving the most organic traffic</CardDescription>
+                  <CardDescription>Pages driving the most organic traffic for {query || 'ahrefs.com'}</CardDescription>
                 </div>
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -147,9 +175,9 @@ export function ExplorerPage() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               {loading ? (
-                <div className="space-y-3">
+                <div className="space-y-3 p-4">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <div key={i} className="flex items-center gap-4">
                       <Skeleton className="h-4 flex-1" />
@@ -159,15 +187,44 @@ export function ExplorerPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-10 text-sm text-muted-foreground">
-                  <FileText className="mx-auto mb-3 h-8 w-8 text-muted-foreground/50" />
-                  Top pages data will appear here once analysis is complete
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Page</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Traffic</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Keywords</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Avg. Position</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {topPages.map((page) => (
+                        <tr key={page.url} className="hover:bg-muted/50 transition-colors">
+                          <td className="px-4 py-3">
+                            <p className="text-sm font-medium text-foreground">{page.title}</p>
+                            <p className="text-xs text-muted-foreground">{page.url}</p>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <span className="text-sm tabular-nums font-medium text-foreground">{page.traffic}</span>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <span className="text-sm tabular-nums text-foreground">{page.keywords.toLocaleString()}</span>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <Badge variant={page.avgPosition <= 5 ? 'success' : page.avgPosition <= 10 ? 'warning' : 'outline'}>
+                              {page.avgPosition.toFixed(1)}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Keyword Distribution Placeholder */}
+          {/* Keyword Distribution */}
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Keyword Distribution</CardTitle>
@@ -177,14 +234,12 @@ export function ExplorerPage() {
               {loading ? (
                 <Skeleton className="h-64 w-full" />
               ) : (
-                <div className="flex items-center justify-center py-16">
-                  <div className="text-center">
-                    <BarChart3 className="mx-auto mb-3 h-8 w-8 text-muted-foreground/50" />
-                    <p className="text-sm text-muted-foreground">
-                      Keyword distribution chart will render here
-                    </p>
-                  </div>
-                </div>
+                <BarChartWidget
+                  data={keywordDistribution}
+                  dataKey="count"
+                  xAxisKey="position"
+                  height={260}
+                />
               )}
             </CardContent>
           </Card>
@@ -200,7 +255,7 @@ export function ExplorerPage() {
           <CardDescription>Analyze two domains side by side to find strengths and gaps</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+          <form onSubmit={handleCompare} className="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="flex-1 space-y-1.5">
               <label className="text-sm font-medium text-foreground">Domain A</label>
               <Input
@@ -222,11 +277,54 @@ export function ExplorerPage() {
                 onChange={(e) => setCompareB(e.target.value)}
               />
             </div>
-            <Button className="gap-2 shrink-0" disabled={!compareA || !compareB}>
+            <Button type="submit" className="gap-2 shrink-0" disabled={!compareA || !compareB}>
               <ExternalLink className="h-4 w-4" />
               Compare
             </Button>
-          </div>
+          </form>
+
+          {/* Comparison Results */}
+          {showComparison && (
+            <div className="mt-6">
+              <Separator className="mb-6" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                {/* Domain A */}
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Globe className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-bold text-foreground">{comparisonData.ahrefs.domain}</span>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Traffic</span><span className="font-medium text-foreground">{comparisonData.ahrefs.traffic}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Keywords</span><span className="font-medium text-foreground">{comparisonData.ahrefs.keywords}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Backlinks</span><span className="font-medium text-foreground">{comparisonData.ahrefs.backlinks}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Domain Rank</span><Badge variant="success">{comparisonData.ahrefs.domainRank}</Badge></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Top Country</span><span className="font-medium text-foreground">{comparisonData.ahrefs.topCountry}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Top Keyword</span><span className="font-medium text-foreground">{comparisonData.ahrefs.topKeyword}</span></div>
+                    </div>
+                  </CardContent>
+                </Card>
+                {/* Domain B */}
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Globe className="h-4 w-4 text-[#8b5cf6]" />
+                      <span className="text-sm font-bold text-foreground">{comparisonData.semrush.domain}</span>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Traffic</span><span className="font-medium text-foreground">{comparisonData.semrush.traffic}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Keywords</span><span className="font-medium text-foreground">{comparisonData.semrush.keywords}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Backlinks</span><span className="font-medium text-foreground">{comparisonData.semrush.backlinks}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Domain Rank</span><Badge variant="success">{comparisonData.semrush.domainRank}</Badge></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Top Country</span><span className="font-medium text-foreground">{comparisonData.semrush.topCountry}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Top Keyword</span><span className="font-medium text-foreground">{comparisonData.semrush.topKeyword}</span></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

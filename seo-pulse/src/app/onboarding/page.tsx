@@ -112,7 +112,7 @@ export function OnboardingPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/20 border border-primary/20">
             <Activity className="h-4 w-4 text-primary" />
           </div>
-          <span className="text-lg font-bold text-foreground tracking-tight">SEO Pulse</span>
+          <span className="text-lg font-bold text-foreground tracking-tight">Caposeo</span>
         </div>
       </div>
 

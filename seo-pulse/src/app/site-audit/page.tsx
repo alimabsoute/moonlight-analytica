@@ -16,59 +16,84 @@ import {
   RotateCcw,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
-const HEALTH_SCORE = 87
+const HEALTH_SCORE = 84
 
 const ISSUE_SUMMARY = [
-  { label: 'Errors', count: 4, icon: AlertCircle, color: 'text-danger', bgColor: 'bg-danger/10' },
-  { label: 'Warnings', count: 12, icon: AlertTriangle, color: 'text-warning', bgColor: 'bg-warning/10' },
-  { label: 'Notices', count: 23, icon: Info, color: 'text-primary', bgColor: 'bg-primary/10' },
+  { label: 'Errors', count: 7, icon: AlertCircle, color: 'text-danger', bgColor: 'bg-danger/10' },
+  { label: 'Warnings', count: 18, icon: AlertTriangle, color: 'text-warning', bgColor: 'bg-warning/10' },
+  { label: 'Notices', count: 31, icon: Info, color: 'text-primary', bgColor: 'bg-primary/10' },
 ]
 
 const AUDIT_CATEGORIES = [
   {
     name: 'Meta Tags',
     icon: FileCode,
-    passed: 18,
-    failed: 2,
-    issues: ['2 pages missing meta descriptions', '1 duplicate title tag'],
+    passed: 831,
+    failed: 16,
+    issues: [
+      'Pages without meta description: 8',
+      'Duplicate title tags on 4 pages',
+      'Title tags too long (>60 chars): 3 pages',
+      'Empty meta robots tag: 1 page',
+    ],
   },
   {
     name: 'Headings',
     icon: Heading,
-    passed: 24,
-    failed: 1,
-    issues: ['1 page missing H1 tag'],
+    passed: 839,
+    failed: 8,
+    issues: [
+      'Missing H1 tag on 3 pages',
+      'Multiple H1 tags: 2 pages',
+      'Skipped heading levels (H2 to H4): 3 pages',
+    ],
   },
   {
     name: 'Images',
     icon: Image,
-    passed: 45,
-    failed: 6,
-    issues: ['4 images missing alt text', '2 oversized images (> 500KB)'],
+    passed: 1204,
+    failed: 18,
+    issues: [
+      'Images without alt text: 12',
+      'Oversized images (>500KB): 4',
+      'Missing width/height attributes: 2',
+    ],
   },
   {
     name: 'Links',
     icon: Link2,
-    passed: 120,
-    failed: 3,
-    issues: ['2 broken internal links', '1 redirect chain'],
+    passed: 3412,
+    failed: 9,
+    issues: [
+      'Broken internal links: 4',
+      'Redirect chains (3+ hops): 2',
+      'Orphan pages with no internal links: 2',
+      'Nofollow on internal links: 1',
+    ],
   },
   {
     name: 'Schema',
     icon: Braces,
-    passed: 8,
-    failed: 2,
-    issues: ['Missing Organization schema', 'Invalid FAQ schema on /help'],
+    passed: 42,
+    failed: 3,
+    issues: [
+      'Missing Organization schema on homepage',
+      'Invalid FAQ schema on /help',
+      'BreadcrumbList missing on 1 category page',
+    ],
   },
   {
     name: 'Core Web Vitals',
     icon: Gauge,
-    passed: 3,
+    passed: 4,
     failed: 2,
-    issues: ['CLS score above threshold on mobile', 'LCP needs improvement'],
+    issues: [
+      'CLS above 0.1 threshold on 14 mobile pages',
+      'LCP >2.5s on /blog and /pricing pages',
+    ],
   },
 ]
 
@@ -162,9 +187,12 @@ export function SiteAuditPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground hidden md:inline">
+            Last crawl: 2 hours ago &bull; 847 pages crawled &bull; 14.2s avg response time
+          </span>
           <Badge variant="outline" className="gap-1.5">
             <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
-            Last run: 2 hours ago
+            Crawl complete
           </Badge>
           <Button variant="outline" size="sm" className="gap-1.5">
             <RotateCcw className="h-3.5 w-3.5" />

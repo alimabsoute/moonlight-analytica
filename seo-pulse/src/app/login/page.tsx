@@ -126,7 +126,7 @@ export function LoginPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20 backdrop-blur-sm border border-primary/20">
               <Activity className="h-5 w-5 text-primary" />
             </div>
-            <span className="text-xl font-bold text-white tracking-tight">SEO Pulse</span>
+            <span className="text-xl font-bold text-white tracking-tight">Caposeo</span>
           </div>
 
           {/* Hero */}
@@ -174,7 +174,7 @@ export function LoginPage() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20 border border-primary/20">
             <Activity className="h-5 w-5 text-primary" />
           </div>
-          <span className="text-xl font-bold text-foreground tracking-tight">SEO Pulse</span>
+          <span className="text-xl font-bold text-foreground tracking-tight">Caposeo</span>
         </div>
 
         <div className="w-full max-w-sm space-y-8">

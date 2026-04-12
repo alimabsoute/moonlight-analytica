@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import {
   Plus,
-  TrendingUp,
-  TrendingDown,
   ArrowUpRight,
   ArrowDownRight,
   Search,
@@ -39,47 +37,70 @@ interface CompetitorData {
 }
 
 const YOUR_SITE: CompetitorData = {
-  domain: 'yourdomain.com',
-  traffic: 124800,
-  trafficDelta: 12.3,
-  keywords: 908,
-  keywordsDelta: 7.5,
-  backlinks: 12453,
-  backlinksDelta: 4.7,
+  domain: 'seohub.io',
+  traffic: 45000,
+  trafficDelta: 14.2,
+  keywords: 3200,
+  keywordsDelta: 9.8,
+  backlinks: 12000,
+  backlinksDelta: 6.3,
   domainRank: 52,
 }
 
 const COMPETITORS: CompetitorData[] = [
   {
-    domain: 'competitor-one.com',
-    traffic: 289500,
-    trafficDelta: 8.1,
-    keywords: 2340,
-    keywordsDelta: 5.2,
-    backlinks: 34200,
-    backlinksDelta: 3.8,
-    domainRank: 67,
+    domain: 'semrush.com',
+    traffic: 28000000,
+    trafficDelta: 3.4,
+    keywords: 892000,
+    keywordsDelta: 2.1,
+    backlinks: 145000000,
+    backlinksDelta: 1.8,
+    domainRank: 91,
   },
   {
-    domain: 'seo-rival.io',
-    traffic: 156200,
-    trafficDelta: -2.4,
-    keywords: 1120,
-    keywordsDelta: -1.8,
-    backlinks: 18900,
-    backlinksDelta: 6.1,
-    domainRank: 58,
+    domain: 'ahrefs.com',
+    traffic: 22000000,
+    trafficDelta: 5.1,
+    keywords: 756000,
+    keywordsDelta: 3.6,
+    backlinks: 198000000,
+    backlinksDelta: 2.4,
+    domainRank: 89,
   },
   {
-    domain: 'search-tool.co',
-    traffic: 93400,
-    trafficDelta: 15.7,
-    keywords: 680,
-    keywordsDelta: 12.3,
-    backlinks: 8700,
-    backlinksDelta: -1.2,
-    domainRank: 44,
+    domain: 'moz.com',
+    traffic: 8200000,
+    trafficDelta: -1.2,
+    keywords: 214000,
+    keywordsDelta: -0.8,
+    backlinks: 52000000,
+    backlinksDelta: 0.9,
+    domainRank: 78,
   },
+]
+
+interface GapKeyword {
+  keyword: string
+  volume: number
+  semrushPos: number | null
+  ahrefsPos: number | null
+  mozPos: number | null
+  yourPos: number | null
+  difficulty: number
+}
+
+const GAP_KEYWORDS: GapKeyword[] = [
+  { keyword: 'backlink audit tool', volume: 14800, semrushPos: 2, ahrefsPos: 1, mozPos: 8, yourPos: null, difficulty: 72 },
+  { keyword: 'seo audit free online', volume: 22400, semrushPos: 3, ahrefsPos: 5, mozPos: 4, yourPos: null, difficulty: 68 },
+  { keyword: 'keyword gap analysis', volume: 9200, semrushPos: 1, ahrefsPos: 3, mozPos: 12, yourPos: null, difficulty: 65 },
+  { keyword: 'seo competitive analysis template', volume: 6800, semrushPos: 4, ahrefsPos: 7, mozPos: 2, yourPos: null, difficulty: 44 },
+  { keyword: 'website authority score', volume: 11300, semrushPos: 5, ahrefsPos: 1, mozPos: 3, yourPos: null, difficulty: 71 },
+  { keyword: 'link building strategies 2026', volume: 18200, semrushPos: 2, ahrefsPos: 4, mozPos: 6, yourPos: null, difficulty: 58 },
+  { keyword: 'serp feature tracker', volume: 4900, semrushPos: 1, ahrefsPos: 2, mozPos: null, yourPos: null, difficulty: 53 },
+  { keyword: 'organic traffic estimator', volume: 7600, semrushPos: 3, ahrefsPos: 2, mozPos: 9, yourPos: null, difficulty: 62 },
+  { keyword: 'content decay analysis', volume: 3400, semrushPos: 6, ahrefsPos: 1, mozPos: null, yourPos: null, difficulty: 38 },
+  { keyword: 'toxic backlink removal', volume: 8100, semrushPos: 1, ahrefsPos: 3, mozPos: 5, yourPos: null, difficulty: 67 },
 ]
 
 function formatCompact(n: number): string {
@@ -266,45 +287,97 @@ export function CompetitorsPage() {
         </TabsContent>
 
         <TabsContent value="keyword-gap">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Keyword Gap Analysis</CardTitle>
-              <CardDescription>
-                Discover keywords your competitors rank for that you don't
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center justify-center py-16">
-                {/* Venn diagram placeholder */}
-                <div className="relative h-48 w-64 mb-6">
-                  <div className="absolute left-0 top-4 h-40 w-40 rounded-full border-2 border-primary/30 bg-primary/5 flex items-center justify-center">
-                    <span className="text-xs text-primary font-medium -ml-6">You</span>
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Keyword Gap Analysis</CardTitle>
+                <CardDescription>
+                  Discover keywords your competitors rank for that you don&apos;t
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center justify-center py-8">
+                  {/* Venn diagram */}
+                  <div className="relative h-48 w-72 mb-6">
+                    <div className="absolute left-0 top-4 h-40 w-40 rounded-full border-2 border-primary/30 bg-primary/5 flex items-center justify-center">
+                      <span className="text-xs text-primary font-medium -ml-8">seohub.io</span>
+                    </div>
+                    <div className="absolute right-0 top-4 h-40 w-40 rounded-full border-2 border-warning/30 bg-warning/5 flex items-center justify-center">
+                      <span className="text-xs text-warning font-medium ml-8">Competitors</span>
+                    </div>
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                      <Badge variant="outline" className="bg-card">Shared: 890</Badge>
+                    </div>
+                    <div className="absolute left-6 top-1/2 -translate-y-1/2">
+                      <span className="text-sm font-bold text-primary">1,800</span>
+                    </div>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <span className="text-sm font-bold text-warning">148K+</span>
+                    </div>
                   </div>
-                  <div className="absolute right-0 top-4 h-40 w-40 rounded-full border-2 border-warning/30 bg-warning/5 flex items-center justify-center">
-                    <span className="text-xs text-warning font-medium ml-6">Competitor</span>
-                  </div>
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                    <Badge variant="outline" className="bg-card">Shared: 234</Badge>
-                  </div>
-                  <div className="absolute left-8 top-1/2 -translate-y-1/2">
-                    <span className="text-sm font-bold text-primary">412</span>
-                  </div>
-                  <div className="absolute right-8 top-1/2 -translate-y-1/2">
-                    <span className="text-sm font-bold text-warning">1,108</span>
+                  <div className="flex gap-6 text-center text-xs text-muted-foreground mt-2">
+                    <div>
+                      <p className="text-lg font-bold text-primary">1,800</p>
+                      <p>Your unique keywords</p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-foreground">890</p>
+                      <p>Shared with all</p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-warning">148,620</p>
+                      <p>Competitor-only</p>
+                    </div>
                   </div>
                 </div>
-                <h3 className="text-base font-semibold text-foreground">Keyword Gap Visualization</h3>
-                <p className="mt-1 max-w-md text-sm text-muted-foreground text-center">
-                  Select a competitor above to see the full keyword gap analysis,
-                  including unique keywords, shared rankings, and opportunity scores.
-                </p>
-                <Button variant="outline" className="mt-4 gap-2">
-                  <Search className="h-4 w-4" />
-                  Run Full Analysis
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Top Keyword Opportunities</CardTitle>
+                <CardDescription>
+                  High-volume keywords your competitors rank for where you have no presence
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Keyword</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Volume</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">KD</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Semrush</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Ahrefs</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Moz</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">You</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {GAP_KEYWORDS.map((kw) => (
+                        <tr key={kw.keyword} className="hover:bg-muted/50 transition-colors">
+                          <td className="px-4 py-3 text-sm font-medium text-foreground">{kw.keyword}</td>
+                          <td className="px-4 py-3 text-sm text-right tabular-nums text-foreground">{kw.volume.toLocaleString()}</td>
+                          <td className="px-4 py-3 text-center">
+                            <Badge variant={kw.difficulty >= 70 ? 'danger' : kw.difficulty >= 50 ? 'warning' : 'success'}>
+                              {kw.difficulty}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-center tabular-nums text-muted-foreground">{kw.semrushPos ?? '—'}</td>
+                          <td className="px-4 py-3 text-sm text-center tabular-nums text-muted-foreground">{kw.ahrefsPos ?? '—'}</td>
+                          <td className="px-4 py-3 text-sm text-center tabular-nums text-muted-foreground">{kw.mozPos ?? '—'}</td>
+                          <td className="px-4 py-3 text-sm text-center">
+                            <Badge variant="danger">Not ranking</Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="backlink-gap">

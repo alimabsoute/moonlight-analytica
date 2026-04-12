@@ -41,7 +41,7 @@ const INTEGRATIONS: Integration[] = [
     name: 'Google Search Console',
     description: 'Import real keyword data, clicks, impressions, and crawl stats',
     icon: Search,
-    connected: false,
+    connected: true,
     color: 'text-[#4285f4]',
   },
   {
@@ -49,7 +49,7 @@ const INTEGRATIONS: Integration[] = [
     name: 'Google Analytics 4',
     description: 'Connect traffic data, user behavior, and conversion tracking',
     icon: BarChart3,
-    connected: false,
+    connected: true,
     color: 'text-[#f59e0b]',
   },
   {
@@ -134,12 +134,12 @@ function PlanCard({ tier, isCurrentPlan }: { tier: PricingTier; isCurrentPlan: b
 
 export function SettingsPage() {
   const user = useAuthStore((s) => s.user)
-  const [name, setName] = useState(user?.fullName ?? 'Demo User')
-  const [email, setEmail] = useState(user?.email ?? 'demo@seopulse.io')
+  const [name, setName] = useState(user?.fullName ?? 'Alex Chen')
+  const [email, setEmail] = useState(user?.email ?? 'alex@seohub.io')
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set())
   const [copied, setCopied] = useState<string | null>(null)
 
-  const currentPlan = user?.plan ?? 'free'
+  const currentPlan = user?.plan ?? 'pro'
 
   function toggleKeyVisibility(id: string) {
     setVisibleKeys((prev) => {
@@ -338,7 +338,7 @@ export function SettingsPage() {
                 <div>
                   <CardTitle className="text-base">API Keys</CardTitle>
                   <CardDescription>
-                    Manage API keys for programmatic access to SEO Pulse
+                    Manage API keys for programmatic access to Caposeo
                   </CardDescription>
                 </div>
                 <Button size="sm" className="gap-1.5">

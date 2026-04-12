@@ -10,10 +10,11 @@ import {
   Settings2,
   Clock,
   ChevronRight,
-  Inbox,
+  Eye,
+  FileSpreadsheet,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 interface ReportType {
@@ -72,11 +73,65 @@ interface PastReport {
   id: string
   name: string
   type: string
+  format: 'PDF' | 'CSV'
   createdAt: string
+  relativeTime: string
   status: 'completed' | 'generating' | 'failed'
+  size: string
 }
 
-const DEMO_REPORTS: PastReport[] = [] // Empty for initial state
+const DEMO_REPORTS: PastReport[] = [
+  {
+    id: '1',
+    name: 'Monthly SEO Performance — March 2026',
+    type: 'Full SEO Audit',
+    format: 'PDF',
+    createdAt: '2026-03-27',
+    relativeTime: '2 days ago',
+    status: 'completed',
+    size: '2.4 MB',
+  },
+  {
+    id: '2',
+    name: 'Competitor Analysis Q1 2026',
+    type: 'Competitor Analysis',
+    format: 'PDF',
+    createdAt: '2026-03-22',
+    relativeTime: '1 week ago',
+    status: 'completed',
+    size: '3.1 MB',
+  },
+  {
+    id: '3',
+    name: 'Keyword Rankings Export',
+    type: 'Keyword Rankings',
+    format: 'CSV',
+    createdAt: '2026-03-26',
+    relativeTime: '3 days ago',
+    status: 'completed',
+    size: '840 KB',
+  },
+  {
+    id: '4',
+    name: 'Technical Audit Report',
+    type: 'Full SEO Audit',
+    format: 'PDF',
+    createdAt: '2026-03-24',
+    relativeTime: '5 days ago',
+    status: 'completed',
+    size: '1.8 MB',
+  },
+  {
+    id: '5',
+    name: 'Content Performance Review',
+    type: 'Content Performance',
+    format: 'PDF',
+    createdAt: '2026-03-15',
+    relativeTime: '2 weeks ago',
+    status: 'completed',
+    size: '2.1 MB',
+  },
+]
 
 export function ReportsPage() {
   const [reports] = useState<PastReport[]>(DEMO_REPORTS)
@@ -138,67 +193,66 @@ export function ReportsPage() {
       <div>
         <h2 className="text-lg font-semibold text-foreground mb-4">Previous Reports</h2>
 
-        {reports.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
-                <Inbox className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-base font-semibold text-foreground">No reports generated yet</h3>
-              <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                Select a report type above to generate your first SEO report.
-                Reports are saved here for easy access and sharing.
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardContent className="p-0">
-              <div className="divide-y divide-border">
-                {reports.map((report) => (
-                  <div
-                    key={report.id}
-                    className="flex items-center justify-between px-5 py-4 hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{report.name}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <Badge variant="outline" className="text-[10px]">{report.type}</Badge>
-                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            {report.createdAt}
-                          </span>
-                        </div>
+        <Card>
+          <CardContent className="p-0">
+            <div className="divide-y divide-border">
+              {reports.map((report) => (
+                <div
+                  key={report.id}
+                  className="flex items-center justify-between px-5 py-4 hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
+                      {report.format === 'CSV' ? (
+                        <FileSpreadsheet className="h-4 w-4 text-success" />
+                      ) : (
+                        <FileText className="h-4 w-4 text-primary" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">{report.name}</p>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        <Badge variant="outline" className="text-[10px]">{report.type}</Badge>
+                        <Badge variant={report.format === 'CSV' ? 'success' : 'default'} className="text-[10px]">
+                          {report.format}
+                        </Badge>
+                        <span className="text-[10px] text-muted-foreground">{report.size}</span>
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          {report.relativeTime}
+                        </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {report.status === 'completed' && (
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {report.status === 'completed' && (
+                      <>
                         <Button variant="ghost" size="sm" className="gap-1.5">
+                          <Eye className="h-3.5 w-3.5" />
+                          View
+                        </Button>
+                        <Button variant="outline" size="sm" className="gap-1.5">
                           <Download className="h-3.5 w-3.5" />
                           Download
                         </Button>
-                      )}
-                      {report.status === 'generating' && (
-                        <Badge variant="secondary" className="gap-1">
-                          <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                          Generating...
-                        </Badge>
-                      )}
-                      {report.status === 'failed' && (
-                        <Badge variant="danger">Failed</Badge>
-                      )}
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </div>
+                      </>
+                    )}
+                    {report.status === 'generating' && (
+                      <Badge variant="secondary" className="gap-1">
+                        <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                        Generating...
+                      </Badge>
+                    )}
+                    {report.status === 'failed' && (
+                      <Badge variant="danger">Failed</Badge>
+                    )}
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

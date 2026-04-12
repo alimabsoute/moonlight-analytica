@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 
 function getInitialTheme(): 'dark' | 'light' {
-  if (typeof window === 'undefined') return 'dark';
-  const stored = localStorage.getItem('seo-pulse-theme');
+  if (typeof window === 'undefined') return 'light';
+  const stored = localStorage.getItem('caposeo-theme');
   if (stored === 'light' || stored === 'dark') return stored;
-  return 'dark';
+  return 'light';
 }
 
 function applyThemeToDOM(theme: 'dark' | 'light') {
   if (typeof document === 'undefined') return;
-  if (theme === 'light') {
-    document.documentElement.classList.add('light');
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
   } else {
-    document.documentElement.classList.remove('light');
+    document.documentElement.classList.remove('dark');
   }
 }
 
@@ -44,7 +44,7 @@ export const useUIStore = create<UIState>()((set) => ({
   toggleTheme: () =>
     set((state) => {
       const next = state.theme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('seo-pulse-theme', next);
+      localStorage.setItem('caposeo-theme', next);
       applyThemeToDOM(next);
       return { theme: next };
     }),

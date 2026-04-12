@@ -109,16 +109,16 @@ export function PulseLabPage() {
   return (
     <div className="space-y-6">
       {/* Premium Header */}
-      <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 via-card to-[#8b5cf6]/5 p-6 sm:p-8">
-        <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-primary/10 blur-[60px]" />
-        <div className="absolute bottom-0 left-1/3 h-24 w-24 rounded-full bg-[#8b5cf6]/10 blur-[50px]" />
+      <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface-cool via-card to-surface-metallic p-6 sm:p-8">
+        <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-steel/5 blur-[60px]" />
+        <div className="absolute bottom-0 left-1/3 h-24 w-24 rounded-full bg-metallic/5 blur-[50px]" />
 
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20">
-              <Zap className="h-4 w-4 text-primary" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-steel/15">
+              <Zap className="h-4 w-4 text-steel" />
             </div>
-            <Badge variant="default" className="bg-primary/20 text-primary border-0">
+            <Badge variant="default" className="bg-steel/10 text-steel border-0">
               Signature Feature
             </Badge>
           </div>

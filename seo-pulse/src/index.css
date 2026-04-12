@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+@theme {
+  /* Caposeo — Off-white, subtle blue, metallic accents */
+
+  /* Light mode is default */
+  --color-background: #f8f9fb;
+  --color-foreground: #1a1f2e;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1f2e;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1a1f2e;
+  --color-primary: #4a6fa5;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f1f3f8;
+  --color-secondary-foreground: #1a1f2e;
+  --color-muted: #eef0f5;
+  --color-muted-foreground: #6b7280;
+  --color-accent: #e8ecf4;
+  --color-accent-foreground: #1a1f2e;
+  --color-destructive: #dc4a4a;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #dfe3ec;
+  --color-input: #dfe3ec;
+  --color-ring: #4a6fa5;
+  --color-success: #3a9a6b;
+  --color-warning: #c68a1d;
+  --color-danger: #c94a4a;
+
+  /* Metallic / section accents */
+  --color-surface-warm: #f7f5f2;
+  --color-surface-cool: #f0f3f9;
+  --color-surface-metallic: #e8eaf0;
+  --color-metallic: #8b95a5;
+  --color-metallic-light: #b4bcc9;
+  --color-steel: #5a7099;
+  --color-ink: #2c3345;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  --color-sidebar: #f1f3f8;
+  --color-sidebar-foreground: #5a6577;
+  --color-sidebar-active: #4a6fa5;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+
+  /* Dark mode override */
+  .dark {
+    --color-background: #0f1118;
+    --color-foreground: #e4e7ed;
+    --color-card: #181b25;
+    --color-card-foreground: #e4e7ed;
+    --color-popover: #181b25;
+    --color-popover-foreground: #e4e7ed;
+    --color-primary: #6b8fc4;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #1e2230;
+    --color-secondary-foreground: #e4e7ed;
+    --color-muted: #1e2230;
+    --color-muted-foreground: #8690a0;
+    --color-accent: #252a3a;
+    --color-accent-foreground: #e4e7ed;
+    --color-border: #252a3a;
+    --color-input: #252a3a;
+    --color-ring: #6b8fc4;
+    --color-success: #4aad7a;
+    --color-warning: #d49a2e;
+    --color-danger: #d45a5a;
+    --color-surface-warm: #1a1e28;
+    --color-surface-cool: #161a26;
+    --color-surface-metallic: #1e222e;
+    --color-metallic: #6b7585;
+    --color-metallic-light: #4a5468;
+    --color-steel: #5a7099;
+    --color-ink: #c8cdd8;
+    --color-sidebar: #12151e;
+    --color-sidebar-foreground: #6b7585;
+    --color-sidebar-active: #6b8fc4;
+  }
+}
+
+/* Scrollbar — subtle, metallic feel */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-metallic-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-metallic); }
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--color-muted) 25%, var(--color-secondary) 50%, var(--color-muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+/* Section surface utilities for visual rhythm */
+.surface-warm { background-color: var(--color-surface-warm); }
+.surface-cool { background-color: var(--color-surface-cool); }
+.surface-metallic { background-color: var(--color-surface-metallic); }
+
+/* Subtle metallic gradient for premium sections */
+.gradient-metallic {
+  background: linear-gradient(135deg, var(--color-surface-cool) 0%, var(--color-surface-metallic) 50%, var(--color-surface-warm) 100%);
+}
+
+/* Thin metallic divider line */
+.divider-metallic {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-metallic-light), transparent);
+}
