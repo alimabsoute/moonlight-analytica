@@ -660,7 +660,7 @@ export default function RealTimeDetectionEnhanced({
           onMetricsUpdate({
             currentCount: trackedPeople.length,
             totalEntries: stats.totalTracked,
-            totalExits: 0,
+            totalExits: stats.totalTracked - stats.activeCount,
             peakCount: Math.max(trackedPeople.length, newMetrics.peopleCount),
             fps,
             avgConfidence

@@ -492,7 +492,7 @@ export default function RealTimeDetection({
           onMetricsUpdate({
             currentCount: trackedPeople.length,
             totalEntries: trackerRef.current.getStats().totalTracked,
-            totalExits: 0,
+            totalExits: trackerRef.current.getStats().totalTracked - trackerRef.current.getStats().activeCount,
             peakCount: Math.max(trackedPeople.length, newMetrics.peopleCount),
             fps,
             avgConfidence
