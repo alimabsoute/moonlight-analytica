@@ -3,6 +3,9 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "crons": [],
+  "rewrites": [
+    { "source": "/", "destination": "/moonlight-complete-structure.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)\\.html",

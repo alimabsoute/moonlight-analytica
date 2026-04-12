@@ -356,12 +356,12 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 .zviz__floor-surface{position:absolute;inset:0;background:rgba(20,24,36,.9);border:1px solid rgba(77,216,230,.12);border-radius:4px}
 .zviz__floor-surface::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(77,216,230,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(77,216,230,.05) 1px,transparent 1px);background-size:30px 30px}
 /* 3D box zones with 6 faces */
-.zbox{position:absolute;transform-style:preserve-3d;opacity:0;transform:scaleY(0);transform-origin:bottom;animation:zboxIn .8s cubic-bezier(.34,1.56,.64,1) forwards}
+.zbox{position:absolute;transform-style:preserve-3d;opacity:0;transform:scaleY(0);transform-origin:bottom;animation:zboxIn 1s cubic-bezier(.34,1.56,.64,1) forwards}
 @keyframes zboxIn{0%{opacity:0;transform:scaleY(0)}100%{opacity:1;transform:scaleY(1)}}
 .zface{position:absolute;backface-visibility:visible}
 .zface--bot{width:100%;height:100%;transform:translateZ(0);border:1.5px solid var(--zc);background:var(--zc-bg,rgba(77,216,230,.1));background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:12px 12px}
-.zface--top{width:100%;height:100%;transform:translateZ(var(--zh));background:var(--zc-top,rgba(77,216,230,.35));border:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:2px;animation:zfaceShimmer 6s ease-in-out infinite}
-@keyframes zfaceShimmer{0%,100%{background:var(--zc-top,rgba(77,216,230,.22))}50%{background:var(--zc-top,rgba(77,216,230,.30))}}
+.zface--top{width:100%;height:100%;transform:translateZ(var(--zh));background:var(--zc-top,rgba(77,216,230,.18));border:1.5px solid var(--zc);border-radius:2px;animation:zfaceShimmer 6s ease-in-out infinite;pointer-events:none}
+@keyframes zfaceShimmer{0%,100%{background:var(--zc-top,rgba(77,216,230,.15))}50%{background:var(--zc-top,rgba(77,216,230,.22))}}
 .zface--front{width:100%;height:var(--zh);bottom:0;left:0;transform-origin:bottom;transform:rotateX(-90deg);background:linear-gradient(0deg,var(--zc-wall,rgba(77,216,230,.38)) 0%,var(--zc-wall2,rgba(77,216,230,.18)) 100%);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-top:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 20px var(--zc-glow,rgba(77,216,230,.08))}
 .zface--back{width:100%;height:var(--zh);top:0;left:0;transform-origin:top;transform:rotateX(90deg);background:linear-gradient(0deg,var(--zc-wall,rgba(77,216,230,.38)) 0%,var(--zc-wall2,rgba(77,216,230,.18)) 100%);border-left:1.5px solid var(--zc);border-right:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 20px var(--zc-glow,rgba(77,216,230,.08))}
 .zface--left{height:100%;width:var(--zh);top:0;left:0;transform-origin:left;transform:rotateY(90deg);background:linear-gradient(0deg,var(--zc-wall,rgba(77,216,230,.38)) 0%,var(--zc-wall2,rgba(77,216,230,.18)) 100%);border-top:1.5px solid var(--zc);border-bottom:1.5px solid var(--zc);border-right:1.5px solid var(--zc);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 20px var(--zc-glow,rgba(77,216,230,.08))}
@@ -421,7 +421,7 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 /* Tab auto-rotate progress bar */
 .ind-tab{position:relative;overflow:hidden}
 .ind-tab::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:#4dd8e6;border-radius:1px}
-.ind-tab.active::after{animation:tabProgress 3s linear forwards}
+.ind-tab.active::after{animation:tabProgress 9s linear forwards}
 @keyframes tabProgress{0%{width:0}100%{width:100%}}
 /* Mannequin 3D improvements */
 .trk-figure .trk-shadow{position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:16px;height:5px;border-radius:50%;background:rgba(0,0,0,.3);filter:blur(2px)}
@@ -433,11 +433,27 @@ body{font-family:'Instrument Sans',sans-serif;background:#06080d;color:#edf0f7}
 .zstruct{position:absolute;transform-style:preserve-3d;opacity:0;transform:scaleY(0);transform-origin:bottom;animation:zstructIn .7s cubic-bezier(.34,1.56,.64,1) forwards}
 @keyframes zstructIn{0%{opacity:0;transform:scaleY(0)}100%{opacity:1;transform:scaleY(1)}}
 .zstruct__bot{position:absolute;width:100%;height:100%;transform:translateZ(0);background:var(--sc);opacity:.15;border:1.5px solid var(--sc);border-radius:1px}
-.zstruct__top{position:absolute;width:100%;height:100%;transform:translateZ(var(--sh));background:var(--sc);opacity:.35;border:1.5px solid var(--sc);border-radius:1px;box-shadow:0 0 8px var(--sc)}
-.zstruct__front{position:absolute;width:100%;height:var(--sh);bottom:0;left:0;transform-origin:bottom;transform:rotateX(-90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.25;border-left:1.5px solid var(--sc);border-right:1.5px solid var(--sc);border-top:1.5px solid var(--sc);box-shadow:inset 0 0 10px var(--sc)}
-.zstruct__back{position:absolute;width:100%;height:var(--sh);top:0;left:0;transform-origin:top;transform:rotateX(90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.2;border-left:1.5px solid var(--sc);border-right:1.5px solid var(--sc);border-bottom:1.5px solid var(--sc)}
-.zstruct__left{position:absolute;height:100%;width:var(--sh);top:0;left:0;transform-origin:left;transform:rotateY(90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.2;border-top:1.5px solid var(--sc);border-bottom:1.5px solid var(--sc);border-right:1.5px solid var(--sc)}
-.zstruct__right{position:absolute;height:100%;width:var(--sh);top:0;right:0;transform-origin:right;transform:rotateY(-90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.2;border-top:1.5px solid var(--sc);border-bottom:1.5px solid var(--sc);border-left:1.5px solid var(--sc)}
+.zstruct__top{position:absolute;width:100%;height:100%;transform:translateZ(var(--sh));background:var(--sc);opacity:.55;border:1.5px solid var(--sc);border-radius:1px;box-shadow:0 0 8px var(--sc)}
+.zstruct__front{position:absolute;width:100%;height:var(--sh);bottom:0;left:0;transform-origin:bottom;transform:rotateX(-90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.5;border-left:1.5px solid var(--sc);border-right:1.5px solid var(--sc);border-top:1.5px solid var(--sc);box-shadow:inset 0 0 10px var(--sc)}
+.zstruct__back{position:absolute;width:100%;height:var(--sh);top:0;left:0;transform-origin:top;transform:rotateX(90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.3;border-left:1.5px solid var(--sc);border-right:1.5px solid var(--sc);border-bottom:1.5px solid var(--sc)}
+.zstruct__left{position:absolute;height:100%;width:var(--sh);top:0;left:0;transform-origin:left;transform:rotateY(90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.38;border-top:1.5px solid var(--sc);border-bottom:1.5px solid var(--sc);border-right:1.5px solid var(--sc)}
+.zstruct__right{position:absolute;height:100%;width:var(--sh);top:0;right:0;transform-origin:right;transform:rotateY(-90deg);background:linear-gradient(0deg,var(--sc),transparent);opacity:.38;border-top:1.5px solid var(--sc);border-bottom:1.5px solid var(--sc);border-left:1.5px solid var(--sc)}
+/* Zstruct ground shadow for grounded 3D pop */
+.zstruct__fshd{position:absolute;left:-4px;right:-4px;bottom:-3px;height:6px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 50%,transparent 80%);filter:blur(2px);z-index:-1;opacity:0;animation:zshdIn .6s ease forwards;animation-delay:inherit}
+@keyframes zshdIn{to{opacity:1}}
+
+/* ═══ 3D MANNEQUINS — smooth white figures inside zones ═══ */
+.zmann{position:absolute;width:0;height:0;transform-style:preserve-3d;pointer-events:none;z-index:5}
+.zmann__shadow{position:absolute;left:-8px;top:-3px;width:16px;height:6px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.7) 0%,rgba(0,0,0,.2) 55%,transparent 80%);filter:blur(1.5px);opacity:0;animation:zmannShadowIn .5s ease forwards;animation-delay:inherit}
+@keyframes zmannShadowIn{to{opacity:.9}}
+.zmann__fig{position:absolute;left:-6px;bottom:0;width:12px;height:38px;transform-origin:center bottom;transform:rotateX(-90deg) scaleY(0);transform-style:preserve-3d;animation:zmannFigIn 1s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:inherit;filter:drop-shadow(0 0 3px rgba(255,255,255,.45))}
+@keyframes zmannFigIn{0%{transform:rotateX(-90deg) scaleY(0)}100%{transform:rotateX(-90deg) scaleY(1)}}
+.zmann__fig::before{content:'';position:absolute;left:50%;top:0;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#f1f5f9 40%,#cbd5e1 75%,#94a3b8 100%);box-shadow:inset -1.5px -1.8px 2.5px rgba(71,85,105,.55),0 0 4px rgba(255,255,255,.6);border:.6px solid rgba(148,163,184,.5)}
+.zmann__fig::after{content:'';position:absolute;left:0;top:9px;width:100%;height:29px;background:linear-gradient(180deg,#ffffff 0%,#f1f5f9 35%,#e2e8f0 70%,#cbd5e1 100%);border-radius:5px 5px 2px 2px;box-shadow:inset -2.5px 0 3.5px rgba(71,85,105,.5),inset 2.5px 0 3.5px rgba(255,255,255,.9),0 0 5px rgba(255,255,255,.35);border:.6px solid rgba(148,163,184,.5)}
+/* Gentle bob loop for life */
+@keyframes zmannBob{0%,100%{transform:rotateX(-90deg) scaleY(1) translateY(0)}50%{transform:rotateX(-90deg) scaleY(1) translateY(-1px)}}
+.zmann__fig{animation:zmannFigIn 1s cubic-bezier(.34,1.56,.64,1) forwards,zmannBob 2.8s ease-in-out 1.2s infinite}
+
 
 
 
@@ -1284,9 +1300,16 @@ function mkFurniture(industry, zoneIdx, z) {
   const base = parseFloat(z.d) + 1.2;
   function bldg(left, top, w, d, h, delay) {
     return '<div class="zstruct" style="left:'+left+'px;top:'+top+'px;width:'+w+'px;height:'+d+'px;--sh:'+h+'px;--sc:'+c+';animation-delay:'+(base+delay).toFixed(1)+'s">' +
+      '<div class="zstruct__fshd"></div>' +
       '<div class="zstruct__bot"></div><div class="zstruct__top"></div>' +
       '<div class="zstruct__front"></div><div class="zstruct__back"></div>' +
       '<div class="zstruct__left"></div><div class="zstruct__right"></div></div>';
+  }
+  function ppl(left, top, delay) {
+    return '<div class="zmann" style="left:'+left+'px;top:'+top+'px;animation-delay:'+(base+delay).toFixed(1)+'s">'+
+      '<div class="zmann__shadow"></div>'+
+      '<div class="zmann__fig"></div>'+
+    '</div>';
   }
   const structs = {
     retail: [
@@ -1314,8 +1337,41 @@ function mkFurniture(industry, zoneIdx, z) {
       [bldg(15,15,35,18,12,.2), bldg(60,15,35,18,12,.4), bldg(110,15,35,18,12,.6), bldg(60,50,25,25,25,.8)]
     ]
   };
-  const set = (structs[industry] || structs.retail)[zoneIdx];
-  return set ? set.join('') : '';
+  const people = {
+    retail: [
+      [ppl(30,25,1.0), ppl(200,30,1.15), ppl(300,35,1.3), ppl(390,25,1.45)],
+      [ppl(35,115,1.0), ppl(55,155,1.2)],
+      [ppl(40,105,1.0), ppl(60,155,1.2)],
+      [ppl(25,75,1.0), ppl(65,80,1.15)],
+      [ppl(50,20,1.0), ppl(100,28,1.15), ppl(150,22,1.3), ppl(185,30,1.45)],
+      [ppl(30,30,1.0), ppl(45,75,1.15)]
+    ],
+    restaurant: [
+      [ppl(30,55,1.0), ppl(140,45,1.15), ppl(75,125,1.3), ppl(155,130,1.45)],
+      [ppl(75,50,1.0), ppl(140,55,1.15)],
+      [ppl(125,75,1.0), ppl(45,85,1.15)],
+      [ppl(55,55,1.0)],
+      [ppl(40,55,1.0), ppl(100,50,1.15), ppl(150,55,1.3)]
+    ],
+    hotel: [
+      [ppl(75,45,1.0), ppl(155,50,1.15)],
+      [ppl(60,90,1.0), ppl(165,95,1.15), ppl(115,60,1.3)],
+      [ppl(45,125,1.0), ppl(50,155,1.15)],
+      [ppl(30,65,1.0), ppl(60,75,1.15)],
+      [ppl(30,40,1.0), ppl(85,45,1.15)]
+    ],
+    gym: [
+      [ppl(75,45,1.0), ppl(100,50,1.15)],
+      [ppl(125,60,1.0), ppl(145,90,1.15), ppl(95,95,1.3)],
+      [ppl(42,42,1.0), ppl(42,92,1.15), ppl(42,142,1.3), ppl(42,175,1.45)],
+      [ppl(30,100,1.0), ppl(85,120,1.15), ppl(55,150,1.3)],
+      [ppl(55,35,1.0), ppl(120,35,1.15), ppl(160,35,1.3)],
+      [ppl(40,25,1.0), ppl(85,25,1.15)]
+    ]
+  };
+  const set = (structs[industry] || structs.retail)[zoneIdx] || [];
+  const peopleSet = (people[industry] || people.retail)[zoneIdx] || [];
+  return set.join('') + peopleSet.join('');
 }
 
 function mkZoneViz(industry) {
@@ -1360,7 +1416,7 @@ function mkZoneViz(industry) {
     <div class="zviz__scan"></div>
     <div class="zviz__stage"><div class="zviz__scene"><div class="zviz__floor">
       <div class="zviz__floor-surface"></div>
-      ${zones.map((z,i)=>`<div class="zbox" style="left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px;--zc:${z.c};--zh:${z.h3}px;--zc-bg:${z.c}1a;--zc-top:${z.c}59;--zc-wall:${z.c}61;--zc-wall2:${z.c}2e;--zc-glow:${z.c}1a;animation-delay:${z.d}">
+      ${zones.map((z,i)=>`<div class="zbox" style="left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px;--zc:${z.c};--zh:${z.h3}px;--zc-bg:${z.c}1a;--zc-top:${z.c}2b;--zc-wall:${z.c}45;--zc-wall2:${z.c}20;--zc-glow:${z.c}1a;animation-delay:${z.d}">
         <div class="zface zface--bot"></div><div class="zface zface--top"></div>
         <div class="zface zface--front"></div><div class="zface zface--back"></div>
         <div class="zface zface--left"></div><div class="zface zface--right"></div>
@@ -2468,7 +2524,7 @@ function startAutoRotate() {
     currentIndustryIdx = (currentIndustryIdx + 1) % industryKeys.length;
     var tab = document.querySelectorAll('.ind-tab')[currentIndustryIdx];
     switchZoneViz(industryKeys[currentIndustryIdx], tab);
-  }, 3000);
+  }, 9000);
 }
 function stopAutoRotate() { clearInterval(autoRotateTimer); clearTimeout(autoRotateDelay); }
 function restartAutoRotateAfterDelay() { autoRotateDelay = setTimeout(startAutoRotate, 10000); }
@@ -2479,7 +2535,7 @@ function switchZoneViz(industry, tabEl, isManual) {
   var container = document.getElementById('zoneVizContainer');
   if (!container) return;
   container.style.opacity = '0';
-  container.style.transition = 'opacity .3s ease';
+  container.style.transition = 'opacity .5s ease';
   var tabs = document.querySelectorAll('.ind-tab');
   tabs.forEach(function(t){ t.classList.remove('active'); });
   if (tabEl) tabEl.classList.add('active');
@@ -2492,7 +2548,7 @@ function switchZoneViz(industry, tabEl, isManual) {
   setTimeout(function(){
     container.innerHTML = mkZoneViz(industry);
     container.style.opacity = '1';
-  }, 300);
+  }, 500);
 }
 
 /* ── Mouse-Follow Card Tilt (60fps) ── */

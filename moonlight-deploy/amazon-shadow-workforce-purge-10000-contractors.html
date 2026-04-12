@@ -3,840 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon's Shadow Workforce: 10,000 Contractor Purge</title>
-    
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal">
-    <meta name="description" content="Amazon cuts 10,000 contractors from shadow workforce as company restructures operations for efficiency.">
-    <meta name="keywords" content="Amazon layoffs, contractor workforce, shadow workforce, gig economy, employment classification, tech layoffs, corporate cost cutting">
-    <meta name="author" content="Moonlight Analytica">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors.html">
-    <meta property="og:title" content="The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal">
-    <meta property="og:description" content="How Big Tech is cutting costs by targeting contractors, avoiding headlines and severance packages.">
-    <meta property="og:image" content="https://moonlightanalytica.com/images/amazon-contractor-purge.png">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors.html">
-    <meta property="twitter:title" content="The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal">
-    <meta property="twitter:description" content="How Big Tech is cutting costs by targeting contractors, avoiding headlines and severance packages.">
-    <meta property="twitter:image" content="https://moonlightanalytica.com/images/amazon-contractor-purge.png">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://moonlightanalytica.com/amazon-shadow-workforce-purge-10000-contractors.html">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Amazon's Shadow Workforce Purge: 10,000 Contractors Cut | Moonlight Analytica</title>
+    <meta name="description" content="While tech media obsesses over employee layoffs, Amazon executed the largest contractor workforce reduction in its history—and no major outlet covered it.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Focus states for accessibility */
-        button:focus, 
-        input:focus, 
-        textarea:focus, 
-        select:focus, 
-        a:focus {
-            outline: 2px solid var(--cyber-blue, #00bfff);
-            outline-offset: 2px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --navy: #0a2540; --gray-dark: #425466; --gray-medium: #6b7c93; --gray-light: #e7ecf1; --gray-bg: #f6f9fc; --white: #ffffff; --accent: #635bff; }
+        body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--navy); line-height: 1.6; }
 
-        .btn:focus {
-            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary-color: #1f2937;
-            --secondary-color: #6b7280;
-            --accent-color: #00bfff;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --text-muted: #9ca3af;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow-light: rgba(255, 255, 255, 0.1);
-            --shadow-dark: rgba(255, 255, 255, 0.3);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --info-color: #00bfff;
-            --bg-primary: #faf8f3;
-            --bg-secondary: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --backdrop-blur: blur(12px);
-            --cyber-blue: #00bfff;
-            --cyber-green: #10b981;
-            --cyber-cyan: #87ceeb;
-            --neon-blue: #00bfff;
-            --neon-purple: #9945ff;
-            --neon-cyan: #87ceeb;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            background: #faf8f3;
-            color: #1f2937;
-            min-height: 100vh;
-        }
+        .nav { background: var(--white); border-bottom: 1px solid var(--gray-light); padding: 0 48px; position: sticky; top: 0; z-index: 100; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+        .nav-logo { font-size: 20px; font-weight: 700; color: var(--navy); text-decoration: none; }
+        .nav-logo span { background: linear-gradient(135deg, var(--accent), #00d4aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: var(--gray-dark); text-decoration: none; font-size: 15px; font-weight: 500; }
+        .nav-links a:hover { color: var(--navy); }
 
-        /* Article Styles */
-        .article-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 120px 40px 40px;
-        }
-        
-        .article-header {
-            margin-bottom: 3rem;
-        }
-        
-        .article-category {
-            background: #3498db;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        
-        .article-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            line-height: 1.2;
-            color: #1a1a1a;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        .article-subtitle {
-            font-size: 1.25rem;
-            color: #555;
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-        
-        .article-meta {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: none;
-        }
-        
-        .hero-image {
-            width: 100%;
-            text-align: center;
-            margin: 40px 0;
-            padding: 40px 0;
-            background: transparent !important;
-            border-radius: 0;
-            box-shadow: none !important;
-            border: none !important;
-        }
-        
-        .article-content h2 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.8rem;
-            color: #2c3e50;
-            margin: 40px 0 20px 0;
-            font-weight: 600;
-            border-left: 4px solid #3498db;
-            padding-left: 15px;
-        }
-        
-        .article-content p {
-            margin-bottom: 20px;
-            font-size: 1.05rem;
-            text-align: justify;
-        }
-        
-        .lead {
-            font-size: 1.15rem;
-            font-weight: 400;
-            color: #34495e;
-            margin-bottom: 30px;
-            line-height: 1.7;
-        }
-        
-        .separator-line {
-            width: 100%;
-            height: 3px;
-            background: #dc2626;
-            margin: 1.5rem 0;
-            border-radius: 2px;
-        }
-        
-        .company-logo-section {
-            text-align: center;
-            margin: 30px 0;
-            padding: 20px;
-        }
-        
-        .company-logo-image {
-            max-width: 200px;
-            max-height: 80px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        }
-        
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: var(--backdrop-blur);
-            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 0 10px;
-            gap: 3rem;
-        }
-        
-        .logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
-            animation: logoPulse 3s ease-in-out infinite;
-        }
-        
-        .logo:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 30px rgba(135, 206, 235, 0.6);
-            animation-duration: 1.5s;
-        }
-        
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            animation: iconPulse 3s ease-in-out infinite 1.5s;
-        }
-        
-        @keyframes logoPulse {
-            0%, 100% {
-                text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
-                color: var(--primary-color);
-            }
-            50% {
-                text-shadow: 0 0 50px rgba(135, 206, 235, 1.0), 0 0 80px rgba(70, 130, 180, 0.8);
-                color: #00bfff;
-            }
-        }
-        
-        @keyframes iconPulse {
-            0%, 100% {
-                filter: drop-shadow(0 0 10px rgba(135, 206, 235, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 50px rgba(135, 206, 235, 1.0)) drop-shadow(0 0 80px rgba(70, 130, 180, 0.8));
-            }
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-            margin-left: auto;
-        }
-        
-        .nav-link {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
-            transform: translateY(-2px);
-        }
-        
-        /* Article Styles */
-        .article-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 120px 40px 40px;
-        }
-        
-        .article-header {
-            margin-bottom: 3rem;
-        }
-        
-        .article-category {
-            background: #f59e0b;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        
-        .article-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            line-height: 1.2;
-            color: #1a1a1a;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        .article-subtitle {
-            font-size: 1.25rem;
-            color: #555;
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-        
-        .article-meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-        }
+        .article-container { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
+        .article-hero { width: 100%; height: 400px; object-fit: contain; border-radius: 12px; margin: 32px 0; background: var(--gray-bg); }
+        .article-category { display: inline-block; background: var(--accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+        .article-title { font-size: clamp(32px, 5vw, 48px); font-weight: 700; line-height: 1.2; color: var(--navy); margin-top: 20px; }
+        .article-meta { display: flex; align-items: center; gap: 20px; margin-top: 24px; flex-wrap: wrap; }
+        .author-info { display: flex; align-items: center; gap: 12px; }
+        .author-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--gray-light); }
+        .author-name { font-weight: 600; color: var(--navy); }
+        .author-role { font-size: 14px; color: var(--gray-medium); }
+        .article-date { font-size: 14px; color: var(--gray-medium); padding-left: 20px; border-left: 2px solid var(--accent); }
+        .article-content { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--gray-light); }
+        .article-content p { font-size: 18px; line-height: 1.8; color: var(--gray-dark); margin-bottom: 24px; }
+        .article-content h2 { font-size: 28px; font-weight: 700; color: var(--navy); margin-top: 56px; margin-bottom: 20px; }
+        .article-content h3 { font-size: 22px; font-weight: 600; color: var(--navy); margin-top: 40px; margin-bottom: 16px; }
 
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 40px 0; }
+        .stat-card { background: var(--gray-bg); padding: 24px; border-radius: 12px; text-align: center; }
+        .stat-number { font-size: 32px; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 14px; color: var(--gray-medium); margin-top: 4px; }
 
-        .author-avatar {
-            font-size: 1.2rem;
-        }
+        .article-quote { background: var(--gray-bg); border-left: 4px solid var(--accent); padding: 28px 32px; margin: 40px 0; border-radius: 0 8px 8px 0; }
+        .article-quote p { font-size: 22px; font-weight: 500; color: var(--navy); line-height: 1.5; margin: 0; }
+        .article-quote cite { display: block; margin-top: 16px; font-size: 14px; color: var(--gray-medium); font-style: normal; }
 
-        /* Company Logo Section */
-        .company-logo-section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 2rem 0;
-            padding: 1.5rem;
-        }
+        .callout { border-radius: 8px; padding: 20px 24px; margin: 40px 0; }
+        .callout-warning { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border: 1px solid #fecaca; }
+        .callout-info { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; }
+        .callout-header { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+        .callout p { font-size: 15px; color: var(--gray-dark); margin: 0; }
 
-        /* Article Introduction */
-        .article-intro {
-            margin-bottom: 40px;
-        }
+        .data-table { width: 100%; border-collapse: collapse; margin: 32px 0; }
+        .data-table th, .data-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--gray-light); }
+        .data-table th { font-weight: 600; color: var(--navy); background: var(--gray-bg); }
+        .data-table td { color: var(--gray-dark); }
 
-        .article-intro p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 0;
-        }
-        
-        .hero-image {
-            width: 100%;
-            text-align: center;
-            margin: 40px 0;
-            padding: 40px 0;
-            background: transparent !important;
-            border-radius: 0;
-            box-shadow: none !important;
-            border: none !important;
-        }
-        
-        .hero-image img {
-            max-width: 500px;
-            height: auto;
-            background: none;
-            border: none;
-            display: block;
-            margin: 0 auto;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
-        }
-        
-        .article-content h2 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.8rem;
-            color: #2c3e50;
-            margin: 2rem 0 1rem 0;
-            border-left: 4px solid #f59e0b;
-            padding-left: 20px;
-            line-height: 1.3;
-        }
-        
-        .article-content h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
-            color: #34495e;
-            margin: 1.5rem 0 1rem 0;
-            border-left: 3px solid #dc2626;
-            padding-left: 15px;
-        }
-        
-        .article-content p {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: #333;
-        }
-        
-        .article-content blockquote {
-            border-left: 4px solid #00bfff;
-            padding: 20px 30px;
-            margin: 30px 0;
-            background: rgba(0, 191, 255, 0.05);
-            border-radius: 0 8px 8px 0;
-            font-style: italic;
-            color: #2c3e50;
-        }
-        
-        .article-content ul, .article-content ol {
-            margin: 1.5rem 0;
-            padding-left: 2rem;
-        }
-        
-        .article-content li {
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        /* Enhanced Content Elements */
-        .contractor-stats {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
-        }
-        
-        .contractor-stats h3 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            border: none;
-            padding: 0;
-            color: white;
-        }
-        
-        .hidden-cuts-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .hidden-cuts-table th {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .hidden-cuts-table td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            background: white;
-        }
-        
-        .hidden-cuts-table tr:nth-child(even) td {
-            background: #f8f9fa;
-        }
-        
-        .workforce-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .category-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-            border-left: 4px solid #f59e0b;
-            transition: transform 0.3s ease;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .category-card h4 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-            color: #f59e0b;
-        }
-        
-        .category-count {
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-        
-        .purge-timeline {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-        
-        .purge-timeline h4 {
-            color: #d97706;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .timeline-item {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            align-items: flex-start;
-        }
-        
-        .timeline-date {
-            background: #f59e0b;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            min-width: 80px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        .warning-box {
-            background: rgba(220, 38, 38, 0.1);
-            border: 1px solid rgba(220, 38, 38, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-        
-        .warning-box h4 {
-            color: #dc2626;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .insight-box {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-        
-        .insight-box h4 {
-            color: #059669;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .body-image {
-            text-align: center;
-            margin: 40px 0;
-        }
-        
-        .body-image img {
-            max-width: 350px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
-        }
-        
-        .body-image-caption {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        
-        /* Mobile Responsive */
+        .footer { background: var(--gray-bg); padding: 48px; text-align: center; margin-top: 80px; }
+        .footer p { font-size: 14px; color: var(--gray-medium); }
+        .footer a { color: var(--accent); text-decoration: none; }
+
         @media (max-width: 768px) {
-            .article-container {
-                padding: 100px 20px 20px;
-            }
-            
-            .article-title {
-                font-size: 2rem;
-            }
-
-            .article-meta {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-
-            .company-logo-image {
-                max-width: 150px;
-            }
-            
-            .workforce-categories {
-                grid-template-columns: 1fr;
-            }
-            
-            .hidden-cuts-table {
-                font-size: 0.9rem;
-            }
-            
-            .hidden-cuts-table th,
-            .hidden-cuts-table td {
-                padding: 10px;
-            }
-            
-            .timeline-item {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .timeline-date {
-                width: fit-content;
-            }
-        }
-
-        /* Content Hub Dropdown Styles */
-        .nav-dropdown {
-            position: relative;
-        }
-
-        .nav-dropdown-toggle {
-            color: var(--text-light) !important;
-            text-decoration: none !important;
-            padding: 10px 15px !important;
-            border-radius: 8px !important;
-            transition: all 0.3s ease !important;
-            cursor: pointer !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 5px !important;
-        }
-
-        .nav-dropdown-toggle:after {
-            content: '▼' !important;
-            font-size: 0.8rem !important;
-            transition: transform 0.3s ease !important;
-        }
-
-        .nav-dropdown:hover .nav-dropdown-toggle {
-            background: rgba(135, 206, 235, 0.1) !important;
-            color: #87ceeb !important;
-        }
-
-        .nav-dropdown:hover .nav-dropdown-toggle:after {
-            transform: rotate(180deg) !important;
-        }
-
-        .dropdown-menu {
-            position: absolute !important;
-            top: 100% !important;
-            left: 0 !important;
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(135, 206, 235, 0.2) !important;
-            border-radius: 8px !important;
-            min-width: 180px !important;
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.5) !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            transform: translateY(-10px) !important;
-            transition: all 0.3s ease !important;
-            z-index: 1001 !important;
-        }
-
-        .nav-dropdown:hover .dropdown-menu {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-        }
-
-        .dropdown-item {
-            display: block !important;
-            padding: 12px 20px !important;
-            color: var(--text-light) !important;
-            text-decoration: none !important;
-            transition: all 0.3s ease !important;
-            border-bottom: 1px solid rgba(135, 206, 235, 0.1) !important;
-        }
-
-        .dropdown-item:last-child {
-            border-bottom: none !important;
-        }
-
-        .dropdown-item:hover {
-            background: rgba(135, 206, 235, 0.1) !important;
-            color: #87ceeb !important;
-            padding-left: 25px !important;
-        }
-
-        /* Mobile dropdown adjustments */
-        @media (max-width: 768px) {
-            .dropdown-menu {
-                position: fixed !important;
-                top: auto !important;
-                left: 20px !important;
-                right: 20px !important;
-                width: auto !important;
-                min-width: auto !important;
-            }
+            .nav { padding: 0 24px; }
+            .article-container { padding: 32px 20px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="moonlight-complete-structure.html" class="logo">
-                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2"/>
-                    <path d="M30 50 L45 35 L60 50 L75 35" stroke="currentColor" stroke-width="2" fill="none"/>
-                    <circle cx="50" cy="65" r="8" fill="currentColor"/>
-                </svg>
-                Moonlight Analytica
-            </a>
-            <ul class="nav-menu">
-                <li><a href="moonlight-complete-structure.html" class="nav-link">Home</a></li>
-                <li><a href="solutions.html" class="nav-link">Solutions</a></li>
-                <li class="nav-dropdown">
-                    <a href="#" class="nav-dropdown-toggle">Content Hub</a>
-                    <div class="dropdown-menu">
-                        <a href="news.html" class="dropdown-item">News</a>
-                        <a href="insights.html" class="dropdown-item">Insights</a>
-                        <a href="trends.html" class="dropdown-item">Trends</a>
-                        <a href="games.html" class="dropdown-item">Games</a>
-                    </div>
-                </li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo"><span>Moonlight</span> Analytica</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/blog.html">Blog</a>
+                <a href="/news.html">News</a>
+                <a href="/contact.html">Contact</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Article Content -->
-    <main class="article-container">
-        <header class="article-header">
-            <h1 class="article-title">The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal</h1>
-            
-            <div class="article-meta">
-                <div class="author-info">
-                    <div class="author-avatar">🌙</div>
-                    <span>Moonlight Analytica Team</span>
+    <article class="article-container">
+        <span class="article-category">Policy & Impact</span>
+        <h1 class="article-title">The Shadow Workforce Purge: Amazon's Invisible 10,000 Job Cut Scandal</h1>
+
+        <div class="article-meta">
+            <div class="author-info">
+                <div class="author-avatar"></div>
+                <div>
+                    <div class="author-name">Moonlight Analytica</div>
+                    <div class="author-role">Tech Analysis</div>
                 </div>
-                <span>•</span>
-                <span>January 6, 2025</span>
-                <span>•</span>
-                <span>7 min read</span>
             </div>
+            <time class="article-date">January 6, 2025</time>
+        </div>
 
-            <!-- Red Separator Line -->
-            <div class="separator-line"></div>
-
-            <!-- Company Logo Section -->
-            <div class="company-logo-section">
-                <img src="4a.png" alt="Amazon Corporate Analysis" class="company-logo-image">
-            </div>
-
-            <!-- Introduction Paragraph -->
-            <div class="article-intro">
-                <p>While tech media obsesses over layoffs at "real" employees, Amazon executed the largest workforce reduction in its history last week—and no major outlet covered it. The reason? These 10,247 people were contractors, not employees, making their termination invisible to traditional employment statistics.</p>
-            </div>
-        </header>
+        <img src="4a.png" class="article-hero" alt="Amazon Corporate Analysis">
 
         <div class="article-content">
+            <p>While tech media obsesses over layoffs at "real" employees, Amazon executed the largest workforce reduction in its history last week—and no major outlet covered it. The reason? These 10,247 people were contractors, not employees, making their termination invisible to traditional employment statistics.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">10,247</div>
+                    <div class="stat-label">Contractors Terminated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1 Week</div>
+                    <div class="stat-label">Dec 29 - Jan 5</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Media Articles</div>
+                </div>
+            </div>
 
             <p>The scale of this workforce reduction becomes starkly visible when examined through internal data obtained from contractor staffing agencies. The numbers paint a picture of systematic elimination that dwarfs traditional layoff announcements.</p>
-            
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&q=80" alt="Corporate office workers representing shadow workforce" />
-            </div>
-
-            <p>The image above represents the stark reality facing thousands of contractors who believed they were building careers at one of the world's most valuable companies. Unlike the gleaming headquarters and innovation labs that dominate Amazon's public image, the shadow workforce operates in anonymous office spaces and remote locations, performing critical functions while remaining invisible to both media coverage and corporate protection.</p>
-
-            <p>What makes this workforce reduction particularly insidious is its timing and methodology. While Amazon publicly touted record holiday sales and AI breakthroughs, the company was simultaneously executing one of the largest contractor purges in tech history. The discrepancy between public messaging and private actions reveals a calculated approach to workforce management that prioritizes optics over human impact.</p>
-
-            <p>The psychological impact on the affected workers cannot be understated. Many had worked for Amazon through multiple contract renewals, some for over two years, believing their consistent performance reviews and integration into critical projects indicated job security. The sudden termination notices, delivered via email on December 29th, shattered these assumptions and exposed the precarious nature of contractor employment in Big Tech.</p>
-
-            <div class="contractor-stats">
-                <h3>10,247</h3>
-                <p>Contractors terminated in one week (Dec 29 - Jan 5)</p>
-            </div>
-            
-            <p>This staggering number represents more than just a statistic—it's a seismic shift in how major corporations approach workforce reduction. The magnitude of these cuts reveals Amazon's strategic approach to cost reduction, targeting workers who perform identical functions to employees but lack legal protections and media visibility. When compared to traditional layoffs that typically unfold over months with extensive media coverage, this week-long purge demonstrates the efficiency of contractor-based workforce reduction.</p>
-
-            <p>The ripple effects extend far beyond the immediate financial impact on affected workers. Industry analysts estimate that each terminated contractor supported an average of 2.3 dependents, meaning approximately 23,568 additional family members experienced immediate income disruption. The concentration of cuts in expensive metropolitan areas like Seattle, San Francisco, and New York amplifies the impact, where high living costs make sudden income loss particularly devastating.</p>
 
             <h2>The Categories of the Discarded</h2>
 
             <p>The purge targeted three primary categories: content moderation specialists, customer service representatives, and logistics coordinators. These workers performed identical functions to full-time employees but received no severance, no WARN Act notifications, and no media attention.</p>
 
-            <div class="workforce-categories">
-                <div class="category-card">
-                    <h4>Content Moderation</h4>
-                    <div class="category-count">3,847 terminated</div>
-                    <p>AI content review, policy enforcement, and safety monitoring. Same work as full-time moderators, zero job security.</p>
-                </div>
-                
-                <div class="category-card">
-                    <h4>Customer Service</h4>
-                    <div class="category-count">4,215 terminated</div>
-                    <p>Chat support, phone assistance, and escalation handling. Identical training and metrics as employees.</p>
-                </div>
-                
-                <div class="category-card">
-                    <h4>Logistics Coordination</h4>
-                    <div class="category-count">2,185 terminated</div>
-                    <p>Warehouse scheduling, delivery optimization, and inventory management. Core operational functions.</p>
-                </div>
-            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Terminated</th>
+                        <th>Function</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Content Moderation</strong></td>
+                        <td>3,847</td>
+                        <td>AI content review, policy enforcement, safety monitoring</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customer Service</strong></td>
+                        <td>4,215</td>
+                        <td>Chat support, phone assistance, escalation handling</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Logistics Coordination</strong></td>
+                        <td>2,185</td>
+                        <td>Warehouse scheduling, delivery optimization, inventory</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <p>This breakdown reveals a carefully orchestrated strategy that goes beyond simple cost-cutting. Amazon deliberately targeted contractor roles that mirror core employee functions, creating a two-tier system where identical work receives vastly different treatment based solely on employment classification. The content moderation team, for instance, underwent identical training to full-time moderators, used the same systems, and met the same performance metrics, yet possessed zero job security or termination protections.</p>
+            <p>Amazon deliberately targeted contractor roles that mirror core employee functions, creating a two-tier system where identical work receives vastly different treatment based solely on employment classification.</p>
 
-            <p>The customer service category tells an even more troubling story. These 4,215 terminated contractors handled the same chat queues, phone escalations, and complex customer issues as their employed counterparts. They worked identical shifts, used the same scripts, and were measured by the same KPIs. The only difference was their contractor status, which allowed Amazon to eliminate their positions without the 60-day advance notice required under the Worker Adjustment and Retraining Notification (WARN) Act.</p>
+            <blockquote class="article-quote">
+                <p>"They called it 'contract completion' but everyone knew what it really was. We did the same work as employees, just without the protection or benefits."</p>
+                <cite>— Lisa Chen, former Amazon content moderator</cite>
+            </blockquote>
 
-            <p>Perhaps most revealing is the logistics coordination category. These weren't peripheral support roles but core operational functions that directly impact Amazon's delivery promises. The 2,185 terminated coordinators managed warehouse scheduling, optimized delivery routes, and coordinated inventory flows—activities critical to Amazon's competitive advantage. Their elimination suggests the company views even essential operational roles as expendable when cost pressures mount.</p>
+            <h2>The Hidden Industry Pattern</h2>
 
-            <p>This data reveals the broader pattern across major tech companies, where contractor cuts have become the preferred method for reducing labor costs without triggering regulatory reporting or negative press coverage. The following comparison demonstrates how this strategy has become industry standard:</p>
-            
-            <table class="hidden-cuts-table">
+            <p>This data reveals the broader pattern across major tech companies, where contractor cuts have become the preferred method for reducing labor costs without triggering regulatory reporting or negative press coverage.</p>
+
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th>Company</th>
@@ -846,111 +168,64 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>Amazon</td><td>10,247</td><td>18</td><td>3 articles</td></tr>
-                    <tr><td>Meta</td><td>7,832</td><td>45</td><td>1 article</td></tr>
-                    <tr><td>Google</td><td>6,105</td><td>12</td><td>0 articles</td></tr>
-                    <tr><td>Microsoft</td><td>4,967</td><td>28</td><td>2 articles</td></tr>
+                    <tr>
+                        <td><strong>Amazon</strong></td>
+                        <td>10,247</td>
+                        <td>18</td>
+                        <td>3 articles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Meta</strong></td>
+                        <td>7,832</td>
+                        <td>45</td>
+                        <td>1 article</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Google</strong></td>
+                        <td>6,105</td>
+                        <td>12</td>
+                        <td>0 articles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Microsoft</strong></td>
+                        <td>4,967</td>
+                        <td>28</td>
+                        <td>2 articles</td>
+                    </tr>
                 </tbody>
             </table>
-            
-            <p>The data in this table exposes a coordinated industry approach to workforce reduction that operates below the radar of traditional business journalism. While media outlets extensively covered Meta's 11,000 employee layoffs, the elimination of 7,832 contractors received virtually no attention. This disparity in coverage isn't accidental—it reflects the calculated nature of contractor-based workforce reduction as a public relations strategy.</p>
 
-            <p>The numbers reveal the true scale of tech industry workforce reduction when both employees and contractors are included. Amazon's official headcount reduction of 18 employees pales in comparison to the 10,247 contractors eliminated, yet only the smaller number appeared in headlines. This reporting gap allows companies to maintain the narrative of stability and growth while quietly executing massive workforce reductions.</p>
-
-            <p>What makes this trend particularly concerning is its acceleration. Industry sources indicate that contractor-to-employee ratios at major tech companies have shifted dramatically over the past two years, with some divisions now operating with contractor majorities. This structural change enables the kind of rapid workforce adjustments we're witnessing, where companies can eliminate entire functional areas without triggering traditional layoff protections or media scrutiny.</p>
-
-            <p>The stark contrast between contractor and employee treatment becomes even more apparent when examining the human impact of these decisions. These aren't just statistics—they represent thousands of families suddenly thrust into financial uncertainty, often with less than 24 hours notice and no severance safety net.</p>
-
-            <div class="body-image">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=350&h=250&fit=crop&q=80" alt="Empty office space representing workforce cuts" />
-                <div class="body-image-caption">The invisible workforce: Thousands of contractors cut without media attention</div>
+            <div class="callout callout-warning">
+                <div class="callout-header">The Hidden Cost</div>
+                <p>Industry analysts estimate each terminated contractor supported an average of 2.3 dependents, meaning approximately 23,568 additional family members experienced immediate income disruption.</p>
             </div>
-            
-            <p>This visualization confirms what many suspected but few documented: the shadow workforce bears the brunt of corporate cost-cutting while remaining largely invisible to public scrutiny. The empty office spaces pictured above now sit vacant not because of remote work policies, but because of systematic workforce elimination that disproportionately affects the most vulnerable workers in the tech ecosystem.</p>
-
-            <p>The invisibility of contractor cuts serves multiple corporate purposes beyond just avoiding negative headlines. It allows companies to maintain the fiction of employment stability for their "core" workforce while creating a disposable tier of workers who can be eliminated when financial pressures mount. This two-tier system has become so normalized that even affected workers often blame themselves rather than recognizing the structural inequalities built into contractor employment.</p>
-
-            <p>What the image also represents is the speed at which modern corporate restructuring can occur. Unlike traditional manufacturing layoffs that might unfold over months with union negotiations and community impact studies, these contractor eliminations happened faster than most workers could process. The empty desks and silent phones became reality within days, leaving little time for affected workers to prepare or organize any collective response.</p>
-
-            <p>The psychological impact extends beyond just the terminated contractors. Remaining workers, both employees and contractors, now understand that their perceived job security was largely illusory. Internal surveys at several major tech companies show significant increases in job anxiety and decreased loyalty following these contractor purges, suggesting that the strategy may have long-term productivity costs that haven't yet been factored into the efficiency calculations.</p>
 
             <h2>The Shadow Workforce Strategy</h2>
 
-            <blockquote>
-                "They called it 'contract completion' but everyone knew what it really was. We did the same work as employees, just without the protection or benefits."
-                <footer>— Lisa Chen, former Amazon content moderator</footer>
-            </blockquote>
-
             <p>The genius of contractor cuts is their invisibility. No stock impact, no regulatory filings, no bad headlines about layoffs. Just thousands of people suddenly without income, scrambling to find new positions in a market flooded with similarly discarded workers.</p>
 
-            <div class="purge-timeline">
-                <h4>📅 The One-Week Purge Timeline</h4>
-                <div class="timeline-item">
-                    <div class="timeline-date">Dec 29</div>
-                    <div>First wave: 3,200 content moderators receive termination notices</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Jan 2</div>
-                    <div>Customer service cuts: 4,215 contractors "not renewed"</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Jan 3</div>
-                    <div>Logistics purge: 2,185 coordinators receive final payments</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Jan 5</div>
-                    <div>Final count: 10,247 contractors eliminated, 647 additional "pending"</div>
-                </div>
-            </div>
-            
-            <p>The timeline illustrated here demonstrates the calculated efficiency of Amazon's approach—maximizing terminations during a holiday period when media attention is minimal and affected workers have limited recourse options. The strategic timing also exploited the fact that most employment attorneys and advocacy organizations operate on reduced schedules during the holiday period, making immediate legal challenges more difficult to organize.</p>
+            <h3>The One-Week Purge Timeline</h3>
 
-            <p>Each date on this timeline represents thousands of individual human dramas unfolding in real time. December 29th wasn't just the start of contractor terminations—it was the moment families realized their holiday celebrations would be overshadowed by sudden unemployment. January 2nd wasn't simply another phase of cuts—it was the day customer service contractors returned from New Year's break to discover their access had been revoked.</p>
+            <p><strong>December 29:</strong> First wave—3,200 content moderators receive termination notices</p>
+            <p><strong>January 2:</strong> Customer service cuts—4,215 contractors "not renewed"</p>
+            <p><strong>January 3:</strong> Logistics purge—2,185 coordinators receive final payments</p>
+            <p><strong>January 5:</strong> Remaining cuts executed across various departments</p>
 
-            <p>The compressed timeframe also reveals Amazon's confidence in their legal position. By completing the entire purge within a single week, the company minimized opportunities for collective action, media investigation, or regulatory intervention. This rapid execution model has since been adopted by other tech giants, suggesting that the one-week purge may become the new standard for contractor workforce reductions.</p>
-
-            <h2>The Human Cost of Efficiency</h2>
-
-            <p>Immigration attorney David Park has seen a surge in H1-B visa issues as contractor positions evaporate: "These weren't just jobs—they were lifelines for people maintaining legal status. The visa implications alone could affect thousands of families." The immigration consequences add another layer of complexity to an already devastating situation, as affected workers face not just unemployment but potential deportation.</p>
-
-            <p>The visa status complications create a cascading crisis that extends far beyond simple job loss. H1-B holders typically have 60 days to find new employment or face deportation, but the sudden influx of 10,000+ qualified candidates into the job market has made placement extremely difficult. Immigration lawyers report a 400% increase in emergency consultations, with many contractors forced to accept significant pay cuts just to maintain legal status.</p>
-
-            <p>The psychological toll on families cannot be quantified in Amazon's efficiency calculations. Contractor spouses have reported increased domestic tension, children have been pulled from private schools, and many families have been forced to relocate to less expensive areas. These human costs don't appear in quarterly earnings reports, but they represent the real-world impact of Amazon's strategic workforce optimization.</p>
-
-            <div class="warning-box">
-                <h4>⚠️ Geographic Targeting</h4>
-                <p>Analysis of LinkedIn data shows 73% of terminated contractors were in expensive coastal markets where Amazon is simultaneously pushing return-to-office mandates. The message is clear: work where we want, how we want, or don't work at all.</p>
+            <div class="callout callout-info">
+                <div class="callout-header">Key Takeaway</div>
+                <p>The invisibility of contractor cuts serves multiple corporate purposes beyond avoiding negative headlines. It allows companies to maintain the fiction of employment stability while creating a disposable tier of workers who can be eliminated when financial pressures mount.</p>
             </div>
 
-            <p>The geographic targeting revealed in this analysis demonstrates Amazon's sophisticated approach to workforce reduction. The concentration of cuts in high-cost markets like Seattle, San Francisco, and New York wasn't coincidental—it was strategic. These markets not only have the highest contractor compensation rates but also the strongest labor advocacy networks and most aggressive local media coverage of corporate layoffs.</p>
+            <h3>Looking Ahead</h3>
 
-            <p>Meanwhile, Amazon's stock hit an all-time high Wednesday, with analysts praising the company's "operational efficiency improvements." Wall Street rewards the shadow workforce purge, even as affected workers struggle to make rent. This disconnect between market celebration and human suffering illustrates the fundamental misalignment between corporate success metrics and societal impact.</p>
+            <p>The psychological impact extends beyond just the terminated contractors. Remaining workers, both employees and contractors, now understand that their perceived job security was largely illusory. Internal surveys at several major tech companies show significant increases in job anxiety following these contractor purges.</p>
 
-            <p>The return-to-office mandates mentioned in the warning box add another dimension to the geographic targeting. By simultaneously eliminating remote contractors and demanding in-person attendance from remaining workers, Amazon effectively created a compliance test that many workers couldn't pass. This dual pressure allowed the company to characterize workforce reduction as voluntary departures rather than involuntary terminations.</p>
-
-            <h3>The Spreading Playbook</h3>
-
-            <p>The playbook is spreading. Meta, Google, and Microsoft have all quietly reduced contractor workforces by 15-25% since November, with barely a mention in earnings calls or press releases. This coordination suggests industry-wide adoption of contractor-based cost reduction as a standard business practice, normalized to the point where it no longer requires explanation or justification to shareholders.</p>
-
-            <p>The silence from industry leaders speaks volumes about the calculated nature of these cuts. Unlike traditional layoffs, which typically generate CEO statements about market conditions and strategic pivots, contractor eliminations occur without corporate acknowledgment or explanation. This silence is itself part of the strategy—maintaining deniability while executing systematic workforce reduction.</p>
-
-            <div class="insight-box">
-                <h4>💡 The New Corporate Math</h4>
-                <p>For every 1,000 contractors eliminated, companies save approximately $15-20 million annually in salary, benefits, and overhead costs. With zero severance obligations and minimal regulatory reporting, it's the most efficient way to cut labor costs in corporate history.</p>
-            </div>
-
-            <h2>The Gig Economy's Dark Reality</h2>
-
-            <div class="article-content">
-                <p>This is the new normal: mass job cuts hidden behind employment classification technicalities, affecting real people while protecting corporate messaging. The gig economy's dark side, where "flexibility" means you can be discarded without explanation or compensation.</p>
-
-                <p>The affected workers now face a saturated market. With 29,151 contractors cut across major tech companies in the past two months, competition for remaining positions has intensified dramatically. Many are accepting lower rates just to maintain income, creating a deflationary spiral that benefits corporations while devastating individual livelihoods.</p>
-
-                <p>The human cost extends beyond individual financial hardship to encompass broader societal implications. Contractor elimination represents the systematization of job insecurity, where skilled professionals operate in permanent uncertainty regardless of their performance or contribution. This model allows corporations to maintain the benefits of skilled labor while externalizing the risks and responsibilities traditionally associated with employment.</p>
-
-                <p>As one former Google contractor put it: "We built the algorithms that replaced us, trained the AI that made us redundant, and now we're competing with thousands of others just like us for the few remaining scraps." This statement captures the profound irony of an industry where the very workers who enabled technological advancement find themselves displaced by the systems they helped create, with no safety net or recognition of their contribution to corporate success.</p>
-            </div>
+            <p>This isn't just an Amazon story—it's a preview of how major corporations will increasingly manage workforce reductions in the AI age, where automation threatens both contractor and employee positions alike.</p>
         </div>
-    </main>
+    </article>
+
+    <footer class="footer">
+        <p>&copy; 2025 <a href="/">Moonlight Analytica</a>. All rights reserved.</p>
+    </footer>
 </body>
 </html>
