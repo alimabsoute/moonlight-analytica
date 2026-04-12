@@ -5,6 +5,8 @@ import os
 import sqlite3
 from contextlib import contextmanager
 
+from migrations import run_migrations
+
 DB = "janus.db"
 
 
@@ -161,3 +163,5 @@ def ensure_schema():
         con.execute("INSERT OR IGNORE INTO zones (zone_name, capacity, zone_type) VALUES ('queue', 30, 'queue')")
 
         con.commit()
+
+    run_migrations(DB)

@@ -1,7 +1,8 @@
 """
-Gate 1.1 — Database security tests.
+Gates 1.1 + 2.2 — Database security and migration tests.
 
-Tests: rollback on error, WAL mode, foreign keys.
+Tests: rollback on error, WAL mode, foreign keys, versioned migrations,
+new zone/event/session columns added in Gate 2.2.
 """
 
 import sqlite3
@@ -46,6 +47,41 @@ class TestDBContextManager:
         with main.db() as con:
             fk = con.execute("PRAGMA foreign_keys").fetchone()[0]
             assert fk == 1
+
+
+class TestMigrations:
+    """Gate 2.2 — Versioned migration system."""
+
+    def test_migrations_apply(self, tmp_db):
+        """All migrations run without error on a fresh DB."""
+        import main
+        from migrations import run_migrations
+        run_migrations(main.DB)  # Should not raise
+
+    def test_new_columns_exist(self, fresh_db):
+        """Gate 2.2 columns exist after migrations."""
+        zones_cols = {r[1] for r in fresh_db.execute("PRAGMA table_info(zones)")}
+        events_cols = {r[1] for r in fresh_db.execute("PRAGMA table_info(events)")}
+        sessions_cols = {r[1] for r in fresh_db.execute("PRAGMA table_info(sessions)")}
+
+        assert "polygon_world" in zones_cols
+        assert "polygon_image" in zones_cols
+        assert "color" in zones_cols
+        assert "world_x" in events_cols
+        assert "world_y" in events_cols
+        assert "trajectory" in sessions_cols
+
+    def test_migrations_idempotent(self, tmp_db):
+        """Running migrations twice does not raise."""
+        import main
+        from migrations import run_migrations
+        run_migrations(main.DB)
+        run_migrations(main.DB)  # second run should be a no-op
+
+    def test_schema_migrations_table_exists(self, fresh_db):
+        """schema_migrations tracking table is created."""
+        tables = {r[0] for r in fresh_db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        assert "schema_migrations" in tables
 
 
 class TestHealthEndpoint:
