@@ -33,7 +33,7 @@ gmc_method: sparseOptFlow   # Optical flow for motion compensation
 # Note: Requires reid_weights model file
 proximity_thresh: 0.5       # IoU threshold for proximity matching
 appearance_thresh: 0.25     # Cosine similarity threshold for appearance matching
-with_reid: False            # Set to True when reid_weights are available
+with_reid: True             # Enabled — appearance matching for occlusion recovery
 
 # Re-ID model weights (uncomment when available)
 # reid_weights: osnet_x0_25_market1501.pt

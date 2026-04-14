@@ -27,10 +27,11 @@ flask-cors>=4.0.0
 requests>=2.31.0
 
 # ============================================
-# OPTIONAL: Enhanced Tracking (AGPL — only if accuracy demands)
-# Uncomment ONLY if ByteTrack accuracy is insufficient in dense scenes
+# OPTIONAL: Enhanced Tracking (AGPL — Gate 4.1 integration)
+# TrackerFactory falls back to ByteTrack gracefully if not installed.
+# Install when BoT-SORT + ReID accuracy is required in dense scenes.
 # ============================================
-# boxmot>=10.0.0            # BoostTrack + CLIP-ReID (AGPL-3.0)
+boxmot>=10.0.0            # BoT-SORT + CLIP-ReID (AGPL-3.0) — optional, graceful fallback to ByteTrack
 
 # ============================================
 # INSTALLATION INSTRUCTIONS
