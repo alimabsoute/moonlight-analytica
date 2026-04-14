@@ -14,6 +14,7 @@ from routes.batch import batch_bp
 from routes.profile import profile_bp
 from routes.zones import zones_bp
 from routes.calibration import calibration_bp
+from routes.websocket import websocket_bp, init_sock
 
 
 def create_app():
@@ -45,6 +46,10 @@ def create_app():
     application.register_blueprint(profile_bp)
     application.register_blueprint(zones_bp)
     application.register_blueprint(calibration_bp)
+    application.register_blueprint(websocket_bp)
+
+    # Attach flask-sock and register /ws/positions WebSocket route
+    init_sock(application)
 
     return application
 
