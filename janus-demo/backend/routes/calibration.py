@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from datetime import datetime, timezone
 
 import cv2
@@ -12,7 +13,9 @@ import numpy as np
 from flask import Blueprint, jsonify, request
 
 from db import db
+from rate_limit import rate_limit
 
+log = logging.getLogger(__name__)
 calibration_bp = Blueprint('calibration', __name__)
 
 
@@ -59,6 +62,7 @@ def _project_pixel_to_world(H: list, px: float, py: float):
 
 
 @calibration_bp.post("/api/calibration/<camera_id>")
+@rate_limit(30)  # calibration is infrequent — 30 req/min is generous
 def save_calibration(camera_id: str):
     """
     Store or replace calibration for a camera.
@@ -114,6 +118,10 @@ def save_calibration(camera_id: str):
             )
             action = "created"
 
+    log.info(
+        "calibration %s for camera '%s': %d points, reprojection error=%.4f",
+        action, camera_id, len(pixel_points), reprojection_error or 0.0,
+    )
     return jsonify({
         "camera_id": camera_id,
         "h_matrix": h_matrix,

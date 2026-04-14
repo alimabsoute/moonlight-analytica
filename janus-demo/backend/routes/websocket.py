@@ -18,6 +18,7 @@ Frame format:
 from __future__ import annotations
 
 import json
+import logging
 import threading
 import time
 from typing import Any
@@ -25,6 +26,9 @@ from typing import Any
 from flask import Blueprint, jsonify, request
 from flask_sock import Sock
 
+from rate_limit import rate_limit
+
+log = logging.getLogger(__name__)
 websocket_bp = Blueprint("websocket", __name__)
 
 # Lazy-initialised Sock instance — attached to the app in create_app()
@@ -115,6 +119,7 @@ def _broadcast_to_clients(payload: str) -> None:
 # ---------------------------------------------------------------------------
 
 @websocket_bp.route("/api/positions/update", methods=["POST"])
+@rate_limit(300)  # 300 req/min — edge agent at ~10 fps × 30 persons
 def positions_update():
     """
     Edge agent pushes real-time person positions here.
@@ -129,6 +134,7 @@ def positions_update():
         return jsonify({"error": "persons must be a list"}), 400
 
     update_position_cache(persons)
+    log.debug("positions updated: %d person(s)", len(persons))
     return jsonify({"ok": True, "count": len(persons)})
 
 

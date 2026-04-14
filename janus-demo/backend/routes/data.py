@@ -1,6 +1,7 @@
 # backend/routes/data.py — Core data endpoints: seed, count, KPIs, CSV, events, sessions
 from __future__ import annotations
 
+import logging
 import random
 from datetime import datetime, timedelta, timezone
 
@@ -8,7 +9,9 @@ from flask import Blueprint, request, jsonify, Response
 
 from db import db
 from helpers import parse_hours, source_filter
+from rate_limit import rate_limit
 
+log = logging.getLogger(__name__)
 data_bp = Blueprint('data', __name__)
 
 
@@ -190,6 +193,7 @@ def seed_demo():
 
 
 @data_bp.post("/count")
+@rate_limit(120)  # 120 req/min — edge agent may push rapidly
 def record_count():
     """
     Ingest a single count point (used by tracker/counter demos).
@@ -209,6 +213,7 @@ def record_count():
         )
         con.commit()
 
+    log.debug("count recorded: %d at %s", count_value, ts)
     return jsonify({"timestamp": ts, "count_value": count_value})
 
 
@@ -294,12 +299,16 @@ def series_csv():
 
 
 @data_bp.post("/events")
+@rate_limit(200)  # 200 req/min — edge agent may burst on busy scenes
 def post_event():
     """
     Receive tracking events from enhanced edge agent
     Expected: {event_type, person_id, zone_id?, direction?, confidence?, timestamp?}
     """
-    body = request.get_json() or {}
+    body = request.get_json(silent=True) or {}
+    if not body:
+        return jsonify({"error": "JSON body required"}), 400
+
     event_type = body.get("event_type")  # entry, exit, zone_change
     person_id = body.get("person_id")
     zone_id = body.get("zone_id")
@@ -324,16 +333,21 @@ def post_event():
             (timestamp, str(person_id), event_type, zone_id, direction, confidence),
         )
 
+    log.debug("event recorded: %s for person %s", event_type, person_id)
     return jsonify({"ok": True, "event_type": event_type, "person_id": person_id})
 
 
 @data_bp.post("/sessions")
+@rate_limit(200)
 def post_session():
     """
     Receive completed session data from enhanced edge agent
     Expected: {person_id, entry_time, exit_time, dwell_seconds, zone_path, converted}
     """
-    body = request.get_json() or {}
+    body = request.get_json(silent=True) or {}
+    if not body:
+        return jsonify({"error": "JSON body required"}), 400
+
     person_id = body.get("person_id")
     entry_time = body.get("entry_time")
     exit_time = body.get("exit_time")
@@ -353,4 +367,5 @@ def post_session():
             (person_id, entry_time, exit_time, dwell_seconds, zone_path, converted),
         )
 
+    log.debug("session recorded: person %s, dwell %ss", person_id, dwell_seconds)
     return jsonify({"ok": True, "person_id": person_id, "dwell_seconds": dwell_seconds})

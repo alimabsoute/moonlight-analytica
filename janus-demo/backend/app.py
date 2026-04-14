@@ -1,10 +1,42 @@
 # backend/app.py — Flask app factory and blueprint registration
 from __future__ import annotations
 
+import logging
+import logging.config
+
 from flask import Flask
 from flask_cors import CORS
 
 from db import ensure_schema
+
+
+def _configure_logging() -> None:
+    """Set up structured logging for the application."""
+    logging.config.dictConfig({
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "standard": {
+                "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+                "datefmt": "%Y-%m-%dT%H:%M:%S",
+            },
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "standard",
+                "stream": "ext://sys.stdout",
+            },
+        },
+        "root": {
+            "level": "INFO",
+            "handlers": ["console"],
+        },
+        "loggers": {
+            # Quiet noisy werkzeug request logs in tests
+            "werkzeug": {"level": "WARNING"},
+        },
+    })
 from routes.health import health_bp
 from routes.data import data_bp
 from routes.analytics import analytics_bp
@@ -19,6 +51,7 @@ from routes.websocket import websocket_bp, init_sock
 
 def create_app():
     """Create and configure the Flask application."""
+    _configure_logging()
     application = Flask(__name__)
     application.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB upload limit
 
