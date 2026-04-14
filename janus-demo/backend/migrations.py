@@ -17,6 +17,24 @@ MIGRATIONS = [
             "ALTER TABLE sessions ADD COLUMN trajectory TEXT",
         ],
     ),
+    (
+        2,
+        "Gate 3.1: add camera_calibration table",
+        [
+            """
+            CREATE TABLE IF NOT EXISTS camera_calibration (
+                id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+                camera_id           TEXT NOT NULL UNIQUE,
+                pixel_points        TEXT NOT NULL,
+                world_points        TEXT NOT NULL,
+                h_matrix            TEXT NOT NULL,
+                reprojection_error  REAL,
+                created_at          TEXT DEFAULT (datetime('now')),
+                updated_at          TEXT DEFAULT (datetime('now'))
+            )
+            """
+        ],
+    ),
 ]
 
 

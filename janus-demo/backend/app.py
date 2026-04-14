@@ -13,6 +13,7 @@ from routes.video import video_bp
 from routes.batch import batch_bp
 from routes.profile import profile_bp
 from routes.zones import zones_bp
+from routes.calibration import calibration_bp
 
 
 def create_app():
@@ -43,6 +44,7 @@ def create_app():
     application.register_blueprint(batch_bp)
     application.register_blueprint(profile_bp)
     application.register_blueprint(zones_bp)
+    application.register_blueprint(calibration_bp)
 
     return application
 
