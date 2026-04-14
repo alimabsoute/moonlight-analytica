@@ -168,10 +168,45 @@ def _default_lines(frame_w: int, frame_h: int):
     return [{"name": "entry_line", "line": sv.LineZone(start=start, end=end)}]
 
 
+# ── Homography / World-Coordinate Helpers ────────────────────────────
+
+def load_calibration_from_api(backend_url: str, camera_id: str = "cam_0"):
+    """
+    Fetch the H matrix for camera_id from the backend calibration API.
+
+    Returns numpy 3×3 H array, or None if not available (uncalibrated).
+    """
+    try:
+        resp = requests.get(f"{backend_url}/api/calibration/{camera_id}", timeout=5)
+        if resp.status_code == 200:
+            h_list = resp.json().get("h_matrix")
+            if h_list:
+                H = np.array(h_list, dtype=np.float64)
+                print(f"[INFO] Loaded calibration for '{camera_id}' from backend API")
+                return H
+    except Exception as e:
+        print(f"[WARN] Could not load calibration from API: {e}")
+    print(f"[WARN] No calibration found for '{camera_id}' — world_x/world_y will be null")
+    return None
+
+
+def project_to_world(H: Optional[np.ndarray], px: float, py: float):
+    """
+    Project pixel foot-point (px, py) to world coords using homography H.
+
+    Returns (world_x, world_y) in metres, or (None, None) if uncalibrated.
+    """
+    if H is None:
+        return None, None
+    pt_h = H @ np.array([px, py, 1.0])
+    return float(pt_h[0] / pt_h[2]), float(pt_h[1] / pt_h[2])
+
+
 # ── Event Posting ────────────────────────────────────────────────────
 
 def post_event(backend_url: str, event_type: str, person_id: str,
-               zone_id: Optional[int] = None, direction: Optional[str] = None):
+               zone_id: Optional[int] = None, direction: Optional[str] = None,
+               world_x: Optional[float] = None, world_y: Optional[float] = None):
     try:
         requests.post(f"{backend_url}/events", json={
             "event_type": event_type,
@@ -180,6 +215,8 @@ def post_event(backend_url: str, event_type: str, person_id: str,
             "direction": direction,
             "confidence": 1.0,
             "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "world_x": world_x,
+            "world_y": world_y,
         }, timeout=2)
     except Exception:
         pass
@@ -231,6 +268,7 @@ def main():
 
     p.add_argument("--backend", default=os.getenv("JANUS_BACKEND", "http://localhost:8000"))
     p.add_argument("--config", default="zones.json", help="Zone configuration file")
+    p.add_argument("--camera-id", default="cam_0", help="Camera ID for calibration lookup")
     p.add_argument("--conf", type=float, default=0.40, help="Detection confidence")
     p.add_argument("--timeout", type=int, default=30, help="Person exit timeout in seconds")
     args = p.parse_args()
@@ -263,6 +301,9 @@ def main():
         zones, lines = load_zone_config(args.config, frame_w, frame_h)
     for name, z in zones.items():
         print(f"  Zone: {name} [{z['zone_type']}]")
+
+    # Load homography calibration for world-coordinate projection
+    H_matrix = load_calibration_from_api(args.backend, args.camera_id)
 
     # Initialize detection + tracking
     model = RFDETRNano()
@@ -317,6 +358,7 @@ def main():
                     # Determine zone from bottom-center anchor
                     feet = detections.get_anchors_coordinates(sv.Position.BOTTOM_CENTER)
                     fx, fy = feet[i]
+                    world_x, world_y = project_to_world(H_matrix, fx, fy)
                     current_zone = None
                     for name, z_info in zones.items():
                         poly = z_info["zone"].polygon
@@ -335,7 +377,8 @@ def main():
                         }
                         if current_zone:
                             post_event(args.backend, "entry", person_id,
-                                       zones[current_zone]["zone_id"], "in")
+                                       zones[current_zone]["zone_id"], "in",
+                                       world_x, world_y)
                             print(f"[ENTRY] {person_id} -> {current_zone}")
                     else:
                         sess = sessions[track_id]
@@ -345,7 +388,8 @@ def main():
                             if current_zone not in sess["zone_history"]:
                                 sess["zone_history"].append(current_zone)
                             post_event(args.backend, "zone_change", person_id,
-                                       zones[current_zone]["zone_id"], "lateral")
+                                       zones[current_zone]["zone_id"], "lateral",
+                                       world_x, world_y)
                             print(f"[ZONE_CHANGE] {person_id}: {old_zone} -> {current_zone}")
 
                         # Check conversion
