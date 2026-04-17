@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Janus — Zone Workflow (What Works Now)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #080c14;
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 20px;
+    min-height: 100vh;
+  }
+  .title {
+    color: #94a3b8;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: #475569;
+    font-size: 0.75rem;
+    margin-bottom: 28px;
+  }
+  #stage {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .nav {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    align-items: center;
+  }
+  .nav button {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: #1e3a5f; color: #93c5fd; border-color: #2563eb; }
+  .nav button.active { background: #1e3a5f; color: #93c5fd; border-color: #2563eb; }
+  #step-label {
+    color: #f1f5f9;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 16px;
+    min-height: 20px;
+  }
+  #step-desc {
+    color: #64748b;
+    font-size: 0.72rem;
+    margin-top: 4px;
+    min-height: 16px;
+    max-width: 700px;
+    text-align: center;
+  }
+  .progress {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #1e293b;
+    transition: background 0.3s;
+  }
+  .dot.active { background: #2563eb; }
+  .dot.done { background: #22c55e; }
+</style>
+</head>
+<body>
+
+<div class="title">Janus Analytics — Zone Setup</div>
+<div class="subtitle">What a user can do right now with a standard camera feed</div>
+
+<div id="stage"><canvas id="c"></canvas></div>
+
+<div class="nav">
+  <button onclick="prevStep()">← Back</button>
+  <div class="progress" id="dots"></div>
+  <button onclick="nextStep()">Next →</button>
+</div>
+
+<div id="step-label"></div>
+<div id="step-desc"></div>
+
+<script>
+const C = document.getElementById('c');
+const ctx = C.getContext('2d');
+
+const W = 780, H = 480;
+C.width = W; C.height = H;
+
+// ── Palette ───────────────────────────────────────────────────────────────────
+const P = {
+  bg: '#0d1117', floor: '#141c2e', tile: '#1a2540',
+  shelf: '#1e2d44', shelfT: '#253450',
+  navy: '#1e3a5f', navyL: '#2563eb', navyGlow: '#93c5fd',
+  gold: '#c9a227', success: '#22c55e', danger: '#ef4444',
+  text: '#f1f5f9', muted: '#64748b', dim: '#334155',
+  person: '#38bdf8', zone1: '#c9a227', zone2: '#22c55e', zone3: '#8b5cf6',
+};
+
+// ── Steps ─────────────────────────────────────────────────────────────────────
+const STEPS = [
+  {
+    label: 'Step 1 — You see your camera feed',
+    desc:  'Live video from a fixed camera. People tracked with bounding boxes. No zones defined yet.',
+    draw:  drawStep1,
+  },
+  {
+    label: 'Step 2 — Click 4 points on the floor you can see',
+    desc:  'Tap 4 corners of any visible floor area — a doorway, an aisle, in front of a counter. The points snap to your clicks.',
+    draw:  drawStep2,
+  },
+  {
+    label: 'Step 3 — Zone appears as a flat overlay on that surface',
+    desc:  'The 4 pixels you clicked define a polygon. The system fills it with a semi-transparent color. This is your zone.',
+    draw:  drawStep3,
+  },
+  {
+    label: 'Step 4 — Name it and set a capacity',
+    desc:  'Give the zone a label (Entrance, Checkout, Queue). Optionally set a max capacity — system alerts when exceeded.',
+    draw:  drawStep4,
+  },
+  {
+    label: 'Step 5 — System tracks who enters and exits',
+    desc:  "When a person's foot point crosses the zone boundary, it's counted as an entry. Dwell time starts. On exit it's logged.",
+    draw:  drawStep5,
+  },
+  {
+    label: 'Step 6 — Optional: add a real-world scale reference',
+    desc:  'Click 2 points and enter the known distance between them (e.g. "these two corners are 3 meters apart"). Now zone area shows in m².',
+    draw:  drawStep6,
+  },
+  {
+    label: 'Step 7 — Multiple zones, live analytics',
+    desc:  'Add as many zones as needed. Each one streams live counts, dwell times, and heat data to the dashboard.',
+    draw:  drawStep7,
+  },
+];
+
+let step = 0;
+let animT = 0;
+let raf;
+
+// ── People positions ──────────────────────────────────────────────────────────
+const people = [
+  { x: 120, y: 200, vx: 0.5,  vy: 0.2,  id: 1 },
+  { x: 400, y: 300, vx: -0.4, vy: 0.3,  id: 2 },
+  { x: 580, y: 180, vx: 0.3,  vy: -0.4, id: 3 },
+  { x: 260, y: 380, vx: 0.6,  vy: -0.2, id: 4 },
+];
+
+// ── Zone definitions (pixel coords) ──────────────────────────────────────────
+const zone1 = [[60, 60], [240, 60], [240, 260], [60, 260]];   // entrance
+const zone2 = [[320, 180], [560, 180], [560, 400], [320, 400]]; // checkout
+const zone3 = [[580, 60], [740, 60], [740, 200], [580, 200]];   // queue
+
+// ── Click animation state ─────────────────────────────────────────────────────
+let clickedPts = [];
+let ripples = [];
+
+function addRipple(x, y, color) {
+  ripples.push({ x, y, r: 0, alpha: 1, color });
+}
+
+// ── Store background ──────────────────────────────────────────────────────────
+function drawBg() {
+  ctx.fillStyle = P.floor;
+  ctx.fillRect(0, 0, W, H);
+
+  // floor tiles
+  ctx.strokeStyle = P.tile;
+  ctx.lineWidth = 0.4;
+  for (let x = 0; x < W; x += 60) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 60) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // shelves left
+  shelf(20, 60, 30, 200);
+  shelf(20, 300, 30, 140);
+
+  // display center
+  shelf(290, 60, 30, 100);
+  shelf(290, 420, 30, 50);
+
+  // checkout counter
+  counter(330, 170, 220, 55);
+
+  // entrance door top-left
+  door(60, 0, 180, 52);
+
+  // cam label
+  ctx.fillStyle = '#1e293b';
+  ctx.fillRect(0, 0, W, 18);
+  ctx.fillStyle = P.muted;
+  ctx.font = '9px monospace';
+  ctx.fillText('CAM-01  ●  LIVE  |  1920×1080  |  30fps', 10, 13);
+  ctx.textAlign = 'right';
+  ctx.fillText(new Date().toLocaleTimeString(), W - 10, 13);
+  ctx.textAlign = 'left';
+
+  // scanlines
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  for (let y = 18; y < H; y += 3) ctx.fillRect(0, y, W, 1);
+}
+
+function shelf(x, y, w, h) {
+  ctx.fillStyle = P.shelf;
+  ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = P.shelfT;
+  ctx.fillRect(x, y, w, 6);
+  ctx.fillStyle = P.dim;
+  for (let sy = y + 20; sy < y + h - 10; sy += 28) ctx.fillRect(x + 2, sy, w - 4, 2);
+}
+function counter(x, y, w, h) {
+  ctx.fillStyle = '#182030';
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = '#253550';
+  ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
+  ctx.fillStyle = P.muted; ctx.font = '9px system-ui';
+  ctx.textAlign = 'center'; ctx.fillText('CHECKOUT', x + w/2, y + h/2 + 4); ctx.textAlign = 'left';
+  ctx.fillStyle = '#1e2d44'; ctx.fillRect(x+10, y+8, 28, 18); ctx.fillRect(x+w-48, y+8, 28, 18);
+}
+function door(x, y, w, h) {
+  ctx.fillStyle = '#10182a';
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = '#1e3050'; ctx.lineWidth = 1.5; ctx.strokeRect(x, y, w, h);
+  ctx.beginPath(); ctx.moveTo(x+w/2, y); ctx.lineTo(x+w/2, y+h); ctx.stroke();
+  ctx.fillStyle = P.muted; ctx.font = '9px system-ui';
+  ctx.textAlign = 'center'; ctx.fillText('ENTRANCE', x+w/2, y+h-8); ctx.textAlign = 'left';
+}
+
+// ── Person ────────────────────────────────────────────────────────────────────
+function drawPerson(p, inZone, color) {
+  const r = 9;
+  const col = inZone ? (color || P.success) : P.person;
+  ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+  ctx.strokeRect(p.x - r, p.y - r*1.5, r*2, r*3);
+  ctx.fillStyle = col + '20';
+  ctx.fillRect(p.x - r, p.y - r*1.5, r*2, r*3);
+  // foot dot
+  ctx.beginPath(); ctx.arc(p.x, p.y + r*1.5, 3, 0, Math.PI*2);
+  ctx.fillStyle = col; ctx.fill();
+  ctx.fillStyle = col; ctx.font = 'bold 8px monospace';
+  ctx.textAlign = 'center'; ctx.fillText(`#${p.id}`, p.x, p.y - r*1.5 - 4); ctx.textAlign = 'left';
+}
+
+// ── Zone polygon ──────────────────────────────────────────────────────────────
+function drawZonePoly(pts, color, label, alpha = 1, showVerts = false, pulse = false) {
+  if (pts.length < 2) return;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  if (pts.length >= 3) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    pts.forEach(p => ctx.lineTo(p[0], p[1]));
+    ctx.closePath();
+    ctx.fillStyle = color + (pulse ? Math.floor(40 + 20 * Math.sin(animT * 0.05)).toString(16) : '30');
+    ctx.fill();
+  }
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  pts.forEach(p => ctx.lineTo(p[0], p[1]));
+  if (pts.length >= 3) ctx.closePath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.setLineDash(pts.length < 4 ? [6,4] : []);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  if (showVerts) {
+    pts.forEach(p => {
+      ctx.beginPath(); ctx.arc(p[0], p[1], 5, 0, Math.PI*2);
+      ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+    });
+  }
+  if (label && pts.length >= 3) {
+    const cx = pts.reduce((s,p) => s+p[0], 0)/pts.length;
+    const cy = pts.reduce((s,p) => s+p[1], 0)/pts.length;
+    ctx.font = 'bold 11px system-ui';
+    const tw = ctx.measureText(label).width;
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.beginPath(); ctx.roundRect(cx-tw/2-8, cy-10, tw+16, 20, 4); ctx.fill();
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center'; ctx.fillText(label, cx, cy+5); ctx.textAlign = 'left';
+  }
+  ctx.restore();
+}
+
+// ── Ripples ───────────────────────────────────────────────────────────────────
+function drawRipples() {
+  ripples = ripples.filter(r => r.alpha > 0);
+  ripples.forEach(r => {
+    ctx.save(); ctx.globalAlpha = r.alpha * 0.7;
+    ctx.strokeStyle = r.color; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI*2); ctx.stroke();
+    ctx.restore();
+    r.r += 2; r.alpha -= 0.035;
+  });
+}
+
+// ── Cursor ────────────────────────────────────────────────────────────────────
+function drawCursor(x, y, click) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = click ? '#fff' : '#e2e8f0';
+  ctx.strokeStyle = '#000'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0,0); ctx.lineTo(10,6); ctx.lineTo(4,8);
+  ctx.lineTo(6,14); ctx.lineTo(2,12); ctx.lineTo(0,18);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+
+// ── Foot-point crosshair ──────────────────────────────────────────────────────
+function drawFootCross(x, y, color) {
+  ctx.strokeStyle = color; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x-8, y); ctx.lineTo(x+8, y); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x, y-8); ctx.lineTo(x, y+8); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.stroke();
+}
+
+// ── Overlay card ──────────────────────────────────────────────────────────────
+function card(x, y, w, h, title, lines) {
+  ctx.fillStyle = 'rgba(13,17,23,0.92)';
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, 8); ctx.fill();
+  ctx.strokeStyle = P.navyL; ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = P.navyL; ctx.font = 'bold 10px system-ui';
+  ctx.fillText(title, x+10, y+18);
+  ctx.fillStyle = P.muted; ctx.font = '9px system-ui';
+  lines.forEach((l, i) => ctx.fillText(l, x+10, y+34+i*14));
+}
+
+function kpiChip(x, y, label, value, color) {
+  ctx.fillStyle = 'rgba(13,17,23,0.9)';
+  ctx.beginPath(); ctx.roundRect(x, y, 80, 38, 6); ctx.fill();
+  ctx.strokeStyle = color + '80'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.fillStyle = P.muted; ctx.font = '8px system-ui'; ctx.fillText(label, x+8, y+14);
+  ctx.fillStyle = color; ctx.font = 'bold 14px system-ui'; ctx.fillText(value, x+8, y+30);
+}
+
+// ── Point in polygon ──────────────────────────────────────────────────────────
+function pip(pt, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length-1; i < poly.length; j=i++) {
+    const [xi,yi] = poly[i], [xj,yj] = poly[j];
+    if (((yi>pt[1]) !== (yj>pt[1])) && (pt[0] < (xj-xi)*(pt[1]-yi)/(yj-yi)+xi)) inside = !inside;
+  }
+  return inside;
+}
+
+// ── STEP RENDERERS ────────────────────────────────────────────────────────────
+
+function drawStep1() {
+  drawBg();
+  people.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 20 || p.x > W-20) p.vx *= -1;
+    if (p.y < 20 || p.y > H-20) p.vy *= -1;
+    drawPerson(p, false, null);
+  });
+  card(W-200, H-110, 190, 100, 'LIVE FEED', [
+    '4 people detected',
+    'No zones defined',
+    'Click → Draw Zone to start',
+    '',
+    'Tracking: RF-DETR + ByteTrack',
+  ]);
+}
+
+function drawStep2() {
+  drawBg();
+  people.forEach(p => { drawPerson(p, false, null); });
+
+  // Animated cursor clicking 4 points
+  const clickSeq = [
+    { x: 60,  y: 60,  t: 0   },
+    { x: 240, y: 60,  t: 60  },
+    { x: 240, y: 260, t: 120 },
+    { x: 60,  y: 260, t: 180 },
+  ];
+  const ct = animT % 280;
+  let cx = 380, cy = 240, clicking = false;
+
+  for (let i = 0; i < clickSeq.length; i++) {
+    const s = clickSeq[i], nxt = clickSeq[i+1] || { x: 60, y: 60, t: 240 };
+    if (ct >= s.t && ct < nxt.t) {
+      const prog = (ct - s.t) / (nxt.t - s.t);
+      cx = s.x + (nxt.x - s.x) * (prog < 0.5 ? 2*prog*prog : 1-Math.pow(-2*prog+2,2)/2);
+      cy = s.y + (nxt.y - s.y) * (prog < 0.5 ? 2*prog*prog : 1-Math.pow(-2*prog+2,2)/2);
+      clicking = prog > 0.9;
+    }
+    if (ct >= s.t) {
+      if (!clickedPts[i]) { clickedPts[i] = true; addRipple(s.x, s.y, P.gold); }
+    }
+  }
+  if (ct < 10) clickedPts = [];
+
+  const drawnSoFar = clickSeq.filter(s => ct >= s.t);
+  const pts = drawnSoFar.map(s => [s.x, s.y]);
+  if (pts.length > 0) {
+    pts.push([cx, cy]);
+    drawZonePoly(pts, P.gold, null, 1, true);
+  }
+  drawRipples();
+  drawCursor(cx, cy, clicking);
+
+  card(W-210, 20, 200, 80, 'DRAWING ZONE', [
+    `Points placed: ${drawnSoFar.length} / 4`,
+    'Click floor to place point',
+    'Close polygon to finish',
+  ]);
+}
+
+function drawStep3() {
+  drawBg();
+  const prog = Math.min(animT / 60, 1);
+  drawZonePoly(zone1, P.gold, null, prog, true);
+  people.forEach(p => drawPerson(p, false, null));
+
+  // Show foot-point falling inside zone
+  people.forEach(p => {
+    const foot = [p.x, p.y + 13];
+    if (pip(foot, zone1)) drawFootCross(foot[0], foot[1], P.gold);
+  });
+
+  card(W-220, H-130, 210, 120, 'ZONE CREATED', [
+    '4 pixel points → flat polygon',
+    'Overlaid on camera perspective',
+    'Foot-point test: is person inside?',
+    '',
+    '✓  Works with any camera angle',
+    '✓  No depth sensor needed',
+  ]);
+}
+
+function drawStep4() {
+  drawBg();
+  drawZonePoly(zone1, P.gold, null, 1, true);
+  people.forEach(p => drawPerson(p, false, null));
+
+  // Name input card
+  const cx = W/2 - 130, cy = H/2 - 70;
+  ctx.fillStyle = 'rgba(8,12,20,0.95)';
+  ctx.beginPath(); ctx.roundRect(cx, cy, 260, 160, 10); ctx.fill();
+  ctx.strokeStyle = P.navyL; ctx.lineWidth = 1.5; ctx.stroke();
+
+  ctx.fillStyle = P.navyL; ctx.font = 'bold 11px system-ui'; ctx.fillText('Name this zone', cx+14, cy+22);
+
+  // Name field
+  ctx.fillStyle = '#0f172a'; ctx.fillRect(cx+14, cy+34, 232, 28);
+  ctx.strokeStyle = P.navyL; ctx.lineWidth = 1; ctx.strokeRect(cx+14, cy+34, 232, 28);
+  ctx.fillStyle = P.text; ctx.font = '12px system-ui'; ctx.fillText('Entrance', cx+20, cy+53);
+  if (Math.floor(animT/30)%2===0) { ctx.fillStyle = P.navyL; ctx.fillRect(cx+20+52, cy+38, 1.5, 18); }
+
+  // Capacity field
+  ctx.fillStyle = P.muted; ctx.font = '9px system-ui'; ctx.fillText('Max capacity (optional)', cx+14, cy+82);
+  ctx.fillStyle = '#0f172a'; ctx.fillRect(cx+14, cy+88, 232, 28);
+  ctx.strokeStyle = P.dim; ctx.lineWidth = 1; ctx.strokeRect(cx+14, cy+88, 232, 28);
+  ctx.fillStyle = P.muted; ctx.font = '12px system-ui'; ctx.fillText('e.g. 20', cx+20, cy+107);
+
+  // Color swatches
+  const colors = [P.gold, P.success, '#8b5cf6', P.danger, '#06b6d4'];
+  colors.forEach((c, i) => {
+    ctx.fillStyle = i === 0 ? c : c + '60';
+    ctx.beginPath(); ctx.arc(cx + 22 + i*22, cy+135, 7, 0, Math.PI*2); ctx.fill();
+    if (i === 0) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); }
+  });
+
+  // Save button
+  ctx.fillStyle = P.navy; ctx.fillRect(cx+130, cy+124, 116, 26);
+  ctx.strokeStyle = P.navyL; ctx.lineWidth = 1; ctx.strokeRect(cx+130, cy+124, 116, 26);
+  ctx.fillStyle = '#93c5fd'; ctx.font = 'bold 10px system-ui';
+  ctx.textAlign = 'center'; ctx.fillText('Save Zone', cx+130+58, cy+141); ctx.textAlign = 'left';
+}
+
+function drawStep5() {
+  drawBg();
+  drawZonePoly(zone1, P.gold, 'Entrance', 1, false, true);
+  people.forEach(p => {
+    const foot = [p.x, p.y + 13];
+    const inside = pip(foot, zone1);
+    drawPerson(p, inside, P.gold);
+    if (inside) drawFootCross(foot[0], foot[1], P.gold);
+  });
+
+  // Entry event animation
+  const evT = animT % 90;
+  if (evT < 30) {
+    ctx.save();
+    ctx.globalAlpha = 1 - evT/30;
+    ctx.fillStyle = P.gold + 'cc';
+    ctx.font = 'bold 11px system-ui';
+    ctx.fillText('↓ ENTRY', zone1[0][0] + 10, zone1[0][1] + 30);
+    ctx.restore();
+  }
+
+  kpiChip(W-210, 30, 'IN ZONE', '2', P.gold);
+  kpiChip(W-120, 30, 'ENTRIES', `${3 + Math.floor(animT/120) % 5}`, P.success);
+  kpiChip(W-210, 80, 'DWELL', '1m 24s', '#38bdf8');
+  kpiChip(W-120, 80, 'EXITS', `${2 + Math.floor(animT/180) % 3}`, P.muted);
+
+  card(W-210, H-100, 200, 90, 'HOW IT WORKS', [
+    'Foot point = bbox bottom-center',
+    'Crosses boundary → entry logged',
+    'Leaves boundary → exit + dwell',
+  ]);
+}
+
+function drawStep6() {
+  drawBg();
+  drawZonePoly(zone1, P.gold, 'Entrance', 1, false);
+  people.forEach(p => drawPerson(p, pip([p.x, p.y+13], zone1), P.gold));
+
+  // Reference line
+  const rx1 = 60, ry1 = 260, rx2 = 240, ry2 = 260;
+  const lineT = Math.min(animT / 40, 1);
+
+  ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 2; ctx.setLineDash([4,3]);
+  ctx.beginPath();
+  ctx.moveTo(rx1, ry1);
+  ctx.lineTo(rx1 + (rx2-rx1)*lineT, ry1 + (ry2-ry1)*lineT);
+  ctx.stroke(); ctx.setLineDash([]);
+
+  if (lineT > 0.3) {
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(rx1, ry1, 5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  }
+  if (lineT > 0.95) {
+    ctx.beginPath(); ctx.arc(rx2, ry2, 5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  }
+
+  if (lineT > 0.6) {
+    ctx.fillStyle = '#06b6d4'; ctx.font = '10px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('3.0 m', (rx1+rx2)/2, ry1-8);
+    ctx.textAlign = 'left';
+  }
+
+  // Input card
+  const prog = Math.min((animT-30)/40, 1);
+  if (prog > 0) {
+    ctx.save(); ctx.globalAlpha = prog;
+    const ix = W-230, iy = H-150;
+    ctx.fillStyle = 'rgba(8,12,20,0.95)';
+    ctx.beginPath(); ctx.roundRect(ix, iy, 220, 140, 8); ctx.fill();
+    ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#06b6d4'; ctx.font = 'bold 10px system-ui';
+    ctx.fillText('Scale Reference', ix+12, iy+20);
+    ctx.fillStyle = P.muted; ctx.font = '9px system-ui';
+    ctx.fillText('Distance between points:', ix+12, iy+38);
+    ctx.fillStyle = '#0f172a'; ctx.fillRect(ix+12, iy+44, 196, 26);
+    ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 1; ctx.strokeRect(ix+12, iy+44, 196, 26);
+    ctx.fillStyle = P.text; ctx.font = '12px system-ui'; ctx.fillText('3.0 meters', ix+18, iy+62);
+    ctx.fillStyle = P.muted; ctx.font = '9px system-ui';
+    ctx.fillText('Zone area will now show in m²', ix+12, iy+86);
+    ctx.fillText('Dwell distance accurate', ix+12, iy+100);
+
+    ctx.fillStyle = P.gold; ctx.font = 'bold 12px system-ui';
+    ctx.fillText('Entrance  =  10.8 m²', ix+12, iy+120);
+    ctx.restore();
+  }
+}
+
+function drawStep7() {
+  drawBg();
+  drawZonePoly(zone1, P.gold,    'Entrance', 1);
+  drawZonePoly(zone2, P.success, 'Checkout', 1);
+  drawZonePoly(zone3, '#8b5cf6', 'Queue',    1);
+
+  people.forEach(p => {
+    const foot = [p.x, p.y+13];
+    const z1 = pip(foot, zone1), z2 = pip(foot, zone2), z3 = pip(foot, zone3);
+    const col = z1 ? P.gold : z2 ? P.success : z3 ? '#8b5cf6' : null;
+    drawPerson(p, !!col, col);
+  });
+
+  // Live KPI strip
+  ctx.fillStyle = 'rgba(8,12,20,0.92)';
+  ctx.fillRect(0, H-52, W, 52);
+  ctx.fillStyle = P.dim; ctx.fillRect(0, H-53, W, 1);
+
+  const chips = [
+    { label: 'ENTRANCE', val: '3 in', sub: '14 today', color: P.gold },
+    { label: 'CHECKOUT', val: '1 in', sub: '8 today',  color: P.success },
+    { label: 'QUEUE',    val: '0 in', sub: '6 today',  color: '#8b5cf6' },
+    { label: 'PEAK OCC', val: '6',    sub: '12:34 PM', color: '#38bdf8' },
+    { label: 'AVG DWELL',val: '2m 8s',sub: 'entrance', color: P.muted },
+  ];
+  chips.forEach((ch, i) => {
+    const cx2 = 20 + i * 152;
+    ctx.fillStyle = ch.color; ctx.font = 'bold 10px system-ui';
+    ctx.fillText(ch.label, cx2, H-34);
+    ctx.fillStyle = P.text; ctx.font = 'bold 13px system-ui';
+    ctx.fillText(ch.val, cx2, H-18);
+    ctx.fillStyle = P.muted; ctx.font = '8px system-ui';
+    ctx.fillText(ch.sub, cx2 + 40, H-18);
+  });
+
+  // Pulse on active zones
+  if (Math.floor(animT/45)%2===0) {
+    ctx.save(); ctx.globalAlpha = 0.15;
+    ctx.fillStyle = P.gold;
+    ctx.beginPath(); ctx.moveTo(...zone1[0]); zone1.forEach(p=>ctx.lineTo(...p)); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+}
+
+// ── Build nav dots ────────────────────────────────────────────────────────────
+const dotsEl = document.getElementById('dots');
+STEPS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.id = `dot-${i}`;
+  dotsEl.appendChild(d);
+});
+
+function updateDots() {
+  STEPS.forEach((_, i) => {
+    const d = document.getElementById(`dot-${i}`);
+    d.className = 'dot' + (i < step ? ' done' : i === step ? ' active' : '');
+  });
+  document.getElementById('step-label').textContent = STEPS[step].label;
+  document.getElementById('step-desc').textContent  = STEPS[step].desc;
+}
+
+function nextStep() {
+  if (step < STEPS.length - 1) { step++; animT = 0; clickedPts = []; ripples = []; updateDots(); }
+}
+function prevStep() {
+  if (step > 0) { step--; animT = 0; clickedPts = []; ripples = []; updateDots(); }
+}
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextStep();
+  if (e.key === 'ArrowLeft')  prevStep();
+});
+
+// ── Render loop ───────────────────────────────────────────────────────────────
+updateDots();
+function loop() {
+  animT++;
+  STEPS[step].draw();
+  drawRipples();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>

@@ -26,11 +26,14 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-import cv2
 import numpy as np
+
+# cv2 and supervision are lightweight — safe to import at module level.
+# rfdetr and trackers pull in PyTorch which needs significant virtual memory on
+# Windows (shm.dll).  We defer those imports to the point of actual inference
+# so that CLI commands like `status` and `clear` work without loading the GPU stack.
+import cv2
 import supervision as sv
-from rfdetr import RFDETRNano
-from trackers import ByteTrackTracker
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -411,6 +414,14 @@ class VideoAnalyzer:
         # Load zones scaled to video resolution
         zones = load_zones(self.config.zone_config, width, height)
         print(f"[INFO] Loaded {len(zones)} zones (scaled to {width}x{height})")
+
+        # Deferred import — loads PyTorch + model weights only when inference runs.
+        # On Windows, set thread counts before torch loads to reduce VA pressure.
+        import os as _os
+        _os.environ.setdefault("OMP_NUM_THREADS", "1")
+        _os.environ.setdefault("MKL_NUM_THREADS", "1")
+        from rfdetr import RFDETRNano
+        from trackers import ByteTrackTracker
 
         # Initialize RF-DETR + ByteTrack
         model = RFDETRNano()

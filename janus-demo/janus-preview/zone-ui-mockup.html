@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Janus — Zone Setup UI Mockup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0e1a; font-family: 'Inter', system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+  h2 { color: #94a3b8; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  #stage { position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06); }
+  #phase-label { margin-top: 16px; font-size: 0.75rem; color: #475569; letter-spacing: 1px; min-height: 20px; transition: opacity 0.3s; }
+</style>
+</head>
+<body>
+<h2>Zone Setup UI — End User Flow</h2>
+<div id="stage">
+  <canvas id="c"></canvas>
+</div>
+<div id="phase-label" id="lbl"></div>
+
+<script>
+const C = document.getElementById('c');
+const ctx = C.getContext('2d');
+const lbl = document.getElementById('phase-label');
+
+// ── Dimensions ────────────────────────────────────────────────────────────────
+const W = 900, H = 560;
+C.width = W; C.height = H;
+
+// ── Palette ───────────────────────────────────────────────────────────────────
+const P = {
+  bg:       '#0d1117',
+  panel:    '#111827',
+  border:   '#1e293b',
+  navy:     '#1e3a5f',
+  navyL:    '#2563eb',
+  gold:     '#c9a227',
+  success:  '#22c55e',
+  danger:   '#ef4444',
+  warn:     '#f59e0b',
+  text:     '#f1f5f9',
+  muted:    '#64748b',
+  dim:      '#334155',
+  floor:    '#1a2035',
+  tile:     '#1e2a42',
+  shelf:    '#243044',
+  shelfTop: '#2d3d58',
+  person:   '#38bdf8',
+};
+
+// ── Side panel dimensions ─────────────────────────────────────────────────────
+const PANEL_W = 230;
+const CAM_W   = W - PANEL_W; // 670
+const CAM_H   = H;
+
+// ── Animation state ───────────────────────────────────────────────────────────
+let t = 0;       // global tick (60fps)
+let phase = 0;   // 0–6
+let phaseT = 0;  // ticks within current phase
+
+const PHASES = [
+  { dur: 120, label: 'Camera feed — people moving through store' },
+  { dur:  60, label: 'User opens Zone Settings panel' },
+  { dur: 200, label: 'User clicks to draw "Entrance" zone polygon' },
+  { dur:  80, label: 'Zone fills — user names it' },
+  { dur: 120, label: 'User drags a vertex to fine-tune boundary' },
+  { dur:  80, label: 'Zone saved — now tracking entries' },
+  { dur: 100, label: 'Second zone "Checkout" being added…' },
+];
+
+// ── People ────────────────────────────────────────────────────────────────────
+const people = [
+  { x: 80,  y: 200, vx: 0.4,  vy: 0.15, id: 1, zone: null },
+  { x: 300, y: 310, vx: -0.3, vy: 0.2,  id: 2, zone: null },
+  { x: 520, y: 150, vx: 0.2,  vy: 0.35, id: 3, zone: null },
+  { x: 180, y: 420, vx: 0.5,  vy: -0.2, id: 4, zone: null },
+  { x: 440, y: 260, vx: -0.2, vy: -0.3, id: 5, zone: null },
+];
+
+// ── Zone definitions ──────────────────────────────────────────────────────────
+// Entrance zone polygon (in camera coords)
+const entrancePts = [
+  [30,  80], [220, 80], [220, 300], [30, 300]
+];
+// Checkout zone
+const checkoutPts = [
+  [360, 200], [600, 200], [600, 420], [360, 420]
+];
+
+// ── Cursor animation state ────────────────────────────────────────────────────
+let cursor = { x: 400, y: 280, visible: false, clicking: false };
+let drawnPts = [];
+let zoneVisible = false;
+let zoneFill = 0;    // 0–1 opacity
+let zoneNamed = false;
+let dragPt = null;   // index of vertex being dragged
+let savedZones = []; // finalized zones list in panel
+let checkoutProgress = 0; // 0–4 for second zone drawing
+
+// ── Easing ────────────────────────────────────────────────────────────────────
+const ease = x => x < 0.5 ? 2*x*x : 1-Math.pow(-2*x+2,2)/2;
+const lerp  = (a, b, t) => a + (b - a) * t;
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+// ── Draw store background ─────────────────────────────────────────────────────
+function drawStore() {
+  // Floor
+  ctx.fillStyle = P.floor;
+  ctx.fillRect(0, 0, CAM_W, CAM_H);
+
+  // Floor tiles
+  ctx.strokeStyle = P.tile;
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x < CAM_W; x += 50) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, CAM_H); ctx.stroke();
+  }
+  for (let y = 0; y < CAM_H; y += 50) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(CAM_W, y); ctx.stroke();
+  }
+
+  // Shelving units — left wall
+  drawShelf(20, 60, 80, 180, 'SHELF A');
+  drawShelf(20, 280, 80, 180, 'SHELF B');
+
+  // Shelving units — center
+  drawShelf(240, 80, 90, 140, 'DISPLAY');
+  drawShelf(240, 320, 90, 120, 'DISPLAY');
+
+  // Checkout counter
+  drawCounter(370, 190, 220, 60);
+
+  // Entry doors (top-left)
+  drawDoor(30, 20, 160, 50);
+
+  // Corner label: security cam icon
+  ctx.fillStyle = P.muted;
+  ctx.font = '10px monospace';
+  ctx.fillText('CAM-01  ●  LIVE', CAM_W - 120, 18);
+
+  // Scanline overlay for realism
+  ctx.fillStyle = 'rgba(0,0,0,0.03)';
+  for (let y = 0; y < CAM_H; y += 4) {
+    ctx.fillRect(0, y, CAM_W, 1);
+  }
+}
+
+function drawShelf(x, y, w, h, label) {
+  ctx.fillStyle = P.shelf;
+  ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = P.shelfTop;
+  ctx.fillRect(x, y, w, 8);
+  // shelves
+  ctx.fillStyle = P.dim;
+  for (let sy = y + 25; sy < y + h - 20; sy += 30) {
+    ctx.fillRect(x + 4, sy, w - 8, 3);
+  }
+  ctx.fillStyle = P.muted;
+  ctx.font = '9px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, x + w/2, y + h - 6);
+  ctx.textAlign = 'left';
+}
+
+function drawCounter(x, y, w, h) {
+  ctx.fillStyle = '#1c2a40';
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = '#2d4060';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x, y, w, h);
+  ctx.fillStyle = P.muted;
+  ctx.font = '9px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('CHECKOUT', x + w/2, y + h/2 + 4);
+  ctx.textAlign = 'left';
+  // register
+  ctx.fillStyle = '#243050';
+  ctx.fillRect(x + 10, y + 8, 30, 20);
+  ctx.fillRect(x + w - 50, y + 8, 30, 20);
+}
+
+function drawDoor(x, y, w, h) {
+  ctx.fillStyle = '#151f30';
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = '#2a3f5f';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(x, y, w, h);
+  // door lines
+  ctx.strokeStyle = '#1e3050';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x + w/2, y); ctx.lineTo(x + w/2, y + h); ctx.stroke();
+  ctx.fillStyle = P.muted;
+  ctx.font = '9px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('ENTRANCE', x + w/2, y + h - 6);
+  ctx.textAlign = 'left';
+}
+
+// ── Draw person ───────────────────────────────────────────────────────────────
+function drawPerson(p, inZone) {
+  const r = 10;
+  // Bounding box
+  ctx.strokeStyle = inZone ? P.success : P.person;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(p.x - r, p.y - r*1.6, r*2, r*3.2);
+  // Fill glow
+  ctx.fillStyle = inZone ? 'rgba(34,197,94,0.12)' : 'rgba(56,189,248,0.12)';
+  ctx.fillRect(p.x - r, p.y - r*1.6, r*2, r*3.2);
+  // Track ID
+  ctx.fillStyle = inZone ? P.success : P.person;
+  ctx.font = 'bold 9px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`#${p.id}`, p.x, p.y - r*1.6 - 3);
+  ctx.textAlign = 'left';
+}
+
+// ── Draw cursor ───────────────────────────────────────────────────────────────
+function drawCursor(x, y, clicking) {
+  ctx.save();
+  ctx.translate(x, y);
+  // shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.moveTo(2, 2); ctx.lineTo(12, 8); ctx.lineTo(6, 10); ctx.lineTo(8, 16); ctx.lineTo(4, 14); ctx.lineTo(2, 20); ctx.lineTo(0, 12);
+  ctx.closePath(); ctx.fill();
+  // cursor
+  ctx.fillStyle = clicking ? '#fff' : '#e2e8f0';
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(10, 6); ctx.lineTo(4, 8); ctx.lineTo(6, 14); ctx.lineTo(2, 12); ctx.lineTo(0, 18);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+
+// ── Draw zone polygon ─────────────────────────────────────────────────────────
+function drawZone(pts, fill, label, color, alpha, dragIdx) {
+  if (pts.length < 2) return;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+
+  // Fill
+  if (pts.length >= 3 && fill > 0) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.closePath();
+    ctx.fillStyle = color + '33';
+    ctx.fill();
+  }
+
+  // Outline
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  if (pts.length >= 3) ctx.closePath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.setLineDash([]);
+  ctx.stroke();
+
+  // Vertices
+  pts.forEach((pt, i) => {
+    ctx.beginPath();
+    ctx.arc(pt[0], pt[1], i === dragIdx ? 7 : 5, 0, Math.PI * 2);
+    ctx.fillStyle = i === dragIdx ? '#fff' : color;
+    ctx.fill();
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // Label
+  if (label && pts.length >= 3) {
+    const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length;
+    const cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.font = 'bold 11px system-ui';
+    ctx.textAlign = 'center';
+    const tw = ctx.measureText(label).width;
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillRect(cx - tw/2 - 6, cy - 10, tw + 12, 18);
+    ctx.fillStyle = color;
+    ctx.fillText(label, cx, cy + 4);
+    ctx.textAlign = 'left';
+  }
+  ctx.restore();
+}
+
+// ── Draw side panel ───────────────────────────────────────────────────────────
+function drawPanel(panelSlide) {
+  const px = CAM_W + (PANEL_W * (1 - panelSlide));
+  ctx.fillStyle = P.panel;
+  ctx.fillRect(px, 0, PANEL_W, H);
+  ctx.fillStyle = P.border;
+  ctx.fillRect(px, 0, 1, H);
+
+  if (panelSlide < 0.1) return;
+  ctx.globalAlpha = clamp(panelSlide * 2 - 0.5, 0, 1);
+
+  // Header
+  ctx.fillStyle = P.navy;
+  ctx.fillRect(px, 0, PANEL_W, 44);
+  ctx.fillStyle = P.text;
+  ctx.font = 'bold 12px system-ui';
+  ctx.fillText('Zone Settings', px + 14, 27);
+
+  // Tool buttons
+  const btnY = 56;
+  drawPanelBtn(px + 12, btnY, 94, 28, 'Draw Zone', true);
+  drawPanelBtn(px + 114, btnY, 104, 28, 'Edit Zone', false);
+
+  // Instructions
+  ctx.fillStyle = P.muted;
+  ctx.font = '10px system-ui';
+  const lines = ['Click on camera feed to', 'place polygon points.', 'Double-click to close.'];
+  lines.forEach((l, i) => ctx.fillText(l, px + 14, btnY + 44 + i * 15));
+
+  // Saved zones list
+  ctx.fillStyle = P.text;
+  ctx.font = 'bold 10px system-ui';
+  ctx.fillText('ZONES', px + 14, btnY + 105);
+
+  savedZones.forEach((z, i) => {
+    const zy = btnY + 118 + i * 42;
+    ctx.fillStyle = P.border;
+    ctx.fillRect(px + 12, zy, PANEL_W - 24, 34);
+    ctx.fillStyle = z.color;
+    ctx.fillRect(px + 12, zy, 4, 34);
+    ctx.fillStyle = P.text;
+    ctx.font = 'bold 11px system-ui';
+    ctx.fillText(z.label, px + 22, zy + 13);
+    ctx.fillStyle = P.muted;
+    ctx.font = '9px system-ui';
+    ctx.fillText(`${z.entries} entries  •  ${z.visits} visits`, px + 22, zy + 27);
+  });
+
+  // Name input (during phase 3)
+  if (phase === 3 && phaseT > 20) {
+    const iy = btnY + 104 + savedZones.length * 42 + 8;
+    ctx.fillStyle = P.border;
+    ctx.fillRect(px + 12, iy, PANEL_W - 24, 28);
+    ctx.strokeStyle = P.navyL;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(px + 12, iy, PANEL_W - 24, 28);
+    ctx.fillStyle = P.text;
+    ctx.font = '11px system-ui';
+    ctx.fillText('Entrance', px + 18, iy + 18);
+    // cursor blink
+    if (Math.floor(t / 30) % 2 === 0) {
+      ctx.fillStyle = P.navyL;
+      ctx.fillRect(px + 18 + 46, iy + 6, 1.5, 16);
+    }
+
+    if (phaseT > 50) {
+      drawPanelBtn(px + 12, iy + 36, PANEL_W - 24, 28, 'Save Zone', true);
+    }
+  }
+
+  ctx.globalAlpha = 1;
+}
+
+function drawPanelBtn(x, y, w, h, label, primary) {
+  ctx.fillStyle = primary ? P.navy : P.border;
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = primary ? P.navyL : P.dim;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x, y, w, h);
+  ctx.fillStyle = primary ? '#93c5fd' : P.muted;
+  ctx.font = '10px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, x + w/2, y + h/2 + 4);
+  ctx.textAlign = 'left';
+}
+
+// ── Draw notification toast ───────────────────────────────────────────────────
+function drawToast(msg, alpha) {
+  if (alpha <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const tw = ctx.measureText(msg).width + 32;
+  const tx = (CAM_W - tw) / 2, ty = H - 60;
+  ctx.fillStyle = 'rgba(0,0,0,0.85)';
+  ctx.beginPath();
+  ctx.roundRect(tx, ty, tw, 32, 8);
+  ctx.fill();
+  ctx.strokeStyle = P.success;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = P.success;
+  ctx.font = 'bold 11px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText(msg, CAM_W / 2, ty + 21);
+  ctx.textAlign = 'left';
+  ctx.restore();
+}
+
+// ── Interpolate cursor to target ──────────────────────────────────────────────
+function moveCursor(tx, ty, speed = 0.08) {
+  cursor.x += (tx - cursor.x) * speed;
+  cursor.y += (ty - cursor.y) * speed;
+}
+
+// ── Click ripple ──────────────────────────────────────────────────────────────
+let ripples = [];
+function addRipple(x, y, color) {
+  ripples.push({ x, y, r: 0, alpha: 1, color });
+}
+function drawRipples() {
+  ripples = ripples.filter(r => r.alpha > 0);
+  ripples.forEach(r => {
+    ctx.save();
+    ctx.globalAlpha = r.alpha * 0.6;
+    ctx.strokeStyle = r.color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    r.r += 1.5; r.alpha -= 0.03;
+  });
+}
+
+// ── Phase sequence targets ────────────────────────────────────────────────────
+// Points the cursor visits to "draw" the entrance zone
+const drawTargets = [
+  { x: 30,  y: 80  },
+  { x: 220, y: 80  },
+  { x: 220, y: 300 },
+  { x: 30,  y: 300 },
+  { x: 30,  y: 80  }, // close
+];
+
+// Checkout zone draw targets
+const checkoutTargets = [
+  { x: 360, y: 200 },
+  { x: 600, y: 200 },
+  { x: 600, y: 420 },
+  { x: 360, y: 420 },
+];
+
+let drawTargetIdx = 0;
+let panelSlide = 0;
+
+// ── Main loop ─────────────────────────────────────────────────────────────────
+function frame() {
+  t++;
+  phaseT++;
+
+  // Advance phase
+  if (phaseT >= PHASES[phase].dur) {
+    phase = (phase + 1) % PHASES.length;
+    phaseT = 0;
+    if (phase === 0) {
+      // Reset
+      drawnPts = [];
+      zoneVisible = false;
+      zoneFill = 0;
+      zoneNamed = false;
+      dragPt = null;
+      savedZones = [];
+      drawTargetIdx = 0;
+      cursor.visible = false;
+      panelSlide = 0;
+      checkoutProgress = 0;
+      ripples = [];
+    }
+    if (phase === 2) {
+      drawTargetIdx = 0;
+      drawnPts = [];
+    }
+  }
+
+  lbl.textContent = PHASES[phase].label;
+
+  // Update people
+  people.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 15 || p.x > CAM_W - 15) p.vx *= -1;
+    if (p.y < 15 || p.y > CAM_H - 15) p.vy *= -1;
+  });
+
+  // ── Render ──────────────────────────────────────────────────────────────────
+  ctx.clearRect(0, 0, W, H);
+
+  // Store background
+  drawStore();
+
+  // Check zone membership
+  people.forEach(p => {
+    let inEntrance = false, inCheckout = false;
+    if (savedZones.find(z => z.label === 'Entrance') && drawnPts.length >= 3) inEntrance = pointInPoly([p.x, p.y], entrancePts);
+    if (savedZones.find(z => z.label === 'Checkout')) inCheckout = pointInPoly([p.x, p.y], checkoutPts);
+    p.zone = inEntrance ? 'entrance' : inCheckout ? 'checkout' : null;
+    drawPerson(p, p.zone !== null);
+  });
+
+  // ── Phase logic ──────────────────────────────────────────────────────────────
+
+  // Phase 0: idle camera feed
+  if (phase === 0) {
+    cursor.visible = false;
+    panelSlide = Math.max(0, panelSlide - 0.05);
+  }
+
+  // Phase 1: panel slides in
+  if (phase === 1) {
+    panelSlide = clamp(phaseT / 40, 0, 1);
+    cursor.visible = true;
+    // Cursor moves toward "Draw Zone" button
+    moveCursor(CAM_W + 14 + 47, 84, 0.06);
+  }
+
+  // Phase 2: drawing entrance zone
+  if (phase === 2) {
+    panelSlide = 1;
+    cursor.visible = true;
+    const seg = 38; // ticks per segment
+    const segIdx = Math.floor(phaseT / seg);
+    const segT   = (phaseT % seg) / seg;
+
+    if (segIdx < drawTargets.length) {
+      const tgt = drawTargets[segIdx];
+      moveCursor(tgt.x, tgt.y, 0.12);
+
+      // Snap point when close
+      if (segIdx < 4 && segT > 0.85 && drawnPts.length <= segIdx) {
+        const pt = drawTargets[segIdx];
+        drawnPts.push([pt.x, pt.y]);
+        addRipple(pt.x, pt.y, P.gold);
+        cursor.clicking = true;
+      } else {
+        cursor.clicking = false;
+      }
+    }
+
+    // Interpolate partial last segment for smooth line
+    const activePts = [...drawnPts];
+    if (segIdx < 4 && drawnPts.length === segIdx) {
+      const prev = segIdx > 0 ? drawTargets[segIdx - 1] : drawTargets[0];
+      const curr = drawTargets[segIdx];
+      activePts.push([lerp(prev.x, curr.x, ease(segT)), lerp(prev.y, curr.y, ease(segT))]);
+    }
+
+    drawZone(activePts, 0, null, P.gold, 1, null);
+    zoneVisible = drawnPts.length >= 4;
+  }
+
+  // Phase 3: zone named + save
+  if (phase === 3) {
+    panelSlide = 1;
+    cursor.visible = true;
+    zoneFill = clamp(phaseT / 30, 0, 1);
+    zoneNamed = phaseT > 25;
+    drawZone(entrancePts, 1, zoneNamed ? 'Entrance' : null, P.gold, 1, null);
+    // Cursor moves to save button
+    if (phaseT > 55) moveCursor(CAM_W + 14 + (PANEL_W - 24)/2, 280, 0.07);
+    // Save click
+    if (phaseT === 72) {
+      addRipple(CAM_W + 14 + (PANEL_W - 24)/2, 280, P.success);
+      cursor.clicking = true;
+    } else cursor.clicking = false;
+    if (phaseT > 74 && savedZones.length === 0) {
+      savedZones.push({ label: 'Entrance', color: P.gold, entries: 0, visits: 0 });
+    }
+  }
+
+  // Phase 4: saved, zone visible, simulate entries
+  if (phase === 4 || phase === 5) {
+    panelSlide = 1;
+    cursor.visible = phase === 5;
+    drawZone(entrancePts, 1, 'Entrance', P.gold, 1, phase === 5 ? 2 : null);
+
+    // Update entry count live
+    if (savedZones.length > 0) {
+      savedZones[0].entries = Math.floor(phaseT / 15) % 8 + 3;
+      savedZones[0].visits  = savedZones[0].entries + 4;
+    }
+
+    // Phase 5: drag vertex 2 (bottom-right)
+    if (phase === 5) {
+      const prog = clamp((phaseT - 10) / 80, 0, 1);
+      entrancePts[2] = [
+        lerp(220, 260, ease(prog > 0.5 ? 1 - (prog - 0.5)*2 : prog*2)),
+        lerp(300, 340, ease(prog > 0.5 ? 1 - (prog - 0.5)*2 : prog*2))
+      ];
+      moveCursor(entrancePts[2][0], entrancePts[2][1], 0.08);
+    }
+  }
+
+  // Phase 6: second zone (Checkout) being drawn
+  if (phase === 6) {
+    panelSlide = 1;
+    cursor.visible = true;
+    drawZone(entrancePts, 1, 'Entrance', P.gold, 1, null);
+
+    const seg = 22;
+    const segIdx = Math.floor(phaseT / seg);
+    const segT   = (phaseT % seg) / seg;
+
+    const activePts2 = [];
+    for (let i = 0; i < Math.min(segIdx, 4); i++) activePts2.push([...checkoutTargets[i]]);
+    if (segIdx < 4) {
+      const prev = segIdx > 0 ? checkoutTargets[segIdx-1] : checkoutTargets[0];
+      const curr = checkoutTargets[segIdx];
+      activePts2.push([lerp(prev.x, curr.x, ease(segT)), lerp(prev.y, curr.y, ease(segT))]);
+      moveCursor(curr.x, curr.y, 0.1);
+      if (segT > 0.85 && activePts2.length <= segIdx + 1) addRipple(curr.x, curr.y, P.navyL);
+    }
+    drawZone(activePts2, 0.5, activePts2.length >= 4 ? 'Checkout' : null, P.navyL, 1, null);
+
+    if (savedZones.length === 1 && phaseT > 85) {
+      savedZones.push({ label: 'Checkout', color: P.navyL, entries: 0, visits: 0 });
+    }
+    if (savedZones.length > 0) savedZones[0].entries = 7; savedZones[0] && (savedZones[0].visits = 11);
+    if (savedZones.length > 1) savedZones[1].entries = Math.floor((phaseT - 85) / 10);
+  }
+
+  // Ripples
+  drawRipples();
+
+  // Panel
+  drawPanel(panelSlide);
+
+  // Cursor
+  if (cursor.visible) drawCursor(cursor.x, cursor.y, cursor.clicking);
+
+  // Toast on save
+  if (phase === 3 && phaseT > 74) {
+    const a = clamp(1 - (phaseT - 74) / 20, 0, 1);
+    drawToast('✓  Zone "Entrance" saved', a);
+  }
+
+  // Phase label overlay on camera
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.fillRect(0, H - 22, CAM_W, 22);
+  ctx.fillStyle = P.muted;
+  ctx.font = '9px monospace';
+  ctx.fillText(`PHASE ${phase + 1}/7   T+${String(phaseT).padStart(3,'0')}`, 10, H - 7);
+
+  requestAnimationFrame(frame);
+}
+
+// ── Point-in-polygon (ray cast) ───────────────────────────────────────────────
+function pointInPoly(pt, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if (((yi > pt[1]) !== (yj > pt[1])) && (pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi)) inside = !inside;
+  }
+  return inside;
+}
+
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
