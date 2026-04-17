@@ -55,7 +55,7 @@ class BatchConfig:
     device: str = "cpu"
     zone_config: str = ZONE_CONFIG
     base_timestamp: Optional[datetime] = None
-    commit_interval: int = 500  # frames between DB commits
+    commit_interval: int = 30   # frames between DB commits (≈1s at 30fps)
 
 
 # ---------------------------------------------------------------------------
@@ -95,14 +95,27 @@ class JSONOutputWriter:
             json.dump(data, f)
 
     def write_tracking(self, total_frames: int, fps: float):
-        """Write {video_id}_tracking.json with all accumulated frames."""
+        """Write {video_id}_tracking.json with all accumulated frames.
+
+        Output uses the PreProcessedPlayer schema:
+          frames[i].frame       (not frame_idx)
+          frames[i].detections  (not tracks)
+          detections[j].confidence (not conf)
+        """
+        output_frames = []
+        for f in self._frames:
+            output_frames.append({
+                "frame": f["frame_idx"],
+                "timestamp_ms": f["timestamp_ms"],
+                "detections": f["tracks"],
+            })
         data = {
             "video_id": self.video_id,
             "status": "completed",
             "total_frames": total_frames,
             "fps": fps,
             "frame_count": len(self._frames),
-            "frames": self._frames,
+            "frames": output_frames,
         }
         path = os.path.join(self.library_dir, f"{self.video_id}_tracking.json")
         with open(path, "w") as f:
@@ -521,8 +534,8 @@ class VideoAnalyzer:
                 if detections.tracker_id is not None and len(detections) > 0:
                     for i, tid in enumerate(detections.tracker_id):
                         bbox = [round(v) for v in detections.xyxy[i].tolist()]
-                        conf = round(float(detections.confidence[i]), 4) if detections.confidence is not None else None
-                        tracks.append({"id": int(tid), "bbox": bbox, "conf": conf})
+                        confidence = round(float(detections.confidence[i]), 4) if detections.confidence is not None else None
+                        tracks.append({"id": int(tid), "bbox": bbox, "confidence": confidence})
                 timestamp_ms = round((frame_num / fps) * 1000, 1)
                 json_writer.add_frame(frame_num, timestamp_ms, tracks)
 

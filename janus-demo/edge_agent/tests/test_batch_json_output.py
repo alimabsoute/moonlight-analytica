@@ -1,10 +1,16 @@
 """
-Gate 6.2 — batch_processor JSON output tests.
+Gates 6.2 + 6.4 — batch_processor JSON output tests.
 
 Tests that JSONOutputWriter:
   1. Accumulates per-frame tracking data via add_frame()
   2. Writes {video_id}_progress.json via write_progress()
   3. Writes {video_id}_tracking.json via write_tracking()
+
+Gate 6.4 additions:
+  - Output format uses 'frame' / 'detections' / 'confidence' keys
+    to match PreProcessedPlayer's expected schema.
+  - BatchConfig.commit_interval defaults to 30 (not 500) so short
+    videos get progress updates.
 
 conftest.py installs sv / rfdetr / trackers mocks before any import,
 so batch_processor can be imported without PyTorch.
@@ -154,32 +160,72 @@ class TestWriteTracking:
 
     def test_includes_accumulated_frames(self, writer, lib_dir):
         for i in range(3):
-            writer.add_frame(i, i * 33.3, [{"id": 1, "bbox": [0, 0, 10, 10], "conf": 0.9}])
+            writer.add_frame(i, i * 33.3, [{"id": 1, "bbox": [0, 0, 10, 10], "confidence": 0.9}])
         writer.write_tracking(3, 30.0)
         data = json.loads(_tracking_path(lib_dir).read_text())
         assert data["frame_count"] == 3
         assert len(data["frames"]) == 3
 
     def test_frame_has_required_keys(self, writer, lib_dir):
-        writer.add_frame(0, 0.0, [{"id": 1, "bbox": [10, 20, 60, 120], "conf": 0.85}])
+        """Output frame uses 'frame' and 'detections' keys (PreProcessedPlayer schema)."""
+        writer.add_frame(0, 0.0, [{"id": 1, "bbox": [10, 20, 60, 120], "confidence": 0.85}])
         writer.write_tracking(1, 30.0)
         data = json.loads(_tracking_path(lib_dir).read_text())
         frame = data["frames"][0]
-        assert "frame_idx" in frame
+        assert "frame" in frame          # NOT frame_idx
         assert "timestamp_ms" in frame
-        assert "tracks" in frame
+        assert "detections" in frame     # NOT tracks
 
     def test_track_has_required_keys(self, writer, lib_dir):
-        writer.add_frame(0, 0.0, [{"id": 1, "bbox": [10, 20, 60, 120], "conf": 0.85}])
+        """Detection dicts use 'confidence' key (PreProcessedPlayer schema)."""
+        writer.add_frame(0, 0.0, [{"id": 1, "bbox": [10, 20, 60, 120], "confidence": 0.85}])
         writer.write_tracking(1, 30.0)
         data = json.loads(_tracking_path(lib_dir).read_text())
-        track = data["frames"][0]["tracks"][0]
-        assert "id" in track
-        assert "bbox" in track
-        assert "conf" in track
+        det = data["frames"][0]["detections"][0]
+        assert "id" in det
+        assert "bbox" in det
+        assert "confidence" in det       # NOT conf
 
     def test_empty_frames_produces_valid_json(self, writer, lib_dir):
         writer.write_tracking(0, 30.0)
         data = json.loads(_tracking_path(lib_dir).read_text())
         assert data["frames"] == []
         assert data["frame_count"] == 0
+
+    def test_output_frame_key_is_frame_not_frame_idx(self, writer, lib_dir):
+        """Regression guard: key must be 'frame', not 'frame_idx'."""
+        writer.add_frame(5, 166.7, [])
+        writer.write_tracking(10, 30.0)
+        data = json.loads(_tracking_path(lib_dir).read_text())
+        frame = data["frames"][0]
+        assert "frame" in frame
+        assert "frame_idx" not in frame
+
+    def test_output_uses_detections_not_tracks(self, writer, lib_dir):
+        """Regression guard: key must be 'detections', not 'tracks'."""
+        writer.add_frame(0, 0.0, [{"id": 1, "bbox": [0, 0, 10, 10], "confidence": 0.9}])
+        writer.write_tracking(1, 30.0)
+        data = json.loads(_tracking_path(lib_dir).read_text())
+        frame = data["frames"][0]
+        assert "detections" in frame
+        assert "tracks" not in frame
+
+    def test_output_uses_confidence_not_conf(self, writer, lib_dir):
+        """Regression guard: detection key must be 'confidence', not 'conf'."""
+        writer.add_frame(0, 0.0, [{"id": 1, "bbox": [0, 0, 10, 10], "confidence": 0.88}])
+        writer.write_tracking(1, 30.0)
+        data = json.loads(_tracking_path(lib_dir).read_text())
+        det = data["frames"][0]["detections"][0]
+        assert "confidence" in det
+        assert "conf" not in det
+
+
+# ---------------------------------------------------------------------------
+# BatchConfig defaults
+# ---------------------------------------------------------------------------
+
+class TestBatchConfigDefaults:
+    def test_commit_interval_default_is_30(self):
+        """commit_interval defaults to 30 — ensures short videos get progress updates."""
+        config = bp.BatchConfig(video_path="/fake/v.mp4", video_id="test-id")
+        assert config.commit_interval == 30
