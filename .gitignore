@@ -51,11 +51,13 @@ __pycache__/
 *.so
 .venv/
 
-# Environment
+# Environment & Secrets
 .env
 .env.local
 .env.staging
 .env.production
+.mcp.json
+.claude.json
 
 # Project specific
 paddle2_x
