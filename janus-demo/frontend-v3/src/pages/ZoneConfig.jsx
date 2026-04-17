@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus, Trash2, Edit2, Save, X, Move, Maximize2,
-  Copy, Eye, EyeOff, Lock, Unlock, Settings, Palette
+  Copy, Eye, EyeOff, Lock, Unlock, Settings, Palette, PenTool
 } from 'lucide-react'
+import ZoneDrawer from '../components/ZoneDrawer'
 
 const INITIAL_ZONES = [
   { id: 1, name: 'Main Entrance', x: 50, y: 400, width: 100, height: 80, color: '#1e3a5f', capacity: 50, enabled: true },
@@ -226,6 +227,14 @@ export default function ZoneConfig() {
   const [selectedZone, setSelectedZone] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [showDrawer, setShowDrawer] = useState(false)
+  const [savedNotice, setSavedNotice] = useState(null)
+
+  const handleZoneDrawerSaved = (savedZone) => {
+    setShowDrawer(false)
+    setSavedNotice(`Zone "${savedZone.zone_name}" saved`)
+    setTimeout(() => setSavedNotice(null), 3000)
+  }
 
   // Draw zones on canvas
   useEffect(() => {
@@ -384,12 +393,69 @@ export default function ZoneConfig() {
             <Copy size={16} />
             Import Layout
           </button>
+          <button
+            className={showDrawer ? 'btn btn-secondary' : 'btn btn-secondary'}
+            onClick={() => setShowDrawer(v => !v)}
+          >
+            <PenTool size={16} />
+            {showDrawer ? 'Hide Drawer' : 'Draw Zone'}
+          </button>
           <button className="btn btn-primary" onClick={addZone}>
             <Plus size={16} />
             Add Zone
           </button>
         </div>
       </div>
+
+      {/* Saved notice */}
+      <AnimatePresence>
+        {savedNotice && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            style={{
+              marginBottom: 'var(--space-md)',
+              padding: '10px 16px',
+              background: 'rgba(16,185,129,0.12)',
+              border: '1px solid rgba(16,185,129,0.35)',
+              borderRadius: 'var(--radius-md)',
+              color: '#10b981',
+              fontSize: '0.875rem',
+              fontWeight: 500
+            }}
+          >
+            {savedNotice}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Zone Drawer panel */}
+      <AnimatePresence>
+        {showDrawer && (
+          <motion.div
+            className="card"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            style={{ overflow: 'hidden', marginBottom: 'var(--space-lg)' }}
+          >
+            <div className="card-header">
+              <h3 className="card-title">Draw New Zone</h3>
+              <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setShowDrawer(false)}>
+                <X size={16} />
+              </button>
+            </div>
+            <div style={{ padding: 'var(--space-md)', display: 'flex', justifyContent: 'center' }}>
+              <ZoneDrawer
+                width={640}
+                height={480}
+                onSaved={handleZoneDrawerSaved}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 'var(--space-lg)' }}>
         {/* Canvas */}
