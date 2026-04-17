@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus, Trash2, Edit2, Save, X, Move, Maximize2,
@@ -6,14 +6,31 @@ import {
 } from 'lucide-react'
 import ZoneDrawer from '../components/ZoneDrawer'
 
-const INITIAL_ZONES = [
-  { id: 1, name: 'Main Entrance', x: 50, y: 400, width: 100, height: 80, color: '#1e3a5f', capacity: 50, enabled: true },
-  { id: 2, name: 'Lobby', x: 200, y: 350, width: 200, height: 150, color: '#3182ce', capacity: 150, enabled: true },
-  { id: 3, name: 'Zone A', x: 450, y: 100, width: 150, height: 120, color: '#38a169', capacity: 80, enabled: true },
-  { id: 4, name: 'Zone B', x: 450, y: 280, width: 150, height: 120, color: '#c9a227', capacity: 80, enabled: true },
-  { id: 5, name: 'Zone C', x: 450, y: 460, width: 150, height: 120, color: '#dd6b20', capacity: 80, enabled: true },
-  { id: 6, name: 'Retail Area', x: 650, y: 200, width: 180, height: 200, color: '#805ad5', capacity: 120, enabled: true }
-]
+const API = 'http://localhost:8000'
+
+/** Convert polygon_image [[x,y],...] to axis-aligned bounding box for canvas display. */
+function polygonToBBox(polygon) {
+  if (!polygon || polygon.length === 0) return { x: 0, y: 0, width: 100, height: 100 }
+  const xs = polygon.map(p => p[0])
+  const ys = polygon.map(p => p[1])
+  const x = Math.min(...xs)
+  const y = Math.min(...ys)
+  return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y }
+}
+
+/** Map an API zone to the internal display format used by the canvas + ZoneCard. */
+function apiZoneToDisplay(apiZone) {
+  const bbox = polygonToBBox(apiZone.polygon_image)
+  return {
+    id: apiZone.id,
+    name: apiZone.name || apiZone.zone_name,
+    color: apiZone.color || '#4dd8e6',
+    capacity: apiZone.capacity || 0,
+    enabled: true,
+    polygon_image: apiZone.polygon_image,
+    ...bbox,
+  }
+}
 
 const PRESET_COLORS = [
   '#1e3a5f', '#3182ce', '#38a169', '#c9a227',
@@ -223,17 +240,38 @@ function ZoneCard({ zone, isSelected, onSelect, onUpdate, onDelete }) {
 
 export default function ZoneConfig() {
   const canvasRef = useRef(null)
-  const [zones, setZones] = useState(INITIAL_ZONES)
+  const [zones, setZones] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState(false)
   const [selectedZone, setSelectedZone] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const [showDrawer, setShowDrawer] = useState(false)
   const [savedNotice, setSavedNotice] = useState(null)
 
+  const fetchZones = useCallback(async () => {
+    setLoading(true)
+    setFetchError(false)
+    try {
+      const res = await fetch(`${API}/api/zones/config`)
+      const data = await res.json()
+      setZones((data.zones || []).map(apiZoneToDisplay))
+    } catch {
+      setFetchError(true)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchZones()
+  }, [fetchZones])
+
   const handleZoneDrawerSaved = (savedZone) => {
     setShowDrawer(false)
     setSavedNotice(`Zone "${savedZone.zone_name}" saved`)
     setTimeout(() => setSavedNotice(null), 3000)
+    fetchZones()
   }
 
   // Draw zones on canvas
@@ -524,6 +562,14 @@ export default function ZoneConfig() {
                 {zones.filter(z => z.enabled).length} active
               </span>
             </div>
+
+            {/* Hidden test hook — triggers refetch to simulate ZoneDrawer onSaved */}
+            <button
+              data-testid="zone-drawer-saved-hook"
+              style={{ display: 'none' }}
+              onClick={fetchZones}
+            />
+
             <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -531,6 +577,28 @@ export default function ZoneConfig() {
               maxHeight: '500px',
               overflowY: 'auto'
             }}>
+              {loading ? (
+                <div
+                  data-testid="zones-loading"
+                  style={{ padding: 'var(--space-md)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}
+                >
+                  Loading zones…
+                </div>
+              ) : fetchError ? (
+                <div
+                  data-testid="zones-error"
+                  style={{ padding: 'var(--space-md)', textAlign: 'center', color: 'var(--danger)', fontSize: '0.875rem' }}
+                >
+                  Failed to load zones. Check backend connection.
+                </div>
+              ) : zones.length === 0 ? (
+                <div
+                  data-testid="zones-empty"
+                  style={{ padding: 'var(--space-md)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}
+                >
+                  No zones configured. Draw a zone to get started.
+                </div>
+              ) : (
               <AnimatePresence>
                 {zones.map(zone => (
                   <ZoneCard
@@ -543,6 +611,7 @@ export default function ZoneConfig() {
                   />
                 ))}
               </AnimatePresence>
+              )}
             </div>
           </div>
 
