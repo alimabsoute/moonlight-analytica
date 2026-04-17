@@ -17,13 +17,19 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['onnxruntime-web', '@mediapipe/tasks-vision']
+    // @mediapipe/tasks-vision is eagerly needed; onnxruntime-web is dynamically
+    // imported only when ML detection is active — keep it out of pre-bundle to
+    // avoid inflating the initial page load with ~21MB of WASM.
+    include: ['@mediapipe/tasks-vision'],
+    exclude: ['onnxruntime-web']
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
           'detection-b': ['@mediapipe/tasks-vision'],
+          // onnxruntime-web stays in its own async chunk; only fetched when
+          // the ML pipeline tab is opened (lazy import in tracking-v-c).
           'detection-c': ['onnxruntime-web']
         }
       }
