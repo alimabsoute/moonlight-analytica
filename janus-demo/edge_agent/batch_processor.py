@@ -41,7 +41,8 @@ import supervision as sv
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "backend", "janus.db")
 ZONE_CONFIG = os.path.join(os.path.dirname(__file__), "zones.json")
-VIDEO_LIBRARY_META = os.path.join(os.path.dirname(__file__), "video_library", "metadata.json")
+VIDEO_LIBRARY_DIR = os.path.join(os.path.dirname(__file__), "video_library")
+VIDEO_LIBRARY_META = os.path.join(VIDEO_LIBRARY_DIR, "metadata.json")
 REFERENCE_WIDTH = 640
 REFERENCE_HEIGHT = 480
 
@@ -55,6 +56,57 @@ class BatchConfig:
     zone_config: str = ZONE_CONFIG
     base_timestamp: Optional[datetime] = None
     commit_interval: int = 500  # frames between DB commits
+
+
+# ---------------------------------------------------------------------------
+# JSON output writer — writes _tracking.json and _progress.json per video
+# ---------------------------------------------------------------------------
+
+class JSONOutputWriter:
+    """Writes per-frame tracking JSON and progress JSON to video_library/."""
+
+    def __init__(self, video_id: str, library_dir: str):
+        self.video_id = video_id
+        self.library_dir = library_dir
+        self._frames: List[dict] = []
+
+    def add_frame(self, frame_idx: int, timestamp_ms: float, tracks: List[dict]):
+        """Accumulate one frame of tracking data."""
+        self._frames.append({
+            "frame_idx": frame_idx,
+            "timestamp_ms": timestamp_ms,
+            "tracks": tracks,
+        })
+
+    def write_progress(self, processed_frames: int, total_frames: int, fps: float,
+                       status: str = "processing"):
+        """Write {video_id}_progress.json (overwrites each call)."""
+        pct = round(processed_frames / total_frames * 100, 1) if total_frames > 0 else 0.0
+        data = {
+            "video_id": self.video_id,
+            "status": status,
+            "total_frames": total_frames,
+            "processed_frames": processed_frames,
+            "fps": fps,
+            "percent": pct,
+        }
+        path = os.path.join(self.library_dir, f"{self.video_id}_progress.json")
+        with open(path, "w") as f:
+            json.dump(data, f)
+
+    def write_tracking(self, total_frames: int, fps: float):
+        """Write {video_id}_tracking.json with all accumulated frames."""
+        data = {
+            "video_id": self.video_id,
+            "status": "completed",
+            "total_frames": total_frames,
+            "fps": fps,
+            "frame_count": len(self._frames),
+            "frames": self._frames,
+        }
+        path = os.path.join(self.library_dir, f"{self.video_id}_tracking.json")
+        with open(path, "w") as f:
+            json.dump(data, f)
 
 
 # ---------------------------------------------------------------------------
@@ -434,6 +486,10 @@ class VideoAnalyzer:
         # Initialize session tracker
         session_tracker = BatchSessionTracker(zones, video_id)
 
+        # Initialize JSON output writer
+        json_writer = JSONOutputWriter(video_id, VIDEO_LIBRARY_DIR)
+        json_writer.write_progress(0, total_frames, fps)
+
         total_events_written = 0
         total_sessions_written = 0
         t0 = time.time()
@@ -460,6 +516,16 @@ class VideoAnalyzer:
                 # Track
                 detections = tracker.update(detections)
 
+                # Accumulate per-frame tracking data for JSON output
+                tracks = []
+                if detections.tracker_id is not None and len(detections) > 0:
+                    for i, tid in enumerate(detections.tracker_id):
+                        bbox = [round(v) for v in detections.xyxy[i].tolist()]
+                        conf = round(float(detections.confidence[i]), 4) if detections.confidence is not None else None
+                        tracks.append({"id": int(tid), "bbox": bbox, "conf": conf})
+                timestamp_ms = round((frame_num / fps) * 1000, 1)
+                json_writer.add_frame(frame_num, timestamp_ms, tracks)
+
                 # Update zone-based session tracking
                 session_tracker.update(detections, video_ts, frame_num)
 
@@ -468,7 +534,7 @@ class VideoAnalyzer:
                     timeout_frames = int(fps * 3)
                     session_tracker.cleanup_inactive(frame_num, timeout_frames)
 
-                # Periodic DB commit
+                # Periodic DB commit + progress JSON update
                 if frame_num % self.config.commit_interval == 0:
                     ev_count = self.db.write_events(session_tracker.pending_events, video_id)
                     ss_count = self.db.write_sessions(session_tracker.pending_sessions, video_id)
@@ -479,6 +545,7 @@ class VideoAnalyzer:
 
                     self.db.update_job_progress(job_id, frame_num,
                                                 total_events_written, total_sessions_written)
+                    json_writer.write_progress(frame_num, total_frames, fps)
 
                     elapsed = time.time() - t0
                     pct = (frame_num / total_frames * 100) if total_frames > 0 else 0
@@ -496,6 +563,11 @@ class VideoAnalyzer:
             total_sessions_written += ss_count
 
             self.db.complete_job(job_id, total_events_written, total_sessions_written)
+
+            # Write final JSON outputs
+            json_writer.write_tracking(total_frames, fps)
+            json_writer.write_progress(total_frames, total_frames, fps, status="completed")
+
             elapsed = time.time() - t0
             print(f"\n[DONE] Batch processing complete in {elapsed:.1f}s")
             print(f"  Total frames: {total_frames}")
