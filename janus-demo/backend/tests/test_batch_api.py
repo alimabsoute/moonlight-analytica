@@ -64,6 +64,75 @@ class TestTrackingData:
         assert "error" in resp.get_json()
 
 
+class TestBatchPlaybackContract:
+    """Gate 8.2 — E2E data contract: batch_processor output → backend API →
+    PreProcessedPlayer schema.
+
+    These tests pin the exact JSON shape that PreProcessedPlayer.jsx
+    consumes. If JSONOutputWriter changes its key names or if the backend
+    route transforms the payload, these tests will catch it before the
+    frontend breaks silently.
+    """
+
+    def test_served_json_has_required_top_level_keys(self, client, video_library_dir):
+        """Response must include all keys PreProcessedPlayer accesses at top level."""
+        video_id = "contract-vid-1"
+        payload = _valid_tracking_payload(video_id)
+        with open(os.path.join(video_library_dir, f"{video_id}_tracking.json"), "w") as f:
+            json.dump(payload, f)
+
+        resp = client.get(f"/api/tracking-data/{video_id}")
+        body = resp.get_json()
+
+        for key in ("video_id", "status", "total_frames", "fps", "frame_count", "frames"):
+            assert key in body, f"Missing required key: {key}"
+
+    def test_frame_objects_use_correct_keys_for_preprocessed_player(
+        self, client, video_library_dir
+    ):
+        """Frames must use 'frame' and 'detections' keys.
+
+        PreProcessedPlayer's findFrameByIndex binary searches on frames[i].frame
+        and iterates frames[i].detections. Using 'frame_idx' or 'tracks' breaks it.
+        """
+        video_id = "contract-vid-2"
+        payload = _valid_tracking_payload(video_id)
+        with open(os.path.join(video_library_dir, f"{video_id}_tracking.json"), "w") as f:
+            json.dump(payload, f)
+
+        resp = client.get(f"/api/tracking-data/{video_id}")
+        frames = resp.get_json()["frames"]
+
+        for frame in frames:
+            assert "frame" in frame, "Frame must have 'frame' key for binary search"
+            assert "frame_idx" not in frame, "Legacy 'frame_idx' key must not be present"
+            assert "detections" in frame, "Frame must have 'detections' key"
+            assert "tracks" not in frame, "Legacy 'tracks' key must not be present"
+
+    def test_detection_objects_use_confidence_key_not_conf(self, client, video_library_dir):
+        """Detections must use 'confidence' key (not 'conf').
+
+        PreProcessedPlayer reads det.confidence for display; 'conf' is the
+        internal batch_processor accumulation key before write_tracking()
+        normalizes it.
+        """
+        video_id = "contract-vid-3"
+        payload = _valid_tracking_payload(video_id)
+        with open(os.path.join(video_library_dir, f"{video_id}_tracking.json"), "w") as f:
+            json.dump(payload, f)
+
+        resp = client.get(f"/api/tracking-data/{video_id}")
+        frames = resp.get_json()["frames"]
+        detections = [d for f in frames for d in f["detections"]]
+
+        assert len(detections) >= 1, "Need at least one detection to validate keys"
+        for det in detections:
+            assert "confidence" in det, "Detection must have 'confidence' key"
+            assert "conf" not in det, "Legacy 'conf' key must not be present"
+            assert "id" in det
+            assert "bbox" in det
+
+
 class TestProcessStatus:
     def test_process_status_completed_when_tracking_exists(self, client, video_library_dir):
         """Presence of {id}_tracking.json implies status=completed, percent=100."""

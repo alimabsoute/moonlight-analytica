@@ -387,6 +387,60 @@ Handles 20+ people with 0 ID errors: **PASS**
 
 ---
 
+## Sprint 7 — Integration Validation (2026-04-18) ✅
+
+Closed the two largest integration gaps: the batch→playback pipeline had never been tested end-to-end, and zone persistence had coverage holes in JSON round-trips, cross-connection durability, and the `polygonToBBox` utility.
+
+### Gate 7.1 — Backend Batch API Tests ✅
+- Created `backend/tests/test_batch_api.py` (5 tests)
+- Added `video_library_dir` fixture to `conftest.py`; refactored `routes/batch.py` to expose `VIDEO_LIBRARY_DIR` constant
+- Tests: serves JSON, 404 when missing, completed/processing/not_started status
+- **Tag:** `gate-7.1-batch-api-tests`
+
+### Gate 7.2 — Zone Persistence Round-Trip Tests ✅
+- 4 backend tests: polygon_image round-trip, polygon_world round-trip, persist across new DB connection, capacity persistence
+- 2 frontend tests: polygonToBBox computation, capacity rendered in zone card
+- Exported `polygonToBBox` as named export from `ZoneConfig.jsx`
+- **Tag:** `gate-7.2-zone-persistence-tests`
+
+### Gate 7.3 — PreProcessedPlayer Tests ✅
+- Created `frontend-v3/src/components/PreProcessedPlayer.test.jsx` (8 tests)
+- Extracted `findFrameByIndex()` as named export (pure binary search, replaces inline)
+- Tests: exact match, closest fallback, clamp past end, null/empty input, fetch on mount, picker render, empty library, completed video triggers tracking fetch
+- **Tag:** `gate-7.3-preprocessed-player-tests`
+
+### Gate 7.4 — Sprint 7 Checkpoint ✅
+- Full suite: 126 backend + 61 edge + 47 frontend = **234 total, 0 failures**
+- **Tag:** `gate-7.4-sprint7-complete`
+
+---
+
+## Sprint 8 — ProcessingStatus + E2E Contract + post_count (2026-04-18) ✅
+
+Closed three remaining coverage gaps: ProcessingStatus polling UI (0 tests), the E2E data contract between JSONOutputWriter → backend API → PreProcessedPlayer, and the edge agent's only network boundary (`post_count()`).
+
+### Gate 8.1 — ProcessingStatus Component Tests ✅
+- Created `frontend-v3/src/components/ProcessingStatus.test.jsx` (5 tests)
+- Pattern: `vi.useFakeTimers()` + `act(advanceTimersByTimeAsync)` — RTL's `waitFor` stalls under fake timers
+- Tests: no-op without videoId, polls correct URL, shows progress % and frame counter, fires onComplete, shows error on fetch failure
+- **Tag:** `gate-8.1-processing-status-tests`
+
+### Gate 8.2 — E2E Batch→Playback Data Contract Tests ✅
+- Added `TestBatchPlaybackContract` to `backend/tests/test_batch_api.py` (3 tests)
+- Pins exact JSON schema PreProcessedPlayer consumes: required top-level keys, `frame`/`detections` (not `frame_idx`/`tracks`), `confidence` (not `conf`)
+- **Tag:** `gate-8.2-batch-playback-contract`
+
+### Gate 8.3 — Edge Agent post_count() Tests ✅
+- Created `edge_agent/tests/test_edge_agent_posting.py` (6 tests)
+- Tests: returns True on 200, correct endpoint URL, payload `{"count_value": n}`, strips trailing slash, False on Timeout, False on ConnectionError
+- **Tag:** `gate-8.3-edge-agent-posting`
+
+### Gate 8.4 — Sprint 8 Checkpoint ✅
+- Full suite: 129 backend + 67 edge + 52 frontend = **248 total, 0 failures**
+- **Tag:** `gate-8.4-sprint8-complete`
+
+---
+
 ## Test Count Tracking
 
 Record after each gate:
@@ -415,6 +469,15 @@ Record after each gate:
 | 5.1 | 117 | 35 | 12 | 0 | 164 | — |
 | 5.2 | 117 | 35 | 16 | 0 | 168 | — |
 | 5.3 | 117 | 35 | 16 | 0 | 168 | — |
+| 6.4 | 117 | 61 | 39 | 0 | 215 | — |
+| 7.1 | 122 | 61 | 39 | 0 | 222 | — |
+| 7.2 | 126 | 61 | 41 | 0 | 228 | — |
+| 7.3 | 126 | 61 | 47 | 0 | 234 | — |
+| 7.4 | 126 | 61 | 47 | 0 | **234** | — |
+| 8.1 | 126 | 61 | 52 | 0 | 239 | — |
+| 8.2 | 129 | 61 | 52 | 0 | 242 | — |
+| 8.3 | 129 | 67 | 52 | 0 | 248 | — |
+| 8.4 | 129 | 67 | 52 | 0 | **248** | — |
 
 ## Rollback Procedure
 
