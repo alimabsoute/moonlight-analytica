@@ -31,6 +31,24 @@ const ZONE_BORDER_COLORS = {
   main_floor: '#2196f3',
 }
 
+/**
+ * Binary search for a frame in a sorted-by-`frame` array. Returns the exact
+ * match when present; otherwise returns the closest frame (never null when
+ * the array is non-empty). Returns null only for an empty frames array.
+ */
+export function findFrameByIndex(frames, frameIdx) {
+  if (!frames || frames.length === 0) return null
+  let lo = 0, hi = frames.length - 1
+  while (lo <= hi) {
+    const mid = Math.floor((lo + hi) / 2)
+    if (frames[mid].frame === frameIdx) return frames[mid]
+    if (frames[mid].frame < frameIdx) lo = mid + 1
+    else hi = mid - 1
+  }
+  const closestIdx = Math.min(lo, frames.length - 1)
+  return frames[closestIdx]
+}
+
 export default function PreProcessedPlayer({ theme = 'dark', onMetricsUpdate }) {
   const [videos, setVideos] = useState([])
   const [selectedVideo, setSelectedVideo] = useState(null)
@@ -140,29 +158,8 @@ export default function PreProcessedPlayer({ theme = 'dark', onMetricsUpdate }) 
     const frameIdx = Math.round(currentTime * fps)
     setCurrentFrame(frameIdx)
 
-    // Find closest frame data
     const frames = trackingData.frames || []
-    let frameData = null
-
-    // Binary search for closest frame
-    let lo = 0, hi = frames.length - 1
-    while (lo <= hi) {
-      const mid = Math.floor((lo + hi) / 2)
-      if (frames[mid].frame === frameIdx) {
-        frameData = frames[mid]
-        break
-      } else if (frames[mid].frame < frameIdx) {
-        lo = mid + 1
-      } else {
-        hi = mid - 1
-      }
-    }
-    // Use closest if exact not found
-    if (!frameData && frames.length > 0) {
-      const closestIdx = Math.min(lo, frames.length - 1)
-      frameData = frames[closestIdx]
-    }
-
+    const frameData = findFrameByIndex(frames, frameIdx)
     if (!frameData) return
 
     const detections = frameData.detections || []
