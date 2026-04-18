@@ -10,6 +10,11 @@ from db import db
 
 batch_bp = Blueprint('batch', __name__)
 
+EDGE_AGENT_DIR = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "edge_agent")
+)
+VIDEO_LIBRARY_DIR = os.path.join(EDGE_AGENT_DIR, "video_library")
+
 
 @batch_bp.get("/api/batch/jobs")
 def batch_jobs_list():
@@ -146,10 +151,7 @@ def process_video_start():
 @batch_bp.get("/api/process-status/<video_id>")
 def process_video_status(video_id):
     """Check processing progress for a video."""
-    edge_agent_dir = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "edge_agent")
-    )
-    library_dir = os.path.join(edge_agent_dir, "video_library")
+    library_dir = VIDEO_LIBRARY_DIR
 
     tracking_file = os.path.join(library_dir, f"{video_id}_tracking.json")
     if os.path.exists(tracking_file):
@@ -173,11 +175,7 @@ def process_video_status(video_id):
 @batch_bp.get("/api/tracking-data/<video_id>")
 def get_tracking_data(video_id):
     """Serve the pre-computed tracking JSON for a video."""
-    edge_agent_dir = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "edge_agent")
-    )
-    tracking_file = os.path.join(edge_agent_dir, "video_library",
-                                  f"{video_id}_tracking.json")
+    tracking_file = os.path.join(VIDEO_LIBRARY_DIR, f"{video_id}_tracking.json")
 
     if not os.path.exists(tracking_file):
         return jsonify({"error": "Tracking data not found. Process the video first."}), 404
@@ -197,11 +195,7 @@ def get_tracking_data(video_id):
 @batch_bp.get("/api/tracking-metrics/<video_id>")
 def get_tracking_metrics(video_id):
     """Serve pre-computed dashboard metrics for a video."""
-    edge_agent_dir = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "edge_agent")
-    )
-    tracking_file = os.path.join(edge_agent_dir, "video_library",
-                                  f"{video_id}_tracking.json")
+    tracking_file = os.path.join(VIDEO_LIBRARY_DIR, f"{video_id}_tracking.json")
 
     if not os.path.exists(tracking_file):
         return jsonify({"error": "Tracking data not found"}), 404

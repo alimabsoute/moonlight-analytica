@@ -52,3 +52,17 @@ def fresh_db(tmp_db):
     con.execute("PRAGMA foreign_keys = ON")
     yield con
     con.close()
+
+
+@pytest.fixture
+def video_library_dir(tmp_path, monkeypatch):
+    """Isolated video_library directory for batch API tests.
+
+    Overrides routes.batch.VIDEO_LIBRARY_DIR so endpoints reading tracking
+    and progress JSON point at an empty tmp dir instead of the real edge_agent/.
+    """
+    from routes import batch as batch_module
+    lib_dir = tmp_path / "video_library"
+    lib_dir.mkdir()
+    monkeypatch.setattr(batch_module, "VIDEO_LIBRARY_DIR", str(lib_dir))
+    return str(lib_dir)
