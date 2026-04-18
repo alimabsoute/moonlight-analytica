@@ -11,7 +11,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor, act } from '@testing-library/react'
-import ZoneConfig from './ZoneConfig'
+import ZoneConfig, { polygonToBBox } from './ZoneConfig'
 
 // jsdom has no canvas — stub getContext
 beforeEach(() => {
@@ -164,6 +164,30 @@ describe('ZoneConfig API integration (Gate 6.3)', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Zones (3)')).toBeTruthy()
+    })
+  })
+})
+
+// ── Gate 7.2 — zone persistence round-trip (frontend side) ────────────────
+
+describe('ZoneConfig zone persistence round-trip (Gate 7.2)', () => {
+  it('polygonToBBox computes correct axis-aligned bbox from polygon_image', () => {
+    // Rectangle polygon [10,20] → [300,480]. Width = 290, height = 460.
+    const bbox = polygonToBBox([[10, 20], [300, 20], [300, 480], [10, 480]])
+    expect(bbox).toEqual({ x: 10, y: 20, width: 290, height: 460 })
+  })
+
+  it('zone capacity from API is rendered in the zone card', async () => {
+    const zone = makeApiZone(1, 'Capacity Zone')
+    zone.capacity = 42
+    mockFetch([zone])
+    render(<ZoneConfig />)
+
+    await waitFor(() => {
+      // Card row: "Capacity: <span>42</span>" — plus total capacity sum is also 42.
+      // Both are valid renderings of the persisted capacity.
+      const matches = screen.getAllByText('42')
+      expect(matches.length).toBeGreaterThanOrEqual(1)
     })
   })
 })

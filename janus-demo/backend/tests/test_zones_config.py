@@ -121,3 +121,84 @@ class TestGetZoneReturnsPolygon:
         zone_map = {z["zone_name"]: z for z in resp.get_json()["zones"]}
         checkout = zone_map["checkout"]
         assert checkout["name"] == checkout["zone_name"]
+
+
+class TestZonePersistenceRoundTrip:
+    """Gate 7.2 — verify polygons and capacity survive JSON serialization,
+    SQLite round-trip, and new DB connections (simulated restart)."""
+
+    def test_polygon_image_json_roundtrip(self, client):
+        """POST polygon_image → GET returns the exact same nested array."""
+        original = [[10, 20], [300, 20], [300, 480], [10, 480]]
+        client.post(
+            "/api/zones/config",
+            json={"zone_name": "roundtrip_img", "polygon_image": original},
+        )
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "roundtrip_img")
+        # Exact structural equality — not a string, coordinate order preserved
+        assert zone["polygon_image"] == original
+        assert isinstance(zone["polygon_image"], list)
+        assert isinstance(zone["polygon_image"][0], list)
+
+    def test_polygon_world_json_roundtrip(self, client):
+        """POST polygon_world with floats → GET returns the same float array."""
+        original = [[0.0, 0.0], [5.0, 0.0], [5.0, 8.0], [0.0, 8.0]]
+        client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "roundtrip_world",
+                "polygon_image": ENTRANCE_POLYGON,
+                "polygon_world": original,
+            },
+        )
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "roundtrip_world")
+        assert zone["polygon_world"] == original
+
+    def test_zone_persists_across_new_db_connection(self, client, tmp_db):
+        """Zone written by POST must be visible when a fresh sqlite connection is opened.
+
+        Simulates a backend restart: the process dies after commit, a new
+        connection opens the same DB file and must still find the row.
+        """
+        import sqlite3
+
+        client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "durable_zone",
+                "capacity": 77,
+                "polygon_image": MAIN_POLYGON,
+            },
+        )
+
+        # Open an entirely new sqlite3 connection to the same file
+        con = sqlite3.connect(tmp_db)
+        con.row_factory = sqlite3.Row
+        try:
+            row = con.execute(
+                "SELECT zone_name, capacity, polygon_image FROM zones WHERE zone_name = ?",
+                ("durable_zone",),
+            ).fetchone()
+        finally:
+            con.close()
+
+        assert row is not None, "Zone did not survive new DB connection"
+        assert row["zone_name"] == "durable_zone"
+        assert row["capacity"] == 77
+        assert json.loads(row["polygon_image"]) == MAIN_POLYGON
+
+    def test_capacity_persists(self, client):
+        """POST capacity → GET returns the same integer capacity."""
+        client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "capacity_zone",
+                "capacity": 42,
+                "polygon_image": ENTRANCE_POLYGON,
+            },
+        )
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "capacity_zone")
+        assert zone["capacity"] == 42

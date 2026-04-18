@@ -9,7 +9,7 @@ import ZoneDrawer from '../components/ZoneDrawer'
 const API = 'http://localhost:8000'
 
 /** Convert polygon_image [[x,y],...] to axis-aligned bounding box for canvas display. */
-function polygonToBBox(polygon) {
+export function polygonToBBox(polygon) {
   if (!polygon || polygon.length === 0) return { x: 0, y: 0, width: 100, height: 100 }
   const xs = polygon.map(p => p[0])
   const ys = polygon.map(p => p[1])
