@@ -16,6 +16,11 @@ edge_agent/video_library/**/*.webm
 edge_agent/video_library/**/*.avi
 edge_agent/uploads/
 
+# Runtime-generated artifacts (test runs, batch jobs)
+edge_agent/video_library/*_tracking.json
+edge_agent/video_library/*_progress.json
+edge_agent/video_library/*.bak
+
 # Environment
 .env
 *.env
