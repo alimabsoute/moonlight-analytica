@@ -1,0 +1,72 @@
+name: Carte Generator
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # every hour on the hour
+  workflow_dispatch:       # manual trigger for testing
+    inputs:
+      batch:
+        description: 'Number of articles to generate'
+        default: '3'
+        type: string
+      dry_run:
+        description: 'Dry run (no deploy, no social)'
+        default: 'false'
+        type: boolean
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tastyr-iq
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install anthropic firecrawl-py requests jinja2 tweepy
+
+      - name: Generate Carte articles
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          CARTE_BATCH_SIZE: ${{ github.event.inputs.batch || '3' }}
+        run: |
+          DRY=${{ github.event.inputs.dry_run || 'false' }}
+          if [ "$DRY" = "true" ]; then
+            python pipeline/generate_carte.py --dry-run
+          else
+            python pipeline/generate_carte.py --batch ${{ github.event.inputs.batch || '3' }}
+          fi
+
+      - name: Generate sitemap
+        run: python pipeline/generate_sitemap.py
+
+      - name: Commit generated articles
+        run: |
+          git config user.name "ForkFox Pipeline"
+          git config user.email "pipeline@forkfox.ai"
+          git add landing-pages/carte/ pipeline/queue.json landing-pages/sitemap.xml landing-pages/robots.txt pipeline/.twitter_counter
+          git diff --staged --quiet || git commit -m "feat(carte): publish batch [skip ci]
+
+🤖 Generated with Claude Haiku"
+          git push
+
+      - name: Deploy to Vercel
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cd landing-pages
+          npx vercel --prod --yes --token $VERCEL_TOKEN

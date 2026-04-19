@@ -1,0 +1,60 @@
+name: Dish Publisher
+
+on:
+  push:
+    paths:
+      - 'tastyr-iq/landing-pages/the-dish/**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tastyr-iq
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install anthropic requests
+
+      - name: Detect changed Dish article
+        id: detect
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'the-dish/' | grep 'index.html' | head -1)
+          echo "html_path=$CHANGED" >> $GITHUB_OUTPUT
+          echo "Changed: $CHANGED"
+
+      - name: Generate social copy
+        if: steps.detect.outputs.html_path != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python pipeline/generate_social_copy.py \
+            --html-path "${{ steps.detect.outputs.html_path }}"
+
+      - name: Generate sitemap
+        run: python pipeline/generate_sitemap.py
+
+      - name: Commit social.json + sitemap
+        run: |
+          git config user.name "ForkFox Pipeline"
+          git config user.email "pipeline@forkfox.ai"
+          git add landing-pages/the-dish/ landing-pages/sitemap.xml landing-pages/robots.txt
+          git diff --staged --quiet || git commit -m "chore(dish): add social copy + update sitemap [skip ci]"
+          git push
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cd landing-pages
+          npx vercel --prod --yes --token $VERCEL_TOKEN

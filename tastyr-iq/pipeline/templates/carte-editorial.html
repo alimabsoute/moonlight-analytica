@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }} — Carte | ForkFox</title>
+<meta name="description" content="{{ meta_description }}">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="{{ article_url }}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:image" content="{{ og_image }}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="https://forkfox.ai/forkfox-logo.png">
+{% if ga4_id %}<script async src="https://www.googletagmanager.com/gtag/js?id={{ ga4_id }}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','{{ ga4_id }}');</script>{% endif %}
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+nav.site{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid #1a1a1a;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}.logo-text span{color:#F97316}
+nav.site ul{display:flex;gap:24px;list-style:none;margin-left:auto;align-items:center}
+nav.site ul a{font-size:14px;color:#999;transition:color .2s}
+nav.site ul a:hover{color:#fff}
+.nav-pill,.nav-ghost{display:inline-flex;align-items:center;justify-content:center;min-width:88px;font-size:13px;font-weight:700;padding:7px 16px;border-radius:20px;transition:transform .22s ease,box-shadow .22s ease,background .22s ease;letter-spacing:.01em}
+.nav-pill{background:#F97316;color:#0a0a0a!important;border:1.5px solid rgba(255,160,70,.5);box-shadow:0 4px 18px rgba(249,115,22,.45),inset 0 1px 0 rgba(255,255,255,.22)}
+.nav-pill:hover{background:#fb8c34!important;transform:translateY(-1px)}
+.nav-ghost{background:transparent;color:#F97316!important;border:1.5px solid rgba(249,115,22,.55)}
+.nav-ghost:hover{background:rgba(249,115,22,.14)!important;transform:translateY(-1px)}
+.progress{position:fixed;top:60px;left:0;height:2px;background:linear-gradient(90deg,#FA2A52,#F97316);width:0;z-index:101;transition:width .1s}
+.page-wrap{max-width:1100px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:18px;font-family:monospace}
+.breadcrumb a{color:#666}.breadcrumb span{color:#FA2A52}
+
+/* HERO */
+.hero-stage{position:relative;margin:36px 0 56px;border-radius:18px;overflow:hidden;aspect-ratio:16/9;background:#050505;box-shadow:0 50px 140px rgba(0,0,0,.6),0 16px 50px rgba(250,42,82,.12),inset 0 0 0 1px rgba(255,255,255,.04)}
+.hero-photo{position:absolute;inset:-6%;background-size:cover;background-position:center;animation:kenBurns 30s ease-in-out infinite;will-change:transform}
+@keyframes kenBurns{0%{transform:scale(1.06) translate(0,0)}25%{transform:scale(1.14) translate(-1.5%,-1%)}50%{transform:scale(1.18) translate(1.5%,1%)}75%{transform:scale(1.12) translate(1%,-1.5%)}100%{transform:scale(1.06) translate(0,0)}}
+.hero-grade{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,5,2,.35) 0%,rgba(20,10,4,.1) 40%,rgba(10,2,0,.4) 100%);mix-blend-mode:multiply;pointer-events:none;z-index:1}
+.hero-accent{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 20% 30%,rgba(250,42,82,.22),transparent 60%),radial-gradient(ellipse 60% 50% at 80% 70%,rgba(249,115,22,.15),transparent 65%);mix-blend-mode:screen;pointer-events:none;z-index:2;animation:accentPulse 11s ease-in-out infinite}
+@keyframes accentPulse{0%,100%{opacity:.65}50%{opacity:1}}
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,transparent 40%,rgba(0,0,0,.55) 85%,rgba(0,0,0,.8) 100%);pointer-events:none;z-index:3}
+.hero-grain{position:absolute;inset:-50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .13 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.35;mix-blend-mode:overlay;pointer-events:none;z-index:4;animation:grainShift 1.4s steps(4) infinite}
+@keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(-4%,2%)}50%{transform:translate(3%,-3%)}75%{transform:translate(-2%,4%)}100%{transform:translate(0,0)}}
+.hero-badge{position:absolute;top:28px;left:28px;z-index:10;display:inline-flex;align-items:center;gap:10px;padding:7px 16px;border-radius:100px;background:rgba(10,8,5,.72);backdrop-filter:blur(16px);border:1px solid rgba(249,115,22,.45);font-family:'Geologica',sans-serif;font-size:10px;color:#fff;text-transform:uppercase;letter-spacing:.18em;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#F97316;animation:blink 1.8s ease-in-out infinite;box-shadow:0 0 10px #F97316,0 0 20px rgba(249,115,22,.5)}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.85)}}
+.hero-badge .sep{color:rgba(255,255,255,.25);margin:0 4px}
+.hero-badge .loc{color:#F97316}
+.hero-tagline{position:absolute;bottom:36px;left:40px;z-index:10;max-width:820px}
+.hero-tagline .eyebrow{font-family:monospace;font-size:12px;color:#F97316;text-transform:uppercase;letter-spacing:.18em;font-weight:700;margin-bottom:14px;opacity:0;animation:fadeUp 1.2s ease-out .3s forwards}
+.hero-tagline .line{font-family:'Geologica',sans-serif;font-weight:800;font-size:clamp(28px,3.6vw,46px);line-height:1.18;color:#fff;letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.7);opacity:0;animation:fadeUp 1.2s ease-out .6s forwards}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+
+/* ARTICLE LAYOUT */
+.two-col{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:start}
+.sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:18px}
+.sidebar-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:22px}
+.sidebar-card h3{font-family:'Geologica',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;color:#888}
+.toc{list-style:none;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.toc a{color:#aaa;padding:6px 0;display:block;border-left:2px solid #222;padding-left:12px;transition:all .2s}
+.toc a:hover{color:#FA2A52;border-left-color:#FA2A52}
+.pub-meta{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#666}
+.pub-meta strong{color:#ccc}
+.carte-badge{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);border-radius:8px;padding:12px 14px;font-size:12px;color:#F97316;font-family:'Geologica',sans-serif;font-weight:700;text-align:center}
+.carte-badge .cb-label{font-size:10px;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
+
+h1.article-title{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(30px,4.5vw,52px);line-height:1.07;letter-spacing:-.025em;margin-bottom:18px;color:#fff}
+.deck{font-size:clamp(16px,1.8vw,20px);line-height:1.55;color:#aaa;max-width:820px;margin-bottom:28px;font-family:'Lora',serif}
+
+.prose{font-family:'Lora',serif;font-size:17px;line-height:1.85;color:#c5c5c5}
+.prose p{margin-bottom:22px}
+.prose > p:first-of-type::first-letter{font-family:'Geologica',sans-serif;font-size:4.2em;float:left;line-height:.85;margin:4px 10px 0 0;color:#F97316;font-weight:900}
+.prose h2{font-family:'Geologica',sans-serif;font-weight:800;font-size:26px;color:#fff;margin:48px 0 20px;letter-spacing:-.015em;position:relative;padding-left:22px}
+.prose h2::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;background:linear-gradient(180deg,#F97316,#FA2A52);border-radius:2px}
+.prose strong{color:#fff;font-weight:700}
+.prose a{color:#F97316;border-bottom:1px solid rgba(249,115,22,.3)}
+
+.pull-quote{margin:40px 0;padding:28px 0;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;font-family:'Geologica',sans-serif;font-weight:600;font-size:22px;line-height:1.4;color:#fff}
+.pull-quote::before{content:'\201C';color:#F97316;font-size:48px;line-height:0;vertical-align:-24px;margin-right:6px}
+
+.h-callouts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:40px 0}
+.h-callout{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:22px;transition:all .25s;position:relative;overflow:hidden}
+.h-callout::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,#FA2A52,#F97316);transform:scaleY(0);transform-origin:top;transition:transform .3s}
+.h-callout:hover{border-color:rgba(249,115,22,.35);transform:translateY(-3px)}
+.h-callout:hover::before{transform:scaleY(1)}
+.h-callout .hc-label{font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#F97316;margin-bottom:10px;font-weight:700}
+.h-callout .hc-title{font-family:'Geologica',sans-serif;font-weight:800;font-size:17px;color:#fff;line-height:1.25;margin-bottom:10px}
+.h-callout .hc-body{font-size:13px;color:#aaa;line-height:1.65;font-family:'Inter',sans-serif}
+.h-callout .hc-body strong{color:#fff}
+
+.closing-principle{margin:48px 0;padding:32px;background:linear-gradient(135deg,#0f0f0f,#181818);border:1px solid #2a2a2a;border-radius:16px;font-family:'Geologica',sans-serif;font-weight:700;font-size:clamp(18px,2.2vw,24px);color:#fff;line-height:1.35;text-align:center;position:relative}
+.closing-principle::before{content:'//';position:absolute;top:22px;left:26px;color:#F97316;font-size:20px;opacity:.6;font-family:monospace}
+
+/* NEWSLETTER */
+.newsletter-stage{position:relative;margin:60px 0 40px;border-radius:18px;overflow:hidden;aspect-ratio:16/9;min-height:420px;background:#050505;box-shadow:0 40px 100px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.04)}
+.newsletter-photo{position:absolute;inset:-6%;background-size:cover;background-position:center;animation:kenBurns 32s ease-in-out infinite -10s;will-change:transform;filter:brightness(.45)}
+.newsletter-content{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px}
+.newsletter-content .mark{font-family:monospace;font-size:11px;color:#F97316;text-transform:uppercase;letter-spacing:.2em;font-weight:700;margin-bottom:18px}
+.newsletter-content .hook{font-family:'Geologica',sans-serif;font-weight:800;font-size:clamp(26px,3.8vw,44px);line-height:1.12;color:#fff;letter-spacing:-.02em;max-width:780px;margin-bottom:20px}
+.newsletter-content .hook em{font-style:normal;color:#F97316}
+.newsletter-content .sub{font-family:'Lora',serif;font-size:clamp(14px,1.4vw,17px);color:rgba(255,255,255,.78);max-width:600px;line-height:1.55;margin-bottom:26px;font-style:italic}
+.news-form{display:flex;gap:.5rem;align-items:center;max-width:480px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:6px 6px 6px 14px}
+.news-form input[type=email]{flex:1;padding:.8rem .6rem;border:none;background:transparent;color:#fff;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;min-width:0}
+.news-form input[type=email]::placeholder{color:rgba(255,255,255,.45)}
+.news-form button{padding:.85rem 1.5rem;border-radius:10px;border:none;background:#F97316;color:#fff;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Geologica',sans-serif;white-space:nowrap}
+.news-fine{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:10px}
+
+/* FAQ */
+.faq{margin:56px auto;max-width:820px}
+.faq-title{font-family:'Geologica',sans-serif;font-weight:900;font-size:28px;color:#fff;margin-bottom:24px;letter-spacing:-.015em}
+.faq-item{border-top:1px solid #1a1a1a;padding:22px 0}.faq-item:last-child{border-bottom:1px solid #1a1a1a}
+.faq-q{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;color:#fff;margin-bottom:10px}
+.faq-a{font-family:'Lora',serif;font-size:15px;color:#999;line-height:1.75}
+
+/* RELATED */
+.related{margin-top:64px;padding-top:44px;border-top:1px solid #1a1a1a}
+.related h3{font-family:'Geologica',sans-serif;font-weight:900;font-size:22px;color:#fff;margin-bottom:24px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.related-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:22px;display:block;transition:all .25s}
+.related-card:hover{border-color:#F97316;transform:translateY(-2px)}
+.related-card .rc-tag{font-size:10px;color:#F97316;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:8px;font-family:monospace}
+.related-card .rc-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:15px;color:#fff;line-height:1.3;margin-bottom:6px}
+.related-card .rc-desc{font-size:13px;color:#888;line-height:1.55;font-family:'Lora',serif;font-style:italic}
+
+footer{background:#060606;border-top:1px solid #1a1a1a;padding:36px 24px;color:#444;font-size:13px;text-align:center;margin-top:80px}
+footer a{color:#666}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}.sidebar{position:static}.h-callouts{grid-template-columns:1fr}}
+@media(max-width:520px){.page-wrap{padding:80px 16px 40px}.hero-tagline{left:20px;bottom:20px}.hero-tagline .line{font-size:24px}.newsletter-stage{aspect-ratio:4/5}.news-form{flex-wrap:wrap}.news-form button{width:100%;padding:.8rem}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="site">
+  <a href="https://forkfox.ai/" class="logo" aria-label="ForkFox home">
+    <div class="logo-sq">F</div>
+    <div class="logo-text">Fork<span>Fox</span></div>
+  </a>
+  <ul>
+    <li><a href="https://forkfox.ai/the-dish/">The Dish</a></li>
+    <li><a href="https://forkfox.ai/carte/" class="nav-ghost">Carte</a></li>
+    <li><a href="https://forkfox.ai/socials.html">Socials</a></li>
+    <li><a href="https://forkfox.ai/gallery.html" class="nav-pill">Beta</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">
+    <a href="https://forkfox.ai/">forkfox.ai</a> /
+    <a href="https://forkfox.ai/carte/">carte</a> /
+    {% if breadcrumb_city and breadcrumb_city != "Multiple Cities" %}
+    <a href="https://forkfox.ai/carte/{{ city | lower | replace(' ', '-') }}/">{{ breadcrumb_city }}</a> /
+    {% endif %}
+    <span>{{ neighborhood }}</span>
+  </div>
+
+  <!-- HERO -->
+  <figure class="hero-stage" aria-label="{{ title }}">
+    <div class="hero-photo" role="img" aria-label="{{ cuisine }} food in {{ neighborhood }}, {{ city }}" style="background-image:url('{{ hero_image_url }}')"></div>
+    <div class="hero-grade"></div>
+    <div class="hero-accent"></div>
+    <div class="hero-vignette"></div>
+    <div class="hero-grain"></div>
+    <div class="hero-badge">
+      <div class="dot"></div>
+      Carte <span class="sep">·</span> <span class="loc">{{ city if city not in ["both","multiple"] else "Multi-City" }}</span>
+    </div>
+    <div class="hero-tagline">
+      <div class="eyebrow">{{ cuisine }} · {{ neighborhood }}</div>
+      <div class="line">{{ title }}</div>
+    </div>
+  </figure>
+
+  <!-- TWO-COLUMN LAYOUT -->
+  <div class="two-col">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <h3>In this piece</h3>
+        <ul class="toc">
+          {% for section in sections %}
+          <li><a href="#{{ section.id }}">{{ section.heading }}</a></li>
+          {% endfor %}
+          <li><a href="#faq">Frequently asked</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-card">
+        <div class="pub-meta">
+          <div><strong>Published</strong> {{ published_date_display }}</div>
+          <div><strong>City</strong> {{ city if city not in ["both","multiple"] else "Multi-city" }}</div>
+          <div><strong>Cuisine</strong> {{ cuisine }}</div>
+        </div>
+      </div>
+      <div class="carte-badge">
+        <div class="cb-label">Carte</div>
+        Data-informed editorial
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <h1 class="article-title">{{ title }}</h1>
+      <p class="deck">{{ deck }}</p>
+
+      <article class="prose">
+        {% for section in sections %}
+        <h2 id="{{ section.id }}">{{ section.heading }}</h2>
+        {% for para in section.paragraphs %}
+        <p>{{ para | safe }}</p>
+        {% endfor %}
+
+        {% if section.callouts and section.callouts | length >= 2 %}
+        <div class="h-callouts">
+          {% for callout in section.callouts %}
+          <div class="h-callout">
+            <div class="hc-label">{{ callout.label }}</div>
+            <div class="hc-title">{{ callout.title }}</div>
+            <div class="hc-body">{{ callout.body | safe }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        <div class="pull-quote">{{ pull_quote }}</div>
+
+        <div class="closing-principle">{{ closing_principle }}</div>
+
+        <!-- NEWSLETTER -->
+        <figure class="newsletter-stage" aria-label="Newsletter signup">
+          <div class="newsletter-photo" style="background-image:url('{{ hero_image_url }}')"></div>
+          <div class="newsletter-content">
+            <div class="mark">The Dish newsletter</div>
+            <div class="hook">{{ city if city not in ["both","multiple"] else "Philly & SF" }}, <em>plate by plate.</em></div>
+            <div class="sub">One dish. One neighborhood. One Friday. No recipes, no rankings — just the plate worth knowing about.</div>
+            <form class="news-form" action="https://formsubmit.co/hello@forkfox.ai" method="POST">
+              <input type="hidden" name="_subject" value="ForkFox Newsletter Signup (Carte — {{ slug }})">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_next" value="https://forkfox.ai/the-dish/">
+              <input type="email" name="email" placeholder="your email — one dish story a week" required>
+              <button type="submit">Subscribe</button>
+            </form>
+            <div class="news-fine">One email per week · Unsubscribe anytime</div>
+          </div>
+        </figure>
+
+      </article>
+
+      <!-- FAQ -->
+      <section class="faq" id="faq">
+        <h2 class="faq-title">Frequently asked</h2>
+        {% for item in faq %}
+        <div class="faq-item">
+          <div class="faq-q">{{ item.q }}</div>
+          <div class="faq-a">{{ item.a }}</div>
+        </div>
+        {% endfor %}
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 ForkFox · <a href="https://forkfox.ai/privacy.html">Privacy</a> · <a href="https://forkfox.ai/">forkfox.ai</a></p>
+  <p style="margin-top:8px;color:#333">Carte: data-informed food editorial. Dishes scored, not restaurants.</p>
+</footer>
+
+<script>
+(function(){
+  var bar=document.getElementById('progress');
+  if(bar){window.addEventListener('scroll',function(){var h=document.documentElement;var pct=(h.scrollTop||document.body.scrollTop)/(h.scrollHeight-h.clientHeight)*100;bar.style.width=pct+'%'});}
+  document.querySelectorAll('.toc a').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=this.getAttribute('href').slice(1);
+      var el=document.getElementById(id);
+      if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ title | tojson }},
+  "description": {{ meta_description | tojson }},
+  "image": {{ og_image | tojson }},
+  "datePublished": {{ published_at | tojson }},
+  "author": {"@type": "Organization", "name": "ForkFox"},
+  "publisher": {"@type": "Organization", "name": "ForkFox", "logo": {"@type": "ImageObject", "url": "https://forkfox.ai/forkfox-logo.png"}}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+name: Post Social
+
+on:
+  schedule:
+    - cron: '30 * * * *'  # 30 min after every hour — catches Carte and Dish posts
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Dry run (no real posts)'
+        default: 'true'
+        type: boolean
+      target:
+        description: 'carte or dish'
+        default: 'carte'
+        type: choice
+        options: [carte, dish]
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tastyr-iq
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Post to social platforms
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          IG_ACCOUNT_ID: ${{ secrets.IG_ACCOUNT_ID }}
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
+          TWITTER_EVERY_N: '2'
+        run: |
+          TARGET=${{ github.event.inputs.target || 'carte' }}
+          TEST=${{ github.event.inputs.test || 'false' }}
+          TEST_FLAG=""
+          if [ "$TEST" = "true" ]; then
+            TEST_FLAG="--test"
+          fi
+          if [ "$TARGET" = "dish" ]; then
+            python pipeline/post_social.py --recent-dish $TEST_FLAG
+          else
+            # Post both (carte first, then any recent dish)
+            python pipeline/post_social.py --recent-carte $TEST_FLAG
+            python pipeline/post_social.py --recent-dish $TEST_FLAG
+          fi
