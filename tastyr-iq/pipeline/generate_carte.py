@@ -19,6 +19,93 @@ from datetime import datetime, timezone
 
 import anthropic
 
+# ─── LSI lookup tables ────────────────────────────────────────────────────────
+
+_CUISINE_LSI: dict[str, list[str]] = {
+    "ethiopian":      ["injera", "tibs", "kitfo", "berbere", "tej", "wot", "shiro", "habesha", "eritrean"],
+    "eritrean":       ["injera", "zigni", "tsebhi", "hilbet", "suwa", "habesha", "east african"],
+    "vietnamese":     ["pho", "banh mi", "bun bo hue", "banh xeo", "goi cuon", "ca phe sua da", "com tam"],
+    "cantonese":      ["dim sum", "har gow", "char siu", "lo mai gai", "cheung fun", "wonton", "congee", "clay pot"],
+    "chinese":        ["dim sum", "har gow", "char siu bao", "lo mai gai", "wonton soup", "mapo tofu", "congee"],
+    "mexican":        ["al pastor", "carnitas", "tamales", "mole", "torta", "chile relleno", "pozole", "birria"],
+    "korean":         ["bibimbap", "bulgogi", "kimchi jjigae", "galbi", "sundubu", "tteokbokki", "banchan", "makgeolli"],
+    "japanese":       ["ramen", "udon", "soba", "omakase", "izakaya", "tempura", "donburi", "yakitori", "tonkotsu"],
+    "south indian":   ["dosa", "idli", "sambar", "rasam", "chettinad", "thali", "uttapam", "filter coffee"],
+    "italian":        ["pasta", "risotto", "osso buco", "antipasto", "trattoria", "red gravy", "sunday sauce", "byob"],
+    "american":       ["charcuterie", "gastropub", "craft beer", "seasonal menu", "farm to table", "small plates"],
+    "american byob":  ["byob", "craft beer", "charcuterie", "seasonal", "small plates", "local sourced"],
+    "seafood":        ["raw bar", "oysters", "chowder", "whole fish", "ceviche", "po boy", "clams casino"],
+    "pizza":          ["neapolitan", "coal fired", "sicilian", "grandma pie", "slice", "margherita", "stromboli"],
+    "thai":           ["pad thai", "larb", "som tam", "khao soi", "boat noodles", "nam tok", "mango sticky rice"],
+    "indian":         ["biryani", "butter chicken", "dal makhani", "naan", "chaat", "samosa", "tandoor"],
+    "middle eastern": ["shawarma", "falafel", "hummus", "meze", "kebab", "tabouleh", "labneh", "pita"],
+    "caribbean":      ["jerk", "oxtail", "curry goat", "roti", "rice and peas", "plantain", "sorrel"],
+    "dim sum":        ["har gow", "siu mai", "char siu bao", "lo mai gai", "cheung fun", "egg tart", "turnip cake"],
+}
+
+_NEIGHBORHOOD_LSI: dict[str, list[str]] = {
+    # Philadelphia
+    "west philadelphia":    ["baltimore avenue", "cedar park", "spruce hill", "malcolm x park", "42nd street", "50th street"],
+    "fishtown":             ["frankford avenue", "front street", "girard avenue", "del frisco's row", "northern liberties adjacent"],
+    "south philadelphia":   ["9th street", "passyunk avenue", "italian market", "washington avenue", "south philly"],
+    "italian market":       ["9th street", "passyunk", "bella vista", "fabric row", "south street"],
+    "bella vista":          ["south street", "washington avenue", "fabric row", "9th street", "queen village"],
+    "chinatown":            ["10th street", "race street", "arch street", "vine street", "center city adjacent"],
+    "reading terminal":     ["12th and arch", "convention center", "center city", "market street", "filbert street"],
+    "kensington":           ["front street", "kensington avenue", "richmond", "port richmond adjacent"],
+    "east passyunk":        ["passyunk avenue", "the ave", "south philly", "queen village", "dickinson square"],
+    "manayunk":             ["main street", "the canal", "roxborough", "green lane", "ridge avenue"],
+    # San Francisco
+    "tenderloin":           ["larkin street", "eddy street", "turk street", "hyde street", "little saigon", "little istanbul"],
+    "mission district":     ["24th street", "valencia street", "16th street bart", "clarion alley", "la lengua"],
+    "financial district":   ["montgomery street", "embarcadero", "the ferry building", "lunch crowd", "sansome"],
+    "polk street":          ["russian hill", "nob hill", "polk gulch", "california street", "austin street"],
+    "outer sunset":         ["irving street", "great highway", "judah street", "foggy avenues", "19th avenue"],
+    "richmond district":    ["clement street", "geary boulevard", "inner richmond", "the avenues", "6th avenue"],
+    "haight ashbury":       ["haight street", "ashbury street", "golden gate park", "upper haight", "lower haight"],
+    "soma":                 ["folsom street", "howard street", "4th street", "design district", "south beach"],
+    # Oakland
+    "fruitvale":            ["international boulevard", "fruitvale bart", "day of the dead", "e 12th street", "34th avenue"],
+    "temescal":             ["telegraph avenue", "40th street", "piedmont avenue adjacent", "rockridge adjacent"],
+    "grand lake":           ["grand avenue", "lake merritt", "grand lake theatre", "lakeshore avenue"],
+    "rockridge":            ["college avenue", "claremont avenue", "rockridge bart", "border of berkeley"],
+}
+
+
+def derive_lsi_terms(topic: dict) -> list[str]:
+    """Return 6–10 LSI terms for a topic based on cuisine + neighborhood."""
+    cuisine_key = topic.get("cuisine", "").lower()
+    neighborhood_key = topic.get("neighborhood", "").lower()
+
+    terms: list[str] = []
+
+    # Match cuisine (try exact, then partial)
+    for key, values in _CUISINE_LSI.items():
+        if key in cuisine_key or cuisine_key in key:
+            terms.extend(values)
+            break
+
+    # Match neighborhood (try exact, then partial)
+    for key, values in _NEIGHBORHOOD_LSI.items():
+        if key in neighborhood_key or neighborhood_key in key:
+            terms.extend(values)
+            break
+
+    # Fallback: derive from street field
+    street = topic.get("street", "")
+    if street and not any(s in terms for s in street.lower().split()):
+        terms.append(street)
+
+    # Deduplicate, cap at 10
+    seen = set()
+    unique = []
+    for t in terms:
+        if t not in seen:
+            seen.add(t)
+            unique.append(t)
+
+    return unique[:10]
+
 REPO_ROOT = pathlib.Path(__file__).parent.parent
 PIPELINE_DIR = REPO_ROOT / "pipeline"
 QUEUE_FILE = PIPELINE_DIR / "queue.json"
@@ -75,19 +162,27 @@ def load_voice() -> str:
 # ─── Related slugs ────────────────────────────────────────────────────────────
 
 def find_related(q: dict, topic: dict, n: int = 3) -> list[dict]:
-    """Find n published articles related by city or cuisine."""
+    """Find n published articles related by city or cuisine, ranked: same-city+cuisine > same-city > same-cuisine."""
     city = topic.get("city", "")
     cuisine = topic.get("cuisine", "")
-    related = []
+    buckets: list[list[dict]] = [[], [], []]  # [both, city-only, cuisine-only]
     for item in q["queue"]:
-        if item["status"] != "published":
+        if item["status"] != "published" or item["slug"] == topic["slug"]:
             continue
-        if item["slug"] == topic["slug"]:
-            continue
-        if item.get("city") == city or item.get("cuisine") == cuisine:
+        same_city = item.get("city") == city
+        same_cuisine = item.get("cuisine") == cuisine
+        if same_city and same_cuisine:
+            buckets[0].append(item)
+        elif same_city:
+            buckets[1].append(item)
+        elif same_cuisine:
+            buckets[2].append(item)
+    related = []
+    for bucket in buckets:
+        for item in bucket:
+            if len(related) >= n:
+                break
             related.append(item)
-        if len(related) >= n:
-            break
     return related
 
 
@@ -110,10 +205,29 @@ def _build_user_prompt(topic: dict, enrichment: dict, related: list[dict]) -> st
         f"Snippet: {newspaper.get('snippet', '')}"
         if newspaper else "No historical newspaper record found."
     )
-    related_block = (
-        "\n".join(f"- {r['slug']} → {r.get('cuisine','')} in {r.get('neighborhood','')}" for r in related)
-        if related else "No related articles yet."
-    )
+
+    # Controlled anchor text: use each related article's primary_keyword as anchor
+    if related:
+        related_lines = []
+        for i, r in enumerate(related):
+            anchor = r.get("primary_keyword") or f"{r.get('cuisine','')} in {r.get('neighborhood','')}"
+            url = f"/carte/{r['slug']}/"
+            # Rotate anchor style: exact → partial → branded
+            if i % 3 == 0:
+                anchor_instruction = f'exact-match anchor: "{anchor}"'
+            elif i % 3 == 1:
+                anchor_instruction = f'partial-match anchor (rephrase naturally): "{anchor}"'
+            else:
+                hood = r.get("neighborhood", "")
+                anchor_instruction = f'branded anchor like "ForkFox on {hood}..."'
+            related_lines.append(f"- URL: {url} | {anchor_instruction}")
+        related_block = "\n".join(related_lines)
+    else:
+        related_block = "No related articles yet — skip internal links."
+
+    # LSI semantic terms for this topic
+    lsi_terms = derive_lsi_terms(topic)
+    lsi_block = ", ".join(lsi_terms) if lsi_terms else "none"
 
     return f"""Generate a ForkFox Carte article in the locked voice and format.
 
@@ -126,6 +240,9 @@ TOPIC:
   Type: {topic_type}
   Primary SEO keyword: {keyword}
 
+LSI TERMS (weave these into the prose naturally — do not force, do not list them):
+{lsi_block}
+
 RESEARCH DATA (use this — real names, real streets, real history):
 --- Community voice (Reddit, anonymized) ---
 {reddit_block}
@@ -136,7 +253,7 @@ RESEARCH DATA (use this — real names, real streets, real history):
 --- Historical record (Chronicling America) ---
 {newspaper_block}
 
---- Related published articles (inject 3 internal links naturally) ---
+--- Internal links (embed using the exact URL and anchor style specified) ---
 {related_block}
 
 REQUIREMENTS:
@@ -148,6 +265,8 @@ REQUIREMENTS:
 6. All social copy follows the rules in SECTION 2 of your system prompt
 7. FAQ: 5 questions targeting long-tail searches around "{keyword}"
 8. Article length: ~900-1200 words of prose
+9. Meta title: 55–60 chars, starts with primary keyword
+10. Meta description: 145–155 chars, includes primary keyword + one named place
 
 Return ONLY the JSON object specified in SECTION 7 of your system prompt. No preamble."""
 
