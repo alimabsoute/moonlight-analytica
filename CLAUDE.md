@@ -37,6 +37,16 @@ Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 
 ---
 
+## Session Commands
+
+| Say | Agent | Does |
+|-----|-------|------|
+| `wrap-flow` | wrap-flow | **Full close**: commit → push (create repo if missing) → Obsidian → SESSION txt → clipboard → new terminal with claude auto-loaded |
+| `wrap` | session-closer | **Quick close**: commit + Obsidian + handoff card only |
+| `wrap up` / `end session` | session-closer | Same as `wrap` |
+
+---
+
 ## Active Projects
 
 | Project | Directory | Stack | Status | CLAUDE.md |
