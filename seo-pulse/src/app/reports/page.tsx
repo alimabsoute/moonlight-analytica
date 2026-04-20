@@ -12,10 +12,14 @@ import {
   ChevronRight,
   Eye,
   FileSpreadsheet,
+  Loader2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { getDomainKeywords } from '@/lib/data-for-seo'
+import { useProjectStore } from '@/stores/project'
+import { toast } from '@/components/ui/toast'
 
 interface ReportType {
   id: string
@@ -134,10 +138,61 @@ const DEMO_REPORTS: PastReport[] = [
 ]
 
 export function ReportsPage() {
-  const [reports] = useState<PastReport[]>(DEMO_REPORTS)
+  const [reports, setReports] = useState<PastReport[]>(DEMO_REPORTS)
+  const [generating, setGenerating] = useState<string | null>(null)
+  const activeProject = useProjectStore((s) => s.activeProject)
 
-  function handleGenerate(typeId: string) {
-    console.log('[reports] Generate report:', typeId)
+  function addReport(r: PastReport) {
+    setReports((prev) => [r, ...prev])
+  }
+
+  async function handleGenerate(typeId: string) {
+    if (typeId === 'keyword-rankings') {
+      setGenerating('keyword-rankings')
+      try {
+        const domain = activeProject?.domain
+        if (!domain) return
+
+        const keywords = await getDomainKeywords(domain, 500)
+
+        const header = 'Keyword,Search Volume,Difficulty,CPC,Competition,SERP Features'
+        const rows = keywords.map((k) =>
+          [
+            k.keyword,
+            k.searchVolume,
+            k.difficulty,
+            k.cpc.toFixed(2),
+            k.competition.toFixed(2),
+            k.serpFeatures.join(';'),
+          ].join(',')
+        )
+        const csv = [header, ...rows].join('\n')
+
+        const blob = new Blob([csv], { type: 'text/csv' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `keywords-${domain}-${new Date().toISOString().split('T')[0]}.csv`
+        a.click()
+        URL.revokeObjectURL(url)
+        toast('Keyword rankings exported!', 'success')
+
+        addReport({
+          id: crypto.randomUUID(),
+          name: `Keyword Rankings — ${domain}`,
+          type: 'Keyword Rankings',
+          format: 'CSV',
+          createdAt: new Date().toISOString().split('T')[0],
+          relativeTime: 'just now',
+          status: 'completed',
+          size: `${Math.round(csv.length / 1024)} KB`,
+        })
+      } finally {
+        setGenerating(null)
+      }
+    } else {
+      console.log('[reports] Generate report:', typeId)
+    }
   }
 
   return (
@@ -179,9 +234,20 @@ export function ReportsPage() {
                   size="sm"
                   className="w-full mt-4 gap-1.5 group-hover:bg-muted/50"
                   onClick={() => handleGenerate(type.id)}
+                  disabled={!activeProject || generating === type.id}
+                  title={!activeProject ? 'Add a project first' : undefined}
                 >
-                  <FileText className="h-3.5 w-3.5" />
-                  Generate
+                  {generating === type.id ? (
+                    <>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="h-3.5 w-3.5" />
+                      Generate
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>

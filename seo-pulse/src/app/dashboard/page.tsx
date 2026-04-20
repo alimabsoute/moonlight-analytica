@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import {
   TrendingUp,
   Search,
@@ -22,8 +24,9 @@ import { BarChartWidget } from '@/components/charts/bar-chart'
 import { ChartWrapper } from '@/components/charts/chart-wrapper'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useProjectStore } from '@/stores/project'
+import { getDomainOverview, getDomainKeywords } from '@/lib/data-for-seo'
 
-// 30-day organic traffic with realistic growth curve for a mid-size SaaS
 const trafficData = [
   { date: 'Mar 1', traffic: 3120, previous: 2680 },
   { date: 'Mar 2', traffic: 3240, previous: 2750 },
@@ -57,7 +60,7 @@ const trafficData = [
   { date: 'Mar 30', traffic: 5920, previous: 4080 },
 ]
 
-const keywordDistribution = [
+const keywordDistribution_MOCK = [
   { position: '1-3', count: 67, color: '#22c55e' },
   { position: '4-10', count: 183, color: '#3b82f6' },
   { position: '11-20', count: 258, color: '#f59e0b' },
@@ -100,36 +103,75 @@ const recentActivity = [
 const sparkline = [32, 35, 40, 38, 42, 50, 55, 58, 62, 60, 65, 70]
 
 export function DashboardPage() {
-  const [_loading] = useState(false)
+  const navigate = useNavigate()
+  const activeProject = useProjectStore(s => s.activeProject)
+
+  const { data: overview, isLoading: overviewLoading } = useQuery({
+    queryKey: ['domain-overview', activeProject?.domain],
+    queryFn: () => getDomainOverview(activeProject!.domain),
+    enabled: !!activeProject?.domain,
+  })
+
+  const { data: keywords = [] } = useQuery({
+    queryKey: ['domain-keywords', activeProject?.domain],
+    queryFn: () => getDomainKeywords(activeProject!.domain, 200),
+    enabled: !!activeProject?.domain,
+  })
+
+  const keywordDistribution = useMemo(() => {
+    if (keywords.length === 0) return keywordDistribution_MOCK
+    return [{ position: 'All', count: keywords.length, color: '#3b82f6' }]
+  }, [keywords])
+
+  if (!activeProject) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Card className="w-full max-w-md text-center">
+          <CardContent className="pt-10 pb-10 px-8">
+            <h2 className="text-lg font-semibold text-foreground mb-2">No project selected</h2>
+            <p className="text-sm text-muted-foreground mb-6">Complete onboarding to see your SEO data</p>
+            <button
+              onClick={() => navigate('/onboarding')}
+              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Go to Onboarding
+            </button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
-      {/* KPI Cards */}
       <KpiGrid>
         <KpiCard
           label="Organic Traffic"
-          value={124892}
+          value={overview?.organicTraffic ?? 0}
           previousValue={111200}
           format="compact"
           sparklineData={sparkline}
+          loading={overviewLoading}
           icon={<TrendingUp className="h-4 w-4" />}
           tooltip="Total organic search visits this period"
         />
         <KpiCard
           label="Tracked Keywords"
-          value={908}
+          value={overview?.organicKeywords ?? 0}
           previousValue={845}
           format="number"
           sparklineData={[40, 42, 45, 48, 50, 53, 55, 58, 60, 62, 65, 68]}
+          loading={overviewLoading}
           icon={<Search className="h-4 w-4" />}
           tooltip="Keywords in positions 1-100"
         />
         <KpiCard
           label="Backlinks"
-          value={12453}
+          value={overview?.backlinks ?? 0}
           previousValue={11890}
           format="compact"
           sparklineData={[100, 105, 108, 112, 115, 118, 120, 122, 124, 125, 128, 130]}
+          loading={overviewLoading}
           icon={<Link2 className="h-4 w-4" />}
           tooltip="Total referring backlinks"
         />
@@ -144,7 +186,6 @@ export function DashboardPage() {
         />
       </KpiGrid>
 
-      {/* Traffic Trend Chart */}
       <ChartWrapper title="Organic Traffic Trend" subtitle="Last 30 days vs previous period">
         <AreaChartWidget
           data={trafficData}
@@ -155,9 +196,7 @@ export function DashboardPage() {
         />
       </ChartWrapper>
 
-      {/* Two-Column Section */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Position Changes */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Position Changes</CardTitle>
@@ -186,7 +225,6 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Keyword Distribution */}
         <ChartWrapper title="Keyword Distribution" subtitle="By SERP position">
           <BarChartWidget
             data={keywordDistribution}
@@ -197,7 +235,6 @@ export function DashboardPage() {
         </ChartWrapper>
       </div>
 
-      {/* Top Pages */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -248,7 +285,6 @@ export function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Share of Voice & Quick Stats */}
       <div className="grid gap-6 lg:grid-cols-3">
         <Card>
           <CardContent className="pt-6">
@@ -296,7 +332,6 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Recent Activity Feed */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

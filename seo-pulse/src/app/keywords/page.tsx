@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   Search,
   Filter,
@@ -14,6 +15,7 @@ import {
   Map,
   ChevronDown,
   ChevronRight,
+  AlertCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,6 +24,9 @@ import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Sparkline } from '@/components/charts/sparkline'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useProjectStore } from '@/stores/project'
+import { getDomainKeywords, getKeywordData, type KeywordData } from '@/lib/data-for-seo'
 
 // SERP feature icons
 const SERP_ICONS: Record<string, typeof Star> = {
@@ -40,199 +45,33 @@ function getDifficultyBadge(difficulty: number) {
   return { label: 'Hard', variant: 'danger' as const }
 }
 
-const DEMO_KEYWORDS = [
-  {
-    keyword: 'best seo tools 2026',
-    volume: 18100,
-    difficulty: 42,
-    cpc: 4.80,
-    intent: 'Commercial',
-    trend: [30, 35, 42, 40, 55, 60, 58, 65, 72, 80, 85, 90],
-    serpFeatures: ['Featured Snippet', 'PAA', 'Sitelinks'],
-  },
-  {
-    keyword: 'how to improve site speed',
-    volume: 12400,
-    difficulty: 28,
-    cpc: 2.30,
-    intent: 'Informational',
-    trend: [50, 48, 52, 55, 60, 58, 62, 65, 60, 63, 68, 70],
-    serpFeatures: ['Featured Snippet', 'Video', 'PAA'],
-  },
-  {
-    keyword: 'keyword research tool',
-    volume: 33100,
-    difficulty: 71,
-    cpc: 8.50,
-    intent: 'Commercial',
-    trend: [60, 62, 65, 68, 70, 72, 75, 78, 80, 82, 85, 88],
-    serpFeatures: ['Shopping', 'Sitelinks'],
-  },
-  {
-    keyword: 'google search console setup',
-    volume: 8900,
-    difficulty: 22,
-    cpc: 1.60,
-    intent: 'Informational',
-    trend: [40, 42, 38, 45, 50, 48, 52, 55, 58, 60, 62, 65],
-    serpFeatures: ['Featured Snippet', 'Video'],
-  },
-  {
-    keyword: 'rank tracking software',
-    volume: 6600,
-    difficulty: 55,
-    cpc: 12.40,
-    intent: 'Commercial',
-    trend: [20, 25, 30, 28, 35, 40, 42, 48, 55, 60, 65, 72],
-    serpFeatures: ['Shopping', 'PAA'],
-  },
-  {
-    keyword: 'what is domain authority',
-    volume: 14800,
-    difficulty: 35,
-    cpc: 3.20,
-    intent: 'Informational',
-    trend: [55, 58, 60, 55, 58, 62, 60, 65, 68, 70, 72, 75],
-    serpFeatures: ['Featured Snippet', 'PAA', 'Image Pack'],
-  },
-  {
-    keyword: 'backlink checker free',
-    volume: 22500,
-    difficulty: 48,
-    cpc: 5.90,
-    intent: 'Navigational',
-    trend: [45, 48, 50, 52, 55, 58, 60, 62, 65, 68, 70, 75],
-    serpFeatures: ['Sitelinks'],
-  },
-  {
-    keyword: 'local seo strategy',
-    volume: 5400,
-    difficulty: 38,
-    cpc: 6.70,
-    intent: 'Informational',
-    trend: [30, 32, 35, 38, 40, 42, 45, 48, 50, 55, 60, 68],
-    serpFeatures: ['Local Pack', 'PAA', 'Video'],
-  },
-  {
-    keyword: 'content optimization ai',
-    volume: 3200,
-    difficulty: 19,
-    cpc: 7.80,
-    intent: 'Commercial',
-    trend: [10, 15, 20, 28, 35, 45, 55, 60, 68, 75, 82, 90],
-    serpFeatures: ['Featured Snippet'],
-  },
-  {
-    keyword: 'serp feature tracking',
-    volume: 1900,
-    difficulty: 31,
-    cpc: 9.10,
-    intent: 'Commercial',
-    trend: [8, 12, 15, 18, 22, 28, 32, 38, 42, 50, 58, 65],
-    serpFeatures: ['PAA'],
-  },
-  {
-    keyword: 'technical seo audit checklist',
-    volume: 9800,
-    difficulty: 34,
-    cpc: 3.90,
-    intent: 'Informational',
-    trend: [42, 45, 48, 50, 52, 55, 58, 60, 63, 65, 68, 72],
-    serpFeatures: ['Featured Snippet', 'PAA'],
-  },
-  {
-    keyword: 'ahrefs vs semrush',
-    volume: 27400,
-    difficulty: 62,
-    cpc: 14.20,
-    intent: 'Commercial',
-    trend: [70, 72, 68, 75, 78, 80, 82, 85, 88, 90, 92, 95],
-    serpFeatures: ['Featured Snippet', 'PAA', 'Video'],
-  },
-  {
-    keyword: 'buy backlinks safely',
-    volume: 4100,
-    difficulty: 45,
-    cpc: 22.50,
-    intent: 'Transactional',
-    trend: [35, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58],
-    serpFeatures: ['PAA'],
-  },
-  {
-    keyword: 'google algorithm update 2026',
-    volume: 110000,
-    difficulty: 78,
-    cpc: 1.80,
-    intent: 'Informational',
-    trend: [15, 18, 22, 85, 95, 80, 60, 45, 38, 32, 28, 25],
-    serpFeatures: ['Featured Snippet', 'Video', 'PAA', 'Image Pack'],
-  },
-  {
-    keyword: 'ai content writing tool',
-    volume: 44200,
-    difficulty: 68,
-    cpc: 11.30,
-    intent: 'Commercial',
-    trend: [25, 30, 38, 45, 55, 62, 70, 78, 82, 88, 92, 96],
-    serpFeatures: ['Shopping', 'Sitelinks', 'PAA'],
-  },
-  {
-    keyword: 'internal linking strategy',
-    volume: 7300,
-    difficulty: 26,
-    cpc: 4.10,
-    intent: 'Informational',
-    trend: [38, 40, 42, 45, 48, 50, 52, 55, 58, 60, 62, 65],
-    serpFeatures: ['Featured Snippet', 'PAA'],
-  },
-  {
-    keyword: 'ecommerce seo services',
-    volume: 2900,
-    difficulty: 52,
-    cpc: 45.00,
-    intent: 'Transactional',
-    trend: [40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62],
-    serpFeatures: ['Local Pack', 'Shopping'],
-  },
-  {
-    keyword: 'broken link building',
-    volume: 3800,
-    difficulty: 41,
-    cpc: 5.60,
-    intent: 'Informational',
-    trend: [50, 48, 52, 50, 54, 52, 56, 54, 58, 56, 60, 58],
-    serpFeatures: ['PAA', 'Video'],
-  },
-  {
-    keyword: 'seo competitor analysis tool',
-    volume: 8200,
-    difficulty: 58,
-    cpc: 9.80,
-    intent: 'Commercial',
-    trend: [32, 35, 38, 42, 45, 48, 52, 55, 58, 62, 65, 70],
-    serpFeatures: ['Shopping', 'Sitelinks'],
-  },
-  {
-    keyword: 'how to get featured snippets',
-    volume: 6100,
-    difficulty: 33,
-    cpc: 2.70,
-    intent: 'Informational',
-    trend: [45, 48, 50, 52, 55, 58, 60, 62, 65, 68, 70, 74],
-    serpFeatures: ['Featured Snippet', 'PAA', 'Video'],
-  },
-]
+function deriveIntent(cpc: number, difficulty: number): string {
+  if (cpc > 3) return 'Commercial'
+  if (difficulty < 30) return 'Informational'
+  return 'Navigational'
+}
 
-const RELATED_KEYWORDS = [
-  { keyword: 'seo software comparison', volume: 5400, difficulty: 48, cpc: 8.90, intent: 'Commercial' },
-  { keyword: 'search engine optimization tools', volume: 14200, difficulty: 55, cpc: 6.40, intent: 'Commercial' },
-  { keyword: 'free seo analysis', volume: 28700, difficulty: 42, cpc: 3.20, intent: 'Navigational' },
-  { keyword: 'website ranking checker', volume: 19500, difficulty: 39, cpc: 4.70, intent: 'Navigational' },
-  { keyword: 'organic traffic growth strategies', volume: 3100, difficulty: 24, cpc: 5.30, intent: 'Informational' },
-  { keyword: 'google ranking factors 2026', volume: 22100, difficulty: 65, cpc: 2.10, intent: 'Informational' },
-  { keyword: 'seo audit tool free', volume: 11800, difficulty: 44, cpc: 7.60, intent: 'Navigational' },
-  { keyword: 'page speed insights alternative', volume: 4600, difficulty: 31, cpc: 3.80, intent: 'Commercial' },
-]
+interface DisplayKeyword {
+  keyword: string
+  volume: number
+  difficulty: number
+  cpc: number
+  intent: string
+  trend: number[]
+  serpFeatures: string[]
+}
+
+function toDisplayKeyword(kw: KeywordData): DisplayKeyword {
+  return {
+    keyword: kw.keyword,
+    volume: kw.searchVolume,
+    difficulty: kw.difficulty,
+    cpc: kw.cpc,
+    intent: deriveIntent(kw.cpc, kw.difficulty),
+    trend: kw.trend,
+    serpFeatures: kw.serpFeatures,
+  }
+}
 
 const PAA_QUESTIONS = [
   { question: 'What are the best free SEO tools in 2026?', volume: 8900, difficulty: 38 },
@@ -272,7 +111,29 @@ export function KeywordsPage() {
   const [intentFilter, setIntentFilter] = useState('')
   const [expandedCluster, setExpandedCluster] = useState<string | null>('SEO Tools & Software')
 
-  const filtered = DEMO_KEYWORDS.filter((kw) => {
+  const activeProject = useProjectStore((s) => s.activeProject)
+
+  const {
+    data: rawDomainKeywords = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ['domain-keywords', activeProject?.domain],
+    queryFn: () => getDomainKeywords(activeProject!.domain, 100),
+    enabled: !!activeProject?.domain,
+  })
+
+  const { data: rawTrackedKeywords = [] } = useQuery({
+    queryKey: ['keyword-metrics', activeProject?.trackedKeywords],
+    queryFn: () => getKeywordData(activeProject!.trackedKeywords),
+    enabled: (activeProject?.trackedKeywords?.length ?? 0) > 0,
+  })
+
+  const domainKeywords: DisplayKeyword[] = rawDomainKeywords.map(toDisplayKeyword)
+  const trackedKeywords: DisplayKeyword[] = rawTrackedKeywords.map(toDisplayKeyword)
+
+  const filtered = domainKeywords.filter((kw) => {
     if (searchQuery && !kw.keyword.toLowerCase().includes(searchQuery.toLowerCase())) return false
     if (difficultyFilter === 'easy' && kw.difficulty > 30) return false
     if (difficultyFilter === 'medium' && (kw.difficulty <= 30 || kw.difficulty > 60)) return false
@@ -280,6 +141,20 @@ export function KeywordsPage() {
     if (intentFilter && kw.intent.toLowerCase() !== intentFilter) return false
     return true
   })
+
+  // No project selected state
+  if (!activeProject) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
+        <Search className="h-12 w-12 text-muted-foreground/40" />
+        <h2 className="text-lg font-semibold text-foreground">No project selected</h2>
+        <p className="text-sm text-muted-foreground">Select or create a project to start researching keywords.</p>
+        <Button asChild>
+          <a href="/onboarding">Go to Onboarding</a>
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -360,6 +235,19 @@ export function KeywordsPage() {
         </TabsList>
 
         <TabsContent value="ideas">
+          {/* Error alert */}
+          {isError && (
+            <div className="mb-4 flex items-center gap-3 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3">
+              <AlertCircle className="h-4 w-4 shrink-0 text-destructive" />
+              <p className="flex-1 text-sm text-destructive">
+                Failed to load keywords. Check your DataForSEO credentials.
+              </p>
+              <Button size="sm" variant="outline" onClick={() => refetch()}>
+                Retry
+              </Button>
+            </div>
+          )}
+
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -390,78 +278,86 @@ export function KeywordsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {filtered.map((kw) => {
-                      const diff = getDifficultyBadge(kw.difficulty)
-                      return (
-                        <tr key={kw.keyword} className="hover:bg-muted/50 transition-colors">
-                          <td className="px-4 py-3">
-                            <span className="text-sm font-medium text-foreground">
-                              {kw.keyword}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-right">
-                            <span className="text-sm tabular-nums text-foreground">
-                              {kw.volume.toLocaleString()}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-center">
-                            <div className="inline-flex items-center gap-2">
-                              <div className="h-1.5 w-12 rounded-full bg-muted overflow-hidden">
-                                <div
-                                  className={`h-full rounded-full transition-all ${
-                                    kw.difficulty <= 30
-                                      ? 'bg-success'
-                                      : kw.difficulty <= 60
-                                        ? 'bg-warning'
-                                        : 'bg-danger'
-                                  }`}
-                                  style={{ width: `${kw.difficulty}%` }}
-                                />
-                              </div>
-                              <Badge variant={diff.variant} className="text-[10px] px-1.5">
-                                {diff.label}
-                              </Badge>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 text-right">
-                            <span className="text-sm tabular-nums text-foreground">
-                              ${kw.cpc.toFixed(2)}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-center">
-                            <Badge variant="outline" className="text-[10px]">
-                              {kw.intent}
-                            </Badge>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex justify-center">
-                              <Sparkline data={kw.trend} width={80} height={28} strokeWidth={1.5} />
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex justify-center gap-1">
-                              {kw.serpFeatures.slice(0, 3).map((feat) => {
-                                const Icon = SERP_ICONS[feat]
-                                return Icon ? (
-                                  <div
-                                    key={feat}
-                                    className="flex h-6 w-6 items-center justify-center rounded bg-muted"
-                                    title={feat}
-                                  >
-                                    <Icon className="h-3 w-3 text-muted-foreground" />
+                    {isLoading
+                      ? Array.from({ length: 8 }).map((_, i) => (
+                          <tr key={i}>
+                            <td colSpan={7}>
+                              <Skeleton className="h-10 w-full" />
+                            </td>
+                          </tr>
+                        ))
+                      : filtered.map((kw) => {
+                          const diff = getDifficultyBadge(kw.difficulty)
+                          return (
+                            <tr key={kw.keyword} className="hover:bg-muted/50 transition-colors">
+                              <td className="px-4 py-3">
+                                <span className="text-sm font-medium text-foreground">
+                                  {kw.keyword}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-right">
+                                <span className="text-sm tabular-nums text-foreground">
+                                  {kw.volume.toLocaleString()}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <div className="inline-flex items-center gap-2">
+                                  <div className="h-1.5 w-12 rounded-full bg-muted overflow-hidden">
+                                    <div
+                                      className={`h-full rounded-full transition-all ${
+                                        kw.difficulty <= 30
+                                          ? 'bg-success'
+                                          : kw.difficulty <= 60
+                                            ? 'bg-warning'
+                                            : 'bg-danger'
+                                      }`}
+                                      style={{ width: `${kw.difficulty}%` }}
+                                    />
                                   </div>
-                                ) : null
-                              })}
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    })}
+                                  <Badge variant={diff.variant} className="text-[10px] px-1.5">
+                                    {diff.label}
+                                  </Badge>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-right">
+                                <span className="text-sm tabular-nums text-foreground">
+                                  ${kw.cpc.toFixed(2)}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <Badge variant="outline" className="text-[10px]">
+                                  {kw.intent}
+                                </Badge>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex justify-center">
+                                  <Sparkline data={kw.trend} width={80} height={28} strokeWidth={1.5} />
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex justify-center gap-1">
+                                  {kw.serpFeatures.slice(0, 3).map((feat) => {
+                                    const Icon = SERP_ICONS[feat]
+                                    return Icon ? (
+                                      <div
+                                        key={feat}
+                                        className="flex h-6 w-6 items-center justify-center rounded bg-muted"
+                                        title={feat}
+                                      >
+                                        <Icon className="h-3 w-3 text-muted-foreground" />
+                                      </div>
+                                    ) : null
+                                  })}
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        })}
                   </tbody>
                 </table>
               </div>
 
-              {filtered.length === 0 && (
+              {!isLoading && filtered.length === 0 && (
                 <div className="py-12 text-center">
                   <Search className="mx-auto mb-3 h-8 w-8 text-muted-foreground/50" />
                   <p className="text-sm text-muted-foreground">No keywords match your filters</p>
@@ -474,7 +370,7 @@ export function KeywordsPage() {
         <TabsContent value="related">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Related Keywords</CardTitle>
+              <CardTitle className="text-base">Tracked Keywords</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -489,7 +385,7 @@ export function KeywordsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {RELATED_KEYWORDS.map((kw) => {
+                    {trackedKeywords.map((kw) => {
                       const diff = getDifficultyBadge(kw.difficulty)
                       return (
                         <tr key={kw.keyword} className="hover:bg-muted/50 transition-colors">
@@ -522,6 +418,13 @@ export function KeywordsPage() {
                   </tbody>
                 </table>
               </div>
+
+              {trackedKeywords.length === 0 && (
+                <div className="py-12 text-center">
+                  <Link2 className="mx-auto mb-3 h-8 w-8 text-muted-foreground/50" />
+                  <p className="text-sm text-muted-foreground">No tracked keywords yet</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

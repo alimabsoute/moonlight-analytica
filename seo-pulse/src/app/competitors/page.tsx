@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useQuery, useQueries } from '@tanstack/react-query'
 import {
   Plus,
   ArrowUpRight,
@@ -15,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
   DialogTrigger,
@@ -24,6 +26,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { useProjectStore } from '@/stores/project'
+import { getDomainOverview, getBacklinks } from '@/lib/data-for-seo'
+import type { BacklinkData } from '@/lib/data-for-seo'
 
 interface CompetitorData {
   domain: string
@@ -109,7 +114,15 @@ function formatCompact(n: number): string {
   return n.toString()
 }
 
-function CompetitorCard({ data, isYou = false }: { data: CompetitorData; isYou?: boolean }) {
+function CompetitorCard({
+  data,
+  isYou = false,
+  loading = false,
+}: {
+  data: CompetitorData
+  isYou?: boolean
+  loading?: boolean
+}) {
   return (
     <Card className={isYou ? 'border-primary/30 bg-primary/[0.02]' : ''}>
       <CardContent className="p-5">
@@ -128,22 +141,44 @@ function CompetitorCard({ data, isYou = false }: { data: CompetitorData; isYou?:
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-xs text-muted-foreground">Traffic</p>
-            <p className="text-lg font-bold text-foreground">{formatCompact(data.traffic)}</p>
-            <DeltaBadge value={data.trafficDelta} />
+            {loading ? (
+              <Skeleton className="h-7 w-16 mt-1" />
+            ) : (
+              <>
+                <p className="text-lg font-bold text-foreground">{formatCompact(data.traffic)}</p>
+                <DeltaBadge value={data.trafficDelta} />
+              </>
+            )}
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Keywords</p>
-            <p className="text-lg font-bold text-foreground">{formatCompact(data.keywords)}</p>
-            <DeltaBadge value={data.keywordsDelta} />
+            {loading ? (
+              <Skeleton className="h-7 w-16 mt-1" />
+            ) : (
+              <>
+                <p className="text-lg font-bold text-foreground">{formatCompact(data.keywords)}</p>
+                <DeltaBadge value={data.keywordsDelta} />
+              </>
+            )}
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Backlinks</p>
-            <p className="text-lg font-bold text-foreground">{formatCompact(data.backlinks)}</p>
-            <DeltaBadge value={data.backlinksDelta} />
+            {loading ? (
+              <Skeleton className="h-7 w-16 mt-1" />
+            ) : (
+              <>
+                <p className="text-lg font-bold text-foreground">{formatCompact(data.backlinks)}</p>
+                <DeltaBadge value={data.backlinksDelta} />
+              </>
+            )}
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Domain Rank</p>
-            <p className="text-lg font-bold text-foreground">{data.domainRank}</p>
+            {loading ? (
+              <Skeleton className="h-7 w-10 mt-1" />
+            ) : (
+              <p className="text-lg font-bold text-foreground">{data.domainRank}</p>
+            )}
           </div>
         </div>
       </CardContent>
@@ -174,6 +209,87 @@ function DeltaBadge({ value }: { value: number }) {
 export function CompetitorsPage() {
   const [newDomain, setNewDomain] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  const activeProject = useProjectStore((s) => s.activeProject)
+
+  // ── Fetch your site overview ────────────────────────────────────────
+  const { data: yourSiteRaw, isLoading: yourLoading } = useQuery({
+    queryKey: ['domain-overview', activeProject?.domain],
+    queryFn: () => getDomainOverview(activeProject!.domain),
+    enabled: !!activeProject?.domain,
+  })
+
+  // ── Fetch each competitor ───────────────────────────────────────────
+  const competitorQueries = useQueries({
+    queries: (activeProject?.competitors ?? []).map((domain) => ({
+      queryKey: ['domain-overview', domain],
+      queryFn: () => getDomainOverview(domain),
+      enabled: !!domain,
+    })),
+  })
+
+  // ── Fetch backlinks for active project domain ───────────────────────
+  const { data: backlinksRaw, isLoading: backlinksLoading } = useQuery({
+    queryKey: ['backlinks', activeProject?.domain],
+    queryFn: () => getBacklinks(activeProject!.domain),
+    enabled: !!activeProject?.domain,
+  })
+
+  // ── Map API data → CompetitorData ───────────────────────────────────
+  const yourSiteData: CompetitorData = yourSiteRaw
+    ? {
+        domain: activeProject!.domain,
+        traffic: yourSiteRaw.organicTraffic,
+        trafficDelta: 0,
+        keywords: yourSiteRaw.organicKeywords,
+        keywordsDelta: 0,
+        backlinks: yourSiteRaw.backlinks,
+        backlinksDelta: 0,
+        domainRank: yourSiteRaw.domainRank,
+      }
+    : YOUR_SITE
+
+  const competitorsData: CompetitorData[] =
+    (activeProject?.competitors ?? []).length > 0
+      ? competitorQueries.map((q, i) =>
+          q.data
+            ? {
+                domain: activeProject!.competitors[i],
+                traffic: q.data.organicTraffic,
+                trafficDelta: 0,
+                keywords: q.data.organicKeywords,
+                keywordsDelta: 0,
+                backlinks: q.data.backlinks,
+                backlinksDelta: 0,
+                domainRank: q.data.domainRank,
+              }
+            : COMPETITORS[i] ?? {
+                domain: activeProject!.competitors[i],
+                traffic: 0,
+                trafficDelta: 0,
+                keywords: 0,
+                keywordsDelta: 0,
+                backlinks: 0,
+                backlinksDelta: 0,
+                domainRank: 0,
+              },
+        )
+      : COMPETITORS
+
+  const allSites = [yourSiteData, ...competitorsData]
+  const backlinks: BacklinkData[] = backlinksRaw ?? []
+
+  // ── No project empty state ──────────────────────────────────────────
+  if (!activeProject) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-center">
+        <Globe className="mb-4 h-10 w-10 text-muted-foreground/50" />
+        <p className="text-sm text-muted-foreground">
+          Add a project in onboarding to compare competitors.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -218,9 +334,13 @@ export function CompetitorsPage() {
 
       {/* Competitor Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <CompetitorCard data={YOUR_SITE} isYou />
-        {COMPETITORS.map((comp) => (
-          <CompetitorCard key={comp.domain} data={comp} />
+        <CompetitorCard data={yourSiteData} isYou loading={yourLoading} />
+        {competitorsData.map((comp, i) => (
+          <CompetitorCard
+            key={comp.domain}
+            data={comp}
+            loading={competitorQueries[i]?.isLoading ?? false}
+          />
         ))}
       </div>
 
@@ -255,10 +375,10 @@ export function CompetitorsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {[YOUR_SITE, ...COMPETITORS].map((site) => {
-                  const maxTraffic = Math.max(YOUR_SITE.traffic, ...COMPETITORS.map((c) => c.traffic))
-                  const pct = (site.traffic / maxTraffic) * 100
-                  const isYou = site.domain === YOUR_SITE.domain
+                {allSites.map((site) => {
+                  const maxTraffic = Math.max(...allSites.map((s) => s.traffic))
+                  const pct = maxTraffic > 0 ? (site.traffic / maxTraffic) * 100 : 0
+                  const isYou = site.domain === yourSiteData.domain
                   return (
                     <div key={site.domain} className="space-y-1.5">
                       <div className="flex items-center justify-between text-sm">
@@ -300,7 +420,7 @@ export function CompetitorsPage() {
                   {/* Venn diagram */}
                   <div className="relative h-48 w-72 mb-6">
                     <div className="absolute left-0 top-4 h-40 w-40 rounded-full border-2 border-primary/30 bg-primary/5 flex items-center justify-center">
-                      <span className="text-xs text-primary font-medium -ml-8">seohub.io</span>
+                      <span className="text-xs text-primary font-medium -ml-8">{yourSiteData.domain}</span>
                     </div>
                     <div className="absolute right-0 top-4 h-40 w-40 rounded-full border-2 border-warning/30 bg-warning/5 flex items-center justify-center">
                       <span className="text-xs text-warning font-medium ml-8">Competitors</span>
@@ -383,23 +503,69 @@ export function CompetitorsPage() {
         <TabsContent value="backlink-gap">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Backlink Gap</CardTitle>
+              <CardTitle className="text-base">Backlinks</CardTitle>
               <CardDescription>
-                Find domains linking to competitors but not to you
+                Referring domains and pages linking to {activeProject.domain}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <Link2 className="mb-3 h-8 w-8 text-muted-foreground/50" />
-                <p className="text-sm text-muted-foreground">
-                  Backlink gap analysis will show referring domains linking to your competitors
-                  but not yet linking to your site.
-                </p>
-                <Button variant="outline" className="mt-4 gap-2">
-                  <Search className="h-4 w-4" />
-                  Analyze Backlink Gap
-                </Button>
-              </div>
+            <CardContent className="p-0">
+              {backlinksLoading ? (
+                <div className="p-6 space-y-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} className="h-10 w-full" />
+                  ))}
+                </div>
+              ) : backlinks.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center px-6">
+                  <Link2 className="mb-3 h-8 w-8 text-muted-foreground/50" />
+                  <p className="text-sm text-muted-foreground">
+                    Backlink gap analysis will show referring domains linking to your competitors
+                    but not yet linking to your site.
+                  </p>
+                  <Button variant="outline" className="mt-4 gap-2">
+                    <Search className="h-4 w-4" />
+                    Analyze Backlink Gap
+                  </Button>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Source URL</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Anchor</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Domain Rank</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">First Seen</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {backlinks.map((bl, i) => (
+                        <tr key={i} className="hover:bg-muted/50 transition-colors">
+                          <td className="px-4 py-3 text-sm text-foreground max-w-xs truncate">
+                            <a
+                              href={bl.sourceUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline truncate block"
+                            >
+                              {bl.sourceUrl}
+                            </a>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground max-w-[160px] truncate">
+                            {bl.anchor || '—'}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-center tabular-nums text-foreground">
+                            {bl.domainRank}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums">
+                            {bl.firstSeen ? new Date(bl.firstSeen).toLocaleDateString() : '—'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -409,7 +575,7 @@ export function CompetitorsPage() {
             <CardHeader>
               <CardTitle className="text-base">Content Gap</CardTitle>
               <CardDescription>
-                Topics and content types your competitors cover that you don't
+                Topics and content types your competitors cover that you don&apos;t
               </CardDescription>
             </CardHeader>
             <CardContent>

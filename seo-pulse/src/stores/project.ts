@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { fetchUserProjects } from '@/lib/supabase';
 
 export interface Project {
   id: string;
@@ -22,6 +23,7 @@ interface ProjectState {
   addProject: (project: Project) => void;
   updateProject: (id: string, partial: Partial<Project>) => void;
   removeProject: (id: string) => void;
+  loadFromDB: (userId: string) => Promise<void>;
 }
 
 export const useProjectStore = create<ProjectState>()((set, get) => ({
@@ -54,4 +56,18 @@ export const useProjectStore = create<ProjectState>()((set, get) => ({
       activeProjectId:
         state.activeProjectId === id ? null : state.activeProjectId,
     })),
+
+  loadFromDB: async (userId: string) => {
+    set({ loading: true })
+    try {
+      const projects = await fetchUserProjects(userId)
+      set({ projects, loading: false })
+      if (projects.length > 0 && !get().activeProjectId) {
+        set({ activeProjectId: projects[0].id })
+      }
+    } catch (err) {
+      console.error('[project store] loadFromDB:', err)
+      set({ loading: false })
+    }
+  },
 }));

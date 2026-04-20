@@ -100,3 +100,103 @@ export function onAuthStateChange(
   const { data } = supabase.auth.onAuthStateChange(callback)
   return data.subscription.unsubscribe
 }
+
+export async function fetchUserProjects(userId: string) {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(row => ({
+    id: row.id as string,
+    name: row.name as string,
+    domain: row.domain as string,
+    competitors: (row.competitors ?? []) as string[],
+    trackedKeywords: (row.tracked_keywords ?? []) as string[],
+    createdAt: row.created_at as string,
+    updatedAt: row.updated_at as string,
+  }))
+}
+
+export async function persistProject(project: { name: string; domain: string; competitors: string[]; trackedKeywords: string[] }, userId: string) {
+  const { data, error } = await supabase
+    .from('projects')
+    .insert({
+      user_id: userId,
+      name: project.name,
+      domain: project.domain,
+      competitors: project.competitors,
+      tracked_keywords: project.trackedKeywords,
+    })
+    .select()
+    .single()
+  if (error) throw error
+  return {
+    id: data.id as string,
+    name: data.name as string,
+    domain: data.domain as string,
+    competitors: (data.competitors ?? []) as string[],
+    trackedKeywords: (data.tracked_keywords ?? []) as string[],
+    createdAt: data.created_at as string,
+    updatedAt: data.updated_at as string,
+  }
+}
+
+export async function deleteProject(projectId: string) {
+  const { error } = await supabase.from('projects').delete().eq('id', projectId)
+  if (error) throw error
+}
+
+export async function fetchIntegrations(userId: string) {
+  const { data, error } = await supabase
+    .from('integrations')
+    .select('provider, expires_at, config, updated_at')
+    .eq('user_id', userId)
+  if (error) throw error
+  return (data ?? []) as { provider: string; expires_at: string | null; config: Record<string, unknown>; updated_at: string }[]
+}
+
+export async function saveSlackWebhook(userId: string, webhookUrl: string) {
+  const { error } = await supabase
+    .from('integrations')
+    .upsert({ user_id: userId, provider: 'slack', config: { webhook_url: webhookUrl }, updated_at: new Date().toISOString() }, { onConflict: 'user_id,provider' })
+  if (error) throw error
+}
+
+export async function disconnectIntegration(userId: string, provider: string) {
+  const { error } = await supabase.from('integrations').delete().eq('user_id', userId).eq('provider', provider)
+  if (error) throw error
+}
+
+export async function fetchUserProfile(userId: string) {
+  const { data, error } = await supabase.from('user_profiles').select('plan, stripe_customer_id, subscription_status').eq('id', userId).single()
+  if (error && error.code !== 'PGRST116') throw error
+  return data as { plan: 'free' | 'pro' | 'business'; stripe_customer_id: string | null; subscription_status: string } | null
+}
+
+export async function fetchApiKeys(userId: string) {
+  const { data, error } = await supabase.from('api_keys').select('id, name, key_prefix, created_at, last_used_at').eq('user_id', userId).order('created_at', { ascending: false })
+  if (error) throw error
+  return (data ?? []) as { id: string; name: string; key_prefix: string; created_at: string; last_used_at: string | null }[]
+}
+
+export async function createApiKey(userId: string, name: string) {
+  const raw = `sp_live_${crypto.randomUUID().replace(/-/g, '').slice(0, 20)}`
+  const prefix = raw.slice(0, 12)
+  // Simple hash (not cryptographic — for display purposes only)
+  const encoder = new TextEncoder()
+  const data = encoder.encode(raw)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const keyHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 64)
+
+  const { error } = await supabase.from('api_keys').insert({ user_id: userId, name, key_hash: keyHash, key_prefix: prefix })
+  if (error) throw error
+  return raw // return raw key ONCE for user to copy
+}
+
+export async function deleteApiKey(keyId: string) {
+  const { error } = await supabase.from('api_keys').delete().eq('id', keyId)
+  if (error) throw error
+}

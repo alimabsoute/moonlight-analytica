@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   Sparkles,
   FileText,
@@ -11,11 +11,14 @@ import {
   Type,
   XCircle,
   Lightbulb,
+  Loader2,
+  RefreshCw,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { claudeStream, claudeChat, generateContentBrief } from '@/lib/claude'
 
 const PLACEHOLDER_CONTENT = `# How to Optimize for AI Search Engines in 2026
 
@@ -73,22 +76,7 @@ Optimizing for AI search engines isn't about abandoning traditional SEO — it's
 
 Start with an audit of your existing content: check entity coverage, add schema markup, and restructure your top pages for extractability. These three actions alone can significantly increase your chances of being cited in AI-generated search results.`
 
-const SEO_CHECKS = [
-  { label: 'Title length (52 chars — ideal 50-60)', status: 'pass' as const },
-  { label: 'Meta description (148 chars — ideal 150-160)', status: 'warn' as const },
-  { label: 'H1 tag present and unique', status: 'pass' as const },
-  { label: 'H2 subheadings used (6 found)', status: 'pass' as const },
-  { label: 'Keyword in first paragraph', status: 'pass' as const },
-  { label: 'Image alt tags (0 images — add at least 2)', status: 'fail' as const },
-  { label: 'Internal links (1 found — add 2 more)', status: 'warn' as const },
-  { label: 'External authority links (0 — add 1-3)', status: 'fail' as const },
-  { label: 'Content length (847 words — good)', status: 'pass' as const },
-  { label: 'Keyword density (2.1% — ideal 1-3%)', status: 'pass' as const },
-  { label: 'Readability (Flesch-Kincaid 62 — Grade B+)', status: 'pass' as const },
-  { label: 'Schema markup (none detected)', status: 'fail' as const },
-]
-
-const NLP_ENTITIES = [
+const DEFAULT_NLP_ENTITIES = [
   { entity: 'Artificial Intelligence', coverage: 92 },
   { entity: 'Search Engine Optimization', coverage: 85 },
   { entity: 'Content Strategy', coverage: 67 },
@@ -99,21 +87,208 @@ const NLP_ENTITIES = [
   { entity: 'Natural Language Processing', coverage: 49 },
 ]
 
-const AI_SUGGESTIONS = [
-  'Add 2-3 images with descriptive alt text containing your target keyword to improve visual search visibility and break up long text sections.',
-  'Include 2-3 external links to authoritative sources (e.g., Google Search Central documentation, research papers) to strengthen E-E-A-T signals.',
-  'Your coverage of "Natural Language Processing" is below 50%. Add a paragraph explaining how NLP relates to AI search ranking to improve entity coverage.',
-  'Implement Article and FAQ schema markup on this page to increase the likelihood of being cited in AI-generated search answers by up to 40%.',
-]
-
 export function ContentEditorPage() {
   const [content, setContent] = useState(PLACEHOLDER_CONTENT)
   const [targetKeyword, setTargetKeyword] = useState('ai search optimization')
 
-  const wordCount = content.split(/\s+/).filter(Boolean).length
-  const contentScore = 76
-  const readabilityGrade = 'B+ (Flesch-Kincaid 62)'
-  const keywordDensity = 2.1
+  // AI Analysis streaming
+  const [streamedAnalysis, setStreamedAnalysis] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false)
+
+  // NLP entities
+  const [nlpEntities, setNlpEntities] = useState(DEFAULT_NLP_ENTITIES)
+  const [extractingEntities, setExtractingEntities] = useState(false)
+
+  // Content brief
+  const [brief, setBrief] = useState('')
+  const [generatingBrief, setGeneratingBrief] = useState(false)
+  const [showBrief, setShowBrief] = useState(false)
+
+  // ─── Real-time SEO metrics ──────────────────────────────────────────
+  const seoMetrics = useMemo(() => {
+    const words = content.split(/\s+/).filter(Boolean)
+    const wordCount = words.length
+    const sentences = content.split(/[.!?]+/).filter((s) => s.trim().length > 0)
+    const avgWordsPerSentence =
+      sentences.length > 0 ? wordCount / sentences.length : 0
+
+    const h1Count = (content.match(/^#\s+.+/gm) ?? []).length
+    const h2Count = (content.match(/^##\s+.+/gm) ?? []).length
+    const keywordLower = targetKeyword.toLowerCase()
+    const contentLower = content.toLowerCase()
+    const kwMatches = (
+      contentLower.match(
+        new RegExp(
+          keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+          'g',
+        ),
+      ) ?? []
+    ).length
+    const kwDensity = wordCount > 0 ? (kwMatches / wordCount) * 100 : 0
+    const firstParaHasKw = contentLower.slice(0, 400).includes(keywordLower)
+    const internalLinks = (content.match(/\[.+?\]\(\/[^)]+\)/g) ?? []).length
+    const externalLinks =
+      (content.match(/\[.+?\]\(https?:\/\/[^)]+\)/g) ?? []).length
+
+    // Flesch reading ease approximation
+    const syllableCount = words.reduce(
+      (acc, w) => acc + Math.max(1, w.replace(/[^aeiou]/gi, '').length),
+      0,
+    )
+    const fleschScore =
+      wordCount > 0 && sentences.length > 0
+        ? Math.round(
+            206.835 -
+              1.015 * (wordCount / sentences.length) -
+              84.6 * (syllableCount / wordCount),
+          )
+        : 0
+    const readabilityGrade =
+      fleschScore >= 70
+        ? 'A (Easy)'
+        : fleschScore >= 60
+          ? 'B+ (Standard)'
+          : fleschScore >= 50
+            ? 'C (Moderate)'
+            : 'D (Difficult)'
+
+    const checks: Array<{ label: string; status: 'pass' | 'warn' | 'fail' }> =
+      [
+        {
+          label: `H1 tag present (${h1Count} found)`,
+          status: h1Count === 1 ? 'pass' : h1Count === 0 ? 'fail' : 'warn',
+        },
+        {
+          label: `H2 subheadings (${h2Count} found)`,
+          status: h2Count >= 3 ? 'pass' : h2Count >= 1 ? 'warn' : 'fail',
+        },
+        {
+          label: `Keyword in first paragraph`,
+          status: firstParaHasKw ? 'pass' : 'fail',
+        },
+        {
+          label: `Content length (${wordCount} words)`,
+          status:
+            wordCount >= 800 ? 'pass' : wordCount >= 400 ? 'warn' : 'fail',
+        },
+        {
+          label: `Keyword density (${kwDensity.toFixed(1)}%)`,
+          status:
+            kwDensity >= 1 && kwDensity <= 3
+              ? 'pass'
+              : kwDensity > 0
+                ? 'warn'
+                : 'fail',
+        },
+        {
+          label: `Readability (${readabilityGrade})`,
+          status:
+            fleschScore >= 60 ? 'pass' : fleschScore >= 45 ? 'warn' : 'fail',
+        },
+        {
+          label: `Internal links (${internalLinks} found)`,
+          status:
+            internalLinks >= 3
+              ? 'pass'
+              : internalLinks >= 1
+                ? 'warn'
+                : 'fail',
+        },
+        {
+          label: `External authority links (${externalLinks} found)`,
+          status: externalLinks >= 1 ? 'pass' : 'fail',
+        },
+        {
+          label: `Avg sentence length (${avgWordsPerSentence.toFixed(0)} words)`,
+          status:
+            avgWordsPerSentence <= 20
+              ? 'pass'
+              : avgWordsPerSentence <= 28
+                ? 'warn'
+                : 'fail',
+        },
+      ]
+
+    const passed = checks.filter((c) => c.status === 'pass').length
+    const warned = checks.filter((c) => c.status === 'warn').length
+    const score = Math.round(
+      ((passed * 10 + warned * 5) / checks.length) * 10,
+    )
+
+    return {
+      checks,
+      score,
+      wordCount,
+      kwDensity,
+      fleschScore,
+      readabilityGrade,
+    }
+  }, [content, targetKeyword])
+
+  // ─── Handlers ───────────────────────────────────────────────────────
+
+  async function handleAnalyzeWithAI() {
+    if (!content.trim()) return
+    setIsStreaming(true)
+    setStreamedAnalysis('')
+
+    try {
+      await claudeStream(
+        [
+          {
+            role: 'user',
+            content: `Analyze this content for SEO. Target keyword: "${targetKeyword}"\n\nContent:\n${content.slice(0, 3000)}`,
+          },
+        ],
+        {
+          model: 'sonnet',
+          maxTokens: 1200,
+          system:
+            'You are an expert SEO content analyst. Provide specific, actionable SEO feedback in 4-6 bullet points. Focus on: keyword usage, content structure, readability, and quick wins. Be concise and direct.',
+        },
+        (chunk) => setStreamedAnalysis((prev) => prev + chunk),
+      )
+    } finally {
+      setIsStreaming(false)
+    }
+  }
+
+  async function handleExtractEntities() {
+    setExtractingEntities(true)
+    try {
+      const result = await claudeChat(
+        [
+          {
+            role: 'user',
+            content: `Extract the top 8 semantic entities from this content and score their coverage (0-100) based on how well the content explains each entity.\n\nContent:\n${content.slice(0, 2000)}\n\nReturn ONLY valid JSON array: [{"entity": "Entity Name", "coverage": 85}]. Return exactly 8 entities.`,
+          },
+        ],
+        { model: 'haiku', maxTokens: 400 },
+      )
+      const parsed = JSON.parse(
+        result.replace(/```json?\n?/g, '').replace(/```/g, '').trim(),
+      ) as Array<{ entity: string; coverage: number }>
+      if (Array.isArray(parsed) && parsed.length > 0) setNlpEntities(parsed)
+    } catch {
+      // Keep existing entities on parse error
+    } finally {
+      setExtractingEntities(false)
+    }
+  }
+
+  async function handleGenerateBrief() {
+    setGeneratingBrief(true)
+    setShowBrief(true)
+    setBrief('')
+    try {
+      const result = await generateContentBrief(targetKeyword, 'informational')
+      setBrief(result)
+    } finally {
+      setGeneratingBrief(false)
+    }
+  }
+
+  // ─── Helpers ────────────────────────────────────────────────────────
 
   function getScoreColor(score: number) {
     if (score >= 80) return 'text-success'
@@ -127,6 +302,9 @@ export function ContentEditorPage() {
     return 'bg-danger'
   }
 
+  const { score: contentScore, wordCount, kwDensity, readabilityGrade } =
+    seoMetrics
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -138,10 +316,33 @@ export function ContentEditorPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm">Save Draft</Button>
-          <Button size="sm" className="gap-1.5">
-            <Sparkles className="h-3.5 w-3.5" />
-            Analyze with AI
+          <Button variant="outline" size="sm" onClick={handleGenerateBrief} disabled={generatingBrief}>
+            {generatingBrief ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
+                Generating...
+              </>
+            ) : (
+              'Generate Brief'
+            )}
+          </Button>
+          <Button
+            size="sm"
+            className="gap-1.5"
+            onClick={handleAnalyzeWithAI}
+            disabled={isStreaming}
+          >
+            {isStreaming ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Analyzing...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-3.5 w-3.5" />
+                Analyze with AI
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -164,6 +365,43 @@ export function ContentEditorPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Content Brief Panel */}
+      {showBrief && (
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm flex items-center gap-1.5">
+                <FileText className="h-3.5 w-3.5 text-primary" />
+                Content Brief — {targetKeyword}
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 text-xs"
+                onClick={() => setShowBrief(false)}
+              >
+                Dismiss
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {generatingBrief ? (
+              <div className="space-y-2 animate-pulse">
+                <div className="h-3 bg-muted rounded w-3/4" />
+                <div className="h-3 bg-muted rounded w-full" />
+                <div className="h-3 bg-muted rounded w-5/6" />
+                <div className="h-3 bg-muted rounded w-2/3" />
+                <p className="text-xs text-muted-foreground mt-3">Generating brief...</p>
+              </div>
+            ) : (
+              <pre className="text-xs text-foreground leading-relaxed whitespace-pre-wrap font-sans max-h-96 overflow-y-auto">
+                {brief}
+              </pre>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Split Layout */}
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
@@ -228,7 +466,9 @@ export function ContentEditorPage() {
                     <Tag className="h-3 w-3" />
                     KW Density
                   </div>
-                  <p className="text-xl font-bold text-foreground tabular-nums">{keywordDensity}%</p>
+                  <p className="text-xl font-bold text-foreground tabular-nums">
+                    {kwDensity.toFixed(1)}%
+                  </p>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -247,7 +487,7 @@ export function ContentEditorPage() {
               <CardTitle className="text-sm">SEO Checks</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {SEO_CHECKS.map((check) => (
+              {seoMetrics.checks.map((check) => (
                 <div key={check.label} className="flex items-center gap-2.5">
                   {check.status === 'pass' && (
                     <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/15">
@@ -273,35 +513,77 @@ export function ContentEditorPage() {
           {/* NLP Entity Coverage */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-1.5">
-                <Brain className="h-3.5 w-3.5 text-primary" />
-                NLP Entity Coverage
-              </CardTitle>
-              <CardDescription className="text-xs">
-                How well your content covers key entities related to your topic
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-sm flex items-center gap-1.5">
+                    <Brain className="h-3.5 w-3.5 text-primary" />
+                    NLP Entity Coverage
+                  </CardTitle>
+                  <CardDescription className="text-xs mt-1">
+                    How well your content covers key entities related to your topic
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0 shrink-0"
+                  onClick={handleExtractEntities}
+                  disabled={extractingEntities}
+                  title="Extract entities with AI"
+                >
+                  {extractingEntities ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <RefreshCw className="h-3.5 w-3.5" />
+                  )}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              {NLP_ENTITIES.map((entity) => (
-                <div key={entity.entity} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-foreground">{entity.entity}</span>
-                    <span className={`font-medium tabular-nums ${
-                      entity.coverage >= 80 ? 'text-success' : entity.coverage >= 60 ? 'text-warning' : 'text-danger'
-                    }`}>
-                      {entity.coverage}%
-                    </span>
-                  </div>
-                  <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${
-                        entity.coverage >= 80 ? 'bg-success' : entity.coverage >= 60 ? 'bg-warning' : 'bg-danger'
-                      }`}
-                      style={{ width: `${entity.coverage}%` }}
-                    />
-                  </div>
+              {extractingEntities ? (
+                <div className="space-y-3 animate-pulse">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex justify-between">
+                        <div className="h-3 bg-muted rounded w-32" />
+                        <div className="h-3 bg-muted rounded w-8" />
+                      </div>
+                      <div className="h-1 w-full rounded-full bg-muted" />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                nlpEntities.map((entity) => (
+                  <div key={entity.entity} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-foreground">{entity.entity}</span>
+                      <span
+                        className={`font-medium tabular-nums ${
+                          entity.coverage >= 80
+                            ? 'text-success'
+                            : entity.coverage >= 60
+                              ? 'text-warning'
+                              : 'text-danger'
+                        }`}
+                      >
+                        {entity.coverage}%
+                      </span>
+                    </div>
+                    <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${
+                          entity.coverage >= 80
+                            ? 'bg-success'
+                            : entity.coverage >= 60
+                              ? 'bg-warning'
+                              : 'bg-danger'
+                        }`}
+                        style={{ width: `${entity.coverage}%` }}
+                      />
+                    </div>
+                  </div>
+                ))
+              )}
             </CardContent>
           </Card>
 
@@ -313,16 +595,37 @@ export function ContentEditorPage() {
                 AI Suggestions
               </CardTitle>
               <CardDescription className="text-xs">
-                Actionable recommendations to improve your content score
+                {streamedAnalysis
+                  ? 'Live analysis from Claude'
+                  : 'Click "Analyze with AI" for personalized recommendations'}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {AI_SUGGESTIONS.map((suggestion) => (
-                <div key={suggestion} className="flex gap-2.5 text-xs text-foreground leading-relaxed">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-warning" />
-                  <span>{suggestion}</span>
+            <CardContent>
+              {streamedAnalysis || isStreaming ? (
+                <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
+                  {streamedAnalysis}
+                  {isStreaming && (
+                    <span className="inline-block w-1.5 h-3.5 bg-foreground/70 ml-0.5 align-text-bottom animate-pulse" />
+                  )}
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {[
+                    'Add 2-3 images with descriptive alt text containing your target keyword to improve visual search visibility and break up long text sections.',
+                    'Include 2-3 external links to authoritative sources (e.g., Google Search Central documentation, research papers) to strengthen E-E-A-T signals.',
+                    'Your coverage of "Natural Language Processing" is below 50%. Add a paragraph explaining how NLP relates to AI search ranking to improve entity coverage.',
+                    'Implement Article and FAQ schema markup on this page to increase the likelihood of being cited in AI-generated search answers by up to 40%.',
+                  ].map((suggestion) => (
+                    <div
+                      key={suggestion}
+                      className="flex gap-2.5 text-xs text-foreground leading-relaxed"
+                    >
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-warning" />
+                      <span>{suggestion}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
         </div>

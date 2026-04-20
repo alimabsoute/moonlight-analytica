@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useProjectStore } from '@/stores/project'
+import { persistProject } from '@/lib/supabase'
+import { useAuthStore } from '@/stores/auth'
 
 const STEPS = [
   { label: 'Your Website', icon: Globe },
@@ -76,7 +78,7 @@ export function OnboardingPage() {
     )
   }
 
-  function handleComplete() {
+  async function handleComplete() {
     const parsedKeywords = keywordText
       .split(',')
       .map((k) => k.trim())
@@ -88,19 +90,35 @@ export function OnboardingPage() {
       .map(cleanDomain)
       .filter((c) => c && isValidDomain(c))
 
-    const projectId = crypto.randomUUID()
-    const now = new Date().toISOString()
-
-    addProject({
-      id: projectId,
+    const projectData = {
       name: domain,
       domain,
       competitors: validCompetitors,
       trackedKeywords: allKeywords,
-      createdAt: now,
-      updatedAt: now,
-    })
-    setActiveProject(projectId)
+    }
+
+    const userId = useAuthStore.getState().user?.id
+    let project: { id: string; name: string; domain: string; competitors: string[]; trackedKeywords: string[]; createdAt: string; updatedAt: string }
+
+    try {
+      if (userId) {
+        project = await persistProject(projectData, userId)
+      } else {
+        throw new Error('no user')
+      }
+    } catch (err) {
+      console.error('[onboarding] persistProject failed, falling back to local:', err)
+      const now = new Date().toISOString()
+      project = {
+        id: crypto.randomUUID(),
+        ...projectData,
+        createdAt: now,
+        updatedAt: now,
+      }
+    }
+
+    addProject(project)
+    setActiveProject(project.id)
     navigate('/dashboard')
   }
 

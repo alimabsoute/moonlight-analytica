@@ -1,7 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { Suspense, lazy, useEffect, type ComponentType } from 'react'
+import { Suspense, lazy, useEffect, type ComponentType, type ReactNode } from 'react'
 import { AppLayout } from '@/components/layout/app-layout'
 import { useUIStore } from '@/stores/ui'
+import { useAuthStore } from '@/stores/auth'
+import { ToastContainer } from '@/components/ui/toast'
 
 // Error boundary for lazy pages
 function lazyPage(importFn: () => Promise<{ [key: string]: ComponentType }>, name: string) {
@@ -27,6 +29,7 @@ const ReportsPage = lazyPage(() => import('@/app/reports/page'), 'ReportsPage')
 const SettingsPage = lazyPage(() => import('@/app/settings/page'), 'SettingsPage')
 const LoginPage = lazyPage(() => import('@/app/login/page'), 'LoginPage')
 const OnboardingPage = lazyPage(() => import('@/app/onboarding/page'), 'OnboardingPage')
+const AuthCallbackPage = lazyPage(() => import('@/app/auth/callback/page'), 'AuthCallbackPage')
 
 function PageLoader() {
   return (
@@ -34,6 +37,15 @@ function PageLoader() {
       <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
     </div>
   )
+}
+
+function AuthGuard({ children }: { children: ReactNode }) {
+  const initialized = useAuthStore(s => s.initialized)
+  const user = useAuthStore(s => s.user)
+
+  if (!initialized) return <PageLoader />
+  if (!user) return <Navigate to="/login" replace />
+  return <>{children}</>
 }
 
 export function App() {
@@ -45,10 +57,12 @@ export function App() {
 
   return (
     <Suspense fallback={<PageLoader />}>
+      <ToastContainer />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
-        <Route element={<AppLayout />}>
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+        <Route element={<AuthGuard><AppLayout /></AuthGuard>}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/explorer" element={<ExplorerPage />} />

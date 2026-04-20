@@ -82,8 +82,8 @@ export async function getKeywordData(
  */
 export async function getDomainOverview(domain: string): Promise<DomainData> {
   try {
-    const params = new URLSearchParams({ domain })
-    const res = await fetch(`/api/dataforseo/domain/overview?${params.toString()}`)
+    const params = new URLSearchParams({ domain, type: 'overview' })
+    const res = await fetch(`/api/dataforseo/domain?${params.toString()}`)
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}))
@@ -109,8 +109,8 @@ export async function getDomainKeywords(
   limit = 100,
 ): Promise<KeywordData[]> {
   try {
-    const params = new URLSearchParams({ domain, limit: String(limit) })
-    const res = await fetch(`/api/dataforseo/domain/keywords?${params.toString()}`)
+    const params = new URLSearchParams({ domain, limit: String(limit), type: 'keywords' })
+    const res = await fetch(`/api/dataforseo/domain?${params.toString()}`)
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}))

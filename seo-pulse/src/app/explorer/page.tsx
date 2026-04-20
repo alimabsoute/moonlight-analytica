@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   Search,
   Globe,
@@ -7,6 +8,7 @@ import {
   Award,
   ExternalLink,
   ArrowUpDown,
+  AlertCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,24 +17,12 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
 import { BarChartWidget } from '@/components/charts/bar-chart'
-
-interface DomainOverview {
-  traffic: string
-  keywords: string
-  backlinks: string
-  domainRank: number
-}
-
-const SEEDED_OVERVIEW: DomainOverview = {
-  traffic: '2.4M',
-  keywords: '892K',
-  backlinks: '145M',
-  domainRank: 91,
-}
+import { useProjectStore } from '@/stores/project'
+import { getDomainOverview } from '@/lib/data-for-seo'
 
 const OVERVIEW_CARDS = [
-  { key: 'traffic' as const, label: 'Organic Traffic', icon: TrendingUp, color: 'text-success' },
-  { key: 'keywords' as const, label: 'Ranking Keywords', icon: Search, color: 'text-primary' },
+  { key: 'organicTraffic' as const, label: 'Organic Traffic', icon: TrendingUp, color: 'text-success' },
+  { key: 'organicKeywords' as const, label: 'Ranking Keywords', icon: Search, color: 'text-primary' },
   { key: 'backlinks' as const, label: 'Backlinks', icon: Link2, color: 'text-warning' },
   { key: 'domainRank' as const, label: 'Domain Rank', icon: Award, color: 'text-[#8b5cf6]' },
 ]
@@ -62,25 +52,40 @@ const comparisonData = {
 }
 
 export function ExplorerPage() {
-  const [query, setQuery] = useState('ahrefs.com')
-  const [searched, setSearched] = useState(true)
-  const [loading, setLoading] = useState(false)
-  const [overview] = useState<DomainOverview>(SEEDED_OVERVIEW)
+  const activeProject = useProjectStore((s) => s.activeProject)
+
+  const [searchDomain, setSearchDomain] = useState(activeProject?.domain ?? '')
+  const [queriedDomain, setQueriedDomain] = useState(activeProject?.domain ?? '')
+
   const [compareA, setCompareA] = useState('ahrefs.com')
   const [compareB, setCompareB] = useState('semrush.com')
   const [showComparison, setShowComparison] = useState(true)
 
+  const {
+    data: overview,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['domain-overview', queriedDomain],
+    queryFn: () => getDomainOverview(queriedDomain),
+    enabled: !!queriedDomain,
+  })
+
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
-    if (!query.trim()) return
-    setLoading(true)
-    setSearched(true)
-    setTimeout(() => setLoading(false), 1500)
+    if (!searchDomain.trim()) return
+    setQueriedDomain(searchDomain.trim())
   }
 
   function handleCompare(e: React.FormEvent) {
     e.preventDefault()
     setShowComparison(true)
+  }
+
+  const kpiValue = (key: typeof OVERVIEW_CARDS[number]['key']): string => {
+    if (!overview) return '—'
+    const val = overview[key]
+    return typeof val === 'number' ? val.toLocaleString() : String(val)
   }
 
   return (
@@ -103,11 +108,11 @@ export function ExplorerPage() {
                 type="text"
                 placeholder="Enter any domain to analyze (e.g. example.com)"
                 className="pl-10 h-11 text-base"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={searchDomain}
+                onChange={(e) => setSearchDomain(e.target.value)}
               />
             </div>
-            <Button type="submit" size="lg" className="gap-2 shrink-0">
+            <Button type="submit" size="lg" className="gap-2 shrink-0" disabled={isLoading}>
               <Search className="h-4 w-4" />
               Analyze
             </Button>
@@ -115,15 +120,23 @@ export function ExplorerPage() {
         </CardContent>
       </Card>
 
+      {/* Error alert */}
+      {isError && (
+        <div className="flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          Could not load data for this domain.
+        </div>
+      )}
+
       {/* Domain Overview KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {OVERVIEW_CARDS.map((item) => (
           <Card key={item.key}>
             <CardContent className="p-5">
-              {loading ? (
+              {isLoading ? (
                 <div className="space-y-3">
                   <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-8 w-28" />
+                  <Skeleton className="h-8 w-20" />
                 </div>
               ) : (
                 <div className="flex items-start justify-between">
@@ -132,7 +145,7 @@ export function ExplorerPage() {
                       {item.label}
                     </p>
                     <p className="text-2xl font-bold text-foreground">
-                      {searched ? overview[item.key] : '--'}
+                      {queriedDomain ? kpiValue(item.key) : '--'}
                     </p>
                   </div>
                   <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-muted ${item.color}`}>
@@ -145,8 +158,8 @@ export function ExplorerPage() {
         ))}
       </div>
 
-      {/* Main Content - always show seeded data */}
-      {!searched ? (
+      {/* Main Content */}
+      {!queriedDomain ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-20 text-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
@@ -167,7 +180,7 @@ export function ExplorerPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-base">Top Pages</CardTitle>
-                  <CardDescription>Pages driving the most organic traffic for {query || 'ahrefs.com'}</CardDescription>
+                  <CardDescription>Pages driving the most organic traffic for {queriedDomain}</CardDescription>
                 </div>
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -176,7 +189,7 @@ export function ExplorerPage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              {loading ? (
+              {isLoading ? (
                 <div className="space-y-3 p-4">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <div key={i} className="flex items-center gap-4">
@@ -231,7 +244,7 @@ export function ExplorerPage() {
               <CardDescription>Keyword rankings by SERP position</CardDescription>
             </CardHeader>
             <CardContent>
-              {loading ? (
+              {isLoading ? (
                 <Skeleton className="h-64 w-full" />
               ) : (
                 <BarChartWidget
@@ -244,6 +257,35 @@ export function ExplorerPage() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* Competitor Quick-Compare */}
+      {activeProject?.competitors && activeProject.competitors.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Your Competitors</CardTitle>
+            <CardDescription>Quickly analyze a competitor domain</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {activeProject.competitors.map((competitor) => (
+                <Button
+                  key={competitor}
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => {
+                    setSearchDomain(competitor)
+                    setQueriedDomain(competitor)
+                  }}
+                >
+                  <Globe className="h-3.5 w-3.5" />
+                  {competitor}
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <Separator />

@@ -22,12 +22,16 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 ```
 Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 
-### Git Directories
-| Project | Git Root | Key Paths |
-|---------|----------|-----------|
-| Janus Demo | `janus-demo/` | backend/, frontend/, edge_agent/, shared/ |
-| Moonlight | `.` (root) | moonlight-deploy/ |
-| Construction Site | `construction-site/` | All files |
+### Git Roots
+| Project | Git Root | Notes |
+|---------|----------|-------|
+| Root workspace | `/c/Users/alima/` | Janus, seo-pulse, moonlight-deploy, construction-site live here |
+| ForkFox | `tastyr-iq/` | Separate repo — alimabsoute/forkfox |
+| Moonlight | `moonlight-analytica/` | Separate repo |
+| BoardLord | `canvas-workbook/` | Separate repo — alimabsoute/BoardLord |
+| Prism | `v0-product-sentinel/` | Separate repo — alimabsoute/v0-product-sentinel |
+| PhynxTimer | `phynxtimer/` | Separate repo |
+| Ink & Ivory | `ink-and-ivory/` | Separate repo — alimabsoute/ink-and-ivory |
 
 **Push Policy**: DO NOT auto-push. Only push when explicitly requested.
 
@@ -35,111 +39,18 @@ Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 
 ## Active Projects
 
-| Project | Directory | Stack | Status |
-|---------|-----------|-------|--------|
-| Moonlight Analytica | `moonlight-deploy/` | Static HTML/Vercel | Live at moonlightanalytica.com |
-| ForkFox | `tastyr-iq/` | Python scripts + HTML landing pages | Live at forkfox.ai |
-| Janus Demo | `janus-demo/` | React+Vite / Flask / SQLite | Sprint 7 complete, 234 tests |
-| Construction Site | `construction-site/` | Static HTML/Vercel | caputoconstructioncompany.com |
-
----
-
-## Janus Demo — Dev Commands
-
-**Start full stack** (runs backend + seeds demo data + frontend):
-```bash
-scripts/dev.bat             # Windows
-scripts/dev_demo.bat        # With VITE_DEMO_MODE=1
-```
-
-**Individual services:**
-```bash
-# Backend (Flask, port 8000)
-cd janus-demo/backend && python main.py
-
-# Frontend (Vite, port 5173)
-cd janus-demo/frontend && npm run dev
-```
-
-**Tests:**
-```bash
-# From janus-demo/ root:
-npm run test:all                          # frontend + backend + e2e
-npm run test:frontend                     # vitest
-npm run test:backend                      # pytest -v
-npm run test:e2e                          # playwright (Chromium only)
-npm run test:e2e:ui                       # playwright interactive
-
-# Single backend test file:
-cd janus-demo/backend && pytest tests/test_foo.py -v
-
-# Coverage:
-cd janus-demo/frontend && npm run test:coverage
-```
-
-### Janus Architecture
-
-```
-janus-demo/
-├── backend/          Flask API (port 8000) — app.py factory, blueprints, db.py SQLite
-├── frontend/         React+Vite (port 5173) — vitest for unit tests
-├── edge_agent/       RF-DETR detection + supervision tracking; yt-dlp for streams
-│                     boxmot optional (AGPL, graceful fallback)
-├── shared/           Shared types/utils between frontend and backend
-└── playwright.config.js  E2E — base URL localhost:5173, Chromium only
-```
-
-- Gate-based development: see `janus-demo/DEVELOPMENT-GATES.md` before any sprint work
-- Backend entry: `backend/main.py` re-exports from `app.py` (Flask factory) and `db.py`
-
----
-
-## ForkFox (tastyr-iq) — Dev Commands
-
-**Generate business artifacts** (requires `pip install reportlab openpyxl python-pptx`):
-```bash
-python build_crm.py
-python build_pptx.py                       # Pitch deck (4 variations)
-python build_strategy_binder.py
-python strategy/build_financial_models.py
-```
-
-**Deploy landing pages:**
-```bash
-cd tastyr-iq/landing-pages && vercel --prod --yes    # → forkfox.ai
-```
-
-> **Vercel gotcha**: After any `git push` to alimabsoute/forkfox, always run the deploy command above — GitHub→Vercel auto-deploy builds from root (broken).
-
----
-
-## Moonlight Analytica — Deployment
-
-- **Entry point**: `moonlight-complete-structure.html` (Vercel rewrite → `/`)
-
-```bash
-cd moonlight-deploy && vercel --prod --yes        # Deploy
-cd moonlight-deploy && vercel ls                   # Check status
-vercel promote [URL] --scope=alimabsoute-3065s-projects  # Rollback
-npm run format                                     # Prettier (HTML/CSS/JS/JSON)
-```
-
-**Backup/restore:**
-```bash
-cp moonlight-MASTER-BACKUP-20250907.html moonlight-deploy/moonlight-complete-structure.html
-```
-
-### Moonlight Design System
-- **Theme**: Neon cyber — #00bfff (primary), #87ceeb (secondary), #4682b4 (accent)
-- **Fonts**: Inter (body), Poppins (headings) with glow/text-shadow
-
----
-
-## Construction Site (Caputo Construction Company)
-
-- **URL**: https://caputoconstructioncompany.com
-- **Deploy dir**: `construction-site/`
-- **Deploy cmd**: `cd construction-site && vercel --prod --yes`
+| Project | Directory | Stack | Status | CLAUDE.md |
+|---------|-----------|-------|--------|-----------|
+| Janus Demo | `janus-demo/` | React+Vite / Flask / SQLite | Sprint 7 done, 234 tests | `janus-demo/CLAUDE.md` |
+| ForkFox | `tastyr-iq/` | Python + HTML / Vercel | Live at forkfox.ai | `tastyr-iq/CLAUDE.md` |
+| Prism | `v0-product-sentinel/` | Next.js / Supabase | Sprint 1 next (pagination) | `v0-product-sentinel/CLAUDE.md` |
+| BoardLord | `canvas-workbook/` | React / Next.js | Phase 2+3 planning | `canvas-workbook/CLAUDE.md` |
+| Caposeo | `seo-pulse/` | Next.js / Supabase | Phase 3 next (data backfill) | `seo-pulse/CLAUDE.md` |
+| PhynxTimer | `phynxtimer/` | React / TypeScript | Phase 3 in progress | `phynxtimer/CLAUDE.md` |
+| Ink & Ivory | `ink-and-ivory/` | React + R3F + Firebase | Phase 4 next (vault) | `ink-and-ivory/CLAUDE.md` |
+| Moonlight Analytica | `moonlight-deploy/` | Static HTML / Vercel | Live at moonlightanalytica.com | `moonlight-deploy/CLAUDE.md` |
+| Construction Site | `construction-site/` | Static HTML / Vercel | Domain wire pending | `construction-site/CLAUDE.md` |
+| ForkFox for Business | `forkfox-business-platform/` | Specs / Wireframes | Pre-build planning | — |
 
 ---
 
@@ -153,7 +64,7 @@ cp moonlight-MASTER-BACKUP-20250907.html moonlight-deploy/moonlight-complete-str
 
 ---
 
-## Supabase Dev (project ID: "alima")
+## Supabase Dev
 
 ```bash
 npx supabase start | stop | status
@@ -161,6 +72,8 @@ npx supabase db reset
 npx supabase migration up | new <name>
 npx supabase gen types typescript --local > types/database.types.ts
 ```
+
+Project IDs: Prism = `fnlmqkfmjfzzkkqcmahe`
 
 ---
 

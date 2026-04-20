@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   User,
   CreditCard,
@@ -14,6 +15,7 @@ import {
   BarChart3,
   Search,
   MessageSquare,
+  X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,25 +25,34 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { Avatar } from '@/components/ui/avatar'
 import { useAuthStore } from '@/stores/auth'
-import { PRICING_TIERS } from '@/lib/stripe'
+import { PRICING_TIERS, createCheckoutSession, createPortalSession } from '@/lib/stripe'
 import type { PricingTier } from '@/lib/stripe'
+import {
+  fetchIntegrations,
+  saveSlackWebhook,
+  disconnectIntegration,
+  fetchApiKeys,
+  createApiKey,
+  deleteApiKey,
+} from '@/lib/supabase'
+import { usePlan } from '@/hooks/usePlan'
+import { PlanGate } from '@/components/ui/plan-gate'
+import { toast } from '@/components/ui/toast'
 
-interface Integration {
+interface IntegrationDef {
   id: string
   name: string
   description: string
   icon: typeof Search
-  connected: boolean
   color: string
 }
 
-const INTEGRATIONS: Integration[] = [
+const INTEGRATIONS: IntegrationDef[] = [
   {
     id: 'gsc',
     name: 'Google Search Console',
     description: 'Import real keyword data, clicks, impressions, and crawl stats',
     icon: Search,
-    connected: true,
     color: 'text-[#4285f4]',
   },
   {
@@ -49,7 +60,6 @@ const INTEGRATIONS: Integration[] = [
     name: 'Google Analytics 4',
     description: 'Connect traffic data, user behavior, and conversion tracking',
     icon: BarChart3,
-    connected: true,
     color: 'text-[#f59e0b]',
   },
   {
@@ -57,37 +67,19 @@ const INTEGRATIONS: Integration[] = [
     name: 'Slack',
     description: 'Receive SEO alerts, rank changes, and audit notifications in Slack',
     icon: MessageSquare,
-    connected: false,
     color: 'text-[#e01e5a]',
   },
 ]
 
-interface ApiKey {
-  id: string
-  name: string
-  key: string
-  createdAt: string
-  lastUsed: string | null
-}
-
-const DEMO_API_KEYS: ApiKey[] = [
-  {
-    id: '1',
-    name: 'Production API',
-    key: 'sp_live_a1b2c3d4e5f6g7h8i9j0',
-    createdAt: '2026-03-15',
-    lastUsed: '2026-03-28',
-  },
-  {
-    id: '2',
-    name: 'Development',
-    key: 'sp_test_x9y8w7v6u5t4s3r2q1p0',
-    createdAt: '2026-03-20',
-    lastUsed: null,
-  },
-]
-
-function PlanCard({ tier, isCurrentPlan }: { tier: PricingTier; isCurrentPlan: boolean }) {
+function PlanCard({
+  tier,
+  isCurrentPlan,
+  onUpgrade,
+}: {
+  tier: PricingTier
+  isCurrentPlan: boolean
+  onUpgrade: (priceId: string) => void
+}) {
   return (
     <Card className={isCurrentPlan ? 'border-primary/30 bg-primary/[0.02]' : ''}>
       <CardContent className="p-5">
@@ -123,7 +115,12 @@ function PlanCard({ tier, isCurrentPlan }: { tier: PricingTier; isCurrentPlan: b
             Current Plan
           </Button>
         ) : (
-          <Button variant={tier.id === 'pro' ? 'default' : 'outline'} className="w-full">
+          <Button
+            variant={tier.id === 'pro' ? 'default' : 'outline'}
+            className="w-full"
+            onClick={() => tier.priceId && onUpgrade(tier.priceId)}
+            disabled={!tier.priceId}
+          >
             {tier.price === 0 ? 'Downgrade' : 'Upgrade'}
           </Button>
         )}
@@ -139,7 +136,121 @@ export function SettingsPage() {
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set())
   const [copied, setCopied] = useState<string | null>(null)
 
-  const currentPlan = user?.plan ?? 'pro'
+  // Integration state
+  const [oauthMessage, setOauthMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [slackUrl, setSlackUrl] = useState('')
+  const [slackStatus, setSlackStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [slackSaving, setSlackSaving] = useState(false)
+  const [disconnecting, setDisconnecting] = useState<string | null>(null)
+
+  // Billing state
+  const [billingSuccess, setBillingSuccess] = useState(false)
+  const [billingLoading, setBillingLoading] = useState(false)
+
+  // API key creation state
+  const [showCreateKey, setShowCreateKey] = useState(false)
+  const [newKeyName, setNewKeyName] = useState('')
+  const [creatingKey, setCreatingKey] = useState(false)
+  const [revealedKey, setRevealedKey] = useState<string | null>(null)
+  const [deletingKeyId, setDeletingKeyId] = useState<string | null>(null)
+
+  const { plan } = usePlan()
+
+  const { data: integrations = [], refetch: refetchIntegrations } = useQuery({
+    queryKey: ['integrations', user?.id],
+    queryFn: () => fetchIntegrations(user!.id),
+    enabled: !!user?.id,
+  })
+
+  const { data: apiKeys = [], refetch: refetchKeys } = useQuery({
+    queryKey: ['api-keys', user?.id],
+    queryFn: () => fetchApiKeys(user!.id),
+    enabled: !!user?.id,
+  })
+
+  function isConnected(provider: string) {
+    return integrations.some((i) => i.provider === provider)
+  }
+
+  // Handle OAuth redirect params on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const success = params.get('integration_success')
+    const error = params.get('integration_error')
+    const billing = params.get('billing')
+
+    if (success) {
+      void refetchIntegrations()
+      setOauthMessage({ type: 'success', text: `${success.toUpperCase()} connected successfully.` })
+      window.history.replaceState({}, '', '/settings')
+    } else if (error) {
+      setOauthMessage({ type: 'error', text: `Connection failed: ${error.replace(/_/g, ' ')}` })
+      window.history.replaceState({}, '', '/settings')
+    }
+
+    if (billing === 'success') {
+      setBillingSuccess(true)
+      window.history.replaceState({}, '', '/settings')
+    }
+  }, [refetchIntegrations])
+
+  function handleConnect(provider: string) {
+    window.location.href = `/api/google/auth?provider=${provider}&user_id=${user?.id ?? ''}`
+  }
+
+  async function handleDisconnect(provider: string) {
+    if (!user?.id) return
+    setDisconnecting(provider)
+    try {
+      await disconnectIntegration(user.id, provider)
+      await refetchIntegrations()
+    } finally {
+      setDisconnecting(null)
+    }
+  }
+
+  async function handleSlackSave() {
+    if (!user?.id || !slackUrl.trim()) return
+    setSlackSaving(true)
+    setSlackStatus(null)
+    try {
+      await saveSlackWebhook(user.id, slackUrl.trim())
+      const r = await fetch('/api/slack/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ webhook_url: slackUrl.trim() }),
+      })
+      if (!r.ok) throw new Error('Test notification failed')
+      await refetchIntegrations()
+      setSlackStatus({ type: 'success', text: 'Slack connected and test message sent.' })
+      toast('Slack connected!', 'success')
+      setSlackUrl('')
+    } catch (err) {
+      setSlackStatus({ type: 'error', text: err instanceof Error ? err.message : 'Failed to connect Slack' })
+    } finally {
+      setSlackSaving(false)
+    }
+  }
+
+  async function handleUpgrade(priceId: string) {
+    setBillingLoading(true)
+    try {
+      const { url } = await createCheckoutSession(priceId)
+      if (url) window.location.href = url
+    } finally {
+      setBillingLoading(false)
+    }
+  }
+
+  async function handleManageBilling() {
+    setBillingLoading(true)
+    try {
+      const { url } = await createPortalSession()
+      if (url) window.location.href = url
+    } finally {
+      setBillingLoading(false)
+    }
+  }
 
   function toggleKeyVisibility(id: string) {
     setVisibleKeys((prev) => {
@@ -150,10 +261,34 @@ export function SettingsPage() {
     })
   }
 
-  function handleCopy(key: string, id: string) {
-    navigator.clipboard.writeText(key).catch(() => {})
+  function handleCopy(text: string, id: string) {
+    navigator.clipboard.writeText(text).catch(() => {})
     setCopied(id)
     setTimeout(() => setCopied(null), 2000)
+  }
+
+  async function handleCreateKey() {
+    if (!user?.id || !newKeyName.trim()) return
+    setCreatingKey(true)
+    try {
+      const raw = await createApiKey(user.id, newKeyName.trim())
+      setRevealedKey(raw)
+      setNewKeyName('')
+      setShowCreateKey(false)
+      await refetchKeys()
+    } finally {
+      setCreatingKey(false)
+    }
+  }
+
+  async function handleDeleteKey(keyId: string) {
+    setDeletingKeyId(keyId)
+    try {
+      await deleteApiKey(keyId)
+      await refetchKeys()
+    } finally {
+      setDeletingKeyId(null)
+    }
   }
 
   return (
@@ -258,22 +393,38 @@ export function SettingsPage() {
         {/* Billing Tab */}
         <TabsContent value="billing">
           <div className="space-y-6">
+            {billingSuccess && (
+              <div className="flex items-center justify-between text-sm px-4 py-3 rounded-lg bg-success/10 text-success">
+                <span>Your plan has been updated!</span>
+                <button type="button" onClick={() => setBillingSuccess(false)}>
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Current Plan</CardTitle>
                 <CardDescription>
-                  You are on the <span className="font-medium text-foreground capitalize">{currentPlan}</span> plan
+                  You are on the <span className="font-medium text-foreground capitalize">{plan}</span> plan
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
                   <div>
-                    <p className="text-sm font-semibold text-foreground capitalize">{currentPlan} Plan</p>
+                    <p className="text-sm font-semibold text-foreground capitalize">{plan} Plan</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      {currentPlan === 'free' ? 'Limited features' : 'Full access to all features'}
+                      {plan === 'free' ? 'Limited features' : 'Full access to all features'}
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">Manage Subscription</Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={billingLoading || plan === 'free'}
+                    onClick={() => void handleManageBilling()}
+                  >
+                    Manage Billing
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -285,7 +436,8 @@ export function SettingsPage() {
                   <PlanCard
                     key={tier.id}
                     tier={tier}
-                    isCurrentPlan={tier.id === currentPlan}
+                    isCurrentPlan={tier.id === plan}
+                    onUpgrade={handleUpgrade}
                   />
                 ))}
               </div>
@@ -296,106 +448,230 @@ export function SettingsPage() {
         {/* Integrations Tab */}
         <TabsContent value="integrations">
           <div className="space-y-4">
-            {INTEGRATIONS.map((integration) => (
-              <Card key={integration.id}>
-                <CardContent className="p-5">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted">
-                      <integration.icon className={`h-5 w-5 ${integration.color}`} />
+            {oauthMessage && (
+              <div className={`text-sm px-4 py-3 rounded-lg ${oauthMessage.type === 'success' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                {oauthMessage.text}
+              </div>
+            )}
+
+            {INTEGRATIONS.map((integration) => {
+              const connected = isConnected(integration.id)
+              return (
+                <Card key={integration.id}>
+                  <CardContent className="p-5">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted">
+                        <integration.icon className={`h-5 w-5 ${integration.color}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-semibold text-foreground">{integration.name}</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">{integration.description}</p>
+
+                        {/* Slack-specific webhook input when disconnected */}
+                        {integration.id === 'slack' && !connected && (
+                          <div className="mt-3 space-y-2">
+                            <Input
+                              placeholder="https://hooks.slack.com/services/..."
+                              value={slackUrl}
+                              onChange={(e) => setSlackUrl(e.target.value)}
+                              className="max-w-sm text-xs"
+                            />
+                            {slackStatus && (
+                              <p className={`text-xs ${slackStatus.type === 'success' ? 'text-success' : 'text-danger'}`}>
+                                {slackStatus.text}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="shrink-0">
+                        {connected ? (
+                          <div className="flex items-center gap-2">
+                            <Badge variant="success" className="gap-1">
+                              <Check className="h-3 w-3" />
+                              Connected
+                            </Badge>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={disconnecting === integration.id}
+                              onClick={() => void handleDisconnect(integration.id)}
+                            >
+                              {disconnecting === integration.id ? 'Disconnecting…' : 'Disconnect'}
+                            </Button>
+                          </div>
+                        ) : integration.id === 'slack' ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5"
+                            disabled={slackSaving || !slackUrl.trim()}
+                            onClick={() => void handleSlackSave()}
+                          >
+                            {slackSaving ? 'Saving…' : 'Save & Test'}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5"
+                            onClick={() => handleConnect(integration.id)}
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            Connect
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-foreground">{integration.name}</h3>
-                      <p className="text-xs text-muted-foreground mt-0.5">{integration.description}</p>
-                    </div>
-                    <div className="shrink-0">
-                      {integration.connected ? (
-                        <div className="flex items-center gap-2">
-                          <Badge variant="success" className="gap-1">
-                            <Check className="h-3 w-3" />
-                            Connected
-                          </Badge>
-                          <Button variant="ghost" size="sm">Disconnect</Button>
-                        </div>
-                      ) : (
-                        <Button variant="outline" size="sm" className="gap-1.5">
-                          <ExternalLink className="h-3.5 w-3.5" />
-                          Connect
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </TabsContent>
 
         {/* API Keys Tab */}
         <TabsContent value="api-keys">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-base">API Keys</CardTitle>
-                  <CardDescription>
-                    Manage API keys for programmatic access to Caposeo
-                  </CardDescription>
+          <PlanGate require="business">
+            <div className="space-y-4">
+              {/* Revealed key banner — shown once after creation */}
+              {revealedKey && (
+                <div className="flex items-start justify-between gap-4 px-4 py-3 rounded-lg bg-success/10 border border-success/20">
+                  <div className="space-y-1 min-w-0">
+                    <p className="text-sm font-semibold text-success">Copy this key — you won&apos;t see it again</p>
+                    <code className="block text-xs font-mono text-foreground break-all">{revealedKey}</code>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1.5"
+                      onClick={() => handleCopy(revealedKey, 'revealed')}
+                    >
+                      {copied === 'revealed' ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                      {copied === 'revealed' ? 'Copied' : 'Copy'}
+                    </Button>
+                    <button type="button" onClick={() => setRevealedKey(null)}>
+                      <X className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                    </button>
+                  </div>
                 </div>
-                <Button size="sm" className="gap-1.5">
-                  <Plus className="h-3.5 w-3.5" />
-                  Create Key
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="divide-y divide-border">
-                {DEMO_API_KEYS.map((apiKey) => (
-                  <div key={apiKey.id} className="flex items-center justify-between px-5 py-4">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-foreground">{apiKey.name}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <code className="text-xs text-muted-foreground font-mono">
-                          {visibleKeys.has(apiKey.id)
-                            ? apiKey.key
-                            : `${apiKey.key.slice(0, 12)}${'*'.repeat(16)}`
-                          }
-                        </code>
-                        <button
-                          type="button"
-                          onClick={() => toggleKeyVisibility(apiKey.id)}
-                          className="text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                          {visibleKeys.has(apiKey.id) ? (
-                            <EyeOff className="h-3.5 w-3.5" />
-                          ) : (
-                            <Eye className="h-3.5 w-3.5" />
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleCopy(apiKey.key, apiKey.id)}
-                          className="text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                          {copied === apiKey.id ? (
-                            <Check className="h-3.5 w-3.5 text-success" />
-                          ) : (
-                            <Copy className="h-3.5 w-3.5" />
-                          )}
-                        </button>
-                      </div>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
-                        <span>Created: {apiKey.createdAt}</span>
-                        <span>Last used: {apiKey.lastUsed ?? 'Never'}</span>
-                      </div>
+              )}
+
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-base">API Keys</CardTitle>
+                      <CardDescription>
+                        Manage API keys for programmatic access to Caposeo
+                      </CardDescription>
                     </div>
-                    <Button variant="ghost" size="sm" className="text-danger hover:text-danger shrink-0">
-                      <Trash2 className="h-3.5 w-3.5" />
+                    <Button
+                      size="sm"
+                      className="gap-1.5"
+                      onClick={() => setShowCreateKey((v) => !v)}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Create Key
                     </Button>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+
+                  {/* Inline create form */}
+                  {showCreateKey && (
+                    <div className="flex items-center gap-2 mt-3">
+                      <Input
+                        placeholder="Key name (e.g. Production API)"
+                        value={newKeyName}
+                        onChange={(e) => setNewKeyName(e.target.value)}
+                        className="max-w-xs text-sm"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') void handleCreateKey()
+                          if (e.key === 'Escape') { setShowCreateKey(false); setNewKeyName('') }
+                        }}
+                        autoFocus
+                      />
+                      <Button
+                        size="sm"
+                        disabled={creatingKey || !newKeyName.trim()}
+                        onClick={() => void handleCreateKey()}
+                      >
+                        {creatingKey ? 'Creating…' : 'Create'}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => { setShowCreateKey(false); setNewKeyName('') }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
+                </CardHeader>
+                <CardContent className="p-0">
+                  {apiKeys.length === 0 ? (
+                    <div className="px-5 py-8 text-center text-sm text-muted-foreground">
+                      No API keys yet. Create one above to get started.
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-border">
+                      {apiKeys.map((apiKey) => (
+                        <div key={apiKey.id} className="flex items-center justify-between px-5 py-4">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground">{apiKey.name}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <code className="text-xs text-muted-foreground font-mono">
+                                {visibleKeys.has(apiKey.id)
+                                  ? `${apiKey.key_prefix}...`
+                                  : `${apiKey.key_prefix}${'*'.repeat(16)}`
+                                }
+                              </code>
+                              <button
+                                type="button"
+                                onClick={() => toggleKeyVisibility(apiKey.id)}
+                                className="text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {visibleKeys.has(apiKey.id) ? (
+                                  <EyeOff className="h-3.5 w-3.5" />
+                                ) : (
+                                  <Eye className="h-3.5 w-3.5" />
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleCopy(apiKey.key_prefix + '...', apiKey.id)}
+                                className="text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {copied === apiKey.id ? (
+                                  <Check className="h-3.5 w-3.5 text-success" />
+                                ) : (
+                                  <Copy className="h-3.5 w-3.5" />
+                                )}
+                              </button>
+                            </div>
+                            <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+                              <span>Created: {new Date(apiKey.created_at).toLocaleDateString()}</span>
+                              <span>Last used: {apiKey.last_used_at ? new Date(apiKey.last_used_at).toLocaleDateString() : 'Never'}</span>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-danger hover:text-danger shrink-0"
+                            disabled={deletingKeyId === apiKey.id}
+                            onClick={() => void handleDeleteKey(apiKey.id)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </PlanGate>
         </TabsContent>
       </Tabs>
     </div>
