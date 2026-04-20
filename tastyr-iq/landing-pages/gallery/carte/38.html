@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Ramen in Chicago — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0d0a;color:#d8c8a8;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,13,10,0.97);border-bottom:1px solid #2a2418;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#8a7a5a}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:820px;margin:0 auto;padding:90px 24px 60px}
+
+.enc-header{border-bottom:1px solid #3a2a18;padding-bottom:16px;margin-bottom:24px}
+.enc-breadcrumb{font-size:11px;color:#5a4a2a;margin-bottom:10px;font-family:monospace}
+.enc-breadcrumb span{color:#F97316}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,44px);line-height:1.1;margin-bottom:8px;color:#f0e8d8}
+h1 em{font-style:normal;color:#F97316}
+.enc-desc{font-size:14px;color:#a09070;margin:8px 0 0;line-height:1.7}
+.enc-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#6a5a3a;margin-top:12px}
+
+.toc{display:inline-block;background:#181410;border:1px solid #3a2a18;border-radius:8px;padding:16px 20px;margin-bottom:32px;min-width:220px}
+.toc-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#5a4a2a;margin-bottom:10px;font-weight:700}
+.toc-list{list-style:none;counter-reset:toc}
+.toc-list li{counter-increment:toc;font-size:13px;color:#8a7a5a;padding:4px 0;border-bottom:1px solid #2a2010}
+.toc-list li:last-child{border-bottom:none}
+.toc-list li::before{content:counter(toc) ". ";color:#F97316;font-weight:700}
+
+.enc-section{margin-bottom:36px}
+.enc-h2{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #3a2a18}
+.sn{color:#F97316;margin-right:6px}
+.enc-p{font-size:14px;color:#a09070;line-height:1.75;margin-bottom:10px}
+
+dl.def-list dt{font-weight:700;color:#d8c8a8;font-size:13px;margin-top:12px}
+.def-list dd{font-size:13px;color:#8a7a5a;padding-left:16px;border-left:2px solid #3a2a18;margin-top:4px;line-height:1.7}
+.def-list dd strong{color:#F97316}
+
+.enc-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.enc-table th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#5a4a2a;padding:8px 12px;background:#181410;border-bottom:2px solid #F97316;text-align:left}
+.enc-table td{font-size:13px;color:#a09070;padding:9px 12px;border-bottom:1px solid #2a2010;background:#0f0d0a}
+.enc-table td.score{font-family:'Geologica',sans-serif;font-weight:700;color:#F97316;font-size:15px}
+
+.enc-note{background:#1a1200;border:1px solid #3a2a10;border-left:3px solid #F97316;padding:12px 16px;border-radius:0 6px 6px 0;margin:16px 0;font-size:13px;color:#a09070;line-height:1.65}
+.enc-note strong{color:#F97316}
+
+.key-findings{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kf{background:#181410;border:1px solid #3a2a18;border-radius:8px;padding:12px 14px;border-left:3px solid #c84000;font-size:13px;color:#a09070}
+
+.see-also{display:flex;gap:8px;flex-wrap:wrap}
+.see-also a{font-size:12px;color:#F97316;background:#181410;border:1px solid #3a2a18;border-radius:4px;padding:4px 10px}
+
+@media(max-width:600px){.key-findings{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="enc-header">
+    <div class="enc-breadcrumb">ForkFox Carte &gt; Chicago &gt; Japanese &gt; <span>Ramen</span></div>
+    <h1>Best <em>Ramen</em> in Chicago</h1>
+    <p class="enc-desc">Reference guide to Chicago's ranked ramen dishes — broth taxonomy, neighborhood analysis, and complete scoring data.</p>
+    <div class="enc-meta"><span>Updated April 2026</span><span>Top Score: 92</span><span>10 dishes ranked</span></div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ul class="toc-list">
+      <li>Overview</li><li>Methodology</li><li>Complete Rankings</li><li>Broth Taxonomy</li><li>Key Findings</li><li>See Also</li>
+    </ul>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2"><span class="sn">1.</span>Overview</div>
+    <p class="enc-p">Chicago's ramen scene is mature and geographically distributed across Wicker Park, Logan Square, and the River North corridor. Unlike NY and LA, Chicago's ramen market is not dominated by Japanese chain outposts — the independent operator share is higher, producing more idiosyncratic and locally-rooted bowls.</p>
+    <p class="enc-p">The city's cold climate has driven broth richness — Chicago's tonkotsu averages a heavier fat content than coastal equivalents, which resonates with locals and scores well on flavor metrics.</p>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2"><span class="sn">2.</span>Methodology</div>
+    <dl class="def-list">
+      <dt>Flavor (30%)</dt><dd>Broth complexity, fat depth, seasoning balance. <strong>Chicago's cold-climate palate</strong> means richer broths score higher here than in SF equivalents.</dd>
+      <dt>Texture (20%)</dt><dd>Noodle firmness consistency, chashu fat-to-lean ratio, egg custard set.</dd>
+      <dt>Value (20%)</dt><dd>Normalized against Chicago avg of $17/bowl. Wicker Park spots run premium; Logan Square offers better value.</dd>
+      <dt>Authenticity (15%)</dt><dd>Regional Japanese tradition alignment. Tokyo shoyu, Hakata tonkotsu, Sapporo miso are scored against respective traditions.</dd>
+      <dt>Presentation (15%)</dt><dd>Nori placement, egg cut quality, broth clarity.</dd>
+    </dl>
+    <div class="enc-note"><strong>Scoring note:</strong> Chicago-specific adaptations (e.g., local duck chashu, Midwestern ingredients) do not penalize authenticity scores if the base tradition is otherwise maintained.</div>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2"><span class="sn">3.</span>Complete Rankings</div>
+    <table class="enc-table">
+      <thead><tr><th>Rank</th><th>Dish</th><th>Restaurant</th><th>Neighborhood</th><th>Score</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Spicy Tonkotsu</td><td>Furious Spoon</td><td>Wicker Park</td><td class="score">92</td></tr>
+        <tr><td>2</td><td>Duck Shoyu Ramen</td><td>Strings Ramen Shop</td><td>Bridgeport</td><td class="score">90</td></tr>
+        <tr><td>3</td><td>Black Garlic Tonkotsu</td><td>Oiistar</td><td>Bucktown</td><td class="score">88</td></tr>
+        <tr><td>4</td><td>Shio Clam Ramen</td><td>Kinton Ramen</td><td>River North</td><td class="score">86</td></tr>
+        <tr><td>5</td><td>Chicken Paitan</td><td>Chicago Ramen</td><td>Logan Square</td><td class="score">83</td></tr>
+        <tr><td>6</td><td>Spicy Miso</td><td>Tank Noodle</td><td>Uptown</td><td class="score">81</td></tr>
+        <tr><td>7</td><td>Hakata Tonkotsu</td><td>Ramen-San</td><td>River North</td><td class="score">79</td></tr>
+        <tr><td>8</td><td>Vegan Mushroom</td><td>Crisp — Wicker Park</td><td>Wicker Park</td><td class="score">77</td></tr>
+        <tr><td>9</td><td>Cold Tsukemen</td><td>Ramen Misoya</td><td>Lincoln Park</td><td class="score">75</td></tr>
+        <tr><td>10</td><td>Mazemen</td><td>Slurp Slurp</td><td>Logan Square</td><td class="score">73</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2"><span class="sn">4.</span>Broth Taxonomy</div>
+    <dl class="def-list">
+      <dt>Tonkotsu</dt><dd>Pork-bone broth cooked 12-24 hours. Milky, rich, heavy. <strong>Dominant style</strong> in Chicago — 6 of 10 ranked dishes use tonkotsu or tonkotsu-hybrid bases.</dd>
+      <dt>Shoyu</dt><dd>Soy-tared clear chicken or pork broth. More delicate, higher umami precision required. Chicago's duck shoyu adaptation at Strings is the most notable regional variation.</dd>
+      <dt>Shio</dt><dd>Salt-based clear broth — lightest of the four base types. Highest technical difficulty to execute well.</dd>
+      <dt>Miso</dt><dd>Fermented soybean paste seasoning over chicken or pork broth. Sapporo-style origin. Tank Noodle's version uses house-fermented red miso.</dd>
+    </dl>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2"><span class="sn">5.</span>Key Findings</div>
+    <div class="key-findings">
+      <div class="kf">Furious Spoon's Wicker Park flagship set the Chicago standard — spicy tonkotsu is the dominant prestige order</div>
+      <div class="kf">Independent operators dominate vs. chains — 8 of 10 top spots are single-location restaurants</div>
+      <div class="kf">Cold climate premium is real — richer, heavier broths score measurably higher in Chicago than in SF</div>
+      <div class="kf">Duck chashu is Chicago's distinctive local adaptation — Strings Ramen is the main practitioner</div>
+    </div>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2"><span class="sn">6.</span>See Also</div>
+    <div class="see-also">
+      <a href="#">Best Pho in Chicago</a>
+      <a href="#">Best Japanese in Chicago</a>
+      <a href="#">Best Korean BBQ in Chicago</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Score: 89 — SF Pad Thai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8f7f4; color: #111; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(248,247,244,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #111; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(17,17,17,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #111; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* SCORE-LED light */
+  .score-hero { max-width: 860px; margin: 0 auto; padding: 100px 24px 0; display: grid; grid-template-columns: auto 1fr; gap: 48px; align-items: start; }
+  .score-block { width: 180px; flex-shrink: 0; text-align: center; }
+  .score-circle { width: 160px; height: 160px; border-radius: 50%; background: #FA2A52; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .score-num { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 64px; color: #fff; line-height: 1; letter-spacing: -3px; }
+  .score-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.7); }
+  .score-context { font-size: 12px; color: rgba(17,17,17,0.45); text-align: center; line-height: 1.5; }
+  .hero-content { }
+  .cuisine-tag { display: inline-block; background: rgba(250,42,82,0.08); border: 1px solid rgba(250,42,82,0.2); color: #FA2A52; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 3px; margin-bottom: 14px; }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(26px, 3.5vw, 50px); line-height: 1.08; letter-spacing: -1.5px; color: #111; margin-bottom: 16px; }
+  .hero-dek { font-size: 16px; line-height: 1.72; color: rgba(17,17,17,0.58); margin-bottom: 24px; }
+  .meta-row { display: flex; gap: 16px; font-size: 13px; color: rgba(17,17,17,0.45); flex-wrap: wrap; }
+  .meta-row strong { color: #111; }
+
+  /* DIM BARS */
+  .dim-section { max-width: 860px; margin: 48px auto 0; padding: 32px; background: #fff; border-radius: 16px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+  .dim-title { font-family: 'Geologica', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: rgba(17,17,17,0.4); margin-bottom: 24px; }
+  .dim-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .dim-name { width: 140px; font-size: 13px; color: rgba(17,17,17,0.6); flex-shrink: 0; }
+  .dim-track { flex: 1; height: 8px; background: rgba(0,0,0,0.06); border-radius: 4px; overflow: hidden; }
+  .dim-fill { height: 100%; background: #FA2A52; border-radius: 4px; }
+  .dim-val { width: 32px; font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 14px; color: #FA2A52; text-align: right; }
+
+  /* HERO IMAGE + ARTICLE */
+  .hero-img { max-width: 860px; margin: 40px auto 0; border-radius: 12px; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish32/1200/675') center/cover; }
+  .article-body { max-width: 680px; margin: 0 auto; padding: 60px 24px 100px; }
+  .article-body p { font-size: 17px; line-height: 1.88; color: rgba(17,17,17,0.72); margin-bottom: 26px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 22px; color: #111; margin: 44px 0 14px; }
+  .body-img { width: 100%; border-radius: 8px; margin: 32px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food32/800/450') center/cover; }
+  .callout { background: rgba(250,42,82,0.06); border-left: 4px solid #FA2A52; padding: 20px 24px; border-radius: 0 8px 8px 0; margin: 32px 0; }
+  .callout p { font-family: 'Geologica', sans-serif; font-size: 17px; font-weight: 600; color: #111; margin: 0; line-height: 1.5; }
+
+  @media (max-width: 768px) {
+    .score-hero { grid-template-columns: 1fr; }
+    .score-block { width: 100%; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="score-hero">
+  <div class="score-block">
+    <div class="score-circle">
+      <div class="score-num">89</div>
+      <div class="score-label">Score</div>
+    </div>
+    <div class="score-context">Top 4% of<br>Thai restaurants<br>in our dataset</div>
+  </div>
+  <div class="hero-content">
+    <span class="cuisine-tag">Pad Thai · San Francisco</span>
+    <h1 class="hero-title">The Wok Hei Champion of the Sunset District</h1>
+    <p class="hero-dek">Six months of tracking Pad Thai quality across the Bay Area. One kitchen in the Outer Sunset consistently outscored every other operation on the dimension that matters most: wok hei.</p>
+    <div class="meta-row">
+      <strong>ForkFox Algorithm</strong>
+      <span>·</span>
+      <span>March 2026</span>
+      <span>·</span>
+      <span>4 min read</span>
+    </div>
+  </div>
+</header>
+
+<div class="dim-section">
+  <div class="dim-title">Dimension Breakdown</div>
+  <div class="dim-bar"><div class="dim-name">Wok Hei</div><div class="dim-track"><div class="dim-fill" style="width:96%"></div></div><div class="dim-val">96</div></div>
+  <div class="dim-bar"><div class="dim-name">Tamarind Balance</div><div class="dim-track"><div class="dim-fill" style="width:91%"></div></div><div class="dim-val">91</div></div>
+  <div class="dim-bar"><div class="dim-name">Noodle Texture</div><div class="dim-track"><div class="dim-fill" style="width:88%"></div></div><div class="dim-val">88</div></div>
+  <div class="dim-bar"><div class="dim-name">Protein Quality</div><div class="dim-track"><div class="dim-fill" style="width:87%"></div></div><div class="dim-val">87</div></div>
+  <div class="dim-bar"><div class="dim-name">Egg Integration</div><div class="dim-track"><div class="dim-fill" style="width:90%"></div></div><div class="dim-val">90</div></div>
+  <div class="dim-bar"><div class="dim-name">Value Index</div><div class="dim-track"><div class="dim-fill" style="width:84%"></div></div><div class="dim-val">84</div></div>
+</div>
+
+<div class="hero-img"></div>
+
+<article class="article-body">
+  <p>The Outer Sunset Thai kitchen that produced our highest Pad Thai score in the Bay Area dataset has installed commercial ring burners producing over 180,000 BTU per burner. This is not an incremental equipment upgrade — it is a categorical one. The heat differential between this kitchen and a standard restaurant range is the difference between a caramelized, smoky, wok-hei-forward Pad Thai and a warm noodle dish.</p>
+
+  <h2>What 96 on Wok Hei Means</h2>
+  <p>Our wok hei dimension measures the presence and quality of the Maillard-reaction-derived flavor compounds that result from extremely high-heat stir-frying. We evaluate this through aroma, surface char distribution on the noodles, and the clean, slightly smoky aftertaste that distinguishes proper wok-cooked food from lower-heat approximations. A score of 96 means the characteristic is clearly, definitively present across every order, which requires the equipment to be capable and the cook to be technically skilled in its use.</p>
+
+  <div class="callout"><p>"A score of 96 on wok hei means the characteristic is clearly, definitively present across every order. Equipment plus skill. Neither alone is sufficient."</p></div>
+
+  <div class="body-img"></div>
+  <p>Tamarind balance score of 91 reflects a sauce that achieves the tart-sweet counterpoint that Bangkok street Pad Thai is known for, rather than the over-sweetened, ketchup-adjacent sauce that most American-facing Thai restaurants default to. The shrimp is fresh Pacific, not farmed and frozen. At $16 per order, the value index is high.</p>
+</article>
+
+</body>
+</html>

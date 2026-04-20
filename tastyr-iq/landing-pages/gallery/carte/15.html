@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Pho in Philadelphia — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#FA2A52;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}.logo-text span{color:#ffcc88}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:rgba(255,255,255,.8)}
+.nav-cta{background:#fff;color:#FA2A52!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;margin-left:8px}
+
+.hero{background:linear-gradient(135deg,#1a0008,#0a0a0a);padding:96px 24px 52px}
+.hero-inner{max-width:900px;margin:0 auto}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:16px}.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(30px,5vw,60px);line-height:1.05;margin-bottom:12px}
+h1 em{font-style:normal;color:#FA2A52}
+.hero-sub{font-size:15px;color:#888;max-width:520px;line-height:1.75;margin-bottom:28px}
+.hero-kpis{display:flex;gap:40px;flex-wrap:wrap}
+.kpi{border-left:3px solid #FA2A52;padding-left:14px}
+.kpi-v{font-family:'Geologica',sans-serif;font-weight:900;font-size:32px;color:#FA2A52;line-height:1}
+.kpi-l{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.04em;margin-top:4px}
+
+.section{max-width:900px;margin:0 auto;padding:44px 24px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.section-title::after{content:'';flex:1;height:1px;background:#1a1a1a}
+.section-title em{font-style:normal;color:#FA2A52}
+
+.findings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.finding-card{padding:14px 16px;background:#111;border-radius:10px;border:1px solid #1a1a1a;position:relative;padding-left:44px}
+.finding-card::before{content:counter(fc);counter-increment:fc;position:absolute;left:12px;top:12px;width:20px;height:20px;background:#FA2A52;border-radius:4px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Geologica',sans-serif}
+.findings-grid{counter-reset:fc}
+.finding-card p{font-size:13px;color:#aaa;line-height:1.65}
+
+.rank-strip{display:flex;align-items:stretch;background:#111;border-radius:10px;margin-bottom:8px;overflow:hidden;border:1px solid #1a1a1a}
+.rs-accent{width:4px;background:#333;flex-shrink:0}
+.rs-accent.t1{background:#FA2A52}.rs-accent.t2{background:#F97316}.rs-accent.t3{background:#fbbf24}
+.rs-body{flex:1;padding:14px 16px}
+.rs-meta{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.rs-name{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;color:#fff}
+.rs-rest{font-size:12px;color:#F97316;margin-top:2px}
+.rs-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:32px;color:#FA2A52;line-height:1}
+.rs-score.dim{color:#222}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.bar-g .bar-l{font-size:10px;color:#444;display:flex;justify-content:space-between;margin-bottom:2px}
+.bar-g .bar-l span{color:#FA2A52}
+.bar-t{height:3px;background:#1a1a1a;border-radius:2px}
+.bar-f{height:3px;background:#FA2A52;border-radius:2px}
+
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rel-card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:14px;font-size:13px;color:#FA2A52;font-weight:600}
+
+@media(max-width:600px){.findings-grid{grid-template-columns:1fr}.hero-kpis{gap:20px}.bars{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">Carte / Philadelphia / <span>Pho</span></div>
+    <h1>Best <em>Pho</em> in Philadelphia</h1>
+    <p class="hero-sub">South Philly and Washington Avenue carry the city's pho tradition — Vietnamese communities here have kept standards exceptionally high and prices remarkably fair.</p>
+    <div class="hero-kpis">
+      <div class="kpi"><div class="kpi-v">93</div><div class="kpi-l">Top Score</div></div>
+      <div class="kpi"><div class="kpi-v">10</div><div class="kpi-l">Ranked</div></div>
+      <div class="kpi"><div class="kpi-v">$13</div><div class="kpi-l">Avg Price</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Key <em>Findings</em></div>
+  <div class="findings-grid">
+    <div class="finding-card"><p>Washington Avenue corridor dominates — 6 of 10 top bowls are within half a mile of each other</p></div>
+    <div class="finding-card"><p>Philly pho is more affordable than any comparable US city — avg $13 vs $18 national average</p></div>
+    <div class="finding-card"><p>Bean sprout and basil freshness quality is a reliable indicator of overall operation quality</p></div>
+    <div class="finding-card"><p>Tendon and tripe texture is more carefully executed here than in comparable NYC spots</p></div>
+  </div>
+</div>
+
+<div style="background:#0d0d0d;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a">
+  <div class="section">
+    <div class="section-title">Full <em>Rankings</em></div>
+    <div class="rank-strip"><div class="rs-accent t1"></div><div class="rs-body"><div class="rs-meta"><div><div class="rs-name">Pho Bo Dac Biet (Special Combo)</div><div class="rs-rest">Pho Ha — Washington Avenue</div></div><div class="rs-score">93</div></div><div class="bars"><div class="bar-g"><div class="bar-l">Flavor <span>95</span></div><div class="bar-t"><div class="bar-f" style="width:95%"></div></div></div><div class="bar-g"><div class="bar-l">Texture <span>92</span></div><div class="bar-t"><div class="bar-f" style="width:92%"></div></div></div><div class="bar-g"><div class="bar-l">Value <span>96</span></div><div class="bar-t"><div class="bar-f" style="width:96%"></div></div></div><div class="bar-g"><div class="bar-l">Auth. <span>94</span></div><div class="bar-t"><div class="bar-f" style="width:94%"></div></div></div></div></div></div>
+    <div class="rank-strip"><div class="rs-accent t2"></div><div class="rs-body"><div class="rs-meta"><div><div class="rs-name">Pho Tai Nam</div><div class="rs-rest">Pho Saigon — South Philly</div></div><div class="rs-score" style="color:#F97316">90</div></div></div></div>
+    <div class="rank-strip"><div class="rs-accent t3"></div><div class="rs-body"><div class="rs-meta"><div><div class="rs-name">Chicken Pho (Ga)</div><div class="rs-rest">Vietnam Restaurant — Chinatown</div></div><div class="rs-score" style="color:#fbbf24">88</div></div></div></div>
+    <div class="rank-strip"><div class="rs-accent"></div><div class="rs-body"><div class="rs-meta"><div><div class="rs-name">Pho Bo Vien</div><div class="rs-rest">Pho 75 — South Philly</div></div><div class="rs-score dim">85</div></div></div></div>
+    <div class="rank-strip"><div class="rs-accent"></div><div class="rs-body"><div class="rs-meta"><div><div class="rs-name">Beef Brisket Pho</div><div class="rs-rest">Pho Xe Lua — Washington Ave</div></div><div class="rs-score dim">83</div></div></div></div>
+    <div class="rank-strip"><div class="rs-accent"></div><div class="rs-body"><div class="rs-meta"><div><div class="rs-name">Spicy Pho Sate</div><div class="rs-rest">Pho 20 — South Philly</div></div><div class="rs-score dim">81</div></div></div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Related <em>Guides</em></div>
+  <div class="related-grid">
+    <a class="rel-card" href="#">Best Banh Mi in Philadelphia →</a>
+    <a class="rel-card" href="#">Best Bun Bo Hue in Philly →</a>
+    <a class="rel-card" href="#">Best Ramen in Philadelphia →</a>
+  </div>
+</div>
+</body>
+</html>

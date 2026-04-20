@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Tacos in Los Angeles — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f7f4;color:#111;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1px solid #e8e4df;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#777}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.hero{background:#fff;padding:96px 24px 48px;border-bottom:1px solid #e8e4df}
+.hero-inner{max-width:860px;margin:0 auto}
+.breadcrumb{font-size:12px;color:#aaa;margin-bottom:16px}.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(30px,5vw,58px);line-height:1.05;margin-bottom:14px}
+h1 em{font-style:normal;color:#FA2A52}
+.hero-sub{font-size:16px;color:#666;margin-bottom:28px;max-width:540px;line-height:1.7}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{background:#f8f7f4;border:1px solid #e8e4df;border-radius:20px;font-size:12px;color:#777;padding:5px 14px}
+.tag.accent{background:#fff5f7;border-color:#facccc;color:#FA2A52;font-weight:600}
+
+.section{max-width:860px;margin:0 auto;padding:48px 24px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:20px;color:#111}
+.section-title em{font-style:normal;color:#FA2A52}
+
+.findings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.finding-card{background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:16px 18px}
+.finding-card p{font-size:13px;color:#555;line-height:1.65}
+
+.sep{border:none;border-top:1px solid #e8e4df;max-width:860px;margin:0 auto}
+
+.rank-row{display:grid;grid-template-columns:60px 1fr auto;gap:20px;align-items:center;padding:18px 24px;background:#fff;border-radius:12px;margin-bottom:10px;border:1px solid #e8e4df}
+.rr-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:32px;color:#eee;line-height:1;text-align:center}
+.rr-num.top1{color:#FA2A52}.rr-num.top2{color:#F97316}.rr-num.top3{color:#fbbf24}
+.name{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;margin-bottom:3px;color:#111}
+.rest{font-size:12px;color:#F97316;margin-bottom:8px}
+.bars{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.bar-g{} .bar-l{font-size:10px;color:#bbb;display:flex;justify-content:space-between;margin-bottom:2px}
+.bar-l span{color:#FA2A52;font-weight:600}
+.bar-t{height:3px;background:#f0ede8;border-radius:2px}
+.bar-f{height:3px;background:linear-gradient(90deg,#FA2A52,#F97316);border-radius:2px}
+.rr-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:36px;color:#FA2A52;line-height:1}
+.rr-score.dim{color:#ddd}
+
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rel-card{background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:16px;font-size:14px;color:#FA2A52;font-weight:500;text-align:center}
+
+@media(max-width:600px){.findings-grid{grid-template-columns:1fr}.rank-row{grid-template-columns:44px 1fr auto}.bars{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">Carte / Los Angeles / <span>Tacos</span></div>
+    <h1>Best <em>Tacos</em> in Los Angeles</h1>
+    <p class="hero-sub">The definitive ForkFox ranking of LA's top taco dishes — scored on Flavor, Texture, Value, Authenticity, and Presentation.</p>
+    <div class="hero-tags">
+      <span class="tag accent">10 Ranked</span>
+      <span class="tag">April 2026</span>
+      <span class="tag">AI-Aggregated</span>
+      <span class="tag">Yelp + Google + Reddit</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Key <em>Findings</em></div>
+  <div class="findings-grid">
+    <div class="finding-card"><p>East LA defines the gold standard — hand-pressed tortillas at spots like Mariscos Jalisco create a benchmark that upscale competitors can't replicate</p></div>
+    <div class="finding-card"><p>Al pastor from a real vertical trompo scores 16pts higher on average than pan-cooked equivalents</p></div>
+    <div class="finding-card"><p>LA's taco truck culture is outperforming brick-and-mortar on every metric except presentation</p></div>
+    <div class="finding-card"><p>Shrimp and fish tacos are the surprise standouts — Baja-style coastal influence scoring as high as beef</p></div>
+  </div>
+</div>
+
+<hr class="sep">
+
+<div class="section">
+  <div class="section-title">Full <em>Rankings</em></div>
+  <div class="rank-row"><div class="rr-num top1">1</div><div><div class="name">Al Pastor de Trompo</div><div class="rest">Leo's Tacos Truck — East LA</div><div class="bars"><div class="bar-g"><div class="bar-l">Flavor <span>97</span></div><div class="bar-t"><div class="bar-f" style="width:97%"></div></div></div><div class="bar-g"><div class="bar-l">Value <span>95</span></div><div class="bar-t"><div class="bar-f" style="width:95%"></div></div></div><div class="bar-g"><div class="bar-l">Auth. <span>96</span></div><div class="bar-t"><div class="bar-f" style="width:96%"></div></div></div></div></div><div class="rr-score">97</div></div>
+  <div class="rank-row"><div class="rr-num top2">2</div><div><div class="name">Shrimp Taco Baja Style</div><div class="rest">Mariscos Jalisco — Boyle Heights</div><div class="bars"><div class="bar-g"><div class="bar-l">Flavor <span>94</span></div><div class="bar-t"><div class="bar-f" style="width:94%"></div></div></div><div class="bar-g"><div class="bar-l">Value <span>92</span></div><div class="bar-t"><div class="bar-f" style="width:92%"></div></div></div></div></div><div class="rr-score" style="color:#F97316">94</div></div>
+  <div class="rank-row"><div class="rr-num top3">3</div><div><div class="name">Carne Asada Taco</div><div class="rest">Guisados — Boyle Heights</div><div class="bars"><div class="bar-g"><div class="bar-l">Flavor <span>91</span></div><div class="bar-t"><div class="bar-f" style="width:91%"></div></div></div></div></div><div class="rr-score" style="color:#fbbf24">91</div></div>
+  <div class="rank-row"><div class="rr-num">4</div><div><div class="name">Guisado de Pollo Taco</div><div class="rest">Guisados — Echo Park</div></div><div class="rr-score dim">88</div></div>
+  <div class="rank-row"><div class="rr-num">5</div><div><div class="name">Lengua Taco</div><div class="rest">Carnitas El Momo — South LA</div></div><div class="rr-score dim">86</div></div>
+  <div class="rank-row"><div class="rr-num">6</div><div><div class="name">Birria Taco</div><div class="rest">Teddy's Red Tacos — Culver City</div></div><div class="rr-score dim">84</div></div>
+  <div class="rank-row"><div class="rr-num">7</div><div><div class="name">Tripa Taco</div><div class="rest">El Taurino — Koreatown</div></div><div class="rr-score dim">81</div></div>
+  <div class="rank-row"><div class="rr-num">8</div><div><div class="name">Cabeza Taco</div><div class="rest">Taco Zone — Silver Lake</div></div><div class="rr-score dim">79</div></div>
+</div>
+
+<div style="background:#fff;border-top:1px solid #e8e4df">
+  <div class="section">
+    <div class="section-title">Related <em>Guides</em></div>
+    <div class="related-grid">
+      <a class="rel-card" href="#">Best Birria in LA →</a>
+      <a class="rel-card" href="#">Best Burritos in LA →</a>
+      <a class="rel-card" href="#">Best Tamales in LA →</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

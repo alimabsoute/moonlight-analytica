@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Korean BBQ in Los Angeles — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0d0a;color:#f0e8d8;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,13,10,0.97);border-bottom:1px solid #2a2418;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#8a7a5a}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:1200px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#5a4a2a;margin-bottom:18px}.breadcrumb span{color:#F97316}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(26px,3.5vw,44px);line-height:1.1;margin-bottom:10px;color:#f0e8d8}
+h1 em{font-style:normal;color:#F97316}
+.meta{font-size:13px;color:#6a5a3a;margin-bottom:32px}.meta strong{color:#F97316}
+
+.two-col{display:grid;grid-template-columns:35fr 65fr;gap:40px;align-items:start}
+
+.sidebar{position:sticky;top:80px}
+.sidebar-card{background:#141008;border:1px solid #2a2010;border-radius:14px;padding:20px;margin-bottom:16px}
+.sidebar-card h3{font-family:'Geologica',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;color:#6a5a3a}
+.rank-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #201808}
+.rank-item:last-child{border-bottom:none}
+.rk-num{font-size:12px;color:#4a3a1a;font-weight:700;width:20px}
+.rk-name{font-size:13px;color:#b89a6a;flex:1}
+.rk-score{font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;color:#F97316}
+.top-badge{background:linear-gradient(135deg,#c84000,#F97316);border-radius:10px;padding:18px;text-align:center;margin-bottom:16px}
+.top-badge .score{font-family:'Geologica',sans-serif;font-weight:900;font-size:48px;color:#fff;line-height:1}
+.top-badge .label{font-size:11px;color:rgba(255,255,255,.8);margin-top:5px;text-transform:uppercase;letter-spacing:.05em}
+
+.intro{font-size:15px;line-height:1.8;color:#c8b888;margin-bottom:28px;border-left:3px solid #F97316;padding-left:18px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;margin-bottom:14px;color:#f0e8d8}
+.findings ul{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:8px}
+.findings ul li{font-size:13px;color:#b09060;padding:10px 14px;background:#181410;border-radius:8px;border-left:3px solid #c84000}
+
+.dish-entry{background:#141008;border:1px solid #2a2010;border-radius:12px;padding:18px;margin-bottom:12px}
+.dish-name{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;color:#f0e8d8;margin-bottom:3px}
+.dish-rest{font-size:12px;color:#F97316;margin-bottom:12px}
+.score-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.score-chip{background:#1e1808;border:1px solid #3a2a10;border-radius:4px;padding:4px 10px;font-size:11px;color:#8a7a5a}
+.score-chip strong{color:#F97316}
+.big-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:36px;color:#F97316;margin-left:auto}
+.bar-group{margin-bottom:6px}
+.bar-label{font-size:10px;color:#5a4a2a;display:flex;justify-content:space-between;margin-bottom:2px}
+.bar-label span{color:#F97316}
+.bar-track{height:3px;background:#2a2010;border-radius:2px}
+.bar-fill{height:3px;background:linear-gradient(90deg,#c84000,#F97316);border-radius:2px}
+
+.related-links a{display:block;font-size:13px;color:#F97316;padding:9px 0;border-bottom:1px solid #201808}
+.related-links a:last-child{border-bottom:none}
+
+@media(max-width:768px){.two-col{grid-template-columns:1fr}.sidebar{position:static}.two-col>*:first-child{order:2}.two-col>*:last-child{order:1}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / Los Angeles / <span>Korean BBQ</span></div>
+  <h1>Best <em>Korean BBQ</em> in Los Angeles</h1>
+  <div class="meta">Updated April 2026 · <strong>10 dishes ranked</strong> · ForkFox Carte Guide</div>
+  <div class="two-col">
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="top-badge"><div class="score">94</div><div class="label">Top Score — Galbi</div></div>
+        <h3>Full Rankings</h3>
+        <div class="rank-item"><div class="rk-num">1</div><div class="rk-name">LA Galbi</div><div class="rk-score">94</div></div>
+        <div class="rank-item"><div class="rk-num">2</div><div class="rk-name">Samgyeopsal</div><div class="rk-score">91</div></div>
+        <div class="rank-item"><div class="rk-num">3</div><div class="rk-name">Chadolbaegi</div><div class="rk-score">89</div></div>
+        <div class="rank-item"><div class="rk-num">4</div><div class="rk-name">Bulgogi Wagyu</div><div class="rk-score">87</div></div>
+        <div class="rank-item"><div class="rk-num">5</div><div class="rk-name">Dwaeji Galbi</div><div class="rk-score">85</div></div>
+        <div class="rank-item"><div class="rk-num">6</div><div class="rk-name">Ogyeopsal</div><div class="rk-score">83</div></div>
+        <div class="rank-item"><div class="rk-num">7</div><div class="rk-name">Deungsim Steak</div><div class="rk-score">80</div></div>
+        <div class="rank-item"><div class="rk-num">8</div><div class="rk-name">Gopchang</div><div class="rk-score">78</div></div>
+        <div class="rank-item"><div class="rk-num">9</div><div class="rk-name">Mak Galbi</div><div class="rk-score">75</div></div>
+        <div class="rank-item"><div class="rk-num">10</div><div class="rk-name">Chicken Galbi</div><div class="rk-score">72</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <p class="intro">Koreatown LA is the undisputed KBBQ capital of the United States — the density, quality, and price competition here creates a near-perfect market. The best meats here are sourced from USDA Prime and domestic Wagyu programs unavailable most places.</p>
+      <div class="findings">
+        <div class="section-title">Key Findings</div>
+        <ul>
+          <li>Charcoal grills outperform gas by 11 pts on average — the wood smoke imparts irreplaceable complexity</li>
+          <li>Banchan quality predicts overall experience score with 83% accuracy</li>
+          <li>LA Galbi (flanken cut) is a local innovation that outperforms traditional galbi in texture scores</li>
+          <li>Koreatown late-night (11pm–2am) service quality drops 8pts — plan accordingly</li>
+        </ul>
+      </div>
+      <div class="section-title">Ranked Dishes</div>
+      <div class="dish-entry"><div class="dish-name">LA Galbi (Flanken Ribs)</div><div class="dish-rest">Park's BBQ — Koreatown</div><div class="score-row"><div class="score-chip">Flavor <strong>96</strong></div><div class="score-chip">Texture <strong>94</strong></div><div class="score-chip">Value <strong>82</strong></div><div class="big-score">94</div></div><div class="bar-group"><div class="bar-label">Authenticity <span>92</span></div><div class="bar-track"><div class="bar-fill" style="width:92%"></div></div></div><div class="bar-group"><div class="bar-label">Presentation <span>88</span></div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div></div></div>
+      <div class="dish-entry"><div class="dish-name">Samgyeopsal Premium</div><div class="dish-rest">Quarters Korean BBQ — Koreatown</div><div class="score-row"><div class="score-chip">Flavor <strong>92</strong></div><div class="score-chip">Value <strong>90</strong></div><div class="big-score">91</div></div></div>
+      <div class="dish-entry"><div class="dish-name">Chadolbaegi (Brisket)</div><div class="dish-rest">Genwa Korean BBQ — Koreatown</div><div class="score-row"><div class="score-chip">Flavor <strong>90</strong></div><div class="score-chip">Texture <strong>93</strong></div><div class="big-score">89</div></div></div>
+      <div class="dish-entry"><div class="dish-name">Wagyu Bulgogi</div><div class="dish-rest">Soban — Koreatown</div><div class="score-row"><div class="score-chip">Flavor <strong>89</strong></div><div class="score-chip">Value <strong>76</strong></div><div class="big-score">87</div></div></div>
+      <div class="related">
+        <div class="section-title">Related Guides</div>
+        <div class="related-links">
+          <a href="#">Best Korean Fried Chicken in LA →</a>
+          <a href="#">Best Bibimbap in Los Angeles →</a>
+          <a href="#">Best Sundubu Jjigae in Los Angeles →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

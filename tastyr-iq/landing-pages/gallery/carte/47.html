@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Tacos in New York — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f7f4;color:#111;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1px solid #e8e4df;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#777}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.hero{margin-top:60px;position:relative}
+.hero img{width:100%;height:300px;object-fit:cover;display:block}
+.hero-caption{background:#fff;padding:20px 32px;border-bottom:2px solid #FA2A52}
+.hero-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#FA2A52;font-weight:700;margin-bottom:6px}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(26px,4vw,42px);line-height:1.1;margin-bottom:6px}
+h1 em{font-style:normal;color:#FA2A52}
+.hero-meta{font-size:12px;color:#aaa;display:flex;gap:16px;flex-wrap:wrap}
+
+.page-wrap{max-width:860px;margin:0 auto;padding:28px 24px 60px}
+
+.byline-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #e8e4df;margin-bottom:24px;flex-wrap:wrap;gap:8px}
+.bl-by{font-size:12px;color:#aaa;display:flex;align-items:center;gap:8px}
+.bl-dot{width:22px;height:22px;background:#FA2A52;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.bl-stats{font-size:11px;color:#bbb}
+.bl-stats strong{color:#FA2A52}
+
+.lede{font-size:16px;color:#444;line-height:1.8;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #e8e4df}
+
+.article-layout{display:grid;grid-template-columns:1fr 260px;gap:28px}
+.article-main{min-width:0}
+.article-side{display:flex;flex-direction:column;gap:12px}
+
+.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#FA2A52;font-weight:700;margin-bottom:8px}
+.body-p{font-size:14px;color:#555;line-height:1.8;margin-bottom:14px}
+
+.rank-block{padding:14px 0;border-bottom:1px solid #e8e4df;display:flex;gap:12px;align-items:flex-start}
+.rb-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:26px;color:#e8e4df;min-width:30px;line-height:1}
+.rb-num.h{color:#FA2A52}
+.rb-content{flex:1}
+.rb-dish{font-family:'Geologica',sans-serif;font-weight:700;font-size:15px;color:#111;margin-bottom:2px}
+.rb-rest{font-size:12px;color:#aaa;margin-bottom:5px}
+.rb-desc{font-size:13px;color:#666;line-height:1.65}
+.rb-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:22px;color:#FA2A52;min-width:36px;text-align:right}
+
+.pull-quote{background:#fff;border:1px solid #e8e4df;border-left:4px solid #FA2A52;border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.pq-text{font-size:16px;color:#333;line-height:1.65;font-style:italic;margin-bottom:8px}
+.pq-attr{font-size:11px;color:#aaa}
+
+.side-card{background:#fff;border:1px solid #e8e4df;border-radius:8px;padding:14px}
+.side-ttl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aaa;font-weight:700;margin-bottom:10px}
+.side-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0ede8;font-size:12px}
+.side-row:last-child{border-bottom:none}
+.side-key{color:#777}
+.side-val{color:#FA2A52;font-weight:700;font-family:'Geologica',sans-serif}
+
+.hood-tags{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0}
+.ht{background:#f8f7f4;border:1px solid #e8e4df;border-radius:12px;padding:3px 10px;font-size:11px;color:#777}
+
+.see-also{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+.see-also a{font-size:12px;color:#FA2A52;background:#fff;border:1px solid #e8e4df;border-radius:4px;padding:4px 10px}
+
+@media(max-width:720px){.article-layout{grid-template-columns:1fr}.article-side{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="hero">
+  <img src="https://picsum.photos/seed/carte47/1200/500" alt="Tacos in New York">
+  <div class="hero-caption">
+    <div class="hero-kicker">ForkFox Carte · New York · Mexican</div>
+    <h1>Best <em>Tacos</em> in New York</h1>
+    <div class="hero-meta"><span>10 dishes ranked</span><span>Top score 94</span><span>Jackson Heights + Sunset Park</span><span>April 2026</span></div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="byline-bar">
+    <div class="bl-by"><div class="bl-dot">FX</div>ForkFox Editorial · April 2026</div>
+    <div class="bl-stats"><strong>94</strong> top score &nbsp;·&nbsp; <strong>10</strong> ranked &nbsp;·&nbsp; <strong>1,500+</strong> reviews</div>
+  </div>
+
+  <div class="lede">
+    New York's taco scene is anchored in neighborhoods where Mexican immigrants have maintained regional cooking traditions without accommodation to the mainstream market: Jackson Heights in Queens, Sunset Park in Brooklyn, and the Bronx's Kingsbridge corridor. The quality gap between these community spots and the tourist-facing spots in Manhattan is wide and consistent.
+  </div>
+
+  <div class="article-layout">
+    <div class="article-main">
+      <div class="section-label">The Rankings</div>
+
+      <div class="rank-block">
+        <div class="rb-num h">1</div>
+        <div class="rb-content">
+          <div class="rb-dish">Al Pastor Taco</div>
+          <div class="rb-rest">Los Tacos No. 1 — Chelsea Market</div>
+          <div class="rb-desc">The only Manhattan taco spot that earns a top score without apology. Trompo al pastor spinning in the window, Oaxacan cheese melted to order, achiote that comes from actual dried chiles, not paste. The line is long and worth it.</div>
+        </div>
+        <div class="rb-score">94</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num h">2</div>
+        <div class="rb-content">
+          <div class="rb-dish">Birria de Res Taco</div>
+          <div class="rb-rest">La Chula NYC — Jackson Heights</div>
+          <div class="rb-desc">Consomé so complex it's worth ordering as a standalone. The quesabirria variant — cheese-crusted tortilla dipped in the broth — is the proper NYC expression of a technique LA pioneered.</div>
+        </div>
+        <div class="rb-score">91</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num h">3</div>
+        <div class="rb-content">
+          <div class="rb-dish">Carne Asada Taco</div>
+          <div class="rb-rest">Tortilleria Nixtamal — Corona, Queens</div>
+          <div class="rb-desc">The masa is ground in-house — a distinction that separates Nixtamal from every other NYC taco spot. The carne asada gets the char that requires an open-flame grill, not a flat-top.</div>
+        </div>
+        <div class="rb-score">89</div>
+      </div>
+
+      <div class="pull-quote">
+        <div class="pq-text">The best tacos in New York are in neighborhoods where Mexican families live, not neighborhoods where tourists eat. Jackson Heights is a 25-minute subway ride from Midtown and worth every minute.</div>
+        <div class="pq-attr">ForkFox Editorial · April 2026</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num">4</div>
+        <div class="rb-content">
+          <div class="rb-dish">Carnitas Taco</div>
+          <div class="rb-rest">El Cochinito — Washington Heights</div>
+          <div class="rb-desc">Pork slow-cooked in its own fat in a copper pot visible from the street. Washington Heights has a Puerto Rican and Dominican majority but El Cochinito's Mexican owner has produced the best carnitas in NYC for a decade.</div>
+        </div>
+        <div class="rb-score">87</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num">5</div>
+        <div class="rb-content">
+          <div class="rb-dish">Lengua Taco</div>
+          <div class="rb-rest">Taqueria El Rancho — Sunset Park</div>
+          <div class="rb-desc">Beef tongue braised low and slow, diced and griddle-crisped to order. Sunset Park's Mexican community has maintained authentic cooking standards that Williamsburg restaurants across the bridge charge double for.</div>
+        </div>
+        <div class="rb-score">85</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num">6</div>
+        <div class="rb-content">
+          <div class="rb-dish">Cabeza Taco</div>
+          <div class="rb-rest">Taqueria Coatzingo — Woodside</div>
+          <div class="rb-desc">Beef head — cheeks, tongue, and slow-braised snout. The most underordered taco in NYC and one of the most flavorful. Coatzingo is the Woodside benchmark for traditional taqueria style.</div>
+        </div>
+        <div class="rb-score">83</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num">7</div>
+        <div class="rb-content">
+          <div class="rb-dish">Chorizo Taco</div>
+          <div class="rb-rest">Casa Adela — Alphabet City</div>
+          <div class="rb-desc">Puerto Rican-run spot with a credible Mexican menu. The chorizo here is loose, house-seasoned, and fried with potato. Lower authenticity score compensated by exceptional value and flavor.</div>
+        </div>
+        <div class="rb-score">81</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num">8</div>
+        <div class="rb-content">
+          <div class="rb-dish">Fish Taco Baja Style</div>
+          <div class="rb-rest">Tacombi — Nolita</div>
+          <div class="rb-desc">The most tourist-friendly spot on this list, but the Baja fish taco with battered mahi and chipotle crema earns a consistent score. The tortillas are fresh masa, not from a bag.</div>
+        </div>
+        <div class="rb-score">79</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num">9</div>
+        <div class="rb-content">
+          <div class="rb-dish">Suadero Taco</div>
+          <div class="rb-rest">Azteca — Kingsbridge, Bronx</div>
+          <div class="rb-desc">Suadero — a cut between the belly and the leg — slow cooked in lard. Fatty, rich, and deeply savory. The Bronx Mexican community produces honest food at price points that Manhattan can't match.</div>
+        </div>
+        <div class="rb-score">77</div>
+      </div>
+
+      <div class="rank-block">
+        <div class="rb-num">10</div>
+        <div class="rb-content">
+          <div class="rb-dish">Veggie Mushroom Taco</div>
+          <div class="rb-rest">Oxomoco — Greenpoint</div>
+          <div class="rb-desc">Wood-fire Mexican restaurant where the mushroom taco is a serious dish. Maitake and trumpet mushrooms roasted in the wood-burning oven with epazote and jalapeño. Best vegetarian taco in the city.</div>
+        </div>
+        <div class="rb-score">75</div>
+      </div>
+    </div>
+
+    <div class="article-side">
+      <div class="side-card">
+        <div class="side-ttl">Score Summary</div>
+        <div class="side-row"><span class="side-key">Top Score</span><span class="side-val">94</span></div>
+        <div class="side-row"><span class="side-key">Average</span><span class="side-val">84.1</span></div>
+        <div class="side-row"><span class="side-key">Reviews</span><span class="side-val">1,500+</span></div>
+        <div class="side-row"><span class="side-key">Avg Price</span><span class="side-val">$5</span></div>
+        <div class="side-row"><span class="side-key">Updated</span><span class="side-val">Apr 2026</span></div>
+      </div>
+      <div class="side-card">
+        <div class="side-ttl">Key Neighborhoods</div>
+        <div class="hood-tags">
+          <div class="ht">Jackson Heights</div>
+          <div class="ht">Sunset Park</div>
+          <div class="ht">Chelsea</div>
+          <div class="ht">Woodside</div>
+          <div class="ht">The Bronx</div>
+          <div class="ht">Greenpoint</div>
+        </div>
+      </div>
+      <div class="side-card">
+        <div class="side-ttl">Best by Type</div>
+        <div class="side-row"><span class="side-key">Al Pastor</span><span class="side-val">94</span></div>
+        <div class="side-row"><span class="side-key">Birria</span><span class="side-val">91</span></div>
+        <div class="side-row"><span class="side-key">Carne Asada</span><span class="side-val">89</span></div>
+        <div class="side-row"><span class="side-key">Vegetarian</span><span class="side-val">75</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="see-also">
+    <a href="#">Best Tacos in LA</a>
+    <a href="#">Best Tacos in Chicago</a>
+    <a href="#">Best Mexican in Jackson Heights</a>
+    <a href="#">Best Birria in NY</a>
+  </div>
+</div>
+</body>
+</html>

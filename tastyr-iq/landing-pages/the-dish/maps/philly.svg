@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%" role="img" aria-label="Map of Philadelphia showing 8 ForkFox beta neighborhoods">
+  <title>Philadelphia — ForkFox beta neighborhoods</title>
+  <desc>Branded stylized map of Philadelphia with pins for Fishtown, Rittenhouse, South Philly, Center City, Old City, Northern Liberties, West Philly, and Chinatown.</desc>
+  <defs>
+    <linearGradient id="phBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0d0d"/>
+      <stop offset="100%" stop-color="#060606"/>
+    </linearGradient>
+    <linearGradient id="phRiver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1420" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#050a12" stop-opacity="1"/>
+    </linearGradient>
+    <radialGradient id="pinGlowPh" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FA2A52" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FA2A52" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glowPh" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .city-label{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:900;font-size:13px;fill:#f0e8d8;letter-spacing:.12em}
+      .compass{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:700;font-size:8px;fill:#555;letter-spacing:.08em}
+      .pin-label{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:700;font-size:9px;fill:#e8e8e8;letter-spacing:.04em;text-anchor:middle}
+      .pin-num{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:900;font-size:10px;fill:#fff;text-anchor:middle;dominant-baseline:central}
+      .water-label{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:400;font-size:8px;font-style:italic;fill:#2a3548;letter-spacing:.2em}
+      .highway{stroke:#22232a;stroke-width:.8;fill:none}
+    </style>
+  </defs>
+
+  <rect width="400" height="500" fill="url(#phBg)"/>
+
+  <!-- SCHUYLKILL RIVER (west side, curvy) -->
+  <path d="M 105,0 Q 110,80 95,160 Q 80,230 92,310 Q 100,380 88,460 L 88,500 L 50,500 L 50,0 Z" fill="url(#phRiver)"/>
+  <path d="M 105,0 Q 110,80 95,160 Q 80,230 92,310 Q 100,380 88,460" stroke="#1a2230" stroke-width="1" fill="none"/>
+
+  <!-- DELAWARE RIVER (east side) -->
+  <path d="M 320,0 Q 325,100 335,200 Q 345,300 335,400 Q 325,470 330,500 L 400,500 L 400,0 Z" fill="url(#phRiver)"/>
+  <path d="M 320,0 Q 325,100 335,200 Q 345,300 335,400 Q 325,470 330,500" stroke="#1a2230" stroke-width="1" fill="none"/>
+
+  <!-- STREET GRID (Philly's famously gridded) -->
+  <g opacity="0.55">
+    <!-- North-South streets (Broad etc.) -->
+    <g stroke="#141414" stroke-width=".3">
+      <line x1="125" y1="10" x2="125" y2="490"/>
+      <line x1="145" y1="10" x2="145" y2="490"/>
+      <line x1="165" y1="10" x2="165" y2="490"/>
+      <line x1="185" y1="10" x2="185" y2="490"/>
+      <line x1="205" y1="10" x2="205" y2="490"/>
+      <line x1="225" y1="10" x2="225" y2="490"/>
+      <line x1="245" y1="10" x2="245" y2="490"/>
+      <line x1="265" y1="10" x2="265" y2="490"/>
+      <line x1="285" y1="10" x2="285" y2="490"/>
+      <line x1="305" y1="10" x2="305" y2="490"/>
+    </g>
+    <!-- Broad Street (major highway, thicker) -->
+    <line x1="205" y1="10" x2="205" y2="490" class="highway"/>
+    <!-- East-West streets (Market, Chestnut, etc.) -->
+    <g stroke="#141414" stroke-width=".3">
+      <line x1="95" y1="85" x2="330" y2="85"/>
+      <line x1="95" y1="125" x2="330" y2="125"/>
+      <line x1="95" y1="165" x2="330" y2="165"/>
+      <line x1="95" y1="200" x2="330" y2="200"/>
+      <line x1="95" y1="240" x2="330" y2="240"/>
+      <line x1="95" y1="280" x2="330" y2="280"/>
+      <line x1="95" y1="320" x2="330" y2="320"/>
+      <line x1="95" y1="360" x2="330" y2="360"/>
+      <line x1="95" y1="400" x2="330" y2="400"/>
+      <line x1="95" y1="440" x2="330" y2="440"/>
+    </g>
+    <!-- Market Street (major) -->
+    <line x1="95" y1="240" x2="330" y2="240" class="highway"/>
+    <!-- I-95 along Delaware -->
+    <path d="M 320,20 Q 325,150 332,280 Q 338,400 330,480" class="highway"/>
+    <!-- Ben Franklin Parkway (diagonal, iconic Philly) -->
+    <path d="M 155,140 L 215,240" class="highway" stroke="#2a2420"/>
+  </g>
+
+  <!-- LIBERTY BELL / CITY HALL marker (small square at Broad+Market intersection) -->
+  <rect x="201" y="236" width="8" height="8" fill="#1a1a1a" stroke="#2a2a2a"/>
+
+  <!-- FAIRMOUNT PARK (northwest silhouette) -->
+  <path d="M 105,40 Q 130,50 155,45 L 170,70 Q 155,85 130,90 L 100,85 Z" fill="#0e1a0a" opacity="0.6"/>
+  <text x="135" y="70" class="water-label" text-anchor="middle" fill="#1a2a10">FAIRMOUNT</text>
+
+  <!-- CITY LABEL + COMPASS -->
+  <text x="200" y="30" class="city-label" text-anchor="middle">PHILADELPHIA</text>
+  <g transform="translate(370,40)">
+    <circle r="14" fill="#0d0d0d" stroke="#1a1a1a"/>
+    <path d="M 0,-9 L 2.5,0 L 0,9 L -2.5,0 Z" fill="#FA2A52"/>
+    <text y="-16" class="compass" text-anchor="middle">N</text>
+  </g>
+
+  <!-- RIVER LABELS -->
+  <text x="70" y="260" class="water-label" transform="rotate(-90 70 260)">SCHUYLKILL</text>
+  <text x="355" y="240" class="water-label" transform="rotate(90 355 240)">DELAWARE</text>
+
+  <!-- NEIGHBORHOOD PINS -->
+
+  <!-- 1 · Northern Liberties (north) -->
+  <g>
+    <circle cx="250" cy="155" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="250" cy="155" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="250" cy="155" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="250" y="155" class="pin-num">1</text>
+    <text x="250" y="138" class="pin-label">N. LIBERTIES</text>
+  </g>
+
+  <!-- 2 · Fishtown (northeast) -->
+  <g>
+    <circle cx="295" cy="175" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="295" cy="175" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="295" cy="175" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="295" y="175" class="pin-num">2</text>
+    <text x="295" y="158" class="pin-label">FISHTOWN</text>
+  </g>
+
+  <!-- 3 · Chinatown (near center city, slightly north of Market) -->
+  <g>
+    <circle cx="235" cy="220" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="235" cy="220" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="235" cy="220" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="235" y="220" class="pin-num">3</text>
+    <text x="235" y="203" class="pin-label">CHINATOWN</text>
+  </g>
+
+  <!-- 4 · Center City (heart of Philly) -->
+  <g>
+    <circle cx="205" cy="252" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="205" cy="252" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="205" cy="252" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="205" y="252" class="pin-num">4</text>
+    <text x="205" y="235" class="pin-label">CENTER CITY</text>
+  </g>
+
+  <!-- 5 · Rittenhouse (center-west of Broad) -->
+  <g>
+    <circle cx="160" cy="260" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="160" cy="260" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="160" cy="260" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="160" y="260" class="pin-num">5</text>
+    <text x="160" y="243" class="pin-label">RITTENHOUSE</text>
+  </g>
+
+  <!-- 6 · Old City (east, near Delaware) -->
+  <g>
+    <circle cx="290" cy="240" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="290" cy="240" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="290" cy="240" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="290" y="240" class="pin-num">6</text>
+    <text x="290" y="258" class="pin-label">OLD CITY</text>
+  </g>
+
+  <!-- 7 · West Philly (across Schuylkill) -->
+  <g>
+    <circle cx="110" cy="320" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="110" cy="320" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="110" cy="320" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="110" y="320" class="pin-num">7</text>
+    <text x="110" y="338" class="pin-label">WEST PHILLY</text>
+  </g>
+
+  <!-- 8 · South Philly -->
+  <g>
+    <circle cx="200" cy="395" r="16" fill="url(#pinGlowPh)"/>
+    <circle cx="200" cy="395" r="6.5" fill="#FA2A52" filter="url(#glowPh)"/>
+    <circle cx="200" cy="395" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="200" y="395" class="pin-num">8</text>
+    <text x="200" y="413" class="pin-label">SOUTH PHILLY</text>
+  </g>
+
+  <!-- SCALE + ATTRIBUTION -->
+  <g transform="translate(60,475)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#333" stroke-width="1"/>
+    <line x1="0" y1="-3" x2="0" y2="3" stroke="#333" stroke-width="1"/>
+    <line x1="40" y1="-3" x2="40" y2="3" stroke="#333" stroke-width="1"/>
+    <text x="20" y="12" class="compass" text-anchor="middle" fill="#444">2 MI</text>
+  </g>
+  <text x="340" y="487" class="compass" text-anchor="end" fill="#444">FORKFOX · BETA</text>
+</svg>

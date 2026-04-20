@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Birria in Chicago — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0d0a;color:#f0e8d8;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,13,10,0.97);border-bottom:1px solid #2a2418;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#8a7a5a}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+/* SCORE HERO - WARM DARK */
+.hero{padding:90px 24px 60px;background:linear-gradient(135deg,#1a0f00,#0f0d0a)}
+.hero-inner{max-width:900px;margin:0 auto}
+.breadcrumb{font-size:12px;color:#5a4a2a;margin-bottom:24px}.breadcrumb span{color:#F97316}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,46px);line-height:1.1;margin-bottom:12px;color:#f0e8d8}
+h1 em{font-style:normal;color:#F97316}
+.hero-sub{font-size:15px;color:#a08060;max-width:520px;line-height:1.7;margin-bottom:40px}
+
+.score-feature{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;max-width:660px}
+.ring-outer{width:200px;height:200px;border-radius:50%;background:conic-gradient(#F97316 calc(91 * 3.6deg),#2a2010 0);position:relative;flex-shrink:0}
+.ring-inner{position:absolute;width:150px;height:150px;background:#0f0d0a;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:62px;color:#F97316;line-height:1}
+.ring-lbl{font-size:10px;color:#5a4a2a;text-transform:uppercase;letter-spacing:.08em}
+.feat-content{}
+.feat-label{font-size:11px;color:#c84000;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:8px}
+.feat-dish{font-family:'Geologica',sans-serif;font-weight:700;font-size:22px;color:#f0e8d8;margin-bottom:4px}
+.feat-rest{font-size:14px;color:#F97316;margin-bottom:18px}
+.dim-row{display:flex;gap:16px;flex-wrap:wrap}
+.dim{text-align:center}
+.dim-val{font-family:'Geologica',sans-serif;font-weight:900;font-size:22px;color:#F97316;line-height:1}
+.dim-lbl{font-size:10px;color:#5a4a2a;text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+
+.page-wrap{max-width:900px;margin:0 auto;padding:48px 24px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:18px;color:#f0e8d8}
+.section-title em{font-style:normal;color:#F97316}
+
+.rank-list{}
+.rank-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #2a2010}
+.rank-row:last-child{border-bottom:none}
+.rn{font-family:'Geologica',sans-serif;font-weight:900;font-size:18px;color:#2a2010;width:28px;flex-shrink:0}
+.rn.t{color:#F97316}
+.ri-name{font-weight:600;font-size:15px;color:#f0e8d8;margin-bottom:2px}
+.ri-rest{font-size:12px;color:#F97316}
+.ri-bar{flex:1;height:4px;background:#2a2010;border-radius:2px;margin:0 16px}
+.ri-bar-f{height:4px;background:linear-gradient(90deg,#c84000,#F97316);border-radius:2px}
+.rs{font-family:'Geologica',sans-serif;font-weight:900;font-size:20px;color:#F97316;width:32px;text-align:right;flex-shrink:0}
+.rs.d{color:#2a2010}
+
+.findings ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:32px}
+.findings ul li{font-size:13px;color:#b09060;padding:10px 14px;background:#181410;border-radius:8px;border-left:3px solid #c84000}
+
+.related{display:flex;gap:8px;flex-wrap:wrap}
+.rel-link{background:#181410;border:1px solid #2a2010;border-radius:8px;padding:10px 16px;font-size:13px;color:#F97316;font-weight:500}
+
+@media(max-width:600px){.score-feature{grid-template-columns:1fr;gap:24px}.dim-row{gap:10px}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">Carte / Chicago / <span>Birria</span></div>
+    <h1>Best <em>Birria</em> in Chicago</h1>
+    <p class="hero-sub">Chicago's Pilsen and Little Village neighborhoods have quietly built one of America's best birria ecosystems — long-stewed, consomé-rich, unapologetically traditional.</p>
+    <div class="score-feature">
+      <div class="ring-outer">
+        <div class="ring-inner"><div class="ring-num">91</div><div class="ring-lbl">Top Score</div></div>
+      </div>
+      <div class="feat-content">
+        <div class="feat-label">#1 Ranked Dish</div>
+        <div class="feat-dish">Birria de Chivo</div>
+        <div class="feat-rest">El Birrieria — Pilsen</div>
+        <div class="dim-row">
+          <div class="dim"><div class="dim-val">94</div><div class="dim-lbl">Flavor</div></div>
+          <div class="dim"><div class="dim-val">92</div><div class="dim-lbl">Auth.</div></div>
+          <div class="dim"><div class="dim-val">89</div><div class="dim-lbl">Value</div></div>
+          <div class="dim"><div class="dim-val">88</div><div class="dim-lbl">Texture</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="findings">
+    <div class="section-title">Key <em>Findings</em></div>
+    <ul>
+      <li>Goat birria (chivo) outperforms beef birria in authenticity scores by 8 points on average in Chicago</li>
+      <li>Pilsen is the neighborhood — 5 of the top 8 spots are within a 2-mile radius</li>
+      <li>Chicago birria has stronger consomé concentration than SF or LA equivalents</li>
+      <li>Little Village weekend-only spots have the highest scores but require early arrival</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Full <em>Rankings</em></div>
+  <div class="rank-list">
+    <div class="rank-row"><div class="rn t">1</div><div><div class="ri-name">Birria de Chivo</div><div class="ri-rest">El Birrieria — Pilsen</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:91%"></div></div><div class="rs">91</div></div>
+    <div class="rank-row"><div class="rn t">2</div><div><div class="ri-name">Quesabirria Tacos</div><div class="ri-rest">Birriera Reyes de Ocotlan — Little Village</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:89%"></div></div><div class="rs">89</div></div>
+    <div class="rank-row"><div class="rn t">3</div><div><div class="ri-name">Beef Birria Bowl</div><div class="ri-rest">Carnitas Uruapan — Pilsen</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:87%"></div></div><div class="rs">87</div></div>
+    <div class="rank-row"><div class="rn t">4</div><div><div class="ri-name">Birria Ramen</div><div class="ri-rest">Dos Urban Cantina — Logan Square</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:85%"></div></div><div class="rs">85</div></div>
+    <div class="rank-row"><div class="rn">5</div><div><div class="ri-name">Lamb Birria Mulita</div><div class="ri-rest">La Palapa — Pilsen</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:83%"></div></div><div class="rs d">83</div></div>
+    <div class="rank-row"><div class="rn">6</div><div><div class="ri-name">Birria Sope</div><div class="ri-rest">5 Rabanitos — Pilsen</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:80%"></div></div><div class="rs d">80</div></div>
+    <div class="rank-row"><div class="rn">7</div><div><div class="ri-name">Birria Torta</div><div class="ri-rest">Birrieria Zaragoza — Archer Heights</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:78%"></div></div><div class="rs d">78</div></div>
+    <div class="rank-row"><div class="rn">8</div><div><div class="ri-name">Weekend Birria Platter</div><div class="ri-rest">La Jiribilla — Little Village</div></div><div class="ri-bar"><div class="ri-bar-f" style="width:76%"></div></div><div class="rs d">76</div></div>
+  </div>
+
+  <div style="margin-top:36px">
+    <div class="section-title">Related <em>Guides</em></div>
+    <div class="related">
+      <a class="rel-link" href="#">Best Tacos in Chicago →</a>
+      <a class="rel-link" href="#">Best Mexican in Pilsen →</a>
+      <a class="rel-link" href="#">Best Tamales in Chicago →</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

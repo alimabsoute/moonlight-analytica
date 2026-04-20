@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LA Ethiopian — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.88); backdrop-filter: blur(12px); border-bottom: 2px solid #FA2A52; }
+  .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #fff; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* NEWSPAPER bold accent */
+  .paper { max-width: 1100px; margin: 0 auto; padding: 80px 24px 80px; }
+  .masthead-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 0; }
+  .mast-left { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: -1px; color: #fff; }
+  .mast-left span { color: #FA2A52; }
+  .mast-center { text-align: center; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+  .mast-right { text-align: right; font-size: 11px; color: rgba(255,255,255,0.3); }
+
+  .red-rule { height: 4px; background: #FA2A52; margin-bottom: 20px; }
+
+  .main-headline { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(28px, 4.5vw, 62px); line-height: 1.02; letter-spacing: -2.5px; color: #fff; margin-bottom: 16px; }
+  .main-headline .red { color: #FA2A52; }
+  .deck { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.65; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; margin-bottom: 24px; }
+
+  /* 3 columns, unequal */
+  .grid { display: grid; grid-template-columns: 1.5fr 1.5fr 1fr; gap: 28px; }
+  .col-v-rule { border-right: 1px solid rgba(255,255,255,0.07); padding-right: 28px; }
+  .col-v-rule:last-child { border-right: none; padding-right: 0; }
+  .col-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #FA2A52; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(250,42,82,0.25); }
+  .col-p { font-size: 14px; line-height: 1.85; color: rgba(255,255,255,0.65); margin-bottom: 14px; }
+  .col-img { width: 100%; aspect-ratio: 4/3; background: url('https://picsum.photos/seed/food25/400/300') center/cover; margin: 14px 0; }
+  .col-img-w { width: 100%; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish25/800/450') center/cover; margin: 14px 0; }
+  .red-pull { font-family: 'Geologica', sans-serif; font-size: 16px; font-weight: 800; color: #fff; background: rgba(250,42,82,0.1); padding: 16px; border-left: 4px solid #FA2A52; margin: 16px 0; line-height: 1.5; }
+  .score-big { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 80px; color: #FA2A52; line-height: 1; letter-spacing: -4px; display: block; }
+  .score-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); display: block; margin-bottom: 20px; }
+  .aside-facts { list-style: none; }
+  .aside-facts li { font-size: 13px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); }
+  .aside-facts li strong { color: rgba(255,255,255,0.35); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; display: block; }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .col-v-rule { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); padding-right: 0; padding-bottom: 20px; }
+    .col-v-rule:last-child { border-bottom: none; }
+    .masthead-row { grid-template-columns: 1fr; text-align: center; }
+    .mast-right { text-align: center; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<main class="paper">
+  <div class="masthead-row">
+    <div class="mast-left">Fork<span>Fox</span></div>
+    <div class="mast-center">Ethiopian · Los Angeles · March 2026</div>
+    <div class="mast-right">The Dish · Vol. 25</div>
+  </div>
+  <div class="red-rule"></div>
+
+  <h1 class="main-headline">Little Ethiopia LA:<br>The <span class="red">Tibs</span> That<br>Defined the Category</h1>
+  <p class="deck">Sautéed beef tibs — cubed, spiced, served on injera — is the most common Ethiopian restaurant order in America. After 28 visits to Little Ethiopia on Fairfax Avenue, our model found the one address that has calibrated it correctly.</p>
+
+  <div class="grid">
+    <div class="col-v-rule">
+      <div class="col-label">Why Tibs Gets Overlooked</div>
+      <div class="col-img-w"></div>
+      <p class="col-p">Tibs is sautéed beef, typically cubed tenderloin or sirloin, cooked in a pan with berbere, rosemary, jalapeño, and onion. It's ordered more than any other dish at Ethiopian restaurants in the US, which has had the counterintuitive effect of making it less prestigious — it's too common to be taken seriously by food media.</p>
+      <p class="col-p">Our model doesn't share this bias. It scores tibs on the same rigorous dimension framework it applies to everything else, and the findings from Little Ethiopia are notable: the gap between the best and worst tibs on Fairfax is 44 points. The best is genuinely exceptional.</p>
+    </div>
+
+    <div class="col-v-rule">
+      <div class="col-label">The Benchmark</div>
+      <p class="col-p">The top-scoring tibs on Fairfax Avenue uses tenderloin cubed to a consistent 3/4-inch size — larger than most operations, which produces a better crust-to-interior ratio. The berbere is house-made from a spice blend that includes rue, a bitter herb rarely used in American-adapted versions of the spice blend. The rosemary is fresh, not dried. The jalapeño is added early to develop sweetness, not late for heat.</p>
+      <div class="red-pull">"The berbere is house-made with rue — a bitter herb rarely included in Americanized versions. That ingredient alone shifts the flavor profile into a different register."</div>
+      <p class="col-p">The tibs arrives sizzling in a pan placed on a thick injera. The injera is 72-hour fermented teff, produced in-house. The sourness is present and clean — not sharp, not muted. The tibs and the injera work as a system: the fat from the meat seasons the injera as you eat, and the sourness of the injera cuts the richness of the meat.</p>
+      <div class="col-img"></div>
+    </div>
+
+    <div>
+      <div class="col-label">Score</div>
+      <span class="score-big">89</span>
+      <span class="score-lbl">ForkFox Composite</span>
+      <ul class="aside-facts">
+        <li><strong>Cuisine</strong>Ethiopian / Tibs</li>
+        <li><strong>City</strong>Los Angeles, CA</li>
+        <li><strong>Corridor</strong>Little Ethiopia, Fairfax</li>
+        <li><strong>Author</strong>ForkFox Algorithm</li>
+        <li><strong>Date</strong>March 2026</li>
+        <li><strong>Price</strong>$24/order</li>
+        <li><strong>Read</strong>4 min</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

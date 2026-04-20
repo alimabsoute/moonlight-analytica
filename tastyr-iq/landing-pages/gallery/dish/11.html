@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ramen Standard — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #fff; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* MINIMAL EDITORIAL HERO */
+  .hero { max-width: 780px; margin: 0 auto; padding: 140px 24px 64px; text-align: center; }
+  .category-line { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .cat { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #FA2A52; }
+  .dot-sep { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+  .city { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(36px, 6vw, 80px); line-height: 1.0; letter-spacing: -3px; color: #fff; margin-bottom: 28px; }
+  .hero-title span { color: #FA2A52; }
+  .hero-dek { font-size: 19px; line-height: 1.65; color: rgba(255,255,255,0.55); max-width: 600px; margin: 0 auto 36px; font-weight: 400; }
+  .meta-bar { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 13px; color: rgba(255,255,255,0.4); }
+  .meta-bar strong { color: rgba(255,255,255,0.8); }
+  .meta-score { background: #FA2A52; color: #fff; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 14px; padding: 4px 14px; border-radius: 999px; }
+
+  /* DIVIDER */
+  .hero-rule { max-width: 780px; margin: 48px auto 0; height: 1px; background: rgba(255,255,255,0.07); }
+
+  /* BODY */
+  .article-body { max-width: 680px; margin: 0 auto; padding: 60px 24px 120px; }
+  .article-body p { font-size: 18px; line-height: 1.85; color: rgba(255,255,255,0.78); margin-bottom: 28px; }
+  .article-body p:first-of-type { font-size: 20px; color: rgba(255,255,255,0.9); font-weight: 400; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 26px; color: #fff; margin: 52px 0 16px; letter-spacing: -0.5px; text-align: center; }
+  .center-rule { width: 40px; height: 2px; background: #FA2A52; margin: 0 auto 36px; }
+  .body-img { width: 100%; border-radius: 12px; margin: 40px 0; aspect-ratio: 3/2; background: url('https://picsum.photos/seed/food11/800/500') center/cover; }
+  .end-mark { text-align: center; margin-top: 60px; color: #FA2A52; font-size: 24px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 120px 20px 48px; }
+    .hero-title { font-size: 36px; letter-spacing: -1.5px; }
+    .hero-dek { font-size: 16px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .article-body p { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="category-line">
+    <span class="cat">Ramen</span>
+    <span class="dot-sep"></span>
+    <span class="city">San Francisco</span>
+  </div>
+  <h1 class="hero-title">The City's Best<br>Shoyu<span> Ramen</span><br>Took 11 Years</h1>
+  <p class="hero-dek">A small Richmond District operation has spent over a decade calibrating a shoyu broth that no other kitchen in the Bay Area has matched. Our model finally has enough data to say so definitively.</p>
+  <div class="meta-bar">
+    <span class="meta-score">Score: 92</span>
+    <strong>ForkFox Algorithm</strong>
+    <span>·</span>
+    <span>March 2026</span>
+    <span>·</span>
+    <span>5 min</span>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<article class="article-body">
+  <p>Shoyu ramen is the most transparent bowl in the canon. With a clear chicken-soy broth and no heavy emulsification to hide behind, every technical decision is immediately legible in the finished product. A cloudy shoyu is a mistake. An under-seasoned one is laziness. A perfectly calibrated one tastes like it was made specifically for you.</p>
+
+  <h2>Eleven Years of Calibration</h2>
+  <div class="center-rule"></div>
+
+  <p>The owner-chef opened in the Richmond District in 2015 with a broth she described in a 2017 interview as "not quite right." In 2019, she changed her soy tare formula. In 2022, she switched to a heritage-breed chicken supplier in Sonoma. In 2024, she adjusted the charred scallion proportion in the aromatic build. The bowl our model tasted in early 2026 reflects every one of those iterations, and it shows.</p>
+
+  <div class="body-img"></div>
+
+  <h2>What the Score Reflects</h2>
+  <div class="center-rule"></div>
+
+  <p>Our composite score of 92 reflects: broth clarity (98), broth depth (94), noodle calibration (89), tare integration (95), topping quality (88), and value index (90). The shoyu tare is the signature variable — a blend of three soy varieties (white, aged, and tamari) that creates a saltiness that rounds rather than sharpens, with a fermented depth that takes several sips to fully register.</p>
+
+  <p>The chashu is rolled pork belly braised for 4 hours, not 2. The menma — bamboo shoots — are fermented in-house rather than purchased pre-processed. The soft-boiled egg sits in a shoyu-mirin marinade for exactly 6 hours, producing a jammy yolk with a faint brown ring that means the timing is right. Every component has been optimized. The bowl is exceptional.</p>
+
+  <div class="end-mark">◆</div>
+</article>
+
+</body>
+</html>

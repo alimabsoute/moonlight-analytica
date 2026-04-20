@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Essay: Chicago Sushi — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0d0a; color: #f0e6d3; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,13,10,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(249,115,22,0.1); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #f0e6d3; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(240,230,211,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #f0e6d3; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* PHOTO ESSAY warm dark */
+  .essay-header { max-width: 680px; margin: 0 auto; padding: 100px 24px 52px; }
+  .kicker { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #F97316; margin-bottom: 16px; }
+  .essay-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(30px, 4.5vw, 58px); line-height: 1.05; letter-spacing: -2px; color: #f0e6d3; margin-bottom: 20px; }
+  .essay-intro { font-size: 16px; line-height: 1.75; color: rgba(240,230,211,0.55); margin-bottom: 20px; }
+  .essay-meta { font-size: 13px; color: rgba(240,230,211,0.4); }
+  .essay-meta strong { color: rgba(240,230,211,0.75); }
+
+  .photo-full { width: 100%; display: block; background-size: cover; background-position: center; aspect-ratio: 16/9; }
+  .photo-caption { max-width: 680px; margin: 10px auto 0; padding: 0 24px; font-size: 12px; color: rgba(240,230,211,0.35); text-align: center; font-style: italic; }
+  .text-block { max-width: 680px; margin: 52px auto; padding: 0 24px; }
+  .text-block p { font-size: 17px; line-height: 1.88; color: rgba(240,230,211,0.7); margin-bottom: 22px; }
+  .text-block h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 23px; color: #F97316; margin-bottom: 14px; }
+  .amber-rule { max-width: 680px; margin: 0 auto; height: 1px; background: rgba(249,115,22,0.15); }
+  .photo-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .p2col { aspect-ratio: 4/3; background-size: cover; background-position: center; }
+  .quote-photo { position: relative; max-width: 960px; margin: 0 auto; }
+  .quote-photo .bg { width: 100%; aspect-ratio: 21/9; background-size: cover; background-position: center; }
+  .quote-photo .q { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(15,13,10,0.6); }
+  .quote-photo .q blockquote { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(18px, 2.5vw, 32px); color: #f0e6d3; text-align: center; line-height: 1.4; max-width: 600px; letter-spacing: -0.5px; }
+
+  @media (max-width: 768px) {
+    .photo-2col { grid-template-columns: 1fr; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="essay-header">
+  <div class="kicker">Photo Essay · Sushi · Chicago</div>
+  <h1 class="essay-title">A Logan Square Sushi Counter That Proves the Midwest Doesn't Need the Coasts</h1>
+  <p class="essay-intro">Eight seats, no website, no social media. A basement omakase in Logan Square that scored 95 across three documented visits. We went back a fourth time to take pictures.</p>
+  <div class="essay-meta"><strong>ForkFox Algorithm</strong> · March 2026 · Score: 95 · 6 min</div>
+</header>
+
+<div class="photo-full" style="background-image: url('https://picsum.photos/seed/dish28/1200/675');"></div>
+<p class="photo-caption">The counter as seen from seat 3. Eight seats total. The chef works approximately 18 inches from each guest.</p>
+
+<div class="text-block">
+  <h2>Why Eight Seats Matters</h2>
+  <p>An eight-seat counter creates a service constraint that has quality implications: the chef cannot manage more than eight simultaneous omakase sequences without compromising the per-piece attention that high-quality nigiri requires. Most high-volume operations manage 30 to 40 seats at a time, which forces the chef into batch-style timing. The Logan Square counter's physical limitation is its quality foundation.</p>
+</div>
+
+<div class="photo-2col">
+  <div class="p2col" style="background-image: url('https://picsum.photos/seed/dish28b/600/450');"></div>
+  <div class="p2col" style="background-image: url('https://picsum.photos/seed/food28/600/450');"></div>
+</div>
+<p class="photo-caption">Left: the knife station — a single yanagiba plus a petty. Right: the rice hangiri, where shari rests between pieces.</p>
+
+<div class="amber-rule"></div>
+
+<div class="text-block">
+  <h2>The Rice Is the Argument</h2>
+  <p>The chef here uses a blend of two rice varieties — Koshihikari from California and a smaller portion of imported Hitomebore — seasoned with a red vinegar-sugar-salt tare that produces a slightly darker, slightly more complex shari than the standard white vinegar approach. The rice is formed at 36.5°C and served within 30 seconds. The temperature measurement was conducted during visit four, with permission.</p>
+  <p>Three different fish species were measured across the four visits. Every piece arrived within 25 to 40 seconds of being formed. The consistency in timing is the hardest variable to maintain across a full evening of service, and this kitchen maintains it completely.</p>
+</div>
+
+<div class="quote-photo">
+  <div class="bg" style="background-image: url('https://picsum.photos/seed/dish28c/1200/514');"></div>
+  <div class="q">
+    <blockquote>"The rice is formed at 36.5°C and served within 30 seconds. That consistency is the hardest thing in sushi and the first thing to break down under pressure."</blockquote>
+  </div>
+</div>
+<p class="photo-caption">A piece of kinmedai (golden eye snapper) — one of the highest-scoring pieces across all four documented visits.</p>
+
+<div class="text-block">
+  <p>Score: 95. The highest omakase score in our Midwest dataset. For reference, our highest-scoring New York counter scores 96. The difference is one point, and it reflects a single scoring dimension — the New York operation's fish sourcing variety is marginally wider. On every other measured dimension, the Logan Square counter is equivalent or superior. At $195 versus $380, it is not a close comparison.</p>
+</div>
+
+</body>
+</html>

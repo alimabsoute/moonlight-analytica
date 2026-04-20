@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Birria in San Francisco — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#FA2A52;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}.logo-text span{color:#ffcc88}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:rgba(255,255,255,.8)}
+.nav-cta{background:#fff;color:#FA2A52!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;margin-left:8px}
+
+.page-wrap{max-width:1200px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:18px}.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(26px,3.5vw,44px);line-height:1.1;margin-bottom:10px}
+h1 em{font-style:normal;color:#FA2A52}
+.meta{font-size:13px;color:#555;margin-bottom:32px}.meta strong{color:#F97316}
+
+.two-col{display:grid;grid-template-columns:35fr 65fr;gap:40px;align-items:start}
+
+.sidebar{position:sticky;top:80px}
+.sidebar-hero{background:linear-gradient(135deg,#FA2A52,#e01040);border-radius:14px;padding:24px;margin-bottom:16px;text-align:center}
+.sh-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:72px;color:#fff;line-height:1}
+.sh-label{font-size:12px;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+.sh-dish{font-size:14px;color:#ffddcc;margin-top:8px;font-weight:600}
+
+.sidebar-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:20px;margin-bottom:16px}
+.sidebar-card h3{font-family:'Geologica',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;color:#555}
+.rank-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #141414}
+.rank-item:last-child{border-bottom:none}
+.rk-num{font-size:12px;color:#333;font-weight:700;width:20px}
+.rk-name{font-size:13px;color:#ccc;flex:1}
+.rk-score{font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;color:#FA2A52}
+
+.intro{font-size:15px;line-height:1.8;color:#bbb;margin-bottom:28px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;margin-bottom:14px;color:#fff}
+
+.findings ul{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:8px}
+.findings ul li{font-size:13px;color:#bbb;padding:10px 14px;background:#111;border-radius:8px}
+.findings ul li::before{content:"▶ ";color:#FA2A52;font-size:10px}
+
+.dish-entry{margin-bottom:16px;padding:16px;background:#0d0d0d;border-radius:12px;border:2px solid transparent;transition:border-color .2s}
+.dish-entry:first-of-type{border-color:#FA2A52}
+.dish-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.d-badge{min-width:36px;height:36px;background:#FA2A52;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.dish-name{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;flex:1}
+.dish-rest{font-size:12px;color:#F97316;margin-top:2px}
+.d-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:28px;color:#FA2A52}
+.bar-group{margin-bottom:6px}
+.bar-label{font-size:10px;color:#555;display:flex;justify-content:space-between;margin-bottom:2px}
+.bar-label span{color:#FA2A52}
+.bar-track{height:3px;background:#1a1a1a;border-radius:2px}
+.bar-fill{height:3px;background:#FA2A52;border-radius:2px}
+
+.related-links a{display:block;font-size:13px;color:#FA2A52;padding:9px 12px;background:#111;border-radius:8px;margin-bottom:6px;font-weight:600;border:1px solid #1a1a1a}
+
+@media(max-width:768px){.two-col{grid-template-columns:1fr}.sidebar{position:static}.two-col>*:first-child{order:2}.two-col>*:last-child{order:1}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / San Francisco / <span>Birria</span></div>
+  <h1>Best <em>Birria</em> in San Francisco</h1>
+  <div class="meta">Updated April 2026 · <strong>10 dishes ranked</strong> · ForkFox Carte Guide</div>
+  <div class="two-col">
+    <div class="sidebar">
+      <div class="sidebar-hero">
+        <div class="sh-score">94</div>
+        <div class="sh-label">Highest Rated</div>
+        <div class="sh-dish">Birria de Res Taco w/ Consomé</div>
+      </div>
+      <div class="sidebar-card">
+        <h3>Full Rankings</h3>
+        <div class="rank-item"><div class="rk-num">1</div><div class="rk-name">Birria de Res Taco</div><div class="rk-score">94</div></div>
+        <div class="rank-item"><div class="rk-num">2</div><div class="rk-name">Birria Quesatacos</div><div class="rk-score">92</div></div>
+        <div class="rank-item"><div class="rk-num">3</div><div class="rk-name">Birria Ramen</div><div class="rk-score">89</div></div>
+        <div class="rank-item"><div class="rk-num">4</div><div class="rk-name">Beef Birria Bowl</div><div class="rk-score">87</div></div>
+        <div class="rank-item"><div class="rk-num">5</div><div class="rk-name">Goat Birria</div><div class="rk-score">85</div></div>
+        <div class="rank-item"><div class="rk-num">6</div><div class="rk-name">Birria Mulita</div><div class="rk-score">83</div></div>
+        <div class="rank-item"><div class="rk-num">7</div><div class="rk-name">Birria Burrito</div><div class="rk-score">80</div></div>
+        <div class="rank-item"><div class="rk-num">8</div><div class="rk-name">Birria Sope</div><div class="rk-score">78</div></div>
+        <div class="rank-item"><div class="rk-num">9</div><div class="rk-name">Birria Flautas</div><div class="rk-score">75</div></div>
+        <div class="rank-item"><div class="rk-num">10</div><div class="rk-name">Birria Nachos</div><div class="rk-score">72</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <p class="intro">Birria has had its cultural moment and SF was ready for it — the Mission District absorbed the trend and elevated it. The best spots here are obsessive about adobo depth, chili layering, and consomé concentration.</p>
+      <div class="findings">
+        <div class="section-title">Key Findings</div>
+        <ul>
+          <li>Consomé quality is the most differentiating factor — depth should come from at minimum 3 chili varieties</li>
+          <li>Quesatacos have taken the crown over standalone tacos — the cheese layer adds textural contrast</li>
+          <li>SF's birria spots outperform LA equivalents on price — avg $4.50 vs $5.25 per taco</li>
+          <li>Goat birria is making a comeback — 2 new entries vs. none last quarter</li>
+        </ul>
+      </div>
+      <div class="section-title">Ranked Dishes</div>
+      <div class="dish-entry">
+        <div class="dish-top"><div class="d-badge">1</div><div><div class="dish-name">Birria de Res Taco w/ Consomé</div><div class="dish-rest">La Lengua — Mission District</div></div><div class="d-score">94</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>96</span></div><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Value <span>91</span></div><div class="bar-track"><div class="bar-fill" style="width:91%"></div></div></div>
+      </div>
+      <div class="dish-entry">
+        <div class="dish-top"><div class="d-badge" style="background:#F97316">2</div><div><div class="dish-name">Birria Quesatacos</div><div class="dish-rest">Tacos El Patron — Excelsior</div></div><div class="d-score" style="color:#F97316">92</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>93</span></div><div class="bar-track"><div class="bar-fill" style="width:93%"></div></div></div>
+      </div>
+      <div class="dish-entry">
+        <div class="dish-top"><div class="d-badge" style="background:#555">3</div><div><div class="dish-name">Birria Ramen Fusion</div><div class="dish-rest">Tacos El Yaqui — Outer Mission</div></div><div class="d-score" style="color:#ccc">89</div></div>
+      </div>
+      <div class="dish-entry">
+        <div class="dish-top"><div class="d-badge" style="background:#555">4</div><div><div class="dish-name">Beef Birria Bowl</div><div class="dish-rest">Birrieria Jalisco — Mission</div></div><div class="d-score" style="color:#ccc">87</div></div>
+      </div>
+      <div style="margin-top:28px">
+        <div class="section-title">Related Guides</div>
+        <div class="related-links">
+          <a href="#">Best Tacos in San Francisco →</a>
+          <a href="#">Best Carnitas in San Francisco →</a>
+          <a href="#">Best Burritos in San Francisco →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

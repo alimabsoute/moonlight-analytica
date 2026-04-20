@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog: NY Pad Thai — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #08080f; color: #d8d8e8; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,15,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(70,70,140,0.1); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #d8d8e8; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(216,216,232,0.45); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #d8d8e8; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* BLOG cool dark */
+  .page { max-width: 1100px; margin: 0 auto; padding: 80px 24px 80px; }
+  .post-header { max-width: 760px; margin: 0 auto 36px; }
+  .post-kicker { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(216,216,232,0.35); border: 1px solid rgba(70,70,140,0.2); display: inline-block; padding: 3px 12px; border-radius: 3px; margin-bottom: 14px; }
+  .post-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(24px, 3.5vw, 50px); line-height: 1.06; letter-spacing: -1.5px; color: #d8d8e8; margin-bottom: 14px; }
+  .post-meta { display: flex; gap: 14px; font-size: 13px; color: rgba(216,216,232,0.4); flex-wrap: wrap; }
+  .post-meta strong { color: rgba(216,216,232,0.8); }
+  .score-pill { background: rgba(250,42,82,0.12); border: 1px solid rgba(250,42,82,0.25); color: #FA2A52; font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 12px; padding: 3px 12px; border-radius: 999px; }
+  .hero-img { max-width: 1100px; margin: 0 auto 40px; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish44/1200/675') center/cover; border-radius: 10px; }
+
+  .blog-layout { display: grid; grid-template-columns: 1fr 280px; gap: 40px; }
+  .main-col p { font-size: 17px; line-height: 1.88; color: rgba(216,216,232,0.65); margin-bottom: 26px; }
+  .main-col h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 22px; color: #d8d8e8; margin: 44px 0 14px; }
+  .main-col .blue-box { background: rgba(30,30,60,0.4); border: 1px solid rgba(70,70,140,0.15); border-radius: 8px; padding: 20px 24px; margin: 28px 0; }
+  .main-col .blue-box p { font-family: 'Geologica', sans-serif; font-size: 17px; font-weight: 600; color: rgba(216,216,232,0.88); margin: 0; line-height: 1.5; }
+  .body-img { width: 100%; border-radius: 8px; margin: 28px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food44/800/450') center/cover; }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .sb-card { background: rgba(30,30,60,0.25); border: 1px solid rgba(70,70,140,0.12); border-radius: 12px; padding: 20px; }
+  .sb-title { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(216,216,232,0.3); margin-bottom: 16px; }
+  .score-num { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 64px; color: #FA2A52; line-height: 1; text-align: center; letter-spacing: -3px; display: block; }
+  .fact-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(70,70,140,0.1); font-size: 13px; }
+  .fact-row:last-child { border: none; }
+  .fact-row .k { color: rgba(216,216,232,0.3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .fact-row .v { color: rgba(216,216,232,0.75); }
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: rgba(70,70,140,0.12); border: 1px solid rgba(70,70,140,0.2); color: rgba(216,216,232,0.55); font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+
+  @media (max-width: 900px) {
+    .blog-layout { grid-template-columns: 1fr; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="post-header">
+    <span class="post-kicker">Pad Thai · New York</span>
+    <h1 class="post-title">The Woodside Queens Pad Thai That Made Our Wok Hei Score Jump</h1>
+    <div class="post-meta">
+      <span class="score-pill">Score 83</span>
+      <strong>ForkFox Algorithm</strong>
+      <span>·</span>
+      <span>March 2026 · 5 min</span>
+    </div>
+  </div>
+  <div class="hero-img"></div>
+
+  <div class="blog-layout">
+    <main class="main-col">
+      <p>Woodside, Queens is the center of Thai food culture in New York — a neighborhood with a significant Thai immigrant population where the restaurants serve a community that cooks Thai food at home and has corresponding standards for restaurant quality. The operations here don't need to explain what Pad Thai is. They need to make it correctly. Our model scored 23 operations in Woodside and found one that achieves wok hei consistently enough to score 83 on the composite and 91 on the wok hei dimension specifically.</p>
+
+      <h2>The Equipment Problem in New York</h2>
+      <p>New York restaurant ranges are governed by BTU limits that make genuine wok hei difficult to achieve. Most Thai restaurants in the city are operating at 35,000 to 50,000 BTU per burner — enough for acceptable stir-fry, not enough for the caramelized, slightly smoky character that constitutes real wok hei. The Woodside kitchen that tops our dataset has installed modified commercial ring burners rated at 120,000 BTU with an additional flame concentration modification that produces genuine wok hei within the constraints of the city's gas supply pressure limits.</p>
+
+      <div class="blue-box"><p>"120,000 BTU with flame concentration modifications — the maximum achievable wok hei within NYC gas pressure constraints. The kitchen found the ceiling and built to it."</p></div>
+
+      <div class="body-img"></div>
+
+      <h2>The Sauce Construction</h2>
+      <p>The Pad Thai sauce here is a house-made tamarind concentrate — block tamarind soaked and strained, not paste — combined with fish sauce, palm sugar, and a small amount of oyster sauce. The tamarind concentration is higher than most New York Thai operations use, producing a more acidic, brighter base that holds its flavor through the richness of the egg and the weight of the noodles. The dried shrimp are high-quality and present in a ratio that contributes salinity without dominating. The noodles are fresh rice noodles, not dried. At $15 per order, the value index is 92.</p>
+    </main>
+
+    <aside class="sidebar">
+      <div class="sb-card">
+        <span class="score-num">83</span>
+        <div style="text-align:center; font-size:11px; color:rgba(216,216,232,0.3); margin-top:4px; letter-spacing:1px; text-transform:uppercase;">Score</div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-title">Details</div>
+        <div class="fact-row"><span class="k">Cuisine</span><span class="v">Pad Thai</span></div>
+        <div class="fact-row"><span class="k">City</span><span class="v">New York</span></div>
+        <div class="fact-row"><span class="k">Wok Hei</span><span class="v">91 / 100</span></div>
+        <div class="fact-row"><span class="k">Value</span><span class="v">92 / 100</span></div>
+        <div class="fact-row"><span class="k">Price</span><span class="v">$15</span></div>
+        <div class="fact-row"><span class="k">Date</span><span class="v">March 2026</span></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-title">Tags</div>
+        <div class="tag-cloud">
+          <span class="tag">Pad Thai</span>
+          <span class="tag">New York</span>
+          <span class="tag">Woodside</span>
+          <span class="tag">Queens</span>
+          <span class="tag">Wok Hei</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>

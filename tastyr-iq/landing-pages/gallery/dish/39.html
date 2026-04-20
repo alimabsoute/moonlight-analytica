@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinematic: NY Ethiopian — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #050505; color: #dde0f0; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(5,5,5,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #dde0f0; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(221,224,240,0.4); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #dde0f0; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* CINEMATIC — cool dark, split vertical design */
+  .hero { height: 100vh; min-height: 600px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+  .hero-img-half { background: url('https://picsum.photos/seed/dish39/800/900') center/cover; filter: brightness(0.3) contrast(1.4); position: relative; }
+  .hero-img-half::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(5,5,5,0.9)); }
+  .hero-text-half { background: #050505; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 48px 72px; }
+  .hero-text-half .number { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(80px, 12vw, 180px); color: rgba(250,42,82,0.08); line-height: 1; letter-spacing: -8px; display: block; margin-bottom: -32px; }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(28px, 3.5vw, 60px); line-height: 1.04; letter-spacing: -2px; color: #dde0f0; text-transform: uppercase; position: relative; }
+  .hero-title .accent { color: #FA2A52; }
+  .hero-label { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: rgba(221,224,240,0.3); margin-top: 16px; margin-bottom: 20px; }
+  .hero-meta { display: flex; gap: 12px; align-items: center; }
+  .score-badge { background: #FA2A52; color: #fff; font-family: 'Geologica', sans-serif; font-weight: 900; padding: 6px 16px; font-size: 13px; letter-spacing: 1px; }
+  .meta-text { font-size: 12px; color: rgba(221,224,240,0.35); letter-spacing: 0.5px; }
+
+  /* BODY */
+  .article-body { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.88; color: rgba(221,224,240,0.62); margin-bottom: 28px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 22px; color: #dde0f0; text-transform: uppercase; letter-spacing: 0.5px; margin: 52px 0 16px; }
+  .body-img { width: 100%; margin: 36px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food39/800/450') center/cover; filter: brightness(0.75); }
+  .cold-rule { height: 1px; background: rgba(50,50,100,0.25); margin: 48px 0; }
+  .stat-aside { float: right; width: 200px; margin: 0 0 24px 32px; padding: 20px; background: rgba(250,42,82,0.06); border: 1px solid rgba(250,42,82,0.15); }
+  .stat-aside .item { margin-bottom: 12px; font-size: 13px; }
+  .stat-aside .item .k { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(221,224,240,0.3); display: block; }
+  .stat-aside .item .v { color: rgba(221,224,240,0.8); display: block; margin-top: 2px; }
+  .stat-aside .item .v.big { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 20px; color: #FA2A52; }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; height: auto; }
+    .hero-img-half { height: 50vw; }
+    .hero-text-half { padding: 40px 20px; }
+    .hero-text-half .number { font-size: 60px; margin-bottom: -16px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .stat-aside { float: none; width: 100%; margin: 0 0 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-img-half"></div>
+  <div class="hero-text-half">
+    <span class="number">85</span>
+    <h1 class="hero-title">Harlem's<br>Ethiopian<br><span class="accent">Secret</span></h1>
+    <div class="hero-label">Ethiopian · New York City · Harlem</div>
+    <div class="hero-meta">
+      <div class="score-badge">SCORE 85</div>
+      <div class="meta-text">ForkFox Algorithm · March 2026 · 5 min</div>
+    </div>
+  </div>
+</section>
+
+<article class="article-body">
+  <p>Harlem's Ethiopian restaurant community is smaller than DC's but more isolated from the review ecosystem, which means the quality signal-to-noise ratio is higher. The operations here serve a community that includes East African immigrants and the diaspora community of Harlem's 116th Street corridor, which functions as an informal Ethiopian neighborhood hub. Our model identified three operations worth scoring. One scored 85. That one is this article.</p>
+
+  <div class="stat-aside">
+    <div class="item"><span class="k">Score</span><span class="v big">85</span></div>
+    <div class="item"><span class="k">Injera Rating</span><span class="v">92</span></div>
+    <div class="item"><span class="k">Berbere Score</span><span class="v">88</span></div>
+    <div class="item"><span class="k">Value Index</span><span class="v">91</span></div>
+    <div class="item"><span class="k">City</span><span class="v">New York</span></div>
+    <div class="item"><span class="k">Read</span><span class="v">5 min</span></div>
+  </div>
+
+  <h2>The Injera at 92</h2>
+  <p>The injera here is 72-hour fermented teff, prepared in-house, with a sourness level that our model scores 92 on the acidity calibration dimension — meaning it achieves the clean, lactic sour profile of properly fermented teff without the sharp or vinegary off-notes that rushed fermentation produces. The surface is fully porous, the texture is flexible without tearing, and the thickness is consistent across the entire surface, which is a result of careful casting technique that short-fermentation injera cannot achieve.</p>
+
+  <div class="body-img"></div>
+
+  <h2>The Berbere Construction</h2>
+  <p>The berbere spice blend is house-made with 13 components including rue, which is increasingly rare in diaspora adaptations of the blend. Our model's spice complexity dimension awarded this kitchen 88 — significantly above the New York average of 67 for this dimension. The doro wot that uses the berbere as its primary seasoning reflects every point of that advantage: the heat builds slowly, the warmth is multidimensional, and the finish is long and aromatic.</p>
+
+  <div class="cold-rule"></div>
+  <p>The combination platter — doro wot, misir wot, gomen, tikel gomen, and kitfo (cooked medium) — at $36 is the correct order. The injera is replenished twice without being asked. The tej (honey wine) is house-made, which is the third signal this kitchen is operating at a different level than most Ethiopian restaurants in New York. Score 85. Worth every minute of the drive to 116th Street.</p>
+</article>
+
+</body>
+</html>

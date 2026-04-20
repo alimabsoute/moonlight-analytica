@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SF Ramen — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8f7f4; color: #111; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(248,247,244,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #111; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(17,17,17,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #111; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* NEWSPAPER — light */
+  .paper { max-width: 1100px; margin: 0 auto; padding: 80px 24px 80px; }
+  .masthead { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-top: 3px solid #111; border-bottom: 1px solid rgba(0,0,0,0.12); margin-bottom: 4px; }
+  .mast-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #FA2A52; }
+  .mast-meta { font-size: 11px; color: rgba(17,17,17,0.4); letter-spacing: 0.5px; }
+  .thin-rule { height: 1px; background: rgba(0,0,0,0.08); margin-bottom: 20px; }
+
+  .main-headline { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(30px, 4.5vw, 60px); line-height: 1.04; letter-spacing: -2.5px; color: #111; padding: 20px 0 16px; border-bottom: 2px solid #111; margin-bottom: 20px; }
+  .deck { font-size: 16px; line-height: 1.65; color: rgba(17,17,17,0.6); max-width: 720px; margin-bottom: 24px; font-style: italic; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 20px; }
+
+  /* 2-column + sidebar */
+  .columns { display: grid; grid-template-columns: 1fr 1fr 280px; gap: 28px; }
+  .col-main { }
+  .col-sidebar { border-left: 1px solid rgba(0,0,0,0.1); padding-left: 24px; }
+
+  .col-label { font-size: 10px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: #FA2A52; padding-bottom: 8px; border-bottom: 2px solid rgba(250,42,82,0.3); margin-bottom: 14px; }
+  .col-p { font-size: 14px; line-height: 1.85; color: rgba(17,17,17,0.72); margin-bottom: 14px; }
+  .col-h2 { font-family: 'Geologica', sans-serif; font-weight: 800; font-size: 16px; color: #111; margin: 20px 0 8px; }
+  .col-img { width: 100%; aspect-ratio: 4/3; background: url('https://picsum.photos/seed/food22/400/300') center/cover; margin: 16px 0; }
+  .col-img-wide { width: 100%; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish22/800/450') center/cover; margin-bottom: 16px; }
+  .pull-dark { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 16px; color: #111; border-top: 2px solid #111; border-bottom: 1px solid rgba(0,0,0,0.1); padding: 14px 0; margin: 16px 0; line-height: 1.5; }
+  .score-box { background: #FA2A52; color: #fff; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 16px; }
+  .score-box .n { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 52px; line-height: 1; display: block; }
+  .score-box .l { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; }
+  .fact-list { list-style: none; }
+  .fact-list li { font-size: 13px; color: rgba(17,17,17,0.65); padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; justify-content: space-between; }
+  .fact-list li strong { color: #111; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  @media (max-width: 900px) {
+    .columns { grid-template-columns: 1fr; }
+    .col-sidebar { border-left: none; border-top: 1px solid rgba(0,0,0,0.1); padding-left: 0; padding-top: 24px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<main class="paper">
+  <div class="masthead">
+    <div class="mast-title">The Dish — ForkFox</div>
+    <div class="mast-meta">San Francisco Edition · March 2026 · Vol. XXII</div>
+  </div>
+  <div class="thin-rule"></div>
+
+  <h1 class="main-headline">San Francisco's Best Spicy Miso Ramen Has Been Hiding in the Outer Sunset Behind a Curtain</h1>
+  <p class="deck">A traditional noren-curtained counter on Judah Street makes a spicy miso ramen that our model ranks first in the Bay Area by a margin that surprised even the algorithm.</p>
+
+  <div class="columns">
+    <div class="col-main">
+      <div class="col-label">The Discovery</div>
+      <div class="col-img-wide"></div>
+      <p class="col-p">The Outer Sunset is not where most food journalists look for benchmark-quality ramen. The neighborhood's restaurant culture trends toward neighborhood family spots rather than destination-dining operations, which means the algorithmic signal from repeat visits within a small geographic radius is unusually high — locals who live nearby eating frequently at the same address.</p>
+      <p class="col-p">That visit frequency data is how our model flagged the operation. The address had been scored three times in 18 months by ForkFox's internal tasting framework before we elevated it to full review status.</p>
+      <div class="pull-dark">"A traditional noren-curtained counter that earns the curtain. The spicy miso here is built on a 3-year-aged miso tare that most ramen chefs in the city have never tasted."</div>
+    </div>
+
+    <div class="col-main">
+      <div class="col-label">The Bowl</div>
+      <p class="col-p">The spicy miso tare is the technical center. A 3-year-aged hatcho miso provides the fermented foundation; a house-made togarashi-sesame paste provides the heat; a small amount of tahini provides a richness that rounds the broth without adding heaviness. The combination produces a broth that is simultaneously spicy, salty, deeply savory, and slightly sweet — a balance that is extremely difficult to achieve and that this kitchen maintains across every visit.</p>
+      <div class="col-h2">The Noodle Architecture</div>
+      <p class="col-p">The noodles are a thick, slightly wavy house-made noodle at 38% hydration — calibrated for a heavy miso broth that would overwhelm a thinner noodle. They are cooked to a firm bite, not soft, and served immediately. The timing between noodle cook and service is approximately 45 seconds.</p>
+      <div class="col-img"></div>
+      <p class="col-p">Toppings: chashu, menma, corn, soft egg, nori, scallion, a pat of garlic-sesame butter that melts into the broth as you eat. The garlic butter is the finishing touch that takes an already excellent bowl and makes it exceptional.</p>
+    </div>
+
+    <div class="col-sidebar">
+      <div class="score-box"><span class="n">91</span><span class="l">ForkFox Score</span></div>
+      <ul class="fact-list">
+        <li><strong>Cuisine</strong> Spicy Miso Ramen</li>
+        <li><strong>City</strong> San Francisco</li>
+        <li><strong>Nbhd</strong> Outer Sunset</li>
+        <li><strong>Author</strong> ForkFox</li>
+        <li><strong>Published</strong> Mar 2026</li>
+        <li><strong>Price</strong> $19/bowl</li>
+        <li><strong>Read</strong> 4 min</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

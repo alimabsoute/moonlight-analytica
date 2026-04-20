@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New York Sushi — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0d0a; color: #f0e6d3; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,13,10,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(249,115,22,0.1); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #f0e6d3; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(240,230,211,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #f0e6d3; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* MINIMAL EDITORIAL — warm dark, large centered typography */
+  .hero { max-width: 780px; margin: 0 auto; padding: 140px 24px 60px; text-align: center; }
+  .issue-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(240,230,211,0.3); margin-bottom: 12px; }
+  .hero-overline { font-family: 'Geologica', sans-serif; font-weight: 300; font-size: clamp(18px, 2vw, 26px); color: #F97316; letter-spacing: 1px; margin-bottom: 12px; }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(36px, 5.5vw, 74px); line-height: 1.0; letter-spacing: -2.5px; color: #f0e6d3; margin-bottom: 28px; }
+  .hero-dek { font-size: 17px; line-height: 1.7; color: rgba(240,230,211,0.55); max-width: 560px; margin: 0 auto 40px; }
+  .amber-line { width: 60px; height: 2px; background: #F97316; margin: 0 auto 28px; }
+  .meta-center { display: flex; justify-content: center; align-items: center; gap: 16px; font-size: 13px; color: rgba(240,230,211,0.45); }
+  .meta-center .score { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 16px; color: #F97316; }
+  .meta-center strong { color: rgba(240,230,211,0.8); }
+
+  /* BODY */
+  .article-body { max-width: 680px; margin: 0 auto; padding: 64px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.88; color: rgba(240,230,211,0.7); margin-bottom: 26px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 24px; color: #F97316; margin: 48px 0 16px; letter-spacing: -0.5px; }
+  .body-img { width: 100%; border-radius: 8px; margin: 36px 0; aspect-ratio: 3/2; background: url('https://picsum.photos/seed/food13/800/500') center/cover; }
+  .warm-rule { height: 1px; background: rgba(249,115,22,0.12); margin: 48px 0; }
+  .footnote { font-size: 14px; color: rgba(240,230,211,0.4); border-top: 1px solid rgba(249,115,22,0.1); padding-top: 24px; margin-top: 48px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 120px 20px 48px; }
+    .hero-title { font-size: 36px; letter-spacing: -1.5px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="issue-label">The Dish — No. 47</div>
+  <div class="hero-overline">Sushi · New York City</div>
+  <h1 class="hero-title">Nigiri at Thirty Dollars a Piece and Worth Every Cent</h1>
+  <p class="hero-dek">Our model evaluated 53 nigiri-focused operations in the five boroughs. One counter in the East Village has created the most technically precise bite we've measured this year.</p>
+  <div class="amber-line"></div>
+  <div class="meta-center">
+    <span class="score">Score: 95</span>
+    <span>—</span>
+    <strong>ForkFox Algorithm</strong>
+    <span>—</span>
+    <span>March 2026 · 6 min</span>
+  </div>
+</header>
+
+<article class="article-body">
+  <p>A single piece of nigiri involves three decisions made in approximately 8 seconds: the amount of rice, the pressure used to form it, and the moment the fish is placed. An experienced shokunin makes those decisions 200 times per service without variation. That consistency — across every piece, every night, for years — is the most difficult thing to achieve in Japanese cuisine and the thing our model is explicitly designed to measure.</p>
+
+  <h2>The Rice Architecture</h2>
+  <p>Nigiri rice is seasoned with a vinegar-salt-sugar ratio that varies by school, by chef, and by season. The rice should be at body temperature when the fish is placed, which means it must be formed and served within a specific time window — typically 20 to 45 seconds after being pulled from the hangiri. Rice that has cooled below 33°C loses its texture and cohesion; rice that is too warm causes the fish to begin changing texture on the surface. The East Village counter serves rice at 36°C, confirmed across six visits with an infrared thermometer. The consistency is extraordinary.</p>
+
+  <div class="body-img"></div>
+
+  <h2>The Sourcing Variable</h2>
+  <p>The counter uses two fish suppliers: a Japanese purveyor operating out of the Bronx with direct Tsukiji contacts, and a local dayboat supplier operating out of Montauk for domestic fish species. The combination means that when aji (horse mackerel) or kinmedai (golden eye snapper) appear on the menu, they have arrived in New York within 36 hours of leaving the water. That freshness is the foundation of everything else.</p>
+
+  <div class="warm-rule"></div>
+  <p>The omakase here runs 16 pieces plus soup and dessert at $180. A la carte pieces range from $12 (domestic) to $32 (premium imported). On the scale of what is being delivered, these prices are correct. The counter holds six seats and operates Thursday through Monday only.</p>
+
+  <div class="footnote">Scores reflect averages across six documented visits between September 2025 and February 2026. All scores produced by the ForkFox scoring model v2.4.</div>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Ethiopian in Los Angeles — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.95);border-bottom:2px solid #FA2A52;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#888}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.hero{background:linear-gradient(180deg,#1a0008 0%,#0a0a0a 100%);padding:90px 24px 50px;border-bottom:1px solid #1a0008;margin-bottom:0}
+.page-wrap{max-width:1200px;margin:0 auto}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:16px}
+.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);line-height:1.05;margin-bottom:10px}
+.h1-accent{color:#FA2A52;display:block}
+.meta-row{display:flex;align-items:center;gap:16px;margin-bottom:0}
+.meta-pill{background:#1a0008;border:1px solid #FA2A52;border-radius:20px;font-size:12px;color:#FA2A52;padding:4px 12px;font-weight:600}
+
+.main-content{max-width:1200px;margin:0 auto;padding:40px 24px 60px}
+.two-col{display:grid;grid-template-columns:65fr 35fr;gap:40px;align-items:start}
+
+.intro{font-size:15px;line-height:1.8;color:#bbb;margin-bottom:28px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;margin-bottom:14px;color:#fff;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:#1a1a1a}
+
+.findings ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:32px}
+.findings ul li{font-size:14px;color:#ccc;padding:10px 14px 10px 42px;background:#0f0f0f;border-radius:8px;position:relative}
+.findings ul li::before{content:'';position:absolute;left:16px;top:50%;transform:translateY(-50%);width:10px;height:10px;background:#FA2A52;border-radius:50%}
+
+.dish-entry{padding:16px 0;border-bottom:1px solid #141414}
+.dish-entry:last-of-type{border-bottom:none}
+.dish-row{display:flex;align-items:center;gap:14px}
+.d-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:24px;color:#FA2A52;width:40px;flex-shrink:0;line-height:1}
+.d-info{flex:1}
+.d-name{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;margin-bottom:2px}
+.d-rest{font-size:12px;color:#F97316}
+.d-score-big{font-family:'Geologica',sans-serif;font-weight:900;font-size:36px;color:#FA2A52;line-height:1}
+.bars{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bar-group{margin-bottom:0}
+.bar-label{font-size:10px;color:#555;display:flex;justify-content:space-between;margin-bottom:3px}
+.bar-label span{color:#FA2A52}
+.bar-track{height:3px;background:#1a1a1a;border-radius:2px}
+.bar-fill{height:3px;background:#FA2A52;border-radius:2px}
+
+.sidebar{position:sticky;top:80px}
+.rank-table{width:100%}
+.rank-table-row{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid #141414}
+.rank-table-row:last-child{border-bottom:none}
+.rt-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:20px;color:#FA2A52;width:36px}
+.rt-info{flex:1}
+.rt-name{font-size:13px;font-weight:600;color:#fff}
+.rt-rest{font-size:11px;color:#555}
+.rt-score{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}
+.sidebar-box{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:20px;margin-bottom:16px}
+.sidebar-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;color:#555}
+
+.related-links a{display:block;font-size:13px;color:#FA2A52;padding:9px 0;border-bottom:1px solid #141414}
+.related-links a:last-child{border-bottom:none}
+
+@media(max-width:768px){.two-col{grid-template-columns:1fr}.sidebar{position:static}.bars{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul>
+    <li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li>
+    <li><a href="/beta" class="nav-cta">Join Beta →</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="page-wrap">
+    <div class="breadcrumb">Carte / Los Angeles / <span>Ethiopian</span></div>
+    <h1>Best <span class="h1-accent">Ethiopian</span> in Los Angeles</h1>
+    <div class="meta-row">
+      <div class="meta-pill">10 Dishes Ranked</div>
+      <div class="meta-pill">April 2026</div>
+      <div class="meta-pill">ForkFox Carte</div>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="two-col">
+    <div>
+      <p class="intro">The Fairfax District is the undisputed center of LA's Ethiopian universe. Little Ethiopia — spanning six blocks on Fairfax — delivers the most concentrated and competitive injera-and-stew culture west of DC.</p>
+      <div class="findings">
+        <div class="section-title">Key Findings</div>
+        <ul>
+          <li>Injera fermentation time is the key differentiator — top spots use 3-day minimum teff sourdough</li>
+          <li>Vegetarian platters outperform meat platters in 8 of 10 top restaurants</li>
+          <li>Doro wat quality has significant seasonal variation tied to spice sourcing</li>
+          <li>LA's Ethiopian scene has 40% more restaurants than five years ago</li>
+        </ul>
+      </div>
+      <div class="section-title">Ranked Dishes</div>
+      <div class="dish-entry"><div class="dish-row"><div class="d-num">1</div><div class="d-info"><div class="d-name">Combination Platter</div><div class="d-rest">Meals by Genet — Fairfax</div></div><div class="d-score-big">92</div></div><div class="bars"><div class="bar-group"><div class="bar-label">Flavor <span>94</span></div><div class="bar-track"><div class="bar-fill" style="width:94%"></div></div></div><div class="bar-group"><div class="bar-label">Value <span>88</span></div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div></div><div class="bar-group"><div class="bar-label">Authenticity <span>96</span></div><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div></div><div class="bar-group"><div class="bar-label">Texture <span>90</span></div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div></div></div></div>
+      <div class="dish-entry"><div class="dish-row"><div class="d-num">2</div><div class="d-info"><div class="d-name">Doro Wat</div><div class="d-rest">Rahel — Fairfax</div></div><div class="d-score-big">89</div></div><div class="bars"><div class="bar-group"><div class="bar-label">Flavor <span>92</span></div><div class="bar-track"><div class="bar-fill" style="width:92%"></div></div></div><div class="bar-group"><div class="bar-label">Authenticity <span>93</span></div><div class="bar-track"><div class="bar-fill" style="width:93%"></div></div></div></div></div>
+      <div class="dish-entry"><div class="dish-row"><div class="d-num">3</div><div class="d-info"><div class="d-name">Tibs Firfir</div><div class="d-rest">Nyala — Fairfax</div></div><div class="d-score-big">86</div></div></div>
+      <div class="dish-entry"><div class="dish-row"><div class="d-num">4</div><div class="d-info"><div class="d-name">Shiro Wat</div><div class="d-rest">Ethiopian Village — Miracle Mile</div></div><div class="d-score-big">84</div></div></div>
+
+      <div style="margin-top:36px">
+        <div class="section-title">Related Guides</div>
+        <div class="related-links">
+          <a href="#">Best Somali in Los Angeles →</a>
+          <a href="#">Best Eritrean in Los Angeles →</a>
+          <a href="#">Best Injera in Los Angeles →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-box">
+        <div class="sidebar-title">Full Rankings</div>
+        <div class="rank-table">
+          <div class="rank-table-row"><div class="rt-num">1</div><div class="rt-info"><div class="rt-name">Combination Platter</div><div class="rt-rest">Meals by Genet</div></div><div class="rt-score">92</div></div>
+          <div class="rank-table-row"><div class="rt-num">2</div><div class="rt-info"><div class="rt-name">Doro Wat</div><div class="rt-rest">Rahel</div></div><div class="rt-score">89</div></div>
+          <div class="rank-table-row"><div class="rt-num">3</div><div class="rt-info"><div class="rt-name">Tibs Firfir</div><div class="rt-rest">Nyala</div></div><div class="rt-score">86</div></div>
+          <div class="rank-table-row"><div class="rt-num">4</div><div class="rt-info"><div class="rt-name">Shiro Wat</div><div class="rt-rest">Ethiopian Village</div></div><div class="rt-score">84</div></div>
+          <div class="rank-table-row"><div class="rt-num">5</div><div class="rt-info"><div class="rt-name">Kitfo</div><div class="rt-rest">Guelele</div></div><div class="rt-score">82</div></div>
+          <div class="rank-table-row"><div class="rt-num">6</div><div class="rt-info"><div class="rt-name">Misir Wat</div><div class="rt-rest">Cafe Lalibela</div></div><div class="rt-score">80</div></div>
+          <div class="rank-table-row"><div class="rt-num">7</div><div class="rt-info"><div class="rt-name">Gored Gored</div><div class="rt-rest">Awash</div></div><div class="rt-score">78</div></div>
+          <div class="rank-table-row"><div class="rt-num">8</div><div class="rt-info"><div class="rt-name">Veggie Sampler</div><div class="rt-rest">Rahel Vegan</div></div><div class="rt-score">77</div></div>
+          <div class="rank-table-row"><div class="rt-num">9</div><div class="rt-info"><div class="rt-name">Beef Tibs</div><div class="rt-rest">Abyssinia</div></div><div class="rt-score">75</div></div>
+          <div class="rank-table-row"><div class="rt-num">10</div><div class="rt-info"><div class="rt-name">Sambusa Platter</div><div class="rt-rest">Merkato</div></div><div class="rt-score">72</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

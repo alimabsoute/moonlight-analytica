@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Angeles Pho — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.85); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(250,42,82,0.15); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #fff; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* HERO — Bold accent style */
+  .hero { position: relative; min-height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: url('https://picsum.photos/seed/dish5/1600/900') center/cover no-repeat; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(250,42,82,0.08) 40%, rgba(10,10,10,0.3) 100%); }
+  /* red stripe accent */
+  .hero-accent-bar { position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: #FA2A52; z-index: 3; }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 48px 80px 56px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #FA2A52; margin-bottom: 16px; }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(32px, 5vw, 66px); line-height: 1.02; letter-spacing: -2px; color: #fff; margin-bottom: 16px; }
+  .hero-subtitle { font-size: 17px; line-height: 1.6; color: rgba(255,255,255,0.6); max-width: 540px; margin-bottom: 28px; }
+  .meta-strip { display: flex; align-items: stretch; gap: 0; border: 1px solid rgba(250,42,82,0.3); border-radius: 8px; overflow: hidden; display: inline-flex; }
+  .meta-cell { padding: 10px 20px; font-size: 12px; border-right: 1px solid rgba(250,42,82,0.3); }
+  .meta-cell:last-child { border-right: none; }
+  .meta-cell .val { font-family: 'Geologica', sans-serif; font-weight: 800; font-size: 20px; color: #FA2A52; display: block; line-height: 1; }
+  .meta-cell .lbl { color: rgba(255,255,255,0.4); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-top: 2px; }
+
+  /* BODY */
+  .article-body { max-width: 720px; margin: 0 auto; padding: 72px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.85; color: rgba(255,255,255,0.75); margin-bottom: 28px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 800; font-size: 22px; color: #fff; margin: 48px 0 14px; padding-left: 16px; border-left: 3px solid #FA2A52; }
+  .red-callout { background: rgba(250,42,82,0.1); border: 1px solid rgba(250,42,82,0.25); border-radius: 10px; padding: 24px 28px; margin: 36px 0; }
+  .red-callout p { font-family: 'Geologica', sans-serif; font-size: 18px; font-weight: 700; color: #fff; margin: 0; line-height: 1.5; }
+  .body-img { width: 100%; border-radius: 10px; margin: 36px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food5/800/500') center/cover; }
+
+  @media (max-width: 768px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+    .hero-content { padding: 0 20px 56px; }
+    .hero-title { font-size: 30px; }
+    .meta-strip { flex-wrap: wrap; }
+    .meta-cell { border-right: none; border-bottom: 1px solid rgba(250,42,82,0.3); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-accent-bar"></div>
+  <div class="hero-content">
+    <div class="eyebrow">Pho · Los Angeles</div>
+    <h1 class="hero-title">LA's Best Pho Bowl Has Been Right There in Westminster for 12 Years</h1>
+    <p class="hero-subtitle">The Vietnamese diaspora built something remarkable in Orange County. Our model finally has the data to prove which bowl is the standard.</p>
+    <div class="meta-strip">
+      <div class="meta-cell"><span class="val">94</span><span class="lbl">Score</span></div>
+      <div class="meta-cell"><span class="val">16h</span><span class="lbl">Broth</span></div>
+      <div class="meta-cell"><span class="val">$12</span><span class="lbl">Price</span></div>
+      <div class="meta-cell"><span class="val">6 min</span><span class="lbl">Read</span></div>
+    </div>
+  </div>
+</section>
+
+<article class="article-body">
+  <p>Westminster and Garden Grove hold the highest concentration of Vietnamese restaurants outside of Vietnam. That density means competition, which means quality — but it also means a visitor without context faces a nearly impossible evaluation problem. Forty pho shops on a two-mile stretch, and the quality variance between best and worst is enormous. Our model was built precisely for this problem.</p>
+
+  <h2>What a 16-Hour Broth Looks Like</h2>
+  <p>The standard for exceptional pho broth is clarity paired with depth — a paradox that most operations never resolve. A long-simmered broth wants to turn cloudy, but correct technique (low heat, skimming intervals, minimal agitation) keeps it crystalline. The bowl we scored at 94 produces a broth you can see through, golden-amber, with a surface sheen from rendered marrow that catches light like a lens.</p>
+
+  <div class="red-callout"><p>"Clarity paired with depth — it's a paradox that most pho operations never resolve. The best broth is crystalline and still tastes like 16 hours of work."</p></div>
+
+  <div class="body-img"></div>
+
+  <h2>The Protein Assembly</h2>
+  <p>The bowl is ordered as a combination: rare eye round sliced thin enough to cook through on contact with the broth, well-done brisket braised separately and sliced against the grain, and tendon that has been simmered to a gelatinous softness that dissolves on the tongue. The herb plate arrives with saw-tooth coriander, Thai basil, bean sprouts, and lime that is actually ripe. The hoisin and sriracha on the table are both house-made. None of this is common.</p>
+
+  <p>Our scoring model ran against 89 pho visits in the Greater LA area over 14 months. This address in Westminster outscored every other bowl on broth construction and protein quality simultaneously. The combination is rare enough that it warrants the drive from anywhere in the metro.</p>
+</article>
+
+</body>
+</html>

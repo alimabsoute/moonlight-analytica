@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog: Philadelphia Dim Sum — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #fff; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* BLOG LAYOUT */
+  .page { max-width: 1100px; margin: 0 auto; padding: 80px 24px 80px; }
+  .post-header { max-width: 760px; margin: 0 auto 40px; }
+  .post-tag { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #FA2A52; margin-bottom: 14px; }
+  .post-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(28px, 4vw, 56px); line-height: 1.05; letter-spacing: -1.5px; color: #fff; margin-bottom: 16px; }
+  .post-meta { display: flex; gap: 16px; font-size: 13px; color: rgba(255,255,255,0.45); flex-wrap: wrap; }
+  .post-meta strong { color: rgba(255,255,255,0.8); }
+  .hero-img { max-width: 1100px; margin: 0 auto 40px; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish41/1200/675') center/cover; border-radius: 12px; }
+
+  /* 2 col layout */
+  .blog-layout { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; }
+  .main-col p { font-size: 17px; line-height: 1.88; color: rgba(255,255,255,0.72); margin-bottom: 26px; }
+  .main-col h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 24px; color: #fff; margin: 44px 0 14px; }
+  .main-col blockquote { border-left: 3px solid #FA2A52; padding: 14px 20px; background: rgba(250,42,82,0.05); margin: 32px 0; }
+  .main-col blockquote p { font-family: 'Geologica', sans-serif; font-size: 17px; font-weight: 600; color: #fff; margin: 0; }
+  .body-img { width: 100%; border-radius: 8px; margin: 28px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food41/800/450') center/cover; }
+
+  /* SIDEBAR */
+  .sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+  .sb-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 20px; }
+  .sb-title { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+  .score-display { text-align: center; }
+  .score-display .n { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 64px; color: #FA2A52; line-height: 1; letter-spacing: -3px; display: block; }
+  .score-display .l { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); }
+  .sb-facts li { list-style: none; font-size: 13px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; color: rgba(255,255,255,0.6); }
+  .sb-facts li:last-child { border: none; }
+  .sb-facts li strong { color: rgba(255,255,255,0.35); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .related-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  .related-img { width: 56px; height: 56px; border-radius: 6px; background-size: cover; flex-shrink: 0; }
+  .related-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+  .related-text strong { color: #FA2A52; display: block; font-size: 11px; margin-bottom: 2px; }
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: rgba(250,42,82,0.08); border: 1px solid rgba(250,42,82,0.15); color: rgba(255,255,255,0.55); font-size: 12px; padding: 4px 10px; border-radius: 999px; }
+
+  @media (max-width: 900px) {
+    .blog-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="post-header">
+    <div class="post-tag">Dim Sum · Philadelphia</div>
+    <h1 class="post-title">Philadelphia's Chinatown Has a Dim Sum Kitchen That Hasn't Been Written About Enough</h1>
+    <div class="post-meta">
+      <strong>ForkFox Algorithm</strong>
+      <span>March 2026</span>
+      <span>·</span>
+      <span>5 min read</span>
+      <span>·</span>
+      <span>Score: 86</span>
+    </div>
+  </div>
+
+  <div class="hero-img"></div>
+
+  <div class="blog-layout">
+    <main class="main-col">
+      <p>Philadelphia's Chinatown — concentrated on and around Race Street between 9th and 11th — is smaller than Chicago's or San Francisco's, which means the quality of each individual operation carries more weight per block. The dim sum kitchen our model scored highest here has been operating in the same space since 2004, and its customer base is almost entirely drawn from the Cantonese and Fujianese communities of the corridor.</p>
+
+      <h2>The Har Gow Test</h2>
+      <p>We use har gow — steamed shrimp dumplings — as the primary quality indicator for any dim sum kitchen. The wrapper must be translucent when steamed, flexible without tearing, and thick enough to hold its pleating. The shrimp filling must be whole pieces, not paste, with a clean snap when bitten. The Philadelphia kitchen scores 93 on har gow construction — our highest score for this item in the Northeast outside of New York's Flushing operations.</p>
+
+      <blockquote><p>"A har gow wrapper that's too thin tears under the shrimp's weight. Too thick and it dominates the flavor and turns gummy. The correct spec is 1.2mm, rolled fresh, every morning."</p></blockquote>
+
+      <div class="body-img"></div>
+
+      <h2>The Turnip Cake Revelation</h2>
+      <p>The most underscored item at this kitchen — and the one that separates it from comparable operations in the corridor — is the lo bak go, or turnip cake. Most dim sum turnip cakes are pan-fried slabs of daikon and rice flour paste that are dense, starchy, and texturally monotonous. The Philadelphia kitchen's version is made with a higher daikon-to-starch ratio, pan-fried in a thin oil layer that produces a crispy exterior without adding greasiness, and seasoned with lap cheong (Chinese sausage) that has been diced fine enough to distribute evenly through every bite. It is the best turnip cake in the city and possibly the best in the Northeast. Score: 97 on this specific item.</p>
+
+      <p>The full dim sum service runs Saturday and Sunday from 9am to 2pm. The har gow, siu mai, turnip cake, and cheung fun are the essential orders. The egg tarts arrive at 10am. Be there before 11 or the turnip cake will be sold out.</p>
+    </main>
+
+    <aside class="sidebar">
+      <div class="sb-card">
+        <div class="sb-title">ForkFox Score</div>
+        <div class="score-display"><span class="n">86</span><span class="l">Composite</span></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-title">Quick Facts</div>
+        <ul class="sb-facts">
+          <li><strong>Cuisine</strong>Dim Sum</li>
+          <li><strong>City</strong>Philadelphia</li>
+          <li><strong>Author</strong>ForkFox</li>
+          <li><strong>Date</strong>March 2026</li>
+          <li><strong>Har Gow</strong>93 / 100</li>
+          <li><strong>Turnip Cake</strong>97 / 100</li>
+          <li><strong>Price</strong>$4–8/dish</li>
+        </ul>
+      </div>
+      <div class="sb-card">
+        <div class="sb-title">Related</div>
+        <div class="related-item"><div class="related-img" style="background-image:url('https://picsum.photos/seed/rel1/56/56')"></div><div class="related-text"><strong>Dim Sum</strong>SF Richmond District scores top 87 in Bay Area</div></div>
+        <div class="related-item"><div class="related-img" style="background-image:url('https://picsum.photos/seed/rel2/56/56')"></div><div class="related-text"><strong>Har Gow</strong>Why wrapper thickness is the only metric that matters</div></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-title">Tags</div>
+        <div class="tag-cloud">
+          <span class="tag">Dim Sum</span>
+          <span class="tag">Philadelphia</span>
+          <span class="tag">Chinatown</span>
+          <span class="tag">Cantonese</span>
+          <span class="tag">ForkFox Pick</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>

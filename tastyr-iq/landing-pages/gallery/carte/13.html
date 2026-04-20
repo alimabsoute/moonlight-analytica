@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Sushi in San Francisco — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0d0a;color:#f0e8d8;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,13,10,0.97);border-bottom:1px solid #2a2418;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#8a7a5a}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.hero{background:linear-gradient(180deg,#1a1000 0%,#0f0d0a 100%);padding:96px 24px 52px;border-bottom:1px solid #2a2418}
+.hero-inner{max-width:860px;margin:0 auto}
+.breadcrumb{font-size:12px;color:#5a4a2a;margin-bottom:16px}.breadcrumb span{color:#F97316}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(30px,5vw,58px);line-height:1.05;margin-bottom:14px}
+h1 em{font-style:normal;color:#F97316}
+.hero-sub{font-size:16px;color:#b09060;margin-bottom:24px;max-width:520px;line-height:1.7}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap}
+.hstat{text-align:left}
+.hstat-val{font-family:'Geologica',sans-serif;font-weight:900;font-size:26px;color:#F97316}
+.hstat-label{font-size:11px;color:#5a4a2a;text-transform:uppercase;letter-spacing:.04em}
+
+.section{max-width:860px;margin:0 auto;padding:44px 24px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:18px;color:#f0e8d8}
+.section-title em{font-style:normal;color:#F97316}
+
+.findings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.finding-card{background:#181410;border:1px solid #2a2010;border-radius:10px;padding:15px}
+.finding-card p{font-size:13px;color:#b09060;line-height:1.65}
+
+.rank-row{display:flex;align-items:stretch;gap:0;background:#141008;border:1px solid #2a2010;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.rr-num-block{display:flex;align-items:center;justify-content:center;width:60px;background:transparent;font-family:'Geologica',sans-serif;font-weight:900;font-size:24px;color:#2a2010;flex-shrink:0;border-right:1px solid #2a2010}
+.rr-num-block.top{color:#F97316;background:#1a1200}
+.rr-body{flex:1;padding:14px 16px}
+.name{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;color:#f0e8d8;margin-bottom:3px}
+.rest{font-size:12px;color:#F97316;margin-bottom:10px}
+.bars{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.bar-g{} .bar-l{font-size:10px;color:#5a4a2a;display:flex;justify-content:space-between;margin-bottom:2px}
+.bar-l span{color:#F97316}
+.bar-t{height:3px;background:#2a2010;border-radius:2px}
+.bar-f{height:3px;background:linear-gradient(90deg,#c84000,#F97316);border-radius:2px}
+.rr-score-block{display:flex;align-items:center;justify-content:center;width:72px;font-family:'Geologica',sans-serif;font-weight:900;font-size:32px;color:#F97316;flex-shrink:0;border-left:1px solid #2a2010}
+.rr-score-block.dim{color:#2a2010}
+
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rel-card{background:#141008;border:1px solid #2a2010;border-radius:10px;padding:14px;font-size:13px;color:#F97316;font-weight:500}
+
+@media(max-width:600px){.findings-grid{grid-template-columns:1fr}.rr-num-block{width:44px}.rr-score-block{width:54px;font-size:24px}.bars{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">Carte / San Francisco / <span>Sushi</span></div>
+    <h1>Best <em>Sushi</em> in San Francisco</h1>
+    <p class="hero-sub">SF's sushi scene is quiet, focused, and serious. The best omakase here rivals anywhere in the country at a fraction of the NYC price.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">95</div><div class="hstat-label">Top Score</div></div>
+      <div class="hstat"><div class="hstat-val">10</div><div class="hstat-label">Ranked</div></div>
+      <div class="hstat"><div class="hstat-val">$180</div><div class="hstat-label">Avg Omakase</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Key <em>Findings</em></div>
+  <div class="findings-grid">
+    <div class="finding-card"><p>Japantown is home to the highest concentration — but SoMa and the Outer Sunset are producing surprising quality</p></div>
+    <div class="finding-card"><p>Rice temperature and seasoning is the defining technical differentiator between mid-tier and top-tier</p></div>
+    <div class="finding-card"><p>Bay Area's access to Pacific fish — halibut, Dungeness, sea urchin — gives local chefs a home-field advantage</p></div>
+    <div class="finding-card"><p>Omakase value is exceptional vs. NYC — comparable 12-course meals average $65 less</p></div>
+  </div>
+</div>
+
+<div style="background:#0d0b08;border-top:1px solid #2a2418;border-bottom:1px solid #2a2418">
+  <div class="section">
+    <div class="section-title">Full <em>Rankings</em></div>
+    <div class="rank-row"><div class="rr-num-block top">1</div><div class="rr-body"><div class="name">Uni & Caviar Nigiri</div><div class="rest">Omakase — SoMa</div><div class="bars"><div class="bar-g"><div class="bar-l">Flavor <span>97</span></div><div class="bar-t"><div class="bar-f" style="width:97%"></div></div></div><div class="bar-g"><div class="bar-l">Texture <span>95</span></div><div class="bar-t"><div class="bar-f" style="width:95%"></div></div></div><div class="bar-g"><div class="bar-l">Presentation <span>96</span></div><div class="bar-t"><div class="bar-f" style="width:96%"></div></div></div></div></div><div class="rr-score-block">95</div></div>
+    <div class="rank-row"><div class="rr-num-block top">2</div><div class="rr-body"><div class="name">Halibut Aburi</div><div class="rest">Robin — Hayes Valley</div><div class="bars"><div class="bar-g"><div class="bar-l">Flavor <span>93</span></div><div class="bar-t"><div class="bar-f" style="width:93%"></div></div></div><div class="bar-g"><div class="bar-l">Value <span>85</span></div><div class="bar-t"><div class="bar-f" style="width:85%"></div></div></div></div></div><div class="rr-score-block">93</div></div>
+    <div class="rank-row"><div class="rr-num-block top">3</div><div class="rr-body"><div class="name">Otoro Nigiri</div><div class="rest">Kusakabe — SoMa</div><div class="bars"><div class="bar-g"><div class="bar-l">Flavor <span>94</span></div><div class="bar-t"><div class="bar-f" style="width:94%"></div></div></div></div></div><div class="rr-score-block">91</div></div>
+    <div class="rank-row"><div class="rr-num-block">4</div><div class="rr-body"><div class="name">Pacific Salmon Nigiri</div><div class="rest">Sushi Yoshizumi — San Mateo</div></div><div class="rr-score-block dim">88</div></div>
+    <div class="rank-row"><div class="rr-num-block">5</div><div class="rr-body"><div class="name">Dungeness Temaki</div><div class="rest">Nari — Japantown</div></div><div class="rr-score-block dim">86</div></div>
+    <div class="rank-row"><div class="rr-num-block">6</div><div class="rr-body"><div class="name">Scallop Sashimi</div><div class="rest">Izakaya Rintaro — Mission</div></div><div class="rr-score-block dim">83</div></div>
+    <div class="rank-row"><div class="rr-num-block">7</div><div class="rr-body"><div class="name">Yellowtail Roll</div><div class="rest">Wako — Inner Richmond</div></div><div class="rr-score-block dim">81</div></div>
+    <div class="rank-row"><div class="rr-num-block">8</div><div class="rr-body"><div class="name">Hamachi Jalapeño</div><div class="rest">Pabu — Financial District</div></div><div class="rr-score-block dim">79</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Related <em>Guides</em></div>
+  <div class="related-grid">
+    <a class="rel-card" href="#">Best Ramen in SF →</a>
+    <a class="rel-card" href="#">Best Dim Sum in SF →</a>
+    <a class="rel-card" href="#">Best Omakase in Bay Area →</a>
+  </div>
+</div>
+</body>
+</html>

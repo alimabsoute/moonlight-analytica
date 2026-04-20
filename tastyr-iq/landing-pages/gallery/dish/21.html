@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Philly Birria — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #fff; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* NEWSPAPER LAYOUT */
+  .paper { max-width: 1100px; margin: 0 auto; padding: 80px 24px 80px; }
+  .paper-header { text-align: center; border-bottom: 3px double rgba(255,255,255,0.15); border-top: 3px double rgba(255,255,255,0.15); padding: 16px 0; margin-bottom: 20px; }
+  .paper-name { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: #FA2A52; }
+  .paper-date { font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 1px; margin-top: 4px; }
+
+  /* Headline spanning full */
+  .main-headline { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(32px, 5vw, 64px); line-height: 1.0; letter-spacing: -2.5px; color: #fff; text-align: center; padding: 28px 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+  .main-headline em { color: #FA2A52; font-style: normal; }
+
+  /* 3-column layout */
+  .columns { display: grid; grid-template-columns: 1.4fr 2fr 1fr; gap: 24px; }
+  .col-rule { border-right: 1px solid rgba(255,255,255,0.08); padding-right: 24px; }
+  .col-rule:last-child { border-right: none; padding-right: 0; }
+
+  .col-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #FA2A52; padding-bottom: 10px; border-bottom: 1px solid rgba(250,42,82,0.3); margin-bottom: 14px; }
+  .col-p { font-size: 14px; line-height: 1.82; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+  .col-h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; color: #fff; margin: 20px 0 10px; letter-spacing: -0.3px; }
+  .col-img { width: 100%; aspect-ratio: 4/3; background: url('https://picsum.photos/seed/food21/400/300') center/cover; border-radius: 4px; margin: 14px 0; }
+  .col-img-wide { width: 100%; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish21/800/450') center/cover; border-radius: 4px; margin: 14px 0; }
+  .pull-quote { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 15px; color: #fff; line-height: 1.5; border-top: 2px solid #FA2A52; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 14px 0; margin: 16px 0; }
+  .sidebar-score { background: rgba(250,42,82,0.1); border: 1px solid rgba(250,42,82,0.25); border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 16px; }
+  .sidebar-score .n { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 48px; color: #FA2A52; line-height: 1; display: block; }
+  .sidebar-score .l { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); }
+  .sidebar-meta { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.8; }
+  .sidebar-meta strong { color: rgba(255,255,255,0.75); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+  @media (max-width: 900px) {
+    .columns { grid-template-columns: 1fr; }
+    .col-rule { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding-right: 0; padding-bottom: 24px; }
+    .col-rule:last-child { border-bottom: none; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<main class="paper">
+  <header class="paper-header">
+    <div class="paper-name">The Dish · ForkFox Editorial</div>
+    <div class="paper-date">Vol. XII · Philadelphia Edition · March 2026</div>
+  </header>
+
+  <h1 class="main-headline">Philadelphia's Birria Tacos<br>Found <em>Their Address</em></h1>
+
+  <div class="columns">
+    <div class="col-rule">
+      <div class="col-label">The Context</div>
+      <p class="col-p">Philadelphia arrived late to the birria trend, which turned out to be a competitive advantage. The operations that opened here in 2024 and 2025 weren't chasing a wave — they were serving a community that had been requesting the dish at family restaurants for years before the national media discovered it.</p>
+      <div class="col-img"></div>
+      <p class="col-p">Our model's South Philadelphia dataset includes 18 birria operations. The quality variance is significant — the top-scored operation and the bottom-scored operation are three miles apart and score 48 points differently.</p>
+    </div>
+
+    <div class="col-rule">
+      <div class="col-label">The Review</div>
+      <div class="col-img-wide"></div>
+      <p class="col-p">The operation our algorithm identified operates out of a former cheesesteak counter in the Italian Market corridor. The ownership is from Jalisco, and the birria recipe is a family construction that predates the trend by approximately 20 years. That provenance matters — the dish was not engineered for the current market. It was scaled from a recipe that already worked.</p>
+      <div class="pull-quote">"The consommé at this Italian Market kitchen is a 7-hour reduction with three chile varieties. Most birria in Philadelphia uses two. The difference registers immediately."</div>
+      <p class="col-p">The taco itself: a handmade corn tortilla dipped in consommé and griddled until the tortilla takes on a brick-red color and a crispy bottom layer, filled with a 10-hour braised beef and goat blend (70/30), topped with diced white onion, cilantro, and a fresh salsa verde. The consommé arrives tableside in a small cup. It is deeply flavored, fatty, with a dried chile complexity that most operations in New York or Chicago don't match.</p>
+      <p class="col-p">Three visits over two months produced consistent results. Score range across visits: 87 to 93, average 90.</p>
+    </div>
+
+    <div>
+      <div class="col-label">At a Glance</div>
+      <div class="sidebar-score"><span class="n">90</span><span class="l">ForkFox Score</span></div>
+      <div class="sidebar-meta">
+        <strong>Cuisine</strong>Birria Tacos
+        <strong>City</strong>Philadelphia, PA
+        <strong>Author</strong>ForkFox Algorithm
+        <strong>Published</strong>March 2026
+        <strong>Read Time</strong>4 min
+        <strong>Price</strong>$4.50/taco
+        <strong>Hours</strong>Fri–Sun 10am–sellout
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

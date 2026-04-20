@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinematic: SF Birria — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #050505; color: #eeede6; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(5,5,5,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #eeede6; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(238,237,230,0.4); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #eeede6; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* CINEMATIC — Light warm text, dark image */
+  .hero { position: relative; height: 100vh; min-height: 600px; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: url('https://picsum.photos/seed/dish37/1600/900') center/cover; filter: brightness(0.25) sepia(0.3) contrast(1.4); }
+  .hero-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, rgba(5,5,5,0.8) 100%); }
+  .hero-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 0 48px 72px; max-width: 900px; }
+  .title-block { }
+  .hero-num { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(80px, 14vw, 200px); color: rgba(250,42,82,0.15); line-height: 1; letter-spacing: -8px; display: block; margin-bottom: -40px; }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(32px, 5vw, 72px); line-height: 1.0; letter-spacing: -2.5px; color: #eeede6; position: relative; }
+  .hero-title .red { color: #FA2A52; }
+  .hero-meta { margin-top: 24px; display: flex; gap: 20px; align-items: center; font-size: 12px; color: rgba(238,237,230,0.4); letter-spacing: 1px; }
+  .score-stamp { background: rgba(250,42,82,0.9); color: #fff; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 14px; padding: 6px 16px; letter-spacing: 2px; }
+
+  /* BODY */
+  .article-body { max-width: 680px; margin: 0 auto; padding: 80px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.88; color: rgba(238,237,230,0.65); margin-bottom: 28px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 26px; color: #eeede6; letter-spacing: -0.5px; margin: 52px 0 16px; }
+  .body-img { width: 100%; margin: 36px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food37/800/450') center/cover; filter: brightness(0.85); }
+  .dropcap-p::first-letter { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 72px; float: left; line-height: 0.8; margin-right: 10px; margin-top: 6px; color: #FA2A52; }
+  .break-quote { font-family: 'Geologica', sans-serif; font-size: clamp(20px, 2.5vw, 30px); font-weight: 700; color: #eeede6; line-height: 1.4; margin: 52px 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 32px; letter-spacing: -0.3px; }
+  .break-quote em { color: #FA2A52; font-style: normal; }
+
+  @media (max-width: 768px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+    .hero-content { padding: 0 20px 48px; }
+    .hero-title { font-size: 32px; }
+    .hero-num { font-size: 80px; margin-bottom: -20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <span class="hero-num">86</span>
+    <h1 class="hero-title">Mission District Birria:<br>Before the <span class="red">Line</span> Finds It</h1>
+    <div class="hero-meta">
+      <span class="score-stamp">SCORE 86</span>
+      <span>ForkFox Algorithm · Birria · San Francisco · March 2026</span>
+    </div>
+  </div>
+</section>
+
+<article class="article-body">
+  <p class="dropcap-p">The Mission District birria operation our model surfaced is not the one you've seen on Instagram. It doesn't have a branded tortilla dipping setup. The consommé doesn't arrive in a photogenic clay cup. The tablecloths are paper. The cook is the owner's mother-in-law, who learned the recipe in Tijuana in 1991 and has been making it since before the dish had a name most Americans recognized.</p>
+
+  <h2>What a Family Recipe Produces</h2>
+  <p>The difference between a family recipe and a recipe designed for commercial scale is difficult to quantify precisely, but our model captures it in the consistency and complexity dimensions. A family recipe has been iterated over decades through immediate feedback — it gets better every year because the cook receives direct responses from people who will tell her honestly when something is wrong. A commercial recipe is optimized for speed, margin, and replicability. The Mission kitchen's birria reflects the former.</p>
+
+  <div class="body-img"></div>
+
+  <div class="break-quote">The consommé has been on the stove since <em>11pm</em> the night before. There is no shortcut that produces the same result, and this kitchen does not look for one.</div>
+
+  <p>The birria here is beef-only — chuck and short rib — braised in an ancho-guajillo-pasilla chile base for 8 hours. The consommé is unseparated, meaning the fat is left in and rises to the surface as a visible, golden layer. You skim it yourself with a spoon if you prefer. Most people don't skim it. The tortillas are purchased from the Mexican grocery two doors down, which makes them fresh-pressed daily. This is the correct call.</p>
+
+  <p>Score: 86. This will rise as we accumulate more visit data. The operation has only been open 18 months, and our confidence interval widens with each documented visit. What we know now: it is the most technically authentic birria in San Francisco, and it is significantly below the radar. Go before the line finds it. Lines always find things like this eventually.</p>
+</article>
+
+</body>
+</html>

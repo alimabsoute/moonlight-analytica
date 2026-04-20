@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Pad Thai in New York — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.97);border-bottom:1px solid #1a1a1a;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#888}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.hero-img{width:100%;height:320px;object-fit:cover;display:block;margin-top:60px;filter:brightness(.7)}
+.hero-overlay{position:relative;margin-top:60px}
+.hero-overlay img{width:100%;height:320px;object-fit:cover;display:block;filter:brightness(.55)}
+.hero-text{position:absolute;bottom:0;left:0;right:0;padding:24px 32px;background:linear-gradient(to top,rgba(0,0,0,.9),transparent)}
+.hero-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#FA2A52;font-weight:700;margin-bottom:6px}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(26px,4vw,42px);line-height:1.1;color:#fff}
+h1 em{font-style:normal;color:#FA2A52}
+.hero-sub{font-size:13px;color:#aaa;margin-top:6px}
+
+.page-wrap{max-width:860px;margin:0 auto;padding:32px 24px 60px}
+
+.byline-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1a1a1a;margin-bottom:28px;flex-wrap:wrap;gap:8px}
+.byline{font-size:12px;color:#555;display:flex;align-items:center;gap:12px}
+.byline-dot{width:24px;height:24px;background:#FA2A52;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.byline-stats{display:flex;gap:14px;font-size:11px;color:#555}
+.byline-stats span{color:#FA2A52;font-weight:700}
+
+.lede{font-size:16px;color:#bbb;line-height:1.75;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #1a1a1a}
+
+.article-grid{display:grid;grid-template-columns:1fr 280px;gap:28px;margin-bottom:32px}
+.article-body{min-width:0}
+.article-sidebar{display:flex;flex-direction:column;gap:14px}
+
+.section-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#FA2A52;font-weight:700;margin-bottom:6px;margin-top:24px}
+.section-kicker:first-child{margin-top:0}
+.article-p{font-size:14px;color:#999;line-height:1.8;margin-bottom:14px}
+
+.rank-entry{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #1a1a1a;align-items:flex-start}
+.re-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:28px;color:#1a1a1a;min-width:32px;line-height:1}
+.re-num.top{color:#FA2A52}
+.re-body{flex:1}
+.re-dish{font-family:'Geologica',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:2px}
+.re-rest{font-size:12px;color:#555;margin-bottom:6px}
+.re-desc{font-size:13px;color:#888;line-height:1.65}
+.re-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:24px;color:#FA2A52;text-align:right;min-width:40px}
+
+.sidebar-card{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:14px}
+.sc-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#555;margin-bottom:10px}
+.sc-stat-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #111;font-size:12px}
+.sc-stat-row:last-child{border-bottom:none}
+.sc-label{color:#666}
+.sc-val{color:#FA2A52;font-family:'Geologica',sans-serif;font-weight:700}
+.neighborhood-pill{display:inline-block;background:#111;border:1px solid #FA2A52;border-radius:20px;padding:4px 12px;font-size:11px;color:#FA2A52;margin:3px}
+
+.pull-quote{background:#111;border-radius:10px;padding:20px 24px;margin:24px 0;border-left:4px solid #FA2A52}
+.pq-text{font-size:17px;color:#ccc;line-height:1.65;font-style:italic;margin-bottom:8px}
+.pq-attr{font-size:11px;color:#555}
+
+.see-also{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.see-also a{font-size:12px;color:#FA2A52;background:#111;border:1px solid #1a1a1a;border-radius:4px;padding:4px 10px}
+
+@media(max-width:720px){.article-grid{grid-template-columns:1fr}.article-sidebar{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="hero-overlay">
+  <img src="https://picsum.photos/seed/carte46/1200/500" alt="Pad Thai noodles">
+  <div class="hero-text">
+    <div class="hero-kicker">ForkFox Carte · New York · Thai</div>
+    <h1>Best <em>Pad Thai</em> in New York</h1>
+    <div class="hero-sub">10 dishes ranked · Top score 93 · Elmhurst + Hell's Kitchen focus</div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="byline-bar">
+    <div class="byline">
+      <div class="byline-dot">FX</div>
+      ForkFox Editorial · April 2026
+    </div>
+    <div class="byline-stats">
+      <span>93</span> Top Score &nbsp;·&nbsp; <span>10</span> Ranked &nbsp;·&nbsp; <span>1,100+</span> Reviews
+    </div>
+  </div>
+
+  <div class="lede">
+    New York's pad thai scene splits cleanly between two distinct worlds: the immigrant community restaurants of Elmhurst, Queens — where the dish is made for Thai diners who know what proper pad thai tastes like — and the Hell's Kitchen / Midtown corridor, where higher rents and tourist volume push operators toward sweeter, less complex interpretations.
+  </div>
+
+  <div class="article-grid">
+    <div class="article-body">
+      <div class="section-kicker">The Rankings</div>
+
+      <div class="rank-entry">
+        <div class="re-num top">1</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai Goong (Shrimp)</div>
+          <div class="re-rest">SriPraPhai — Elmhurst, Queens</div>
+          <div class="re-desc">The Elmhurst institution that Thai expats use as a reference point. Tamarind paste made in-house, palm sugar not white sugar, proper dried shrimp. The wok heat leaves visible char on the noodles.</div>
+        </div>
+        <div class="re-score">93</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num top">2</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai Tofu (Traditional)</div>
+          <div class="re-rest">Ayada Thai — Elmhurst, Queens</div>
+          <div class="re-desc">Firm tofu, bean sprouts that stay crunchy, chives that are still bright. The fish sauce balance here is precise — funky but not overbearing. A vegetarian pad thai that doesn't compromise.</div>
+        </div>
+        <div class="re-score">90</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num top">3</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai Duck</div>
+          <div class="re-rest">Pure Thai Cookhouse — Hell's Kitchen</div>
+          <div class="re-desc">The only Manhattan pad thai that competes with the Queens benchmark. Duck confit integrated into a proper tamarind-based sauce. Thin flat rice noodles cooked to the right al dente.</div>
+        </div>
+        <div class="re-score">88</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num">4</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai with Pork Belly</div>
+          <div class="re-rest">Fish Cheeks — NoHo</div>
+          <div class="re-desc">Contemporary Thai-American interpretation that earns its score through technique. The pork belly adds fat depth that the classic shrimp version lacks. Garnishes are intentional not decorative.</div>
+        </div>
+        <div class="re-score">86</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num">5</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai Combo</div>
+          <div class="re-rest">Pam Real Thai — Hell's Kitchen</div>
+          <div class="re-desc">Family-run since 2001. The combo version (shrimp + chicken + tofu) allows tasting across proteins. Smaller portions than competitors but higher flavor concentration per bite.</div>
+        </div>
+        <div class="re-score">84</div>
+      </div>
+
+      <div class="pull-quote">
+        <div class="pq-text">Elmhurst has more quality Thai restaurants per block than any neighborhood outside Bangkok or LA's Thai Town. The QD corridor from Roosevelt to Woodside is the most underrated food street in New York.</div>
+        <div class="pq-attr">ForkFox Editorial · April 2026</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num">6</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai Seafood</div>
+          <div class="re-rest">Pokpok NY — Columbia Street Waterfront</div>
+          <div class="re-desc">Andy Ricker's Brooklyn outpost earns consistent scores for technique. The seafood version uses squid, shrimp, and scallop. Rice noodles are slightly wider than standard for better sauce absorption.</div>
+        </div>
+        <div class="re-score">82</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num">7</div>
+        <div class="re-body">
+          <div class="re-dish">Vegetarian Pad Thai Deluxe</div>
+          <div class="re-rest">Wondee Siam — Hell's Kitchen</div>
+          <div class="re-desc">Best vegetarian-only pad thai in the city. The owner refuses to use oyster sauce, using a mushroom-based umami substitute. Result scores near traditional versions on flavor.</div>
+        </div>
+        <div class="re-score">80</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num">8</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai Classic</div>
+          <div class="re-rest">Lotus of Siam — Midtown East</div>
+          <div class="re-desc">NYC satellite of the Las Vegas institution. Consistent, technically correct, but the Midtown location adds a 25% premium without a comparable quality lift over Queens alternatives.</div>
+        </div>
+        <div class="re-score">78</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num">9</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai Roll (Fusion)</div>
+          <div class="re-rest">Obao — Upper East Side</div>
+          <div class="re-desc">Hybrid presentation — pad thai noodle components wrapped in a rice paper roll with mango. Creative and consistent, penalized on authenticity but scores well on texture and value.</div>
+        </div>
+        <div class="re-score">75</div>
+      </div>
+
+      <div class="rank-entry">
+        <div class="re-num">10</div>
+        <div class="re-body">
+          <div class="re-dish">Pad Thai with Crab</div>
+          <div class="re-rest">Somtum Der — East Village</div>
+          <div class="re-desc">Isaan-style restaurant that does pad thai as a supporting item, not a signature. The crab version is premium but inconsistent across visits — drops points on reliability.</div>
+        </div>
+        <div class="re-score">73</div>
+      </div>
+    </div>
+
+    <div class="article-sidebar">
+      <div class="sidebar-card">
+        <div class="sc-title">Score Summary</div>
+        <div class="sc-stat-row"><span class="sc-label">Top Score</span><span class="sc-val">93</span></div>
+        <div class="sc-stat-row"><span class="sc-label">Average</span><span class="sc-val">82.9</span></div>
+        <div class="sc-stat-row"><span class="sc-label">Reviews Analyzed</span><span class="sc-val">1,100+</span></div>
+        <div class="sc-stat-row"><span class="sc-label">Avg Price / Bowl</span><span class="sc-val">$18</span></div>
+        <div class="sc-stat-row"><span class="sc-label">Updated</span><span class="sc-val">Apr 2026</span></div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sc-title">Key Neighborhoods</div>
+        <div style="padding:6px 0;line-height:1.8">
+          <div class="neighborhood-pill">Elmhurst</div>
+          <div class="neighborhood-pill">Hell's Kitchen</div>
+          <div class="neighborhood-pill">NoHo</div>
+          <div class="neighborhood-pill">East Village</div>
+          <div class="neighborhood-pill">Brooklyn</div>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sc-title">Top Dish Types</div>
+        <div class="sc-stat-row"><span class="sc-label">Goong (Shrimp)</span><span class="sc-val">93</span></div>
+        <div class="sc-stat-row"><span class="sc-label">Duck</span><span class="sc-val">88</span></div>
+        <div class="sc-stat-row"><span class="sc-label">Tofu (Veg)</span><span class="sc-val">90</span></div>
+        <div class="sc-stat-row"><span class="sc-label">Seafood</span><span class="sc-val">82</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="see-also">
+    <a href="#">Best Thai in New York</a>
+    <a href="#">Best Thai in Elmhurst Queens</a>
+    <a href="#">Best Pad Thai in Chicago</a>
+    <a href="#">Best Pad Thai in LA</a>
+  </div>
+</div>
+</body>
+</html>

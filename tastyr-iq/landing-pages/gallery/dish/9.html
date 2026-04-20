@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New York Korean BBQ — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #08080f; color: #e4e4f0; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,15,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(80,80,160,0.1); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #e4e4f0; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(228,228,240,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #e4e4f0; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* SPLIT HERO cool dark */
+  .hero { margin-top: 60px; display: grid; grid-template-columns: 0.9fr 1.1fr; min-height: calc(100vh - 60px); }
+  .hero-text-col { background: #08080f; display: flex; flex-direction: column; justify-content: center; padding: 64px 52px; border-right: 1px solid rgba(80,80,160,0.1); }
+  .hero-img-col { position: relative; overflow: hidden; }
+  .hero-img-col .bg { position: absolute; inset: 0; background: url('https://picsum.photos/seed/dish9/900/1000') center/cover no-repeat; }
+  .hero-img-col .overlay { position: absolute; inset: 0; background: linear-gradient(270deg, rgba(8,8,15,0) 50%, rgba(8,8,15,0.4) 100%); }
+  .tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(228,228,240,0.35); border: 1px solid rgba(80,80,160,0.2); padding: 4px 12px; border-radius: 3px; display: inline-block; margin-bottom: 20px; }
+  .split-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(26px, 2.6vw, 44px); line-height: 1.1; letter-spacing: -1px; color: #e4e4f0; margin-bottom: 20px; }
+  .split-intro { font-size: 15px; line-height: 1.7; color: rgba(228,228,240,0.5); margin-bottom: 36px; }
+  .score-ring { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #FA2A52; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .score-ring .num { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 26px; color: #FA2A52; line-height: 1; }
+  .score-ring .lbl { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: rgba(228,228,240,0.35); }
+  .meta-list { display: flex; flex-direction: column; gap: 8px; }
+  .meta-item { display: flex; gap: 12px; font-size: 13px; }
+  .meta-item .k { color: rgba(228,228,240,0.35); width: 80px; flex-shrink: 0; }
+  .meta-item .v { color: rgba(228,228,240,0.8); }
+
+  /* BODY */
+  .article-body { max-width: 720px; margin: 0 auto; padding: 72px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.85; color: rgba(228,228,240,0.7); margin-bottom: 28px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 22px; color: #e4e4f0; margin: 44px 0 14px; }
+  .blue-blockquote { border-left: 2px solid rgba(80,80,160,0.5); padding: 14px 24px; margin: 32px 0; }
+  .blue-blockquote p { font-family: 'Geologica', sans-serif; font-size: 18px; font-weight: 600; color: rgba(228,228,240,0.9); margin: 0; line-height: 1.5; }
+  .body-img { width: 100%; border-radius: 10px; margin: 32px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food9/800/500') center/cover; }
+  .subtle-rule { height: 1px; background: rgba(80,80,160,0.12); margin: 40px 0; }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-text-col { padding: 36px 20px; }
+    .hero-img-col { height: 56vw; }
+    .split-title { font-size: 24px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-text-col">
+    <span class="tag">Korean BBQ · New York</span>
+    <div class="score-ring"><span class="num">90</span><span class="lbl">Score</span></div>
+    <h1 class="split-title">New York Koreatown's Best Table Doesn't Need Tableside Theater</h1>
+    <p class="split-intro">When the meat quality is high enough, the performance around it becomes noise. One Koreatown operation understands this distinction.</p>
+    <div class="meta-list">
+      <div class="meta-item"><span class="k">Author</span><span class="v">ForkFox Algorithm</span></div>
+      <div class="meta-item"><span class="k">Published</span><span class="v">March 2026</span></div>
+      <div class="meta-item"><span class="k">Read time</span><span class="v">5 min</span></div>
+      <div class="meta-item"><span class="k">City</span><span class="v">New York, NY</span></div>
+    </div>
+  </div>
+  <div class="hero-img-col">
+    <div class="bg"></div>
+    <div class="overlay"></div>
+  </div>
+</section>
+
+<article class="article-body">
+  <p>New York's Koreatown operates on a block and a half of 32nd Street and contains more Korean BBQ operations than most cities contain restaurants. The density makes evaluation difficult — particularly for visitors who mistake theatrical presentation for culinary quality. Our model was designed to disentangle these two variables, and the results are clarifying.</p>
+
+  <h2>Meat Grade as Signal</h2>
+  <p>Korean BBQ quality begins at sourcing. The operations our model scores highest all use USDA Prime galbi (short rib) cut to a consistent 1/3 inch thickness — the specification that allows proper caramelization on a charcoal grill without overcooking the center. The top-ranked operation also sources wagyu brisket for its chadolbaegi course, which is unusual for this price point and indicates a kitchen that has made a deliberate quality investment.</p>
+
+  <div class="blue-blockquote"><p>"When the meat quality is high enough, the performance around it becomes noise. A charcoal grill and proper galbi speak for themselves."</p></div>
+
+  <div class="body-img"></div>
+
+  <h2>The Banchan Multiplier</h2>
+  <p>The quality of the banchan — the array of small side dishes that arrive before and with the main meat courses — functions as a proxy for kitchen discipline. A kitchen that takes its kimchi fermentation seriously, that makes its pajeon to order, and that treats its kongnamul as a dish rather than a filler is signaling a level of care that transfers to the main event. The operation we ranked first produces banchan that, in isolation, would be worth the trip.</p>
+
+  <div class="subtle-rule"></div>
+  <p>Tables here are available without a reservation before 6pm on weekdays. The charcoal grill setup — real charcoal, not gas — requires approximately 12 minutes to reach proper cooking temperature. Your server will tell you when it's ready. Trust them.</p>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Sushi in New York — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.95);backdrop-filter:blur(10px);border-bottom:1px solid #1a1a1a;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#888}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:1100px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:18px}.breadcrumb span{color:#FA2A52}
+.page-header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:32px}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(24px,3.5vw,42px);line-height:1.1}
+h1 em{font-style:normal;color:#FA2A52}
+.header-meta{font-size:13px;color:#555;text-align:right}
+.header-meta strong{color:#F97316;display:block;font-size:22px;font-family:'Geologica',sans-serif;font-weight:700}
+
+.intro{font-size:15px;line-height:1.75;color:#999;margin-bottom:28px;max-width:700px}
+
+/* THE TABLE */
+.table-wrap{width:100%;overflow-x:auto;margin-bottom:40px}
+table{width:100%;border-collapse:collapse;min-width:700px}
+thead tr{background:#111;border-bottom:2px solid #FA2A52}
+thead th{padding:12px 16px;font-size:11px;font-family:'Geologica',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#555;text-align:left}
+thead th:last-child{text-align:right}
+thead th.numeric{text-align:center}
+tbody tr{border-bottom:1px solid #111;transition:background .15s}
+tbody tr:hover{background:#0d0d0d}
+tbody tr.top{background:#0d0000}
+td{padding:14px 16px;vertical-align:middle}
+.td-rank{font-family:'Geologica',sans-serif;font-weight:900;font-size:18px;color:#1a1a1a;width:40px}
+.td-rank.t{color:#FA2A52}
+.td-dish{font-weight:600;font-size:15px;color:#fff;margin-bottom:3px}
+.td-rest{font-size:12px;color:#F97316}
+.td-score{text-align:center}
+.score-chip{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#1a1a1a;font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;color:#fff}
+.score-chip.s1{background:linear-gradient(135deg,#FA2A52,#c01030);color:#fff}
+.score-chip.s2{background:linear-gradient(135deg,#F97316,#c05000);color:#fff}
+.score-chip.s3{background:#222;color:#FA2A52;border:1px solid #FA2A52}
+.bar-cell{width:120px}
+.bar-wrap{display:flex;align-items:center;gap:6px}
+.bar-track{flex:1;height:4px;background:#1a1a1a;border-radius:2px}
+.bar-fill{height:4px;background:linear-gradient(90deg,#FA2A52,#F97316);border-radius:2px}
+.bar-val{font-size:11px;color:#555;width:22px;text-align:right}
+.td-overall{text-align:right}
+.overall-val{font-family:'Geologica',sans-serif;font-weight:900;font-size:20px;color:#FA2A52}
+.overall-val.dim{color:#222}
+
+.findings{margin-bottom:36px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:16px}
+.section-title em{font-style:normal;color:#FA2A52}
+.findings ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.findings ul li{font-size:13px;color:#aaa;padding:12px 16px;background:#0d0d0d;border-radius:8px;border-left:3px solid #FA2A52}
+
+.related{display:flex;gap:8px;flex-wrap:wrap}
+.rel-link{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:8px;padding:10px 16px;font-size:13px;color:#FA2A52;font-weight:500}
+
+@media(max-width:600px){.findings ul{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / New York / <span>Sushi</span></div>
+  <div class="page-header">
+    <h1>Best <em>Sushi</em> in New York</h1>
+    <div class="header-meta"><strong>10</strong>dishes ranked · April 2026</div>
+  </div>
+  <p class="intro">New York's sushi scene operates at two distinct altitudes — the transcendent omakase experiences in Midtown and TriBeCa, and the extraordinary neighborhood spots that punch well above their price point.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Dish / Restaurant</th>
+          <th class="numeric">Flavor</th>
+          <th class="numeric">Texture</th>
+          <th class="numeric">Value</th>
+          <th class="numeric">Auth.</th>
+          <th class="numeric">Pres.</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="top"><td><span class="td-rank t">1</span></td><td><div class="td-dish">Otoro Nigiri</div><div class="td-rest">Sushi Nakazawa — West Village</div></td><td class="td-score"><div class="bar-cell"><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:97%"></div></div><span class="bar-val">97</span></div></div></td><td class="td-score"><div class="bar-cell"><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div><span class="bar-val">96</span></div></div></td><td class="td-score"><div class="bar-cell"><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:68%"></div></div><span class="bar-val">68</span></div></div></td><td class="td-score"><div class="bar-cell"><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:98%"></div></div><span class="bar-val">98</span></div></div></td><td class="td-score"><div class="bar-cell"><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div><span class="bar-val">96</span></div></div></td><td class="td-overall"><span class="overall-val">95</span></td></tr>
+        <tr class="top"><td><span class="td-rank t">2</span></td><td><div class="td-dish">Uni Tasting Plate</div><div class="td-rest">Noda — Midtown</div></td><td class="td-score"><span class="bar-val">94</span></td><td class="td-score"><span class="bar-val">92</span></td><td class="td-score"><span class="bar-val">72</span></td><td class="td-score"><span class="bar-val">95</span></td><td class="td-score"><span class="bar-val">93</span></td><td class="td-overall"><span class="overall-val">93</span></td></tr>
+        <tr class="top"><td><span class="td-rank t">3</span></td><td><div class="td-dish">A5 Wagyu Nigiri</div><div class="td-rest">Sushi Ginza Onodera — Midtown</div></td><td class="td-score"><span class="bar-val">96</span></td><td class="td-score"><span class="bar-val">95</span></td><td class="td-score"><span class="bar-val">65</span></td><td class="td-score"><span class="bar-val">88</span></td><td class="td-score"><span class="bar-val">91</span></td><td class="td-overall"><span class="overall-val">91</span></td></tr>
+        <tr><td><span class="td-rank t">4</span></td><td><div class="td-dish">Salmon Ikura Don</div><div class="td-rest">Sushi of Gari — Upper West Side</div></td><td class="td-score"><span class="bar-val">90</span></td><td class="td-score"><span class="bar-val">88</span></td><td class="td-score"><span class="bar-val">80</span></td><td class="td-score"><span class="bar-val">89</span></td><td class="td-score"><span class="bar-val">87</span></td><td class="td-overall"><span class="overall-val">88</span></td></tr>
+        <tr><td><span class="td-rank">5</span></td><td><div class="td-dish">Hamachi Jalapeño</div><div class="td-rest">Nobu — TriBeCa</div></td><td class="td-score"><span class="bar-val">88</span></td><td class="td-score"><span class="bar-val">86</span></td><td class="td-score"><span class="bar-val">74</span></td><td class="td-score"><span class="bar-val">80</span></td><td class="td-score"><span class="bar-val">88</span></td><td class="td-overall"><span class="overall-val dim">86</span></td></tr>
+        <tr><td><span class="td-rank">6</span></td><td><div class="td-dish">Rainbow Roll</div><div class="td-rest">Blue Ribbon Sushi — SoHo</div></td><td class="td-score"><span class="bar-val">85</span></td><td class="td-score"><span class="bar-val">84</span></td><td class="td-score"><span class="bar-val">82</span></td><td class="td-score"><span class="bar-val">78</span></td><td class="td-score"><span class="bar-val">85</span></td><td class="td-overall"><span class="overall-val dim">83</span></td></tr>
+        <tr><td><span class="td-rank">7</span></td><td><div class="td-dish">Scallop Aburi</div><div class="td-rest">Morimoto — Chelsea</div></td><td class="td-score"><span class="bar-val">84</span></td><td class="td-score"><span class="bar-val">86</span></td><td class="td-score"><span class="bar-val">75</span></td><td class="td-score"><span class="bar-val">82</span></td><td class="td-score"><span class="bar-val">90</span></td><td class="td-overall"><span class="overall-val dim">81</span></td></tr>
+        <tr><td><span class="td-rank">8</span></td><td><div class="td-dish">Tuna Sashimi</div><div class="td-rest">Tomoe Sushi — Greenwich Village</div></td><td class="td-score"><span class="bar-val">83</span></td><td class="td-score"><span class="bar-val">82</span></td><td class="td-score"><span class="bar-val">88</span></td><td class="td-score"><span class="bar-val">85</span></td><td class="td-score"><span class="bar-val">80</span></td><td class="td-overall"><span class="overall-val dim">79</span></td></tr>
+        <tr><td><span class="td-rank">9</span></td><td><div class="td-dish">Spicy Tuna Crispy Rice</div><div class="td-rest">Katsuya — Upper East Side</div></td><td class="td-score"><span class="bar-val">82</span></td><td class="td-score"><span class="bar-val">85</span></td><td class="td-score"><span class="bar-val">76</span></td><td class="td-score"><span class="bar-val">74</span></td><td class="td-score"><span class="bar-val">88</span></td><td class="td-overall"><span class="overall-val dim">77</span></td></tr>
+        <tr><td><span class="td-rank">10</span></td><td><div class="td-dish">Dragon Roll</div><div class="td-rest">Sushi Park — Midtown</div></td><td class="td-score"><span class="bar-val">78</span></td><td class="td-score"><span class="bar-val">77</span></td><td class="td-score"><span class="bar-val">80</span></td><td class="td-score"><span class="bar-val">70</span></td><td class="td-score"><span class="bar-val">82</span></td><td class="td-overall"><span class="overall-val dim">74</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="findings">
+    <div class="section-title">Key <em>Findings</em></div>
+    <ul>
+      <li>Nakazawa's omakase remains unchallenged for the top spot — Jiro-trained precision at non-Tokyo prices</li>
+      <li>Value scores are inverted from what you'd expect — best-scored dishes cost the most</li>
+      <li>Noda is the fastest-rising spot — entered the top 5 in two cycles</li>
+      <li>Neighborhood spots in upper Manhattan punch above weight on authenticity despite lower prestige</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Related <em>Guides</em></div>
+  <div class="related">
+    <a class="rel-link" href="#">Best Ramen in New York →</a>
+    <a class="rel-link" href="#">Best Omakase in NY →</a>
+    <a class="rel-link" href="#">Best Izakaya in New York →</a>
+  </div>
+</div>
+</body>
+</html>

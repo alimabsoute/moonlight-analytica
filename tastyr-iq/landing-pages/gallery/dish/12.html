@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chicago Tacos — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8f7f4; color: #111; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(248,247,244,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #111; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(17,17,17,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #111; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* MINIMAL EDITORIAL — light, newspaper-feel typography */
+  .hero { max-width: 820px; margin: 0 auto; padding: 140px 24px 52px; }
+  .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+  .section-name { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #FA2A52; }
+  .section-rule { flex: 1; height: 1px; background: rgba(0,0,0,0.12); }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(38px, 6vw, 84px); line-height: 0.95; letter-spacing: -4px; color: #111; margin-bottom: 32px; }
+  .hero-title .outline { -webkit-text-stroke: 2px #111; color: transparent; }
+  .hero-dek { font-size: 18px; line-height: 1.7; color: rgba(17,17,17,0.6); max-width: 640px; margin-bottom: 36px; }
+  .meta-flex { display: flex; align-items: center; gap: 16px; padding-bottom: 36px; border-bottom: 2px solid #111; }
+  .meta-score-box { background: #FA2A52; color: #fff; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 1px; padding: 6px 16px; }
+  .meta-text { font-size: 13px; color: rgba(17,17,17,0.55); }
+  .meta-text strong { color: #111; }
+
+  /* BODY */
+  .article-body { max-width: 680px; margin: 0 auto; padding: 52px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.88; color: rgba(17,17,17,0.75); margin-bottom: 26px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 28px; color: #111; margin: 52px 0 16px; letter-spacing: -1px; }
+  .body-img { width: 100%; margin: 36px 0; aspect-ratio: 3/2; background: url('https://picsum.photos/seed/food12/800/500') center/cover; }
+  .large-quote { font-family: 'Geologica', sans-serif; font-weight: 800; font-size: clamp(22px, 3vw, 32px); line-height: 1.3; color: #111; margin: 48px 0; letter-spacing: -0.5px; padding-left: 0; border: none; }
+  .large-quote::before { content: '\201C'; color: #FA2A52; }
+  .large-quote::after { content: '\201D'; color: #FA2A52; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 120px 20px 48px; }
+    .hero-title { font-size: 38px; letter-spacing: -2px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="section-header">
+    <span class="section-name">The Dish</span>
+    <div class="section-rule"></div>
+    <span style="font-size:11px; color: rgba(17,17,17,0.4); font-weight:600; letter-spacing:1px; text-transform:uppercase;">Tacos · Chicago</span>
+  </div>
+  <h1 class="hero-title"><span class="outline">Pilsen</span><br>Has America's<br>Best Al Pastor</h1>
+  <p class="hero-dek">After 140 taco visits across the city, our algorithm converged on a taqueria in Pilsen that has been quietly cooking spit-roasted al pastor the right way since 2009. No trends. No fusion. Just the standard.</p>
+  <div class="meta-flex">
+    <span class="meta-score-box">SCORE 91</span>
+    <span class="meta-text"><strong>ForkFox Algorithm</strong> · March 2026 · 5 min read</span>
+  </div>
+</header>
+
+<article class="article-body">
+  <p>Al pastor is a Mexican taco tradition derived from Lebanese shawarma brought to Mexico City by Lebanese immigrants in the early 20th century. The meat — thinly sliced pork marinated in dried chiles, achiote, and pineapple — is stacked vertically on a trompo (vertical spit) and slow-cooked while rotating. The taquero shaves the meat directly onto a tortilla as orders come in, adding a pineapple slice from the top of the spit.</p>
+
+  <div class="large-quote">The trompo is not a theatrical prop. It is the technique. Without it, you are making something else and calling it al pastor.</div>
+
+  <h2>Why Most Al Pastor in the US Gets It Wrong</h2>
+  <p>The majority of al pastor served in American taquerias is prepared in a pan, on a flat-top griddle, or in a conventional oven — not on a vertical spit. This produces meat with an entirely different texture and flavor profile: crispier in some cases, yes, but lacking the layered fat rendering and chile penetration that a properly operated trompo produces over 4-6 hours of rotation. Our model scores trompo vs. non-trompo separately, and the gap is significant.</p>
+
+  <div class="body-img"></div>
+
+  <h2>The Pilsen Standard</h2>
+  <p>The taqueria our algorithm identified in Pilsen operates with a two-trompo setup — one for service, one building the next column. The marinade is achiote-heavy with a dried guajillo and ancho base, pineapple juice used in the marinade rather than only as topping, and a chile de árbol layer for heat that builds slowly rather than hitting immediately. The tortillas are handmade on-site from masa imported from Jalisco twice weekly.</p>
+
+  <p>The combination of authentic spit technique, house-made tortillas, and a chile profile that requires genuine knowledge to construct puts this taqueria in a tier by itself in the Midwest. We scored it 91 overall, with a 97 on technique and 94 on flavor profile. It costs $3.50 per taco and is open until 1am Thursday through Saturday.</p>
+</article>
+
+</body>
+</html>

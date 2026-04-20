@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ForkFox Leaflet Maps — SF + Philly</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+body{margin:0;background:#0a0a0a;font-family:'Inter',system-ui,sans-serif;color:#fff}
+.map-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
+.map-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;overflow:hidden;position:relative}
+.map-title{position:absolute;top:14px;left:14px;z-index:500;background:rgba(10,10,10,.85);backdrop-filter:blur(8px);padding:6px 14px;border-radius:100px;border:1px solid rgba(250,42,82,.3);font-family:'Geologica',sans-serif;font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#fff}
+.map-title .count{color:#FA2A52;margin-left:8px;font-weight:900}
+.map-card .map{width:100%;aspect-ratio:4/5;background:#f5f3ee}
+
+/* FF-branded marker */
+.ff-marker-wrap{position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;pointer-events:auto}
+.ff-marker-ring{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(250,42,82,.5),transparent 70%);animation:ringPulse 2.5s ease-out infinite}
+@keyframes ringPulse{0%{transform:scale(.7);opacity:1}100%{transform:scale(2.2);opacity:0}}
+.ff-marker-dot{position:relative;width:26px;height:26px;border-radius:50%;background:#FA2A52;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Geologica',sans-serif;font-weight:900;font-size:13px;border:2px solid #fff;box-shadow:0 4px 12px rgba(250,42,82,.45),0 2px 4px rgba(0,0,0,.2);transition:transform .25s;z-index:2}
+.ff-marker-wrap:hover .ff-marker-dot{transform:scale(1.15)}
+
+/* Popup */
+.leaflet-popup-content-wrapper{background:#0d0d0d;border:1px solid rgba(250,42,82,.25);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.4);padding:0}
+.leaflet-popup-content{margin:14px 16px;color:#fff;font-family:'Inter',sans-serif}
+.leaflet-popup-content .pop-title{font-family:'Geologica',sans-serif;font-weight:800;font-size:14px;color:#fff;margin-bottom:4px}
+.leaflet-popup-content .pop-meta{font-size:11px;color:#F97316;text-transform:uppercase;letter-spacing:.08em;font-weight:600;font-family:monospace}
+.leaflet-popup-content .pop-desc{font-size:12px;color:#bbb;margin-top:6px;line-height:1.5}
+.leaflet-popup-tip{background:#0d0d0d;border:1px solid rgba(250,42,82,.25)}
+.leaflet-popup-close-button{color:#666!important}
+
+/* Attribution tweaks */
+.leaflet-control-attribution{background:rgba(255,255,255,.9)!important;font-size:10px!important;color:#555!important}
+.leaflet-control-attribution a{color:#FA2A52!important}
+
+/* Pin-drop animation */
+.pin-drop{animation:pinDrop .6s cubic-bezier(.34,1.56,.64,1) forwards;transform-origin:center bottom;opacity:0}
+@keyframes pinDrop{0%{transform:translateY(-40px) scale(.5);opacity:0}60%{transform:translateY(4px) scale(1.05);opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<div class="map-grid">
+  <div class="map-card">
+    <div class="map-title">San Francisco <span class="count">8</span></div>
+    <div id="mapSF" class="map"></div>
+  </div>
+  <div class="map-card">
+    <div class="map-title">Philadelphia <span class="count">8</span></div>
+    <div id="mapPhilly" class="map"></div>
+  </div>
+</div>
+
+<script>
+// CartoDB Positron (light, clean, free, no token)
+var TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+var TILE_ATTR = '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+var SF_PINS = [
+  {n:1, name:'Richmond', lat:37.7760, lng:-122.4831, note:'Outer Richmond · dumpling row, Burmese pockets'},
+  {n:2, name:'Chinatown', lat:37.7941, lng:-122.4078, note:'Dim sum parlors, Good Mong Kok, Yank Sing-adjacent'},
+  {n:3, name:'Japantown', lat:37.7852, lng:-122.4291, note:'Izakaya row, Peace Plaza ramen spots'},
+  {n:4, name:'Tenderloin', lat:37.7835, lng:-122.4139, note:'South Indian dosas, Saigon Sandwich, Little Saigon'},
+  {n:5, name:'Hayes Valley', lat:37.7758, lng:-122.4241, note:'Zuni Cafe, brunch row, wine bars'},
+  {n:6, name:'SoMa', lat:37.7786, lng:-122.4044, note:'Ferry Building, Slanted Door, Yank Sing'},
+  {n:7, name:'Mission', lat:37.7606, lng:-122.4174, note:'La Taqueria, El Farolito, Mission Chinese, Tartine'},
+  {n:8, name:'Sunset', lat:37.7425, lng:-122.4944, note:'Inner Sunset izakayas, Outer Sunset boba + ramen'}
+];
+
+var PHILLY_PINS = [
+  {n:1, name:'Northern Liberties', lat:39.9650, lng:-75.1428, note:'Piazza, cocktail bars, casual dining'},
+  {n:2, name:'Fishtown', lat:39.9723, lng:-75.1295, note:'Pizzeria Beddia, Royal Boucherie, natural wine BYOBs'},
+  {n:3, name:'Chinatown', lat:39.9556, lng:-75.1568, note:'Dim sum, Sichuan, Vietnamese'},
+  {n:4, name:'Center City', lat:39.9526, lng:-75.1652, note:'Parc, Vernick, Morimoto'},
+  {n:5, name:'Rittenhouse', lat:39.9497, lng:-75.1712, note:'Walnut Street dining, classic rooms'},
+  {n:6, name:'Old City', lat:39.9498, lng:-75.1444, note:'Fork, Zahav, Royal Izakaya'},
+  {n:7, name:'West Philly', lat:39.9536, lng:-75.2075, note:"Baltimore Ave Ethiopian, Penn-campus eats"},
+  {n:8, name:'South Philly', lat:39.9294, lng:-75.1679, note:'Italian Market, Vietnamese corner, Pat\'s & Geno\'s'}
+];
+
+function makeMarker(pin, idx) {
+  var icon = L.divIcon({
+    className: 'ff-marker',
+    html: '<div class="ff-marker-wrap pin-drop" style="animation-delay:'+ (idx*0.08) +'s"><div class="ff-marker-ring"></div><div class="ff-marker-dot">'+ pin.n +'</div></div>',
+    iconSize: [40,40],
+    iconAnchor: [20,20],
+    popupAnchor: [0,-20]
+  });
+  var m = L.marker([pin.lat, pin.lng], {icon:icon});
+  m.bindPopup(
+    '<div class="pop-title">'+ pin.name +'</div>' +
+    '<div class="pop-meta">Neighborhood #'+ pin.n +'</div>' +
+    '<div class="pop-desc">'+ pin.note +'</div>'
+  );
+  return m;
+}
+
+function initMap(elId, center, zoom, pins) {
+  var map = L.map(elId, {zoomControl:false, attributionControl:true, scrollWheelZoom:false});
+  map.setView(center, zoom);
+  L.tileLayer(TILE_URL, {attribution: TILE_ATTR, subdomains:'abcd', maxZoom:19}).addTo(map);
+  // Add zoom control on right
+  L.control.zoom({position:'topright'}).addTo(map);
+  // Pins
+  pins.forEach(function(p, i) { makeMarker(p, i).addTo(map); });
+  return map;
+}
+
+initMap('mapSF', [37.775, -122.438], 12, SF_PINS);
+initMap('mapPhilly', [39.952, -75.162], 12, PHILLY_PINS);
+</script>
+</body>
+</html>

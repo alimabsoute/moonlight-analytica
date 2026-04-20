@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>San Francisco's Best Fish Tacos — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8f7f4; color: #111; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(248,247,244,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 32px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #111; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(17,17,17,0.6); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: #111; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+  .nav-cta:hover { background: #e0243f !important; }
+
+  /* HERO */
+  .hero { position: relative; height: 90vh; min-height: 520px; display: flex; align-items: flex-end; overflow: hidden; margin-top: 60px; }
+  .hero-bg { position: absolute; inset: 0; background: url('https://picsum.photos/seed/dish2/1600/900') center/cover no-repeat; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(248,247,244,1) 0%, rgba(248,247,244,0.6) 50%, rgba(248,247,244,0.05) 100%); }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 0 48px 64px; }
+  .crumb { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #FA2A52; margin-bottom: 14px; }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(30px, 4.5vw, 58px); line-height: 1.06; letter-spacing: -1.5px; color: #111; margin-bottom: 18px; }
+  .hero-meta { display: flex; gap: 16px; align-items: center; font-size: 13px; color: rgba(17,17,17,0.5); flex-wrap: wrap; }
+  .hero-meta strong { color: #111; font-weight: 600; }
+  .dot { color: #FA2A52; font-size: 16px; line-height: 1; }
+  .score-pill { background: #FA2A52; color: #fff; font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 999px; letter-spacing: 0.5px; }
+
+  /* BODY */
+  .article-body { max-width: 700px; margin: 0 auto; padding: 64px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.85; color: rgba(17,17,17,0.78); margin-bottom: 28px; }
+  .article-body p:first-of-type { font-size: 19px; font-weight: 500; color: #111; line-height: 1.7; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 24px; color: #111; margin: 44px 0 14px; letter-spacing: -0.3px; }
+  .highlight-box { background: #fff; border-radius: 12px; padding: 24px 28px; margin: 36px 0; border-left: 4px solid #FA2A52; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+  .highlight-box p { font-family: 'Geologica', sans-serif; font-size: 18px; font-weight: 600; color: #111; margin: 0; line-height: 1.5; }
+  .body-img { width: 100%; border-radius: 10px; margin: 36px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food2/800/500') center/cover; }
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(0,0,0,0.08); }
+  .tag { background: rgba(250,42,82,0.08); color: #FA2A52; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px; }
+
+  @media (max-width: 768px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+    .hero-content { padding: 0 20px 48px; }
+    .hero-title { font-size: 26px; }
+    .article-body p { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="crumb">Tacos · San Francisco</div>
+    <h1 class="hero-title">San Francisco's Baja Fish Tacos Have a New Benchmark — and It's Not on the Waterfront</h1>
+    <div class="hero-meta">
+      <span class="score-pill">Score: 88</span>
+      <strong>ForkFox Algorithm</strong>
+      <span class="dot">·</span>
+      <span>March 2026</span>
+      <span class="dot">·</span>
+      <span>6 min read</span>
+    </div>
+  </div>
+</section>
+
+<article class="article-body">
+  <p>The Mission District has been claiming the best tacos in the city for a generation, and on most metrics, it's been correct. But a quieter operation on the edge of the Excelsior has been scoring consistently above every established benchmark in our dataset — and it doesn't have a Yelp presence worth mentioning.</p>
+
+  <h2>What Makes a Baja Fish Taco Exceptional</h2>
+  <p>The distinction between a very good fish taco and a great one comes down to three variables: batter aeration, cabbage freshness window, and crema acidity balance. Most operations get one right. Two is rare. Three is the benchmark we use to classify a dish as analytically exceptional, and this kitchen achieves all three on every visit we've logged.</p>
+
+  <div class="highlight-box"><p>"Three variables separate a good fish taco from a great one. Getting all three right on every visit is what puts this place in its own category."</p></div>
+
+  <div class="body-img"></div>
+
+  <h2>The Batter Architecture</h2>
+  <p>A beer batter at proper aeration creates a crust that shatters cleanly rather than pulling away from the fish in sheets. The protein here — fresh Pacific cod, not frozen pollock — is dredged light, fried at a controlled 375°F, and landed directly onto a warmed handmade corn tortilla. The cabbage slaw is dressed immediately before service, which preserves texture in a way that a pre-dressed holding tray never can.</p>
+
+  <p>Our scoring model cross-references 218 fish taco visits across the Bay Area. This address clusters nearest to the top on every sub-dimension. The value index — $3.75 per taco — puts it into an essentially uncontested tier.</p>
+
+  <div class="tag-row">
+    <span class="tag">Fish Tacos</span>
+    <span class="tag">San Francisco</span>
+    <span class="tag">Excelsior</span>
+    <span class="tag">ForkFox Pick</span>
+  </div>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%" role="img" aria-label="Map of San Francisco showing 8 ForkFox beta neighborhoods">
+  <title>San Francisco — ForkFox beta neighborhoods</title>
+  <desc>Branded stylized map of San Francisco with pins for Mission, Japantown, Chinatown, Tenderloin, Sunset, Richmond, Hayes Valley, and SoMa.</desc>
+  <defs>
+    <linearGradient id="sfBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0d0d"/>
+      <stop offset="100%" stop-color="#060606"/>
+    </linearGradient>
+    <linearGradient id="sfBay" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1420" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#050a12" stop-opacity="1"/>
+    </linearGradient>
+    <radialGradient id="pinGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FA2A52" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FA2A52" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .city-label{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:900;font-size:13px;fill:#f0e8d8;letter-spacing:.12em}
+      .compass{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:700;font-size:8px;fill:#555;letter-spacing:.08em}
+      .pin-label{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:700;font-size:9px;fill:#e8e8e8;letter-spacing:.04em;text-anchor:middle}
+      .pin-num{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:900;font-size:10px;fill:#fff;text-anchor:middle;dominant-baseline:central}
+      .water-label{font-family:'Geologica','Inter',system-ui,sans-serif;font-weight:400;font-size:8px;font-style:italic;fill:#2a3548;letter-spacing:.2em}
+      .street{stroke:#1a1a1a;stroke-width:.4;fill:none}
+      .highway{stroke:#22232a;stroke-width:.8;fill:none}
+      .coast{stroke:#1a2230;stroke-width:1;fill:none}
+    </style>
+  </defs>
+
+  <!-- BACKGROUND -->
+  <rect width="400" height="500" fill="url(#sfBg)"/>
+
+  <!-- OCEAN (Pacific, west) + BAY (east + north) -->
+  <path d="M 0,0 L 0,500 L 55,500 Q 55,420 60,360 Q 62,300 58,240 Q 54,180 60,120 Q 65,60 60,0 Z" fill="url(#sfBay)"/>
+  <!-- Bay east side -->
+  <path d="M 330,0 L 400,0 L 400,500 L 340,500 Q 335,440 342,380 Q 348,320 342,260 Q 336,200 342,140 Q 348,80 335,20 Z" fill="url(#sfBay)"/>
+  <!-- North bay notch -->
+  <path d="M 55,0 L 335,0 L 335,40 Q 280,55 220,50 Q 160,45 110,52 Q 70,56 55,50 Z" fill="url(#sfBay)"/>
+
+  <!-- COASTLINE -->
+  <path d="M 55,500 Q 55,420 60,360 Q 62,300 58,240 Q 54,180 60,120 Q 65,60 60,0" class="coast"/>
+  <path d="M 340,500 Q 335,440 342,380 Q 348,320 342,260 Q 336,200 342,140 Q 348,80 335,20" class="coast"/>
+  <path d="M 55,50 Q 110,56 160,50 Q 220,45 280,50 Q 335,52 335,50" class="coast"/>
+
+  <!-- SUBTLE STREET GRID -->
+  <g opacity="0.55">
+    <!-- Major east-west highways (market, geary, fell) -->
+    <path d="M 85,220 L 330,260" class="highway"/>
+    <path d="M 75,160 L 335,170" class="highway"/>
+    <path d="M 70,310 L 320,340" class="highway"/>
+    <!-- Market Street diagonal (SF iconic) -->
+    <path d="M 335,265 L 165,360" class="highway" stroke="#2a2420"/>
+    <!-- Highway 101 / embarcadero -->
+    <path d="M 320,70 L 335,265 L 310,440" class="highway"/>
+    <!-- Street grid fill (north-south) -->
+    <g stroke="#141414" stroke-width=".3">
+      <line x1="90" y1="55" x2="90" y2="490"/>
+      <line x1="120" y1="55" x2="120" y2="490"/>
+      <line x1="150" y1="55" x2="150" y2="490"/>
+      <line x1="180" y1="55" x2="180" y2="490"/>
+      <line x1="210" y1="55" x2="210" y2="490"/>
+      <line x1="240" y1="55" x2="240" y2="490"/>
+      <line x1="270" y1="55" x2="270" y2="490"/>
+      <line x1="300" y1="55" x2="300" y2="490"/>
+    </g>
+    <!-- Street grid fill (east-west) -->
+    <g stroke="#141414" stroke-width=".3">
+      <line x1="60" y1="90" x2="335" y2="90"/>
+      <line x1="60" y1="130" x2="335" y2="130"/>
+      <line x1="60" y1="190" x2="335" y2="200"/>
+      <line x1="60" y1="250" x2="335" y2="270"/>
+      <line x1="60" y1="350" x2="325" y2="370"/>
+      <line x1="60" y1="400" x2="322" y2="420"/>
+      <line x1="60" y1="440" x2="320" y2="455"/>
+    </g>
+  </g>
+
+  <!-- GOLDEN GATE PARK (easter egg silhouette, west side) -->
+  <rect x="62" y="235" width="100" height="18" rx="2" fill="#0e1a0a" opacity="0.7"/>
+  <text x="112" y="248" class="water-label" text-anchor="middle" fill="#1a2a10">GGP</text>
+
+  <!-- TWIN PEAKS (center mountain silhouette) -->
+  <path d="M 185,275 L 195,255 L 200,260 L 205,255 L 215,275 Z" fill="#0f0f0f" opacity="0.8"/>
+
+  <!-- CITY LABEL + COMPASS -->
+  <text x="200" y="30" class="city-label" text-anchor="middle">SAN FRANCISCO</text>
+  <g transform="translate(370,40)">
+    <circle r="14" fill="#0d0d0d" stroke="#1a1a1a"/>
+    <path d="M 0,-9 L 2.5,0 L 0,9 L -2.5,0 Z" fill="#FA2A52"/>
+    <text y="-16" class="compass" text-anchor="middle">N</text>
+  </g>
+
+  <!-- WATER LABELS -->
+  <text x="25" y="280" class="water-label" transform="rotate(-90 25 280)">PACIFIC</text>
+  <text x="370" y="270" class="water-label" transform="rotate(90 370 270)">BAY</text>
+
+  <!-- NEIGHBORHOOD PINS -->
+  <!-- Pin template: glow + ring + dot + number + label below -->
+
+  <!-- 1 · Richmond (far west, north) -->
+  <g>
+    <circle cx="100" cy="125" r="16" fill="url(#pinGlow)"/>
+    <circle cx="100" cy="125" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="100" cy="125" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="100" y="125" class="pin-num">1</text>
+    <text x="100" y="108" class="pin-label">RICHMOND</text>
+  </g>
+
+  <!-- 2 · Chinatown (north-center) -->
+  <g>
+    <circle cx="245" cy="95" r="16" fill="url(#pinGlow)"/>
+    <circle cx="245" cy="95" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="245" cy="95" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="245" y="95" class="pin-num">2</text>
+    <text x="245" y="78" class="pin-label">CHINATOWN</text>
+  </g>
+
+  <!-- 3 · Japantown (center-left) -->
+  <g>
+    <circle cx="165" cy="165" r="16" fill="url(#pinGlow)"/>
+    <circle cx="165" cy="165" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="165" cy="165" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="165" y="165" class="pin-num">3</text>
+    <text x="165" y="148" class="pin-label">JAPANTOWN</text>
+  </g>
+
+  <!-- 4 · Tenderloin (center) -->
+  <g>
+    <circle cx="225" cy="180" r="16" fill="url(#pinGlow)"/>
+    <circle cx="225" cy="180" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="225" cy="180" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="225" y="180" class="pin-num">4</text>
+    <text x="225" y="198" class="pin-label">TENDERLOIN</text>
+  </g>
+
+  <!-- 5 · Hayes Valley (center-south-left) -->
+  <g>
+    <circle cx="175" cy="225" r="16" fill="url(#pinGlow)"/>
+    <circle cx="175" cy="225" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="175" cy="225" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="175" y="225" class="pin-num">5</text>
+    <text x="175" y="243" class="pin-label">HAYES VALLEY</text>
+  </g>
+
+  <!-- 6 · SoMa (east-center) -->
+  <g>
+    <circle cx="285" cy="240" r="16" fill="url(#pinGlow)"/>
+    <circle cx="285" cy="240" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="285" cy="240" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="285" y="240" class="pin-num">6</text>
+    <text x="285" y="258" class="pin-label">SOMA</text>
+  </g>
+
+  <!-- 7 · Mission (south-center) -->
+  <g>
+    <circle cx="235" cy="320" r="16" fill="url(#pinGlow)"/>
+    <circle cx="235" cy="320" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="235" cy="320" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="235" y="320" class="pin-num">7</text>
+    <text x="235" y="338" class="pin-label">MISSION</text>
+  </g>
+
+  <!-- 8 · Sunset (far west, south) -->
+  <g>
+    <circle cx="105" cy="320" r="16" fill="url(#pinGlow)"/>
+    <circle cx="105" cy="320" r="6.5" fill="#FA2A52" filter="url(#glow)"/>
+    <circle cx="105" cy="320" r="6.5" fill="none" stroke="#fff" stroke-width=".8"/>
+    <text x="105" y="320" class="pin-num">8</text>
+    <text x="105" y="338" class="pin-label">SUNSET</text>
+  </g>
+
+  <!-- FOOTER: scale + attribution -->
+  <g transform="translate(60,475)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#333" stroke-width="1"/>
+    <line x1="0" y1="-3" x2="0" y2="3" stroke="#333" stroke-width="1"/>
+    <line x1="40" y1="-3" x2="40" y2="3" stroke="#333" stroke-width="1"/>
+    <text x="20" y="12" class="compass" text-anchor="middle" fill="#444">2 MI</text>
+  </g>
+  <text x="340" y="487" class="compass" text-anchor="end" fill="#444">FORKFOX · BETA</text>
+</svg>

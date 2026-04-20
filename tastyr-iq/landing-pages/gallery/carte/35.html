@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Dim Sum in Chicago — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#FA2A52;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}.logo-text span{color:#ffcc88}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:rgba(255,255,255,.8)}
+.nav-cta{background:#fff;color:#FA2A52!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;margin-left:8px}
+
+.page-wrap{max-width:860px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:16px}.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(26px,4vw,46px);line-height:1.05;margin-bottom:10px}
+h1 em{font-style:normal;color:#FA2A52}
+.meta{font-size:13px;color:#555;margin-bottom:12px}.meta strong{color:#F97316}
+.intro{font-size:15px;color:#bbb;line-height:1.75;margin-bottom:40px}
+
+.neighborhood-section{margin-bottom:44px}
+.hood-wrap{display:flex;align-items:flex-start;gap:20px;margin-bottom:16px}
+.hood-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:48px;color:#FA2A52;line-height:1;flex-shrink:0;opacity:.3}
+.hood-name{font-family:'Geologica',sans-serif;font-weight:900;font-size:22px;color:#fff;margin-bottom:3px}
+.hood-desc{font-size:13px;color:#555;line-height:1.5}
+.hood-tag{display:inline-block;background:#FA2A52;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;margin-top:5px}
+.hood-line{height:1px;background:linear-gradient(90deg,#FA2A52 0%,#1a1a1a 60%,transparent 100%);margin-bottom:16px}
+
+.dish-row{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid #141414}
+.dish-row:last-child{border-bottom:none}
+.dr-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:16px;color:#FA2A52;width:22px;flex-shrink:0;margin-top:2px}
+.dr-num.d{color:#1a1a1a}
+.dr-name{font-weight:600;font-size:15px;color:#fff;margin-bottom:2px}
+.dr-rest{font-size:12px;color:#F97316}
+.dr-score{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;color:#FA2A52;margin-left:auto;flex-shrink:0}
+.dr-score.d{color:#1a1a1a}
+
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:16px}
+.section-title em{font-style:normal;color:#FA2A52}
+.findings ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:32px}
+.findings ul li{font-size:13px;color:#aaa;padding:10px 14px;background:#0d0d0d;border-radius:8px;padding-left:36px;position:relative}
+.findings ul li::before{content:'';position:absolute;left:13px;top:14px;width:8px;height:8px;background:#FA2A52;border-radius:50%}
+
+.related{display:flex;gap:8px;flex-wrap:wrap}
+.rel-link{background:#0d0d0d;border:1px solid #FA2A52;border-radius:8px;padding:10px 16px;font-size:13px;color:#FA2A52;font-weight:700}
+
+@media(max-width:600px){.findings ul{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / Chicago / <span>Dim Sum</span></div>
+  <h1>Best <em>Dim Sum</em> in Chicago</h1>
+  <div class="meta">Updated April 2026 · <strong>10 dishes ranked</strong> · ForkFox Carte Guide</div>
+  <p class="intro">Chicago's Chinatown (one of the largest in the US) is the natural center — but Bridgeport and Argyle Street have important dim sum outposts. Ranked by neighborhood.</p>
+
+  <div class="neighborhood-section">
+    <div class="hood-wrap">
+      <div class="hood-num">01</div>
+      <div>
+        <div class="hood-name">Chinatown</div>
+        <div class="hood-desc">Wentworth Avenue corridor — the traditional heart</div>
+        <span class="hood-tag">Top Zone</span>
+      </div>
+    </div>
+    <div class="hood-line"></div>
+    <div class="dish-row"><div class="dr-num">1</div><div><div class="dr-name">Har Gow</div><div class="dr-rest">Phoenix Restaurant — Chinatown</div></div><div class="dr-score">92</div></div>
+    <div class="dish-row"><div class="dr-num">2</div><div><div class="dr-name">Siu Mai</div><div class="dr-rest">Dim Sum King — Chinatown Square</div></div><div class="dr-score">89</div></div>
+    <div class="dish-row"><div class="dr-num d">3</div><div><div class="dr-name">Baked BBQ Bao</div><div class="dr-rest">Triple Crown — Chinatown</div></div><div class="dr-score d">86</div></div>
+    <div class="dish-row"><div class="dr-num d">4</div><div><div class="dr-name">Cheung Fun</div><div class="dr-rest">Emperor's Choice — Chinatown</div></div><div class="dr-score d">84</div></div>
+  </div>
+
+  <div class="neighborhood-section">
+    <div class="hood-wrap">
+      <div class="hood-num">02</div>
+      <div>
+        <div class="hood-name">Bridgeport</div>
+        <div class="hood-desc">Adjacent to Chinatown, less tourist traffic</div>
+        <span class="hood-tag" style="background:#F97316">Best Value</span>
+      </div>
+    </div>
+    <div class="hood-line" style="background:linear-gradient(90deg,#F97316 0%,#1a1a1a 60%,transparent 100%)"></div>
+    <div class="dish-row"><div class="dr-num">5</div><div><div class="dr-name">Egg Tart</div><div class="dr-rest">Saint Anna Bakery — Bridgeport</div></div><div class="dr-score">82</div></div>
+    <div class="dish-row"><div class="dr-num d">6</div><div><div class="dr-name">Turnip Cake</div><div class="dr-rest">Ming Hin — Chinatown Sq</div></div><div class="dr-score d">80</div></div>
+    <div class="dish-row"><div class="dr-num d">7</div><div><div class="dr-name">Sesame Ball</div><div class="dr-rest">Lao Ma Spicy — Bridgeport</div></div><div class="dr-score d">77</div></div>
+  </div>
+
+  <div class="neighborhood-section">
+    <div class="hood-wrap">
+      <div class="hood-num">03</div>
+      <div>
+        <div class="hood-name">Argyle Street</div>
+        <div class="hood-desc">Vietnamese-Chinese crossover dim sum</div>
+      </div>
+    </div>
+    <div class="hood-line" style="background:linear-gradient(90deg,#555 0%,transparent 60%)"></div>
+    <div class="dish-row"><div class="dr-num d">8</div><div><div class="dr-name">Sticky Rice Lotus</div><div class="dr-rest">Hai Yen — Argyle</div></div><div class="dr-score d">75</div></div>
+    <div class="dish-row"><div class="dr-num d">9</div><div><div class="dr-name">Shrimp Dumpling</div><div class="dr-rest">Ba Le — Argyle</div></div><div class="dr-score d">73</div></div>
+    <div class="dish-row"><div class="dr-num d">10</div><div><div class="dr-name">Pork Custard Bao</div><div class="dr-rest">Nhu Lan — Argyle</div></div><div class="dr-score d">70</div></div>
+  </div>
+
+  <div class="findings">
+    <div class="section-title">Key <em>Findings</em></div>
+    <ul>
+      <li>Phoenix Restaurant remains Chicago's undisputed dim sum #1 — weekend cart service is a pilgrimage</li>
+      <li>Chinatown Square's newer spots are raising the bar — Ming Hin and Dim Sum King compete closely</li>
+      <li>Argyle Street's fusion dim sum is underrated — Vietnamese influence creates interesting flavor combinations</li>
+      <li>Chicago dim sum prices are 25-35% cheaper than SF or NYC — exceptional value across the board</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Related <em>Guides</em></div>
+  <div class="related">
+    <a class="rel-link" href="#">Best Peking Duck in Chicago →</a>
+    <a class="rel-link" href="#">Best Vietnamese in Chicago →</a>
+    <a class="rel-link" href="#">Best Ramen in Chicago →</a>
+  </div>
+</div>
+</body>
+</html>

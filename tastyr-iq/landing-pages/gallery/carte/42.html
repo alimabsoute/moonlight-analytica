@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Ethiopian in San Francisco — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f7f4;color:#111;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1px solid #e8e4df;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#777}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:860px;margin:0 auto;padding:90px 24px 60px}
+
+.breadcrumb{font-size:11px;color:#aaa;margin-bottom:10px;font-family:monospace}
+.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,44px);line-height:1.1;margin-bottom:8px}
+h1 em{font-style:normal;color:#FA2A52}
+.page-desc{font-size:14px;color:#666;margin:8px 0 0;max-width:580px;line-height:1.7}
+
+.agg-stats{display:flex;gap:0;border:1px solid #e8e4df;border-radius:10px;overflow:hidden;margin:20px 0 28px}
+.stat-cell{flex:1;padding:14px 16px;text-align:center;border-right:1px solid #e8e4df}
+.stat-cell:last-child{border-right:none}
+.sc-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:22px;color:#FA2A52}
+.sc-lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+.source-bar{display:flex;gap:6px;margin-bottom:24px}
+.sb-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid #e8e4df;color:#666}
+.sb-chip.active{background:#FA2A52;border-color:#FA2A52;color:#fff}
+
+.top-dish-card{background:#fff;border:1px solid #e8e4df;border-radius:12px;padding:20px;margin-bottom:28px;display:flex;gap:20px;align-items:flex-start}
+.tdc-score{width:64px;height:64px;border-radius:50%;background:conic-gradient(#FA2A52 calc(var(--pct)*1%),#e8e4df 0);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tdc-inner{width:50px;height:50px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:16px;color:#FA2A52}
+.tdc-body{flex:1}
+.tdc-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px}
+.tdc-rest{font-size:13px;color:#888;margin-bottom:10px}
+.tdc-dims{display:flex;gap:8px;flex-wrap:wrap}
+.td-dim{background:#f8f7f4;border:1px solid #e8e4df;border-radius:20px;padding:3px 10px;font-size:11px;color:#666}
+.td-dim span{color:#FA2A52;font-weight:700;margin-left:3px}
+
+.reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px}
+.rv-card{background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:16px}
+.rv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.rv-dish{font-weight:700;font-size:13px;color:#111}
+.rv-rest{font-size:11px;color:#aaa;margin-top:2px}
+.rv-badge{background:#FA2A52;color:#fff;font-family:'Geologica',sans-serif;font-weight:900;font-size:13px;padding:3px 8px;border-radius:5px}
+.rv-quote{font-size:13px;color:#555;line-height:1.65;font-style:italic;background:#f8f7f4;padding:10px 12px;border-radius:6px;border-left:2px solid #FA2A52;margin-bottom:10px}
+.rv-footer{display:flex;justify-content:space-between;align-items:center}
+.rv-src{display:flex;align-items:center;gap:5px;font-size:11px;color:#aaa}
+.src-dot{width:7px;height:7px;border-radius:50%}
+.src-dot.reddit{background:#FF4500}
+.src-dot.yelp{background:#D32323}
+.src-dot.google{background:#4285F4}
+.rv-hood{font-size:11px;color:#bbb}
+
+.highlight-quote{background:#fff5f7;border:1px solid #fcd8df;border-radius:10px;padding:20px 24px;margin-bottom:28px}
+.hq-text{font-size:16px;color:#333;line-height:1.7;font-style:italic;margin-bottom:12px}
+.hq-text::before{content:'"';font-size:40px;line-height:.8;color:#FA2A52;font-family:Georgia,serif;display:block;margin-bottom:4px}
+.hq-byline{font-size:12px;color:#aaa;display:flex;align-items:center;gap:8px}
+.hq-dot{width:24px;height:24px;background:#FA2A52;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+
+.rankings-table{width:100%;border-collapse:collapse;margin-bottom:28px}
+.rankings-table th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#aaa;padding:8px 12px;background:#f8f7f4;border-bottom:2px solid #FA2A52;text-align:left}
+.rankings-table td{font-size:13px;color:#555;padding:9px 12px;border-bottom:1px solid #f0ede8;background:#fff}
+.rankings-table td.score{font-family:'Geologica',sans-serif;font-weight:700;color:#FA2A52;font-size:14px}
+.rankings-table tr.top td{background:#fff9f8}
+
+.see-also{display:flex;gap:8px;flex-wrap:wrap}
+.see-also a{font-size:12px;color:#FA2A52;background:#fff;border:1px solid #e8e4df;border-radius:4px;padding:4px 10px}
+
+@media(max-width:640px){.reviews-grid{grid-template-columns:1fr}.agg-stats{flex-wrap:wrap}.stat-cell{flex:0 0 50%;border-bottom:1px solid #e8e4df}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">ForkFox Carte &gt; San Francisco &gt; Ethiopian &gt; <span>Top Dishes</span></div>
+  <h1>Best <em>Ethiopian</em> in San Francisco</h1>
+  <p class="page-desc">Community-aggregated guide to San Francisco's top Ethiopian dishes — scored from Reddit, Yelp, and Google review signals.</p>
+
+  <div class="agg-stats">
+    <div class="stat-cell"><div class="sc-num">93</div><div class="sc-lbl">Top Score</div></div>
+    <div class="stat-cell"><div class="sc-num">10</div><div class="sc-lbl">Ranked</div></div>
+    <div class="stat-cell"><div class="sc-num">980+</div><div class="sc-lbl">Reviews</div></div>
+    <div class="stat-cell"><div class="sc-num">83.1</div><div class="sc-lbl">Avg Score</div></div>
+    <div class="stat-cell"><div class="sc-num">Apr '26</div><div class="sc-lbl">Updated</div></div>
+  </div>
+
+  <div class="source-bar">
+    <div class="sb-chip active">All Sources</div>
+    <div class="sb-chip">Reddit</div>
+    <div class="sb-chip">Yelp</div>
+    <div class="sb-chip">Google</div>
+  </div>
+
+  <div class="top-dish-card" style="--pct:93">
+    <div class="tdc-score"><div class="tdc-inner">93</div></div>
+    <div class="tdc-body">
+      <div class="tdc-title">Doro Wat — Chicken in Berbere</div>
+      <div class="tdc-rest">Axum Ethiopian — Inner Richmond · #1 Ranked This Cycle</div>
+      <div class="tdc-dims">
+        <div class="td-dim">Flavor<span>95</span></div>
+        <div class="td-dim">Texture<span>91</span></div>
+        <div class="td-dim">Value<span>90</span></div>
+        <div class="td-dim">Authenticity<span>96</span></div>
+        <div class="td-dim">Presentation<span>88</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-grid">
+    <div class="rv-card">
+      <div class="rv-header">
+        <div><div class="rv-dish">Doro Wat</div><div class="rv-rest">Axum Ethiopian — Inner Richmond</div></div>
+        <div class="rv-badge">93</div>
+      </div>
+      <div class="rv-quote">"House-made berbere spice blend that they've been using for over 15 years. The injera is made fresh daily. No shortcuts, no compromises. Best in SF."</div>
+      <div class="rv-footer">
+        <div class="rv-src"><div class="src-dot reddit"></div>r/SanFrancisco · 723 upvotes</div>
+        <div class="rv-hood">Inner Richmond</div>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-header">
+        <div><div class="rv-dish">Tibs (Sauteed Lamb)</div><div class="rv-rest">Kezira Ethiopian — Tenderloin</div></div>
+        <div class="rv-badge">90</div>
+      </div>
+      <div class="rv-quote">"The lamb here is halal and the seasoning is aggressive in the best way — rosemary and mitmita hitting simultaneously. Injera soaks it all up perfectly."</div>
+      <div class="rv-footer">
+        <div class="rv-src"><div class="src-dot yelp"></div>Yelp · 4.7★ (241 reviews)</div>
+        <div class="rv-hood">Tenderloin</div>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-header">
+        <div><div class="rv-dish">Kitfo (Ethiopian Steak Tartare)</div><div class="rv-rest">Bati Ethiopian — Mission</div></div>
+        <div class="rv-badge">88</div>
+      </div>
+      <div class="rv-quote">"Raw or cooked your preference — I go medium raw. The mitmita and niter kibbeh balance is surgical. Best kitfo I've had outside Addis."</div>
+      <div class="rv-footer">
+        <div class="rv-src"><div class="src-dot google"></div>Google · 4.6★ (389 reviews)</div>
+        <div class="rv-hood">Mission District</div>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-header">
+        <div><div class="rv-dish">Vegetarian Combination</div><div class="rv-rest">Tadu Ethiopian Kitchen — Tenderloin</div></div>
+        <div class="rv-badge">86</div>
+      </div>
+      <div class="rv-quote">"7 dishes on one platter — gomen, misir, atakilt, ye'abesha gomen, shiro, lentils, and tikel gomen. Every single one distinct and properly seasoned. Vegan dream."</div>
+      <div class="rv-footer">
+        <div class="rv-src"><div class="src-dot reddit"></div>r/veganfoodporn · 511 upvotes</div>
+        <div class="rv-hood">Tenderloin</div>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-header">
+        <div><div class="rv-dish">Shiro Wet (Chickpea Stew)</div><div class="rv-rest">Cafe Ethiopia — Excelsior</div></div>
+        <div class="rv-badge">84</div>
+      </div>
+      <div class="rv-quote">"The Excelsior Ethiopian community's hidden gem. Shiro so thick you can stand a spoon in it. Neighborhood spot with zero pretense and all substance."</div>
+      <div class="rv-footer">
+        <div class="rv-src"><div class="src-dot yelp"></div>Yelp · 4.5★ (112 reviews)</div>
+        <div class="rv-hood">Excelsior</div>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-header">
+        <div><div class="rv-dish">Lamb Shank Firfir</div><div class="rv-rest">Massawa — Inner Sunset</div></div>
+        <div class="rv-badge">82</div>
+      </div>
+      <div class="rv-quote">"Eritrean-Ethiopian crossover spot but their firfir — injera stewed in berbere sauce with lamb — is the real discovery. Order it and nothing else."</div>
+      <div class="rv-footer">
+        <div class="rv-src"><div class="src-dot google"></div>Google · 4.5★ (298 reviews)</div>
+        <div class="rv-hood">Inner Sunset</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-quote">
+    <div class="hq-text">SF's Ethiopian scene is anchored in the Tenderloin corridor but the true community spots are in Excelsior and Inner Richmond — neighborhoods the food media hasn't caught up to yet.</div>
+    <div class="hq-byline">
+      <div class="hq-dot">FX</div>
+      ForkFox Editorial · April 2026 · 980+ reviews analyzed
+    </div>
+  </div>
+
+  <table class="rankings-table">
+    <thead><tr><th>Rank</th><th>Dish</th><th>Restaurant</th><th>Neighborhood</th><th>Score</th></tr></thead>
+    <tbody>
+      <tr class="top"><td>1</td><td>Doro Wat</td><td>Axum Ethiopian</td><td>Inner Richmond</td><td class="score">93</td></tr>
+      <tr class="top"><td>2</td><td>Tibs Lamb</td><td>Kezira Ethiopian</td><td>Tenderloin</td><td class="score">90</td></tr>
+      <tr class="top"><td>3</td><td>Kitfo</td><td>Bati Ethiopian</td><td>Mission</td><td class="score">88</td></tr>
+      <tr><td>4</td><td>Vegetarian Combo</td><td>Tadu Ethiopian Kitchen</td><td>Tenderloin</td><td class="score">86</td></tr>
+      <tr><td>5</td><td>Shiro Wet</td><td>Cafe Ethiopia</td><td>Excelsior</td><td class="score">84</td></tr>
+      <tr><td>6</td><td>Lamb Shank Firfir</td><td>Massawa</td><td>Inner Sunset</td><td class="score">82</td></tr>
+      <tr><td>7</td><td>Beyaynetu Platter</td><td>Habesha Market</td><td>Tenderloin</td><td class="score">80</td></tr>
+      <tr><td>8</td><td>Gored Gored</td><td>Red Sea Ethiopian</td><td>Excelsior</td><td class="score">78</td></tr>
+      <tr><td>9</td><td>Asa Tibs (Fish)</td><td>Ethiopian Diamond</td><td>Lower Haight</td><td class="score">75</td></tr>
+      <tr><td>10</td><td>Teff Pancake Stack</td><td>Moya — Nopa</td><td>NoPa</td><td class="score">73</td></tr>
+    </tbody>
+  </table>
+
+  <div class="see-also">
+    <a href="#">Best Ethiopian in Chicago</a>
+    <a href="#">Best Ethiopian in NY</a>
+    <a href="#">Best African in SF</a>
+    <a href="#">Best Vegetarian in Tenderloin</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Pho in Chicago — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#FA2A52;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}.logo-text span{color:#ffcc88}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:rgba(255,255,255,.8)}
+.nav-cta{background:#fff;color:#FA2A52!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;margin-left:8px}
+
+.page-wrap{max-width:820px;margin:0 auto;padding:90px 24px 60px}
+
+.enc-header{border-bottom:2px solid #FA2A52;padding-bottom:16px;margin-bottom:24px}
+.enc-breadcrumb{font-size:11px;color:#555;margin-bottom:10px;font-family:monospace}
+.enc-breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,44px);line-height:1.1;margin-bottom:8px}
+h1 em{font-style:normal;color:#FA2A52}
+.enc-desc{font-size:14px;color:#888;margin:8px 0 0;line-height:1.7}
+.enc-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#555;margin-top:12px;padding-top:12px;border-top:1px solid #1a1a1a}
+.enc-meta span strong{color:#FA2A52}
+
+.toc{display:inline-block;background:#0d0d0d;border:1px solid #1a1a1a;border-top:2px solid #FA2A52;border-radius:0 0 8px 8px;padding:14px 20px;margin-bottom:32px;min-width:220px}
+.toc-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#555;margin-bottom:10px;font-weight:700}
+.toc-list{list-style:none;counter-reset:toc}
+.toc-list li{counter-increment:toc;font-size:13px;color:#888;padding:4px 0;border-bottom:1px solid #141414}
+.toc-list li:last-child{border-bottom:none}
+.toc-list li::before{content:counter(toc) ". ";color:#FA2A52;font-weight:700}
+
+.enc-section{margin-bottom:36px}
+.enc-h2{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #1a1a1a;display:flex;gap:8px;align-items:center}
+.enc-h2::before{content:'';width:4px;height:18px;background:#FA2A52;border-radius:2px;flex-shrink:0}
+.enc-p{font-size:14px;color:#999;line-height:1.75;margin-bottom:10px}
+
+dl.def-list dt{font-weight:700;color:#ccc;font-size:13px;margin-top:12px}
+.def-list dd{font-size:13px;color:#888;padding-left:16px;border-left:2px solid #1a1a1a;margin-top:4px;line-height:1.7}
+.def-list dd strong{color:#FA2A52}
+
+.enc-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.enc-table th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#555;padding:8px 12px;background:#111;border-bottom:2px solid #FA2A52;text-align:left}
+.enc-table td{font-size:13px;color:#999;padding:9px 12px;border-bottom:1px solid #111;background:#0d0d0d}
+.enc-table td.score{font-family:'Geologica',sans-serif;font-weight:700;color:#FA2A52;font-size:15px}
+.enc-table tr.top td{background:#130007}
+
+.enc-note{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #FA2A52;padding:12px 16px;margin:16px 0;font-size:13px;color:#888}
+.enc-note strong{color:#FA2A52}
+
+.key-findings{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kf{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:8px;padding:12px 14px;border-left:3px solid #FA2A52;font-size:13px;color:#999}
+
+.see-also{display:flex;gap:8px;flex-wrap:wrap}
+.see-also a{font-size:12px;color:#FA2A52;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:4px;padding:4px 10px;font-weight:600}
+
+@media(max-width:600px){.key-findings{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="enc-header">
+    <div class="enc-breadcrumb">ForkFox Carte &gt; Chicago &gt; Vietnamese &gt; <span>Pho</span></div>
+    <h1>Best <em>Pho</em> in Chicago</h1>
+    <p class="enc-desc">Reference guide to Chicago's ranked pho dishes, neighborhood analysis, and broth quality standards.</p>
+    <div class="enc-meta"><span>April 2026</span><span>Top Score: <strong>92</strong></span><span>10 dishes ranked</span><span>Argyle Street + Bridgeport focus</span></div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ul class="toc-list">
+      <li>Overview</li><li>Methodology</li><li>Complete Rankings</li><li>Neighborhood Guide</li><li>Key Findings</li><li>See Also</li>
+    </ul>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2">Overview</div>
+    <p class="enc-p">Chicago's pho scene is centered on Argyle Street in Uptown — historically the Vietnamese quarter — and Bridgeport, where newer Vietnamese-American operators have set up shop. The Argyle corridor has been producing quality pho since the 1970s, making it one of the older established scenes outside of the coasts.</p>
+    <p class="enc-p">Chicago pho tends toward richer, bolder broths than SF or LA equivalents — a climate adaptation that produces higher flavor scores but occasionally at the cost of broth clarity.</p>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2">Methodology</div>
+    <dl class="def-list">
+      <dt>Flavor (30%)</dt><dd>Broth depth, spice complexity. <strong>Charred ginger and onion technique</strong> is the primary quality differentiator at the top of Chicago's market.</dd>
+      <dt>Texture (20%)</dt><dd>Noodle quality (fresh preferred over dried), meat tenderness, accompaniment freshness.</dd>
+      <dt>Value (20%)</dt><dd>Normalized against Chicago average ($15/bowl). Argyle spots outperform on this metric.</dd>
+      <dt>Authenticity (15%)</dt><dd>Vietnamese culinary tradition. Five-spice and star anise balance are primary markers.</dd>
+      <dt>Presentation (15%)</dt><dd>Broth clarity, garnish freshness, bowl sizing.</dd>
+    </dl>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2">Complete Rankings</div>
+    <table class="enc-table">
+      <thead><tr><th>Rank</th><th>Dish</th><th>Restaurant</th><th>Neighborhood</th><th>Score</th></tr></thead>
+      <tbody>
+        <tr class="top"><td>1</td><td>Pho Bo Dac Biet</td><td>Tank Noodle</td><td>Argyle Street</td><td class="score">92</td></tr>
+        <tr class="top"><td>2</td><td>Pho Ga</td><td>Pho 888</td><td>Argyle Street</td><td class="score">89</td></tr>
+        <tr class="top"><td>3</td><td>Pho Tai Nam</td><td>Hai Yen</td><td>Argyle Street</td><td class="score">87</td></tr>
+        <tr><td>4</td><td>Spicy Sate Pho</td><td>Pho Xe Tang</td><td>Bridgeport</td><td class="score">85</td></tr>
+        <tr><td>5</td><td>Oxtail Pho</td><td>Pho & I</td><td>Uptown</td><td class="score">82</td></tr>
+        <tr><td>6</td><td>Pho Bo Vien</td><td>Pho Lien</td><td>Argyle Street</td><td class="score">80</td></tr>
+        <tr><td>7</td><td>Pho Chay</td><td>Green Vegetarian</td><td>Lincoln Park</td><td class="score">78</td></tr>
+        <tr><td>8</td><td>Brisket Pho</td><td>Bopnbun — Wicker Park</td><td>Wicker Park</td><td class="score">76</td></tr>
+        <tr><td>9</td><td>Pho Combo Jumbo</td><td>Pho Viet — Midway</td><td>Midway</td><td class="score">74</td></tr>
+        <tr><td>10</td><td>Pho Rare Eye Round</td><td>Ba Le — Argyle</td><td>Argyle Street</td><td class="score">72</td></tr>
+      </tbody>
+    </table>
+    <div class="enc-note"><strong>Note:</strong> Tank Noodle has held the #1 position for five consecutive quarterly cycles. Its consistency is the benchmark for evaluating all other Chicago pho.</div>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2">Key Findings</div>
+    <div class="key-findings">
+      <div class="kf">Argyle Street remains the definitive Chicago pho neighborhood — 6 of 10 top spots are within 4 blocks</div>
+      <div class="kf">Chicago pho broths are richer and heavier than coastal equivalents — high flavor scores, lower clarity</div>
+      <div class="kf">Tank Noodle's consistency across 5+ years is unmatched — no other Chicago pho spot is as reliable</div>
+      <div class="kf">Value is exceptional — avg $15 bowl vs $18 in SF and $20 in NYC for comparable quality</div>
+    </div>
+  </div>
+
+  <div class="enc-section">
+    <div class="enc-h2">See Also</div>
+    <div class="see-also">
+      <a href="#">Best Vietnamese in Chicago</a>
+      <a href="#">Best Bun Bo Hue in Chicago</a>
+      <a href="#">Best Dim Sum in Chicago</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -66,8 +66,9 @@ h1 em{font-style:normal;color:#FA2A52}
 .pick-desc{font-size:.85rem;color:rgba(255,255,255,.55);line-height:1.6}
 .pick-tag{flex-shrink:0;font-size:.58rem;padding:.2rem .55rem;border-radius:20px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);color:var(--accent);font-weight:700;letter-spacing:.04em;white-space:nowrap;margin-top:.1rem}
 .body{font-family:'Lora',serif;font-size:1rem;line-height:1.88;color:rgba(255,255,255,.6);margin-bottom:2rem}
-.info-image{margin-bottom:2rem;opacity:0;transform:translateY(18px);transition:opacity .75s ease,transform .75s cubic-bezier(.22,1,.36,1)}
-.info-image img{width:100%;max-height:340px;object-fit:cover;border-radius:12px;border:1px solid rgba(245,158,11,.1)}
+.info-image{margin-bottom:.5rem;position:relative;overflow:hidden;border-radius:12px;border:1px solid rgba(245,158,11,.1);opacity:0;transform:translateY(18px);transition:opacity .75s ease,transform .75s cubic-bezier(.22,1,.36,1)}
+.info-image img{width:100%;max-height:340px;object-fit:cover;display:block}
+.img-caption{margin-bottom:2rem;font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.55rem;font-style:italic;line-height:1.5}
 .img-caption{font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.55rem;font-style:italic;line-height:1.5}
 .closing{font-family:'Lora',serif;font-size:1rem;line-height:1.88;color:rgba(255,255,255,.55)}
 .email-section{background:var(--bg-card);border-top:1px solid rgba(245,158,11,.1);border-bottom:1px solid rgba(245,158,11,.1)}
@@ -118,8 +119,15 @@ h1 em{font-style:normal;color:#FA2A52}
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-4%,3%)}50%{transform:translate(3%,-4%)}75%{transform:translate(-3%,2%)}100%{transform:translate(0,0)}}
 /* ── INFO IMAGE ─────────────────────────── */
 .info-image.in-view{opacity:1;transform:translateY(0)}
-.info-image img{transition:transform 1.1s cubic-bezier(.22,1,.36,1)}
-.info-image:hover img{transform:scale(1.05)}
+.info-image img{animation:infoFloat 18s ease-in-out infinite;transform-origin:center}
+@keyframes infoFloat{0%,100%{transform:scale(1) translate(0,0)}30%{transform:scale(1.04) translate(.7%,-.4%)}65%{transform:scale(1.03) translate(-.5%,.4%)}90%{transform:scale(1.05) translate(.4%,-.5%)}}
+.info-image::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 15% 85%,rgba(245,158,11,.22),transparent 60%),radial-gradient(ellipse 45% 38% at 85% 15%,rgba(245,158,11,.1),transparent 55%);mix-blend-mode:screen;pointer-events:none;z-index:2;animation:infoGlow 9s ease-in-out infinite}
+@keyframes infoGlow{0%,100%{opacity:.4}50%{opacity:1}}
+.info-image::after{content:'';position:absolute;bottom:-40%;left:-25%;width:75%;height:160%;background:linear-gradient(130deg,transparent 35%,rgba(255,210,100,.04) 48%,rgba(255,210,100,.1) 55%,rgba(255,210,100,.04) 62%,transparent 75%);transform:rotate(-15deg);pointer-events:none;z-index:3;mix-blend-mode:screen;animation:infoLeak 17s ease-in-out infinite}
+@keyframes infoLeak{0%,100%{transform:translateX(-20%) rotate(-15deg);opacity:.2}55%{transform:translateX(260%) rotate(-15deg);opacity:.7}}
+.info-grain{position:absolute;inset:-50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ig'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ig)'/%3E%3C/svg%3E");opacity:.3;mix-blend-mode:overlay;pointer-events:none;z-index:4;animation:infoGrainShift 2.1s steps(4) infinite}
+@keyframes infoGrainShift{0%{transform:translate(0,0)}25%{transform:translate(3%,-2%)}50%{transform:translate(-2%,3%)}75%{transform:translate(2%,-3%)}100%{transform:translate(0,0)}}
+.info-image:hover img{transform:scale(1.06)!important}
 /* ── PICK CARDS ─────────────────────────── */
 .pick{opacity:0;transform:translateX(-22px) scale(.97);transition:opacity .5s ease,transform .55s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease}
 .pick.in-view{opacity:1;transform:translateX(0) scale(1)}
@@ -153,7 +161,7 @@ h1 em{font-style:normal;color:#FA2A52}
   <div class="hero-content">
     <div class="breadcrumb">
       <a href="/carte">Carte</a><sep>›</sep>
-      <a href="/carte/philadelphia">Philadelphia</a><sep>›</sep>
+      <a href="/carte/">Philadelphia</a><sep>›</sep>
       South Philly Vietnamese
     </div>
     <div class="hero-eyebrow">Philadelphia &middot; South Philly</div>
@@ -217,8 +225,9 @@ h1 em{font-style:normal;color:#FA2A52}
 
   <div class="info-image">
     <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=1200&q=85&auto=format&fit=crop" alt="Fresh herbs and ingredients for Vietnamese cooking at a South Philadelphia market">
-    <p class="img-caption">The Vietnamese grocery stores on Washington Ave stock rau muống, multiple varieties of rice paper, and the specific fish sauce brands the South Philly community uses. This supply chain is why the restaurant food tastes the way it does.</p>
+    <div class="info-grain"></div>
   </div>
+  <p class="img-caption">The Vietnamese grocery stores on Washington Ave stock rau muống, multiple varieties of rice paper, and the specific fish sauce brands the South Philly community uses. This supply chain is why the restaurant food tastes the way it does.</p>
 
   <p class="closing">The best part about Washington Ave is that it hasn't been discovered yet in the way that makes neighborhoods worse. Prices are honest. The bánh mì shops don't have Instagram handles. The regulars are regulars. It is what a food corridor looks like before the brunch spots move in, and before anyone decides to call it a destination.</p>
 

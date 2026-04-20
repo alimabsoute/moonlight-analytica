@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Pho in New York — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#08080f;color:#c8c8e8;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,15,0.97);backdrop-filter:blur(10px);border-bottom:1px solid #12121f;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#e8e8f8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#6060a0;transition:color .2s}
+nav ul a:hover{color:#c8c8e8}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:1200px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#3a3a6a;margin-bottom:20px}
+.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,48px);line-height:1.1;margin-bottom:12px;color:#e8e8f8}
+h1 em{font-style:normal;color:#FA2A52}
+.meta{font-size:13px;color:#5050a0;margin-bottom:32px}
+.meta strong{color:#8888cc}
+
+.two-col{display:grid;grid-template-columns:65fr 35fr;gap:40px;align-items:start}
+.intro{font-size:16px;line-height:1.75;color:#9090c8;margin-bottom:32px;padding:20px;background:#0d0d1a;border-radius:12px;border:1px solid #1a1a2f}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:16px;color:#e8e8f8}
+
+.findings ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:36px}
+.findings ul li{font-size:14px;color:#8080c0;padding:11px 15px;background:#0d0d1a;border-radius:8px;border-left:3px solid #4a4aaa}
+
+.dish-entry{border:1px solid #141428;border-radius:12px;padding:20px;margin-bottom:14px;background:#0c0c18}
+.dish-header{margin-bottom:12px}
+.rank-badge{display:inline-block;font-size:11px;font-weight:700;background:#1a1a35;color:#6a6acc;padding:3px 10px;border-radius:4px;margin-bottom:8px;letter-spacing:.04em}
+.dish-name{font-family:'Geologica',sans-serif;font-weight:700;font-size:17px;color:#e8e8f8;margin-bottom:3px}
+.dish-rest{font-size:13px;color:#5a5aaa}
+.bar-group{margin-bottom:7px}
+.bar-label{font-size:11px;color:#4a4a8a;display:flex;justify-content:space-between;margin-bottom:3px}
+.bar-label span{color:#FA2A52;font-weight:600}
+.bar-track{height:4px;background:#141428;border-radius:2px}
+.bar-fill{height:4px;background:linear-gradient(90deg,#FA2A52,#aa44cc);border-radius:2px}
+
+.sidebar{position:sticky;top:80px}
+.sidebar-card{background:#0c0c18;border:1px solid #141428;border-radius:14px;padding:20px;margin-bottom:18px}
+.sidebar-card h3{font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px;color:#c8c8e8;text-transform:uppercase;letter-spacing:.05em}
+.rank-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #0f0f22}
+.rank-item:last-child{border-bottom:none}
+.rk-num{font-size:12px;color:#2a2a4a;font-weight:600;width:18px}
+.rk-name{font-size:13px;color:#7070b0;flex:1}
+.rk-score{font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;color:#FA2A52}
+
+.top-badge{background:linear-gradient(135deg,#1a1a3a,#2a1a4a);border:1px solid #3a2a6a;border-radius:10px;padding:18px;text-align:center;margin-bottom:16px}
+.top-badge .score{font-family:'Geologica',sans-serif;font-weight:900;font-size:48px;color:#FA2A52;line-height:1}
+.top-badge .label{font-size:11px;color:#6060a0;margin-top:5px;text-transform:uppercase;letter-spacing:.05em}
+
+.related-links a{display:block;font-size:14px;color:#6060aa;padding:10px 14px;background:#0c0c18;border-radius:8px;border:1px solid #141428;margin-bottom:8px;transition:all .2s}
+.related-links a:hover{border-color:#FA2A52;color:#FA2A52}
+
+@media(max-width:768px){.two-col{grid-template-columns:1fr}.sidebar{position:static}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul>
+    <li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li>
+    <li><a href="/beta" class="nav-cta">Join Beta →</a></li>
+  </ul>
+</nav>
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / New York / <span>Pho</span></div>
+  <h1>Best <em>Pho</em> in New York</h1>
+  <div class="meta">Updated April 2026 · <strong>10 dishes ranked</strong> · ForkFox Carte Guide</div>
+  <div class="two-col">
+    <div class="content">
+      <p class="intro">New York's pho landscape is anchored in Flushing and the East Village, where Vietnamese communities have maintained decades-long broth-craft traditions. The best bowls here are architectural — layers of star anise, charred ginger, and twelve-hour bones.</p>
+      <div class="findings">
+        <div class="section-title">Key Findings</div>
+        <ul>
+          <li>Flushing bowls score 8% higher on authenticity than Manhattan counterparts</li>
+          <li>Broth clarity is the #1 quality signal — cloudy broth correlates with lower flavor scores</li>
+          <li>Pho ga (chicken) is rapidly gaining prestige — 3 entries in the top 10 this cycle</li>
+          <li>Average portion sizes in NYC are 15% larger than LA equivalent restaurants</li>
+        </ul>
+      </div>
+      <div class="section-title">Ranked Dishes</div>
+
+      <div class="dish-entry">
+        <div class="dish-header"><div class="rank-badge">RANK 01</div><div class="dish-name">Pho Bo Dac Biet</div><div class="dish-rest">Pho Bang — Flushing, Queens</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>91</span></div><div class="bar-track"><div class="bar-fill" style="width:91%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Authenticity <span>94</span></div><div class="bar-track"><div class="bar-fill" style="width:94%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Value <span>88</span></div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div></div>
+      </div>
+
+      <div class="dish-entry">
+        <div class="dish-header"><div class="rank-badge">RANK 02</div><div class="dish-name">Pho Tai Nam</div><div class="dish-rest">Nha Trang One — Chinatown</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>89</span></div><div class="bar-track"><div class="bar-fill" style="width:89%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Value <span>92</span></div><div class="bar-track"><div class="bar-fill" style="width:92%"></div></div></div>
+      </div>
+
+      <div class="dish-entry">
+        <div class="dish-header"><div class="rank-badge">RANK 03</div><div class="dish-name">Pho Ga Thit Vit</div><div class="dish-rest">Pho Grand — Little Italy</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>87</span></div><div class="bar-track"><div class="bar-fill" style="width:87%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Authenticity <span>89</span></div><div class="bar-track"><div class="bar-fill" style="width:89%"></div></div></div>
+      </div>
+
+      <div class="related">
+        <div class="section-title">Related Guides</div>
+        <div class="related-links">
+          <a href="#">Best Bun Bo Hue in New York →</a>
+          <a href="#">Best Banh Mi in New York →</a>
+          <a href="#">Best Dim Sum in New York →</a>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="top-badge"><div class="score">91</div><div class="label">Top Score — Pho Bo</div></div>
+        <h3>Full Rankings</h3>
+        <div class="rank-item"><div class="rk-num">1</div><div class="rk-name">Pho Bo Dac Biet</div><div class="rk-score">91</div></div>
+        <div class="rank-item"><div class="rk-num">2</div><div class="rk-name">Pho Tai Nam</div><div class="rk-score">89</div></div>
+        <div class="rank-item"><div class="rk-num">3</div><div class="rk-name">Pho Ga Thit Vit</div><div class="rk-score">87</div></div>
+        <div class="rank-item"><div class="rk-num">4</div><div class="rk-name">Pho Sate Spicy</div><div class="rk-score">85</div></div>
+        <div class="rank-item"><div class="rk-num">5</div><div class="rk-name">Brisket Pho</div><div class="rk-score">83</div></div>
+        <div class="rank-item"><div class="rk-num">6</div><div class="rk-name">Pho Bo Vien</div><div class="rk-score">81</div></div>
+        <div class="rank-item"><div class="rk-num">7</div><div class="rk-name">Pho Chay</div><div class="rk-score">78</div></div>
+        <div class="rank-item"><div class="rk-num">8</div><div class="rk-name">Pho Tai Gan</div><div class="rk-score">76</div></div>
+        <div class="rank-item"><div class="rk-num">9</div><div class="rk-name">Pho Oxtail</div><div class="rk-score">74</div></div>
+        <div class="rank-item"><div class="rk-num">10</div><div class="rk-name">Pho Combo Bowl</div><div class="rk-score">71</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

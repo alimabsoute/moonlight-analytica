@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Dim Sum in New York — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0d0a;color:#f0e8d8;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,13,10,0.97);border-bottom:1px solid #2a2418;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#8a7a5a}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:1100px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#5a4a2a;margin-bottom:18px}.breadcrumb span{color:#F97316}
+.page-header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:28px}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(24px,3.5vw,42px);line-height:1.1;color:#f0e8d8}
+h1 em{font-style:normal;color:#F97316}
+
+.intro{font-size:15px;line-height:1.75;color:#b09060;margin-bottom:28px;max-width:700px;border-left:3px solid #F97316;padding-left:18px}
+
+.table-wrap{width:100%;overflow-x:auto;margin-bottom:40px}
+table{width:100%;border-collapse:collapse;min-width:700px}
+thead tr{background:#181410;border-bottom:2px solid #F97316}
+thead th{padding:12px 16px;font-size:11px;font-family:'Geologica',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#5a4a2a;text-align:left}
+thead th.c{text-align:center}
+thead th.r{text-align:right}
+tbody tr{border-bottom:1px solid #201808;background:#0f0d0a;transition:background .15s}
+tbody tr:hover{background:#141008}
+tbody tr.top{background:#1a1000}
+td{padding:13px 16px;vertical-align:middle}
+.td-rank{font-family:'Geologica',sans-serif;font-weight:900;font-size:20px;color:#2a2010;width:36px}
+.td-rank.t{color:#F97316}
+.td-dish{font-weight:600;font-size:14px;color:#f0e8d8;margin-bottom:2px}
+.td-rest{font-size:11px;color:#F97316}
+.score-val{font-size:13px;color:#8a7a5a;text-align:center}
+.score-val.hi{color:#F97316;font-weight:700}
+.bar-mini{height:3px;background:#2a2010;border-radius:2px;margin-top:4px;min-width:60px}
+.bar-mini-f{height:3px;background:linear-gradient(90deg,#c84000,#F97316);border-radius:2px}
+.td-total{text-align:right;font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#F97316}
+.td-total.d{color:#2a2010}
+.td-tag{text-align:center}
+.tag{display:inline-block;font-size:10px;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
+.tag.a{background:#1a1200;color:#F97316;border:1px solid #c84000}
+.tag.b{background:#1a1a10;color:#a0a060}
+
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:16px;color:#f0e8d8}
+.section-title em{font-style:normal;color:#F97316}
+.findings ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:32px}
+.findings ul li{font-size:13px;color:#b09060;padding:12px 16px;background:#181410;border-radius:8px;border-left:3px solid #c84000}
+
+.related{display:flex;gap:8px;flex-wrap:wrap}
+.rel-link{background:#141008;border:1px solid #2a2010;border-radius:8px;padding:10px 16px;font-size:13px;color:#F97316;font-weight:500}
+
+@media(max-width:600px){.findings ul{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / New York / <span>Dim Sum</span></div>
+  <div class="page-header"><h1>Best <em>Dim Sum</em> in New York</h1></div>
+  <p class="intro">Flushing and Sunset Park in Brooklyn host the most serious dim sum operations outside Hong Kong. The scale here is remarkable — banquet halls seating 400+ while maintaining quality.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Dish / Restaurant</th><th class="c">Flavor</th><th class="c">Texture</th><th class="c">Value</th><th class="c">Auth.</th><th class="c">Type</th><th class="r">Score</th></tr>
+      </thead>
+      <tbody>
+        <tr class="top"><td><span class="td-rank t">1</span></td><td><div class="td-dish">Har Gow</div><div class="td-rest">Jing Fong — Manhattan Chinatown</div></td><td><div class="score-val hi">93<div class="bar-mini"><div class="bar-mini-f" style="width:93%"></div></div></div></td><td><div class="score-val hi">95<div class="bar-mini"><div class="bar-mini-f" style="width:95%"></div></div></div></td><td><div class="score-val">90<div class="bar-mini"><div class="bar-mini-f" style="width:90%"></div></div></div></td><td><div class="score-val hi">94</div></td><td class="td-tag"><span class="tag a">Steamed</span></td><td class="td-total">93</td></tr>
+        <tr class="top"><td><span class="td-rank t">2</span></td><td><div class="td-dish">Siu Mai Wagyu</div><div class="td-rest">Ocean Palace — Flushing</div></td><td><div class="score-val hi">91</div></td><td><div class="score-val hi">90</div></td><td><div class="score-val">82</div></td><td><div class="score-val hi">92</div></td><td class="td-tag"><span class="tag a">Steamed</span></td><td class="td-total">91</td></tr>
+        <tr class="top"><td><span class="td-rank t">3</span></td><td><div class="td-dish">XO Cheung Fun</div><div class="td-rest">Dim Sum Palace — Flushing</div></td><td><div class="score-val hi">90</div></td><td><div class="score-val hi">92</div></td><td><div class="score-val">84</div></td><td><div class="score-val">88</div></td><td class="td-tag"><span class="tag a">Steamed</span></td><td class="td-total">89</td></tr>
+        <tr><td><span class="td-rank t">4</span></td><td><div class="td-dish">Baked Char Siu Bao</div><div class="td-rest">Golden Palace — Sunset Park</div></td><td><div class="score-val">88</div></td><td><div class="score-val">86</div></td><td><div class="score-val">90</div></td><td><div class="score-val">87</div></td><td class="td-tag"><span class="tag b">Baked</span></td><td class="td-total">87</td></tr>
+        <tr><td><span class="td-rank">5</span></td><td><div class="td-dish">Egg Tart</div><div class="td-rest">Golden Unicorn — Chinatown</div></td><td><div class="score-val">86</div></td><td><div class="score-val">88</div></td><td><div class="score-val">88</div></td><td><div class="score-val">84</div></td><td class="td-tag"><span class="tag b">Baked</span></td><td class="td-total d">85</td></tr>
+        <tr><td><span class="td-rank">6</span></td><td><div class="td-dish">Turnip Cake Lo Bak Go</div><div class="td-rest">Nom Wah Tea Parlor — Chinatown</div></td><td><div class="score-val">84</div></td><td><div class="score-val">86</div></td><td><div class="score-val">91</div></td><td><div class="score-val">88</div></td><td class="td-tag"><span class="tag b">Pan-Fried</span></td><td class="td-total d">83</td></tr>
+        <tr><td><span class="td-rank">7</span></td><td><div class="td-dish">Sticky Rice Lotus</div><div class="td-rest">Jing Fong — Manhattan</div></td><td><div class="score-val">82</div></td><td><div class="score-val">80</div></td><td><div class="score-val">87</div></td><td><div class="score-val">86</div></td><td class="td-tag"><span class="tag a">Steamed</span></td><td class="td-total d">80</td></tr>
+        <tr><td><span class="td-rank">8</span></td><td><div class="td-dish">Sesame Ball</div><div class="td-rest">Great Wall — Flushing</div></td><td><div class="score-val">80</div></td><td><div class="score-val">82</div></td><td><div class="score-val">90</div></td><td><div class="score-val">80</div></td><td class="td-tag"><span class="tag b">Fried</span></td><td class="td-total d">78</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="findings">
+    <div class="section-title">Key <em>Findings</em></div>
+    <ul>
+      <li>Jing Fong's grand hall tradition remains unmatched — cart service at this scale is a theatrical experience</li>
+      <li>Flushing outperforms Manhattan Chinatown on authenticity but Manhattan has shorter wait times</li>
+      <li>Nom Wah Tea Parlor (est. 1920) is experiencing a quality renaissance — now in top 10 after years out</li>
+      <li>Steamed preparations score 9pts higher on average than fried — texture is better preserved</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Related <em>Guides</em></div>
+  <div class="related">
+    <a class="rel-link" href="#">Best Sushi in New York →</a>
+    <a class="rel-link" href="#">Best Peking Duck in NY →</a>
+    <a class="rel-link" href="#">Best Cantonese in NY →</a>
+  </div>
+</div>
+</body>
+</html>

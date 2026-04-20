@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Philadelphia Pad Thai — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(250,42,82,0.2); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #fff; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* SPLIT HERO — bold accent, vertical divider */
+  .hero { margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 60px); }
+  .hero-img-col { position: relative; overflow: hidden; }
+  .hero-img-col .bg { position: absolute; inset: 0; background: url('https://picsum.photos/seed/dish10/900/1000') center/cover no-repeat; }
+  .hero-img-col .overlay { position: absolute; inset: 0; background: rgba(10,10,10,0.15); }
+  /* Red vertical line separating panels */
+  .hero-divider { width: 4px; background: #FA2A52; flex-shrink: 0; }
+  .hero-text-col { background: #0a0a0a; display: flex; flex-direction: column; justify-content: center; padding: 64px 52px; position: relative; }
+  /* Big decorative number */
+  .big-num { position: absolute; top: 40px; right: 40px; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 140px; color: rgba(250,42,82,0.06); line-height: 1; pointer-events: none; }
+  .cuisine-line { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .cuisine-pill { background: #FA2A52; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 5px 12px; border-radius: 3px; }
+  .city-tag { font-size: 12px; color: rgba(255,255,255,0.35); }
+  .split-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(26px, 2.8vw, 46px); line-height: 1.08; letter-spacing: -1px; color: #fff; margin-bottom: 20px; position: relative; }
+  .split-intro { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.55); margin-bottom: 32px; max-width: 400px; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat { text-align: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(250,42,82,0.15); border-radius: 8px; padding: 14px 8px; }
+  .stat .n { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 24px; color: #FA2A52; display: block; }
+  .stat .l { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.35); display: block; margin-top: 2px; }
+  .byline { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+  /* BODY */
+  .article-body { max-width: 720px; margin: 0 auto; padding: 72px 24px 120px; }
+  .article-body p { font-size: 17px; line-height: 1.85; color: rgba(255,255,255,0.72); margin-bottom: 26px; }
+  .article-body h2 { font-family: 'Geologica', sans-serif; font-weight: 800; font-size: 22px; color: #fff; margin: 44px 0 14px; }
+  .red-box { background: rgba(250,42,82,0.08); border: 1px solid rgba(250,42,82,0.2); border-radius: 8px; padding: 22px 26px; margin: 32px 0; }
+  .red-box p { font-family: 'Geologica', sans-serif; font-size: 17px; font-weight: 700; color: #fff; margin: 0; line-height: 1.5; }
+  .body-img { width: 100%; border-radius: 10px; margin: 32px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food10/800/500') center/cover; }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-img-col { height: 56vw; }
+    .hero-divider { display: none; }
+    .hero-text-col { padding: 36px 20px; }
+    .split-title { font-size: 24px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .big-num { font-size: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-img-col">
+    <div class="bg"></div>
+    <div class="overlay"></div>
+  </div>
+  <div class="hero-divider"></div>
+  <div class="hero-text-col">
+    <div class="big-num">96</div>
+    <div class="cuisine-line">
+      <span class="cuisine-pill">Pad Thai</span>
+      <span class="city-tag">Philadelphia</span>
+    </div>
+    <h1 class="split-title">This Philadelphia Pad Thai Scores Higher Than Anything We've Found in New York</h1>
+    <p class="split-intro">A wok hei-forward, tamarind-bright Pad Thai from a Thai Town operation that should have a line out the door.</p>
+    <div class="stats-row">
+      <div class="stat"><span class="n">96</span><span class="l">Score</span></div>
+      <div class="stat"><span class="n">$14</span><span class="l">Price</span></div>
+      <div class="stat"><span class="n">4 min</span><span class="l">Read</span></div>
+    </div>
+    <div class="byline">ForkFox Algorithm · March 2026</div>
+  </div>
+</section>
+
+<article class="article-body">
+  <p>Philadelphia has a Thai food community centered around a cluster of restaurants on Washington Avenue that most of the city's food press ignores entirely. Our model found a Pad Thai here that outscores every equivalent dish in our New York dataset — which contains 60 entries — on wok hei, tamarind balance, and noodle calibration simultaneously.</p>
+
+  <h2>Wok Hei Is Not Optional</h2>
+  <p>Wok hei — the breath of the wok — is the slightly smoky, caramelized quality that results from cooking at extremely high heat in a seasoned carbon steel wok. It is not replicable on a standard restaurant range. The operations that achieve it in this city are using modified burners or commercial Thai-style ring burners that output 200,000 BTU or more. The kitchen on Washington Avenue is using the latter, and it shows in every order.</p>
+
+  <div class="red-box"><p>"Wok hei is non-negotiable. You can't simulate it with a lower heat source — you either have the equipment or you don't, and the dish tells you immediately."</p></div>
+
+  <div class="body-img"></div>
+
+  <h2>The Tamarind Ratio</h2>
+  <p>Pad Thai sauce is built on tamarind paste, fish sauce, and palm sugar, with the tamarind providing the foundational acidity. Most American operations use an over-sweetened sauce that pushes the dish toward dessert territory. This kitchen uses a tamarind-forward ratio — noticeably more sour than most — that creates a brightness that holds up through the richness of the egg and the weight of the noodles. The shrimp is fresh, not frozen, and added to the wok last so it doesn't overcook.</p>
+
+  <p>This is the best Pad Thai in the mid-Atlantic region by our current dataset. If that claim seems overstated, visit once and recalibrate.</p>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Sushi in Los Angeles — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#FA2A52;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}.logo-text span{color:#ffcc88}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:rgba(255,255,255,.8)}
+.nav-cta{background:#fff;color:#FA2A52!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;margin-left:8px}
+
+.page-wrap{max-width:1100px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:16px}.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(26px,4vw,48px);line-height:1.05;margin-bottom:10px}
+h1 em{font-style:normal;color:#FA2A52}
+.meta{font-size:13px;color:#555;margin-bottom:12px}.meta strong{color:#F97316}
+.intro{font-size:15px;color:#bbb;max-width:680px;line-height:1.75;margin-bottom:32px}
+
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:20px}
+.section-title em{font-style:normal;color:#FA2A52}
+
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:44px}
+.dish-card{background:#111;border-radius:14px;overflow:hidden;border:2px solid transparent}
+.dish-card.r1{border-color:#FA2A52}
+.dish-card.r2{border-color:#F97316}
+.dish-card.r3{border-color:#fbbf24}
+
+.card-header{background:#FA2A52;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.card-header.h2{background:#F97316}
+.card-header.h3{background:#fbbf24}
+.card-header.hn{background:#1a1a1a}
+.ch-rank{font-family:'Geologica',sans-serif;font-weight:900;font-size:11px;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.06em}
+.ch-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:28px;color:#fff;line-height:1}
+.ch-score.dark{color:#111}
+
+.card-body{padding:14px}
+.cname{font-family:'Geologica',sans-serif;font-weight:700;font-size:15px;margin-bottom:3px;color:#fff}
+.crest{font-size:12px;color:#FA2A52;margin-bottom:10px}
+.score-row{display:flex;gap:6px;flex-wrap:wrap}
+.score-pill{background:#1a1a1a;border-radius:4px;font-size:10px;color:#888;padding:3px 8px}
+.score-pill strong{color:#FA2A52}
+
+.findings ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:32px}
+.findings ul li{font-size:13px;color:#aaa;padding:11px 14px;background:#111;border-radius:8px}
+.findings ul li::before{content:"▶ ";color:#FA2A52;font-size:10px}
+
+.related{display:flex;gap:8px;flex-wrap:wrap}
+.rel-link{background:#111;border:1px solid #FA2A52;border-radius:8px;padding:10px 16px;font-size:13px;color:#FA2A52;font-weight:700}
+
+@media(max-width:768px){.card-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.card-grid{grid-template-columns:1fr}.findings ul{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / Los Angeles / <span>Sushi</span></div>
+  <h1>Best <em>Sushi</em> in Los Angeles</h1>
+  <div class="meta">Updated April 2026 · <strong>9 dishes ranked</strong> · ForkFox Carte Guide</div>
+  <p class="intro">West Hollywood, Little Tokyo, and the San Fernando Valley each host world-class sushi — LA's Japanese-American community has cultivated an omakase tradition that now exports chefs globally.</p>
+
+  <div class="section-title">Ranked <em>Dishes</em></div>
+  <div class="card-grid">
+    <div class="dish-card r1">
+      <div class="card-header"><span class="ch-rank">Rank 1</span><span class="ch-score">96</span></div>
+      <div class="card-body"><div class="cname">Omakase Otoro Nigiri</div><div class="crest">Sushi Ōta — San Diego (LA Adjacent)</div><div class="score-row"><span class="score-pill">Flavor <strong>98</strong></span><span class="score-pill">Texture <strong>97</strong></span><span class="score-pill">Auth. <strong>99</strong></span></div></div>
+    </div>
+    <div class="dish-card r2">
+      <div class="card-header h2"><span class="ch-rank">Rank 2</span><span class="ch-score">94</span></div>
+      <div class="card-body"><div class="cname">Wagyu Nigiri</div><div class="crest">Nobu — West Hollywood</div><div class="score-row"><span class="score-pill">Flavor <strong>96</strong></span><span class="score-pill">Pres. <strong>95</strong></span></div></div>
+    </div>
+    <div class="dish-card r3">
+      <div class="card-header h3"><span class="ch-rank" style="color:rgba(0,0,0,.7)">Rank 3</span><span class="ch-score dark">91</span></div>
+      <div class="card-body"><div class="cname">Uni Hand Roll</div><div class="crest">Sugarfish — Downtown</div><div class="score-row"><span class="score-pill">Flavor <strong>93</strong></span><span class="score-pill">Value <strong>88</strong></span></div></div>
+    </div>
+    <div class="dish-card">
+      <div class="card-header hn"><span class="ch-rank">Rank 4</span><span class="ch-score">89</span></div>
+      <div class="card-body"><div class="cname">Salmon Roe Gunkan</div><div class="crest">Sushi Gen — Little Tokyo</div></div>
+    </div>
+    <div class="dish-card">
+      <div class="card-header hn"><span class="ch-rank">Rank 5</span><span class="ch-score">87</span></div>
+      <div class="card-body"><div class="cname">Halibut Sashimi</div><div class="crest">Matsuhisa — Beverly Hills</div></div>
+    </div>
+    <div class="dish-card">
+      <div class="card-header hn"><span class="ch-rank">Rank 6</span><span class="ch-score">84</span></div>
+      <div class="card-body"><div class="cname">Scallop Aburi</div><div class="crest">Q Sushi — Downtown</div></div>
+    </div>
+    <div class="dish-card">
+      <div class="card-header hn"><span class="ch-rank">Rank 7</span><span class="ch-score">82</span></div>
+      <div class="card-body"><div class="cname">Yellowtail Roll</div><div class="crest">Katsu-ya — Studio City</div></div>
+    </div>
+    <div class="dish-card">
+      <div class="card-header hn"><span class="ch-rank">Rank 8</span><span class="ch-score">79</span></div>
+      <div class="card-body"><div class="cname">Spicy Tuna Crispy Rice</div><div class="crest">Kura — Los Feliz</div></div>
+    </div>
+    <div class="dish-card">
+      <div class="card-header hn"><span class="ch-rank">Rank 9</span><span class="ch-score">76</span></div>
+      <div class="card-body"><div class="cname">Dragon Roll</div><div class="crest">East Restaurant — Silver Lake</div></div>
+    </div>
+  </div>
+
+  <div class="findings">
+    <div class="section-title">Key <em>Findings</em></div>
+    <ul>
+      <li>LA's omakase scene has matured to the point of rivaling NYC — Sushi Ōta's southerly location notwithstanding</li>
+      <li>Sugarfish democratized quality sushi in LA — the trust me set at $55 remains the best value play</li>
+      <li>Little Tokyo's Sushi Gen has a legendary lunch line — worth every minute at 40% below WeHo prices</li>
+      <li>Neighborhood sushi in LA is dramatically better than equivalent NYC offerings — fewer tourists inflating prices</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Related <em>Guides</em></div>
+  <div class="related">
+    <a class="rel-link" href="#">Best Ramen in LA →</a>
+    <a class="rel-link" href="#">Best Omakase in LA →</a>
+    <a class="rel-link" href="#">Best Japanese in LA →</a>
+  </div>
+</div>
+</body>
+</html>

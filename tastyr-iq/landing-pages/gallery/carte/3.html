@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Sushi in Chicago — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0d0a;color:#f0e8d8;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,13,10,0.96);backdrop-filter:blur(10px);border-bottom:1px solid #2a2418;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#8a7a5a;transition:color .2s}
+nav ul a:hover{color:#f0e8d8}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:1200px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#5a4a2a;margin-bottom:20px}
+.breadcrumb span{color:#F97316}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,48px);line-height:1.1;margin-bottom:12px;color:#f0e8d8}
+h1 em{font-style:normal;color:#F97316}
+.meta{font-size:13px;color:#6a5a3a;margin-bottom:32px}
+.meta strong{color:#F97316}
+
+.two-col{display:grid;grid-template-columns:65fr 35fr;gap:40px;align-items:start}
+
+.intro{font-size:16px;line-height:1.75;color:#c8b888;margin-bottom:32px;border-left:3px solid #F97316;padding-left:20px}
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:16px;color:#f0e8d8}
+
+.findings ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:36px}
+.findings ul li{font-size:14px;color:#b89a6a;padding:11px 15px;background:#181410;border-radius:8px;border-left:3px solid #F97316}
+
+.dish-entry{border:1px solid #2a2010;border-radius:12px;padding:20px;margin-bottom:14px;background:#141008}
+.dish-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.dish-name{font-family:'Geologica',sans-serif;font-weight:700;font-size:17px;color:#f0e8d8}
+.dish-rest{font-size:13px;color:#F97316;margin-top:3px}
+.dish-score{font-family:'Geologica',sans-serif;font-weight:900;font-size:32px;color:#F97316;line-height:1}
+.bar-group{margin-bottom:7px}
+.bar-label{font-size:11px;color:#6a5a3a;display:flex;justify-content:space-between;margin-bottom:3px}
+.bar-label span{color:#F97316}
+.bar-track{height:4px;background:#2a2010;border-radius:2px}
+.bar-fill{height:4px;background:linear-gradient(90deg,#c84000,#F97316);border-radius:2px}
+
+.sidebar{position:sticky;top:80px}
+.sidebar-card{background:#141008;border:1px solid #2a2010;border-radius:14px;padding:20px;margin-bottom:18px}
+.sidebar-card h3{font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px;color:#f0e8d8;text-transform:uppercase;letter-spacing:.05em}
+.rank-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #201808}
+.rank-item:last-child{border-bottom:none}
+.rk-num{font-size:12px;color:#4a3a1a;font-weight:600;width:18px}
+.rk-name{font-size:13px;color:#b89a6a;flex:1}
+.rk-score{font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;color:#F97316}
+
+.top-badge{background:linear-gradient(135deg,#c84000,#F97316);border-radius:10px;padding:18px;text-align:center;margin-bottom:16px}
+.top-badge .score{font-family:'Geologica',sans-serif;font-weight:900;font-size:48px;color:#fff;line-height:1}
+.top-badge .label{font-size:11px;color:rgba(255,255,255,.8);margin-top:5px;text-transform:uppercase;letter-spacing:.05em}
+
+.related{margin-top:40px}
+.related-links a{display:block;font-size:14px;color:#F97316;padding:10px 14px;background:#141008;border-radius:8px;border:1px solid #2a2010;margin-bottom:8px;transition:border-color .2s}
+.related-links a:hover{border-color:#F97316}
+
+@media(max-width:768px){.two-col{grid-template-columns:1fr}.sidebar{position:static}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul>
+    <li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li>
+    <li><a href="/beta" class="nav-cta">Join Beta →</a></li>
+  </ul>
+</nav>
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / Chicago / <span>Sushi</span></div>
+  <h1>Best <em>Sushi</em> in Chicago</h1>
+  <div class="meta">Updated April 2026 · <strong>10 dishes ranked</strong> · ForkFox Carte Guide</div>
+  <div class="two-col">
+    <div class="content">
+      <p class="intro">Chicago's sushi scene benefits from deep Midwest umami traditions — restaurant groups here take fermentation and curing seriously, producing omakase experiences that rival coasts at notably lower price points.</p>
+      <div class="findings">
+        <div class="section-title">Key Findings</div>
+        <ul>
+          <li>Wicker Park has quietly become the sushi neighborhood — 4 of the top 10 are within six blocks</li>
+          <li>Wagyu nigiri overtook fatty tuna as the prestige order in 2025</li>
+          <li>Chicago's cold-water fish sourcing from Great Lakes suppliers adds distinctive terroir</li>
+          <li>Omakase value gap vs. NYC is widening — comparable meals run $40 less on average</li>
+        </ul>
+      </div>
+      <div class="section-title">Ranked Dishes</div>
+
+      <div class="dish-entry">
+        <div class="dish-top"><div><div class="dish-name">A5 Wagyu Nigiri</div><div class="dish-rest">Kyoten — West Town</div></div><div class="dish-score">93</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>95</span></div><div class="bar-track"><div class="bar-fill" style="width:95%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Texture <span>96</span></div><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Value <span>78</span></div><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div></div>
+      </div>
+
+      <div class="dish-entry">
+        <div class="dish-top"><div><div class="dish-name">Otoro Nigiri</div><div class="dish-rest">Momotaro — River North</div></div><div class="dish-score">91</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>93</span></div><div class="bar-track"><div class="bar-fill" style="width:93%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Texture <span>94</span></div><div class="bar-track"><div class="bar-fill" style="width:94%"></div></div></div>
+      </div>
+
+      <div class="dish-entry">
+        <div class="dish-top"><div><div class="dish-name">Uni Hand Roll</div><div class="dish-rest">Arami — Wicker Park</div></div><div class="dish-score">88</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>91</span></div><div class="bar-track"><div class="bar-fill" style="width:91%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Value <span>82</span></div><div class="bar-track"><div class="bar-fill" style="width:82%"></div></div></div>
+      </div>
+
+      <div class="dish-entry">
+        <div class="dish-top"><div><div class="dish-name">Salmon Roe Gunkan</div><div class="dish-rest">Sushi-San — River North</div></div><div class="dish-score">85</div></div>
+        <div class="bar-group"><div class="bar-label">Flavor <span>87</span></div><div class="bar-track"><div class="bar-fill" style="width:87%"></div></div></div>
+        <div class="bar-group"><div class="bar-label">Value <span>88</span></div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div></div>
+      </div>
+
+      <div class="related">
+        <div class="section-title">Related Guides</div>
+        <div class="related-links">
+          <a href="#">Best Ramen in Chicago →</a>
+          <a href="#">Best Dim Sum in Chicago →</a>
+          <a href="#">Best Korean BBQ in Chicago →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="top-badge"><div class="score">93</div><div class="label">Top Score — Wagyu Nigiri</div></div>
+        <h3>Full Rankings</h3>
+        <div class="rank-item"><div class="rk-num">1</div><div class="rk-name">A5 Wagyu Nigiri</div><div class="rk-score">93</div></div>
+        <div class="rank-item"><div class="rk-num">2</div><div class="rk-name">Otoro Nigiri</div><div class="rk-score">91</div></div>
+        <div class="rank-item"><div class="rk-num">3</div><div class="rk-name">Uni Hand Roll</div><div class="rk-score">88</div></div>
+        <div class="rank-item"><div class="rk-num">4</div><div class="rk-name">Salmon Roe Gunkan</div><div class="rk-score">85</div></div>
+        <div class="rank-item"><div class="rk-num">5</div><div class="rk-name">Hamachi Sashimi</div><div class="rk-score">83</div></div>
+        <div class="rank-item"><div class="rk-num">6</div><div class="rk-name">Spicy Tuna Roll</div><div class="rk-score">81</div></div>
+        <div class="rank-item"><div class="rk-num">7</div><div class="rk-name">Scallop Aburi</div><div class="rk-score">79</div></div>
+        <div class="rank-item"><div class="rk-num">8</div><div class="rk-name">Ebi Tempura Roll</div><div class="rk-score">77</div></div>
+        <div class="rank-item"><div class="rk-num">9</div><div class="rk-name">Mackerel Nigiri</div><div class="rk-score">75</div></div>
+        <div class="rank-item"><div class="rk-num">10</div><div class="rk-name">Avocado Roll</div><div class="rk-score">71</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How ForkFox Sees a City — The Dish | ForkFox</title>
+<meta name="description" content="A 4.6-star restaurant can serve a 6-out-of-10 biryani. Here's why ForkFox scores dishes, not dinners — and what that changes about the way you eat.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://forkfox.ai/the-dish/how-forkfox-sees-a-city/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How ForkFox Sees a City">
+<meta property="og:description" content="The case for scoring dishes, not dinners.">
+<meta property="og:image" content="https://forkfox.ai/the-dish/how-forkfox-sees-a-city/og.jpg">
+<meta property="og:url" content="https://forkfox.ai/the-dish/how-forkfox-sees-a-city/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="https://forkfox.ai/forkfox-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#d8d8d8;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+nav.site{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid #1a1a1a;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff}.logo-text span{color:#F97316}
+nav.site ul{display:flex;gap:24px;list-style:none;margin-left:auto;align-items:center}
+nav.site ul a{font-size:14px;color:#999;transition:color .2s}
+nav.site ul a:hover{color:#fff}
+nav.site ul li:first-child a{color:#ccc;font-size:13px;font-weight:500;letter-spacing:.01em;transition:color .2s}
+nav.site ul li:first-child a:hover{color:#fff}
+.nav-pill,.nav-ghost{display:inline-flex;align-items:center;justify-content:center;min-width:88px;font-size:13px;font-weight:700;padding:7px 16px;border-radius:20px;transition:transform .22s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease;letter-spacing:.01em}
+.nav-pill{background:#F97316;color:#0a0a0a!important;border:1.5px solid rgba(255,160,70,.5);box-shadow:0 4px 18px rgba(249,115,22,.45),0 1px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.22)}
+.nav-pill:hover{background:#fb8c34!important;transform:translateY(-1px);box-shadow:0 7px 22px rgba(249,115,22,.55),inset 0 1px 0 rgba(255,255,255,.28);color:#0a0a0a!important}
+.nav-pill:active{transform:translateY(1px);box-shadow:0 1px 5px rgba(249,115,22,.2)!important;transition:all .08s}
+.nav-ghost{background:transparent;color:#F97316!important;border:1.5px solid rgba(249,115,22,.55)}
+.nav-ghost:hover{background:rgba(249,115,22,.14)!important;border-color:rgba(249,115,22,.8);transform:translateY(-1px);box-shadow:0 4px 16px rgba(249,115,22,.22);color:#fb8c34!important}
+.nav-ghost:active{transform:translateY(1px);transition:all .08s}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;transition:all .2s}
+.nav-cta:hover{background:#e0243f}
+.progress{position:fixed;top:60px;left:0;height:2px;background:linear-gradient(90deg,#FA2A52,#F97316);width:0;z-index:101;transition:width .1s}
+.page-wrap{max-width:1200px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#555;margin-bottom:20px;font-family:monospace}
+.breadcrumb a{color:#666}.breadcrumb a:hover{color:#FA2A52}.breadcrumb span{color:#FA2A52}
+.hero-article{margin-bottom:40px}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tag{font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(250,42,82,.1);border:1px solid rgba(250,42,82,.3);color:#FA2A52;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.tag.concept{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:#34d399}
+h1.article-title{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(34px,5.5vw,62px);line-height:1.02;letter-spacing:-.025em;margin-bottom:20px;color:#fff}
+h1.article-title em{font-style:normal;color:#FA2A52}
+.deck{font-size:clamp(17px,2vw,22px);line-height:1.5;color:#aaa;max-width:820px;margin-bottom:28px;font-family:'Lora',serif}
+.byline{display:flex;align-items:center;gap:16px;padding-top:20px;border-top:1px solid #1a1a1a;font-size:13px;color:#777}
+.byline .author{color:#ccc;font-weight:600}.byline .sep{color:#333}
+
+/* HERO */
+.hero-stage{position:relative;margin:36px 0 56px;border-radius:18px;overflow:hidden;aspect-ratio:16/9;background:#050505;box-shadow:0 50px 140px rgba(0,0,0,.6),0 16px 50px rgba(250,42,82,.12),inset 0 0 0 1px rgba(255,255,255,.04)}
+.hero-photo{position:absolute;inset:-6%;background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=2400&q=85&auto=format&fit=crop');background-size:cover;background-position:center;animation:kenBurns 30s ease-in-out infinite;will-change:transform}
+@keyframes kenBurns{0%{transform:scale(1.06) translate(0,0)}25%{transform:scale(1.14) translate(-1.5%,-1%)}50%{transform:scale(1.18) translate(1.5%,1%)}75%{transform:scale(1.12) translate(1%,-1.5%)}100%{transform:scale(1.06) translate(0,0)}}
+.hero-grade{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,5,2,.35) 0%,rgba(20,10,4,.1) 30%,rgba(40,15,8,.1) 70%,rgba(10,2,0,.4) 100%);mix-blend-mode:multiply;pointer-events:none;z-index:1}
+.hero-accent{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 20% 30%,rgba(250,42,82,.22),transparent 60%),radial-gradient(ellipse 60% 50% at 80% 70%,rgba(249,115,22,.15),transparent 65%);mix-blend-mode:screen;pointer-events:none;z-index:2;animation:accentPulse 11s ease-in-out infinite}
+@keyframes accentPulse{0%,100%{opacity:.65}50%{opacity:1}}
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,transparent 40%,rgba(0,0,0,.55) 85%,rgba(0,0,0,.8) 100%);pointer-events:none;z-index:3}
+.hero-grain{position:absolute;inset:-50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .13 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.35;mix-blend-mode:overlay;pointer-events:none;z-index:4;animation:grainShift 1.4s steps(4) infinite}
+@keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(-4%,2%)}50%{transform:translate(3%,-3%)}75%{transform:translate(-2%,4%)}100%{transform:translate(0,0)}}
+.hero-shaft{position:absolute;top:-20%;left:-30%;width:50%;height:140%;background:linear-gradient(115deg,transparent 30%,rgba(255,220,180,.08) 45%,rgba(255,220,180,.14) 50%,rgba(255,220,180,.08) 55%,transparent 70%);transform:rotate(18deg);pointer-events:none;z-index:5;animation:shaftSweep 16s ease-in-out infinite;mix-blend-mode:screen}
+@keyframes shaftSweep{0%,100%{transform:translateX(0) rotate(18deg);opacity:.4}50%{transform:translateX(220%) rotate(18deg);opacity:.8}}
+.hero-badge-anim{position:absolute;top:28px;left:28px;z-index:10;display:inline-flex;align-items:center;gap:10px;padding:7px 16px;border-radius:100px;background:rgba(10,8,5,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(250,42,82,.35);font-family:'Geologica',sans-serif;font-size:10px;color:#fff;text-transform:uppercase;letter-spacing:.18em;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.hero-badge-anim .dot{width:7px;height:7px;border-radius:50%;background:#FA2A52;animation:blink 1.8s ease-in-out infinite;box-shadow:0 0 10px #FA2A52,0 0 20px rgba(250,42,82,.5)}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.85)}}
+.hero-badge-anim .sep{color:rgba(255,255,255,.25);margin:0 4px}.hero-badge-anim .loc{color:#34d399}
+.hero-tagline{position:absolute;bottom:36px;left:40px;z-index:10;max-width:760px}
+.hero-tagline .eyebrow{font-family:monospace;font-size:12px;color:#F97316;text-transform:uppercase;letter-spacing:.18em;font-weight:700;margin-bottom:14px;opacity:0;animation:fadeUp 1.2s ease-out .3s forwards}
+.hero-tagline .line{font-family:'Geologica',sans-serif;font-weight:800;font-size:clamp(28px,3.6vw,46px);line-height:1.18;color:#fff;letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.7);opacity:0;animation:fadeUp 1.2s ease-out .6s forwards}
+.hero-tagline .line em{font-style:normal;color:#FA2A52}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+.hero-caption{position:absolute;bottom:22px;right:26px;z-index:10;font-family:monospace;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;opacity:0;animation:fadeUp 1.2s ease-out .9s forwards}
+.hero-stage.parallax .hero-photo{transform:scale(1.06) translateY(calc(var(--scroll-y,0px) * -.15))}
+
+/* CLOSING */
+.closing-stage{position:relative;margin:60px 0 40px;border-radius:18px;overflow:hidden;aspect-ratio:16/9;min-height:520px;background:#050505;box-shadow:0 40px 100px rgba(0,0,0,.55),0 12px 36px rgba(249,115,22,.08),inset 0 0 0 1px rgba(255,255,255,.04)}
+.closing-photo{position:absolute;inset:-6%;background-image:url('https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=2400&q=85&auto=format&fit=crop');background-size:cover;background-position:center;animation:closingBurns 32s ease-in-out infinite;will-change:transform}
+@keyframes closingBurns{0%{transform:scale(1.08) translate(1%,0)}50%{transform:scale(1.16) translate(-1.5%,-1%)}100%{transform:scale(1.08) translate(1%,0)}}
+.closing-grade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,5,2,.2) 0%,rgba(20,10,4,.05) 40%,rgba(10,2,0,.45) 100%);mix-blend-mode:multiply;pointer-events:none;z-index:1}
+.closing-accent{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 75% 60%,rgba(250,42,82,.18),transparent 60%),radial-gradient(ellipse 50% 40% at 25% 40%,rgba(249,115,22,.14),transparent 65%);mix-blend-mode:screen;pointer-events:none;z-index:2;animation:accentPulse 13s ease-in-out infinite}
+.closing-grain{position:absolute;inset:-50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");opacity:.3;mix-blend-mode:overlay;pointer-events:none;z-index:3;animation:grainShift 1.6s steps(4) infinite}
+.closing-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,transparent 45%,rgba(0,0,0,.5) 85%,rgba(0,0,0,.78) 100%);pointer-events:none;z-index:4}
+.closing-content{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px}
+.closing-content .mark{font-family:monospace;font-size:11px;color:#FA2A52;text-transform:uppercase;letter-spacing:.2em;font-weight:700;margin-bottom:18px;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+.closing-content .hook{font-family:'Geologica',sans-serif;font-weight:800;font-size:clamp(30px,4.2vw,52px);line-height:1.1;color:#fff;letter-spacing:-.025em;max-width:880px;text-shadow:0 4px 28px rgba(0,0,0,.7);margin-bottom:22px}
+.closing-content .hook em{font-style:normal;color:#FA2A52}
+.closing-content .sub{font-family:'Lora',serif;font-size:clamp(15px,1.5vw,18px);color:rgba(255,255,255,.8);max-width:620px;line-height:1.55;text-shadow:0 2px 16px rgba(0,0,0,.6);margin-bottom:28px}
+.closing-content .sig-btn{display:inline-flex;align-items:center;gap:10px;background:rgba(250,42,82,.95);color:#fff;padding:14px 28px;border-radius:100px;font-family:'Geologica',sans-serif;font-weight:800;font-size:14px;letter-spacing:.03em;box-shadow:0 12px 40px rgba(250,42,82,.4),0 2px 10px rgba(0,0,0,.3);transition:all .25s;backdrop-filter:blur(8px)}
+.closing-content .sig-btn:hover{background:#FA2A52;transform:translateY(-2px)}
+.closing-caption{position:absolute;bottom:20px;right:26px;z-index:11;font-family:monospace;font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase}
+
+.two-col{display:grid;grid-template-columns:65fr 35fr;gap:56px;align-items:start}
+.content article{font-family:'Lora',serif;font-size:17px;line-height:1.85;color:#c8c8c8}
+.content article p{margin-bottom:22px}
+.content article > p:first-of-type::first-letter{font-family:'Geologica',sans-serif;font-size:4.2em;float:left;line-height:.85;margin:4px 10px 0 0;color:#FA2A52;font-weight:900}
+.content h2{font-family:'Geologica',sans-serif;font-weight:800;font-size:30px;line-height:1.2;color:#fff;margin:52px 0 22px;letter-spacing:-.015em;position:relative;padding-left:22px}
+.content h2::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;background:linear-gradient(180deg,#FA2A52,#F97316);border-radius:2px}
+.content a{color:#FA2A52;border-bottom:1px solid rgba(250,42,82,.3)}
+.content strong{color:#fff;font-weight:700}
+.content ul{margin:0 0 26px 0;list-style:none}
+.content ul li{margin-bottom:14px;padding-left:22px;position:relative;color:#bbb}
+.content ul li::before{content:'—';position:absolute;left:0;color:#FA2A52;font-weight:700}
+.content ul li strong{display:inline}
+
+.pull-quote{margin:44px 0;padding:32px 36px;background:linear-gradient(135deg,rgba(250,42,82,.09),rgba(249,115,22,.04));border-left:3px solid #FA2A52;border-radius:0 14px 14px 0;font-family:'Geologica',sans-serif;font-weight:600;font-size:24px;line-height:1.4;color:#fff;letter-spacing:-.01em}
+.pull-quote::before{content:'"';color:#FA2A52;font-size:54px;line-height:0;vertical-align:-28px;margin-right:8px}
+
+.faq{margin:60px 0}
+.faq-title{font-family:'Geologica',sans-serif;font-weight:800;font-size:30px;color:#fff;margin-bottom:26px;letter-spacing:-.01em}
+.faq-item{border-top:1px solid #1a1a1a;padding:22px 0}
+.faq-item:last-child{border-bottom:1px solid #1a1a1a}
+.faq-q{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#fff;margin-bottom:12px}
+.faq-a{font-size:15px;color:#aaa;line-height:1.75}
+.cta-block{margin:60px 0;padding:44px 36px;background:linear-gradient(135deg,rgba(250,42,82,.12),rgba(249,115,22,.05));border:1px solid rgba(250,42,82,.25);border-radius:18px;text-align:center;position:relative;overflow:hidden}
+.cta-block::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(250,42,82,.08),transparent 50%);animation:ctaWash 8s ease-in-out infinite}
+@keyframes ctaWash{0%,100%{transform:rotate(0deg)}50%{transform:rotate(180deg)}}
+.cta-block>*{position:relative}
+.cta-block h3{font-family:'Geologica',sans-serif;font-weight:900;font-size:30px;color:#fff;margin-bottom:12px}
+.cta-block p{color:#bbb;font-size:15px;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
+.cta-block a.btn{display:inline-flex;align-items:center;gap:10px;background:#FA2A52;color:#fff;padding:15px 32px;border-radius:100px;font-family:'Geologica',sans-serif;font-weight:800;font-size:14px;letter-spacing:.03em;box-shadow:0 8px 32px rgba(250,42,82,.3)}
+.cta-block a.btn:hover{background:#e0243f;transform:translateY(-2px)}
+.sidebar{position:sticky;top:80px}
+.sidebar-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:22px;margin-bottom:18px}
+.sidebar-card h3{font-family:'Geologica',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px;color:#888}
+.toc{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.toc a{color:#ccc;padding:6px 0;display:block;border-left:2px solid #222;padding-left:12px;transition:all .2s}
+.toc a:hover{color:#FA2A52;border-left-color:#FA2A52}
+.author-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.author-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FA2A52,#F97316);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Geologica',sans-serif;font-weight:900;font-size:16px}
+.author-info .name{font-family:'Geologica',sans-serif;font-weight:700;color:#fff;font-size:14px}
+.author-info .role{font-size:12px;color:#666}
+.share{display:flex;gap:8px}
+.share a{flex:1;padding:8px 0;text-align:center;background:#111;border:1px solid #1a1a1a;border-radius:8px;font-size:12px;color:#888}
+.related{margin-top:60px;padding-top:44px;border-top:1px solid #1a1a1a}
+.related h3{font-family:'Geologica',sans-serif;font-weight:800;font-size:24px;color:#fff;margin-bottom:24px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.related-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:22px;display:block;transition:all .25s}
+.related-card:hover{border-color:#FA2A52;transform:translateY(-3px);box-shadow:0 12px 40px rgba(250,42,82,.15)}
+.related-card .rc-tag{font-size:10px;color:#FA2A52;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:10px}
+.related-card .rc-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:16px;color:#fff;line-height:1.35;margin-bottom:8px}
+.related-card .rc-desc{font-size:13px;color:#888;line-height:1.55}
+footer{background:#050505;border-top:1px solid #1a1a1a;padding:40px 24px;color:#555;font-size:13px;text-align:center;margin-top:80px}
+footer a{color:#888}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;gap:32px}.sidebar{position:static}}
+@media(max-width:520px){.page-wrap{padding:80px 16px 40px}h1.article-title{font-size:36px}.content article > p:first-of-type::first-letter{font-size:3.2em}.content h2{font-size:24px}.pull-quote{padding:22px 24px;font-size:19px}.cta-block{padding:32px 24px}.cta-block h3{font-size:24px}.hero-badge-anim{top:14px;left:14px;font-size:9px;padding:5px 12px}.hero-tagline{bottom:20px;left:20px;max-width:calc(100% - 40px)}.hero-tagline .eyebrow{font-size:10px;margin-bottom:8px}.hero-tagline .line{font-size:22px}.closing-stage{aspect-ratio:4/5}.closing-content{padding:28px 20px}.closing-content .hook{font-size:26px}.closing-content .sub{font-size:14px}.attr-row{grid-template-columns:100px 1fr 40px;gap:12px}.attr-desc{padding-left:0}}
+
+/* === BETA SIGNUP (homepage inline-pill style) === */
+.beta-signup{margin:52px 0 36px;padding:28px 28px 22px;border-radius:20px;background:linear-gradient(135deg,rgba(28,10,14,.55),rgba(14,8,10,.8));border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)}
+.beta-signup .beta-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.beta-signup .beta-eyebrow{font-family:monospace;font-size:10px;color:#FA2A52;text-transform:uppercase;letter-spacing:.18em;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+.beta-signup .beta-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:#FA2A52;box-shadow:0 0 8px #FA2A52;animation:blink 1.8s ease-in-out infinite}
+.beta-signup .beta-title{font-family:'Geologica',sans-serif;font-weight:800;font-size:18px;color:#fff;letter-spacing:-.01em;line-height:1.3;flex:1;min-width:220px}
+.beta-signup .beta-title em{font-style:normal;color:#FA2A52}
+.beta-form{display:flex;gap:.5rem;align-items:center;max-width:520px;margin:0 0 .8rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:6px 6px 6px 14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 12px 36px rgba(0,0,0,.3);transition:all .25s}
+.beta-form:focus-within{border-color:rgba(250,42,82,.4);box-shadow:0 12px 36px rgba(0,0,0,.3),0 0 0 3px rgba(250,42,82,.12)}
+.beta-form .apple-mini{width:18px;height:18px;fill:rgba(255,255,255,.65);flex-shrink:0}
+.beta-form input[type=email]{flex:1;padding:.85rem .6rem;border:none;background:transparent;color:#fff;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;min-width:0}
+.beta-form input[type=email]::placeholder{color:rgba(255,255,255,.45)}
+.beta-form button{padding:.85rem 1.5rem;border-radius:10px;border:none;background:#FA2A52;color:#fff;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Geologica',sans-serif;transition:all .3s;white-space:nowrap;box-shadow:0 4px 14px rgba(250,42,82,.35)}
+.beta-form button:hover{background:#e0243f;transform:translateY(-1px);box-shadow:0 6px 20px rgba(250,42,82,.45)}
+.beta-fine{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:.02em;display:inline-flex;align-items:center;gap:.45rem;font-family:'Inter',sans-serif;font-weight:500}
+.beta-fine::before{content:'';width:5px;height:5px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+@media(max-width:520px){.beta-signup{padding:22px 18px 18px;margin:36px 0 28px}.beta-form{flex-wrap:wrap;padding:8px}.beta-form input[type=email]{width:100%;padding:.8rem .8rem}.beta-form button{width:100%;padding:.85rem}}
+
+/* === NEWSLETTER FORM (inside closing image) — distinct from beta === */
+.news-form{display:flex;gap:.4rem;align-items:center;max-width:440px;margin:0 auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:5px 5px 5px 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 12px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.1);transition:all .25s}
+.news-form:focus-within{border-color:rgba(249,115,22,.5);box-shadow:0 12px 40px rgba(0,0,0,.45),0 0 0 3px rgba(249,115,22,.18)}
+.news-form input[type=email]{flex:1;padding:.75rem .6rem;border:none;background:transparent;color:#fff;font-size:.85rem;font-family:'Inter',sans-serif;outline:none;min-width:0}
+.news-form input[type=email]::placeholder{color:rgba(255,255,255,.55)}
+.news-form button{padding:.75rem 1.25rem;border-radius:9px;border:1px solid rgba(249,115,22,.5);background:linear-gradient(135deg,#F97316,#c84000);color:#fff;font-weight:800;font-size:.8rem;cursor:pointer;font-family:'Geologica',sans-serif;transition:all .25s;white-space:nowrap;box-shadow:0 4px 14px rgba(249,115,22,.35)}
+.news-form button:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(249,115,22,.5)}
+.news-label{font-family:monospace;font-size:10px;color:#F97316;text-transform:uppercase;letter-spacing:.16em;font-weight:700;margin-bottom:10px;display:inline-flex;align-items:center;gap:8px;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.news-label::before{content:'';width:5px;height:5px;border-radius:50%;background:#F97316;box-shadow:0 0 8px #F97316}
+.news-fine{font-family:monospace;font-size:10px;color:rgba(255,255,255,.5);margin-top:10px;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+@media(max-width:520px){.news-form{flex-wrap:wrap;padding:8px}.news-form input[type=email]{width:100%}.news-form button{width:100%}}
+
+.related-card .rc-thumb{height:76px;margin:-18px -18px 13px -18px;background-size:cover;background-position:center;border-radius:10px 10px 0 0}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="site">
+  <a href="https://forkfox.ai/" class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></a>
+  <ul>
+    <li><a href="https://forkfox.ai/">Home</a></li>
+    <li><a href="https://forkfox.ai/the-dish" class="nav-pill">The Dish</a></li>
+    <li><a href="https://forkfox.ai/carte" class="nav-ghost">Carte</a></li>
+    <li><a href="https://forkfox.ai/#download" class="nav-cta">Join Beta →</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <nav class="breadcrumb"><a href="https://forkfox.ai/">Home</a> / <a href="https://forkfox.ai/the-dish">The Dish</a> / <span>How ForkFox sees a city</span></nav>
+
+  <header class="hero-article">
+    <div class="tag-row">
+      <span class="tag">Concept</span>
+      <span class="tag concept">Algorithm</span>
+    </div>
+    <h1 class="article-title">How ForkFox <em>sees</em> a city</h1>
+    <p class="deck">A 4.6-star restaurant can serve a six-out-of-ten biryani. Here's why dish-level intelligence is harder than venue ratings — and why it's the only honest way to tell you what to eat.</p>
+    <div class="byline">
+      <span class="author">ForkFox Team</span><span class="sep">·</span>
+      <time datetime="2026-04-22">April 22, 2026</time><span class="sep">·</span>
+      <span>9 min read</span>
+    </div>
+  </header>
+
+  <figure class="hero-stage parallax" aria-label="Overhead shot of a beautifully plated dish on a dark table">
+    <div class="hero-photo" role="img" aria-label="Editorial food photography, Unsplash"></div>
+    <div class="hero-grade"></div><div class="hero-accent"></div><div class="hero-shaft"></div><div class="hero-vignette"></div><div class="hero-grain"></div>
+    <div class="hero-badge-anim"><span class="dot"></span>The Dish<span class="sep">·</span><span class="loc">No. 02 · Concept</span></div>
+    <div class="hero-tagline">
+      <div class="eyebrow">The star problem, explained</div>
+      <div class="line">Stop scoring rooms. <em>Start scoring plates.</em></div>
+    </div>
+    <div class="hero-caption">ForkFox · concept · 2026</div>
+  </figure>
+
+  <div class="two-col">
+    <div class="content">
+      <article>
+        <h2 id="star-problem">The star problem</h2>
+        <p>Every time you open a food app, it hands you a venue. Four and a half stars. Save it. Map it. Drive there. You sit down, and the dish that was supposed to be the signature — the thing the reviewers cried about — arrives cold. Or oily. Or worse, mediocre in a way that feels personal. You paid for the reviews. The reviews were wrong.</p>
+        <p>Pull that thread and something strange happens. The star rating isn't actually about any one thing. It's an average of a thousand opinions about unrelated things. The patio is lovely. The owner walks the floor. The risotto was cold that Tuesday in March. The wine list is deep if you know how to read it. One reviewer had a terrible day and took it out on the bread course. All of those get compressed into a single 4.6, and that single number gets pasted onto a map pin, and that map pin gets called a recommendation.</p>
+        <p>It isn't one. It's a compression. And the compression throws away the only information that mattered when you were hungry: <strong>which plate should I order?</strong></p>
+
+        <div class="pull-quote">A star rating is an average of a thousand opinions about different things. It can tell you a restaurant exists. It cannot tell you what to order.</div>
+
+        <p>Every food app in the English-speaking internet has been playing this compression game since roughly 2004. Yelp. Google. OpenTable. TripAdvisor. Michelin's digital surface. Even the review aggregators that aggregate the aggregators. All of them rank restaurants, because restaurants are the unit that maps and reservation systems have always used, and because the word "dish" didn't have a clean database schema in the early days of local search.</p>
+        <p>But you never ate a restaurant in your life. You ate the pork shoulder. You ate the clams. You ate a burrito wrapped in foil at eleven-thirty at night standing up. The plate is the unit. The restaurant is the address where the unit lives. It is long past time somebody started ranking the units.</p>
+
+        <h2 id="what-a-score-measures">What a dish score actually measures</h2>
+        <p>Scoring plates is harder than scoring rooms, which is the polite way of saying this is why nobody has done it yet. A room is a fuzzy average — a kind of vibe. A plate is specific. A plate is either good or it's not. And our judgment about whether a plate is good isn't one judgment, it's at least five, and they don't always agree.</p>
+        <p>ForkFox looks at a set of sensory and contextual signals for each plate — the way the kitchen handles the technical stuff, how the plate compares to its cuisine’s canonical version, whether the price lines up with what’s on the plate. The algorithm combines them into a score out of 100 and calibrates that score to your taste.</p></div>
+
+        <p>Those five numbers feed a combined score. The combination is not a simple average — it's a weighted formula that shifts by cuisine. Flavor and execution carry more weight for technical-floor cuisines; texture and context carry more for regional and hyperlocal cuisines; value stays constant across all of them, because nobody's price tolerance changes based on what they ordered.</p>
+
+        <h2 id="why-the-dish-wins">Why the dish wins over the restaurant</h2>
+        <p>Run the algorithm on a real city and a strange thing happens. The rooms you expect to dominate — the tasting-menu fortresses, the three-starred reservations, the places where the bartender knows your name — don't always dominate the top scores. Sometimes they do. But more often, a 94 lives on the menu of a no-name spot whose reviews you've scrolled past because the venue rating was an uninspired 4.2.</p>
+        <p>We see this constantly in the beta. A 4.5-star Oakland restaurant that scores a 67 on its most-ordered dish and a 91 on a side that almost never gets mentioned. A Michelin-starred Center City room where the signature course grades out at 81 and the bread service grades out at 94. A Philadelphia taco truck whose al pastor scores higher than anything within a ten-block radius, including three sit-down restaurants with triple the price and double the star rating.</p>
+        <p>This isn't a gotcha. It's what happens when you stop compressing. The compressed number was hiding real information. The real information was that the room average lies about the plate variance. Every restaurant is actually a portfolio of dishes, and portfolios have uneven performance, and when you only read the portfolio's summary statistics you systematically miss the best individual investments.</p>
+
+        <div class="pull-quote">The room average lies about the plate variance. Every restaurant is a portfolio of dishes — and portfolios have uneven performance.</div>
+
+        <p>The dish-first view also surfaces something the star-first view never could: <strong>the no-name spot whose one perfect plate is worth the trip</strong>. Every city has dozens of these. They never break into the top twenty restaurants. They don't have a marketing budget. Their one perfect plate is surrounded by six mediocre ones, and the venue rating drags the perfect plate down to the city's median. That plate was invisible under the star system. It becomes findable under the dish system.</p>
+
+        <h2 id="what-we-found">What we found in beta</h2>
+        <p>We've been running ForkFox against San Francisco and Philadelphia for most of 2026. The beta has scored several thousand dishes. We haven't ranked restaurants yet — that would violate the very frame we just spent two thousand words defending — but we have a few pattern-level observations that held up across both cities.</p>
+        <p><strong>The best dish on a menu is usually not the "house signature."</strong> This surprised us. The dishes marketing teams push hardest are frequently the third or fourth best thing the kitchen makes. The actual best plate is often a lunch special, a side, or a fish-of-the-day — something that wasn't written for a website and therefore reflects what the chef actually thinks is working that month.</p>
+        <p><strong>Value scores skew higher outside the Michelin-halo neighborhoods.</strong> This also surprised nobody who eats in immigrant neighborhoods. The corollary is that the Michelin-halo rooms aren't overpriced relative to their attribute scores — they're correctly priced for the technical floor they clear. You're just getting the same attribute delivery per dollar somewhere else, served on heavier ceramic.</p>
+        <p><strong>Execution scores are the noisiest metric and the hardest to fix.</strong> A dish that's a 94 on its best day and a 76 on its worst is a reputation problem for the restaurant and a prediction problem for us. We're weighting execution scores more conservatively during beta until we have more repeat-visit data.</p>
+        <p><strong>Context scores correlate with neighborhood more than with restaurant prestige.</strong> South Indian dosa scores in the Tenderloin out-perform South Indian dosa scores in Pacific Heights at the same price point. The neighborhood does something to the kitchen. The algorithm can see it. We don't fully understand the mechanism yet.</p>
+        <p>These are pattern-level statements, not recommendations. We're still in intro mode. The actual lists — the ones that say "the best taco in the Mission scored a 96 and here's where to find it" — come later, once the model has more beta data and we trust the scores enough to name names.</p>
+        <p>For now, the concept is what we're shipping. The concept is simple: <strong>stop averaging rooms, start ranking plates, and pay attention to which plate the algorithm has started believing in.</strong></p>
+
+        <figure class="closing-stage" aria-label="Closing signature — overhead dining scene">
+          <div class="closing-photo" role="img" aria-label="Cinematic overhead dining scene, Louis Hansel / Unsplash"></div>
+          <div class="closing-grade"></div><div class="closing-accent"></div><div class="closing-grain"></div><div class="closing-vignette"></div>
+          <div class="closing-content">
+            <div class="mark">The Dish newsletter</div>
+            <div class="hook">Your Friday plate, <em>served.</em></div>
+            <div class="sub">Real diners. Real scores. One dish a week that broke the star system, plus where to find it. We read the reviews so you don't have to. Free forever.</div>
+            <div class="news-label">The Dish newsletter</div>
+    <form class="news-form" action="https://formsubmit.co/hello@forkfox.ai" method="POST">
+      <input type="hidden" name="_subject" value="ForkFox Newsletter Signup (The Dish)">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://forkfox.ai/the-dish/">
+      <input type="email" name="email" placeholder="your email &mdash; one dish story a week" required>
+      <button type="submit">Subscribe</button>
+    </form>
+    <div class="news-fine">One email per week &middot; Unsubscribe anytime</div>
+          </div>
+          <div class="closing-caption">Signature · concept</div>
+        </figure>
+
+        <aside class="beta-signup">
+  <div class="beta-head">
+    <span class="beta-eyebrow">iOS Beta &middot; Free &middot; SF + Philly</span>
+    <div class="beta-title">Score your next plate with us.</div>
+  </div>
+  <form class="beta-form" action="https://formsubmit.co/hello@forkfox.ai" method="POST">
+    <input type="hidden" name="_subject" value="ForkFox iOS Beta Signup (The Dish &mdash; Concept)">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://forkfox.ai/the-dish/">
+    <svg class="apple-mini" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.05 20.28c-.98.95-2.05.86-3.08.42-1.09-.45-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.42C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+    <input type="email" name="email" placeholder="your email &mdash; we'll send a TestFlight invite" required>
+    <button type="submit">Join the Beta</button>
+  </form>
+  <div class="beta-fine">Free &middot; iOS only &middot; TestFlight invite arrives within 24 hours</div>
+</aside>
+      </article>
+
+      <section class="faq">
+        <h2 class="faq-title">Frequently asked</h2>
+        <div class="faq-item"><div class="faq-q">Why dishes instead of restaurants?</div><div class="faq-a">Because you eat dishes, not restaurants. A venue rating averages the room, the service, and a dozen plates you'll never order. The plate is the unit you remember. That's the unit we score.</div></div>
+        <div class="faq-item"><div class="faq-q">How does the scoring actually work?</div><div class="faq-a">Five attributes — several sensory and contextual attributes — each scored from aggregated review data combined into a 0-to-100 personalized to your taste profile.</div></div>
+        <div class="faq-item"><div class="faq-q">What counts as "execution"?</div><div class="faq-a">Consistency across visits, technical competence, how close the plate lands on a repeatable version of itself. We weight it higher for cuisines with high technical floors like ramen, sushi, and Neapolitan pizza.</div></div>
+        <div class="faq-item"><div class="faq-q">How is this different from Yelp or Google?</div><div class="faq-a">Those rank places. We rank plates. A 4-star restaurant in our system might have one 94-scoring dish and one 62-scoring dish on the same menu — and we'll tell you which is which.</div></div>
+        <div class="faq-item"><div class="faq-q">Does the algorithm get dishes wrong?</div><div class="faq-a">Yes. It's in beta. Every correction a user submits trains the model. The app is built to learn in public. If it scores a plate wrong, we want to know.</div></div>
+      </section>
+    </div>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <h3>In this piece</h3>
+        <ul class="toc">
+          <li><a href="#star-problem">The star problem</a></li>
+          <li><a href="#what-a-score-measures">What a score measures</a></li>
+          <li><a href="#why-the-dish-wins">Why the dish wins</a></li>
+          <li><a href="#what-we-found">What we found in beta</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-card">
+        <h3>Written by</h3>
+        <div class="author-row">
+          <div class="author-avatar">FF</div>
+          <div class="author-info"><div class="name">ForkFox Team</div><div class="role">Founders</div></div>
+        </div>
+        <div class="share"><a href="#">Share</a><a href="https://forkfox.ai/the-dish">All articles</a></div>
+      </div>
+    </aside>
+  </div>
+
+    <section class="related">
+    <h3>Related reads</h3>
+    <div class="related-grid">
+    <a class="related-card" href="/the-dish/two-cities/"><div class="rc-thumb" style="background-image:url('https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&q=75&auto=format&fit=crop')"></div><div class="rc-tag">Compare</div><div class="rc-title">Two Cities, One Question</div></a>
+    <a class="related-card" href="/the-dish/philly-beyond-cheesesteak/"><div class="rc-thumb" style="background-image:url('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&q=75&auto=format&fit=crop')"></div><div class="rc-tag">Philly</div><div class="rc-title">What Philly Eats When Not Eating a Cheesesteak</div></a>
+    <a class="related-card" href="/the-dish/sf-plate-first/"><div class="rc-thumb" style="background-image:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=75&auto=format&fit=crop')"></div><div class="rc-tag">SF</div><div class="rc-title">SF Is a Tasting Menu</div></a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>ForkFox · <a href="https://forkfox.ai/the-dish">The Dish</a> · <a href="https://forkfox.ai/carte">Carte</a> · <a href="https://forkfox.ai/privacy">Privacy</a> · <a href="https://forkfox.ai/support">Support</a></p>
+  <p style="margin-top:10px">&copy; 2026 ForkFox. </p>
+</footer>
+
+<script>
+(function(){var progress=document.getElementById('progress');var heroStage=document.querySelector('.hero-stage');var ticking=false;function update(){var h=document.documentElement,b=document.body;var scrollY=h.scrollTop||b.scrollTop;var pct=scrollY/((h.scrollHeight||b.scrollHeight)-h.clientHeight)*100;if(progress)progress.style.width=pct+'%';if(heroStage){var heroBottom=heroStage.offsetTop+heroStage.offsetHeight;if(scrollY<heroBottom+200)heroStage.style.setProperty('--scroll-y',scrollY+'px')}ticking=false}window.addEventListener('scroll',function(){if(!ticking){window.requestAnimationFrame(update);ticking=true}})})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How ForkFox Sees a City","description":"A 4.6-star restaurant can serve a 6-out-of-10 biryani. Here's why ForkFox scores dishes, not dinners.","image":"https://forkfox.ai/the-dish/how-forkfox-sees-a-city/og.jpg","datePublished":"2026-04-22","dateModified":"2026-04-22","author":{"@type":"Person","name":"ForkFox Team"},"publisher":{"@type":"Organization","name":"ForkFox","logo":{"@type":"ImageObject","url":"https://forkfox.ai/forkfox-logo.png"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://forkfox.ai/"},{"@type":"ListItem","position":2,"name":"The Dish","item":"https://forkfox.ai/the-dish/"},{"@type":"ListItem","position":3,"name":"How ForkFox Sees a City","item":"https://forkfox.ai/the-dish/how-forkfox-sees-a-city/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why dishes instead of restaurants?","acceptedAnswer":{"@type":"Answer","text":"Because you eat dishes, not restaurants. A venue rating averages the room, the service, and a dozen plates you'll never order."}},{"@type":"Question","name":"How does the scoring actually work?","acceptedAnswer":{"@type":"Answer","text":"Five attributes — several sensory and contextual attributes — each scored from aggregated review data combined into a 0-to-100 personalized to your taste profile."}},{"@type":"Question","name":"How is this different from Yelp or Google?","acceptedAnswer":{"@type":"Answer","text":"Those rank places. We rank plates."}}]}</script>
+</body>
+</html>

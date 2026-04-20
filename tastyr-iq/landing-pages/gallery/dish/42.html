@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog: SF Pizza — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8f7f4; color: #111; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(248,247,244,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #111; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(17,17,17,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #111; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* BLOG LAYOUT light */
+  .page { max-width: 1100px; margin: 0 auto; padding: 80px 24px 80px; }
+  .post-header { max-width: 760px; margin: 0 auto 36px; }
+  .breadcrumb { font-size: 12px; color: rgba(17,17,17,0.4); margin-bottom: 12px; }
+  .breadcrumb a { color: #FA2A52; text-decoration: none; }
+  .post-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(26px, 3.8vw, 54px); line-height: 1.05; letter-spacing: -1.5px; color: #111; margin-bottom: 14px; }
+  .post-dek { font-size: 18px; line-height: 1.65; color: rgba(17,17,17,0.58); margin-bottom: 20px; }
+  .post-meta { display: flex; gap: 14px; font-size: 13px; color: rgba(17,17,17,0.45); flex-wrap: wrap; align-items: center; }
+  .post-meta strong { color: #111; }
+  .score-chip { background: #FA2A52; color: #fff; font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 12px; padding: 3px 12px; border-radius: 999px; }
+  .hero-img { max-width: 1100px; margin: 0 auto 40px; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish42/1200/675') center/cover; border-radius: 12px; box-shadow: 0 4px 40px rgba(0,0,0,0.1); }
+
+  /* BLOG GRID */
+  .blog-layout { display: grid; grid-template-columns: 1fr 280px; gap: 40px; }
+  .main-col p { font-size: 17px; line-height: 1.88; color: rgba(17,17,17,0.72); margin-bottom: 26px; }
+  .main-col p:first-of-type { font-size: 19px; font-weight: 500; color: #111; }
+  .main-col h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 24px; color: #111; margin: 44px 0 14px; }
+  .main-col .callout { background: #fff; border-radius: 10px; padding: 20px 24px; margin: 28px 0; border-left: 4px solid #FA2A52; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+  .main-col .callout p { font-family: 'Geologica', sans-serif; font-size: 17px; font-weight: 600; color: #111; margin: 0; line-height: 1.5; }
+  .body-img { width: 100%; border-radius: 8px; margin: 28px 0; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food42/800/450') center/cover; }
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 40px; padding-top: 28px; border-top: 1px solid rgba(0,0,0,0.07); }
+  .tag { background: rgba(250,42,82,0.07); color: #FA2A52; font-size: 12px; padding: 4px 12px; border-radius: 999px; font-weight: 600; }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .sb-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 16px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+  .sb-title { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(17,17,17,0.4); margin-bottom: 16px; }
+  .score-big { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 64px; color: #FA2A52; line-height: 1; text-align: center; letter-spacing: -3px; display: block; }
+  .score-lbl { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(17,17,17,0.35); }
+  .fact-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 13px; }
+  .fact-row:last-child { border: none; }
+  .fact-row .k { color: rgba(17,17,17,0.4); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .fact-row .v { color: #111; font-weight: 500; }
+  .related-post { display: flex; gap: 12px; margin-bottom: 14px; }
+  .rp-img { width: 52px; height: 52px; border-radius: 6px; flex-shrink: 0; background-size: cover; }
+  .rp-text { font-size: 13px; color: rgba(17,17,17,0.65); line-height: 1.4; }
+  .rp-text .cat { color: #FA2A52; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
+
+  @media (max-width: 900px) {
+    .blog-layout { grid-template-columns: 1fr; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="post-header">
+    <div class="breadcrumb"><a href="#">The Dish</a> / <a href="#">Pizza</a> / San Francisco</div>
+    <h1 class="post-title">The Neapolitan Pizza Score San Francisco Has Been Missing</h1>
+    <p class="post-dek">After 56 pizza visits across the Bay Area, our model found one Mission District operation that achieves the four non-negotiable properties of proper Neapolitan simultaneously — and scores 91 as a result.</p>
+    <div class="post-meta">
+      <span class="score-chip">Score 91</span>
+      <strong>ForkFox Algorithm</strong>
+      <span>·</span>
+      <span>March 2026 · 6 min</span>
+    </div>
+  </div>
+
+  <div class="hero-img"></div>
+
+  <div class="blog-layout">
+    <main class="main-col">
+      <p>San Francisco has had a complicated relationship with Neapolitan pizza. The city's sourdough culture and premium ingredients obsession produce technically impressive crusts, but the Neapolitan tradition — which requires specific flour (Tipo 00), specific fermentation (48 to 72 hours), specific temperature (850°F minimum), and specific cook time (60 to 90 seconds) — has remained elusive here. Most operations approximate one or two of these variables. The Mission kitchen our model ranked first achieves all four.</p>
+
+      <h2>The 850°F Requirement</h2>
+      <p>A true Neapolitan pizza is cooked at 850°F to 900°F in a wood-burning oven, which produces a cook time of 60 to 90 seconds. This brief, high-heat exposure creates a crust that is simultaneously charred in spots (the characteristic leopard spotting), soft and slightly chewy in the center, and light enough to fold and eat. A lower temperature oven cannot produce this result — longer baking at lower heat dries the crust before achieving the thermal shock that creates the texture. This kitchen uses a Stefano Ferrara oven imported from Naples. Wood only.</p>
+
+      <div class="callout"><p>"60 to 90 seconds at 900°F. That window is the entire game. Miss it in either direction and you have a different pizza — possibly a good one, but not Neapolitan."</p></div>
+
+      <div class="body-img"></div>
+
+      <h2>The Flour Specification</h2>
+      <p>The dough uses Caputo Tipo 00 "Pizzeria" flour, a low-protein flour specifically milled for Neapolitan applications. Combined with a 72-hour cold fermentation, the dough develops a flavor complexity and a gluten structure that produces the characteristic extensibility — the dough stretches without tearing under the pizza maker's hands — and the open crumb structure in the cornicione (crust edge) that is the technical signature of the form. Score: 91. The Margherita with house-made fior di latte is the correct order.</p>
+
+      <div class="tag-row">
+        <span class="tag">Pizza</span>
+        <span class="tag">San Francisco</span>
+        <span class="tag">Neapolitan</span>
+        <span class="tag">Mission District</span>
+        <span class="tag">ForkFox Pick</span>
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="sb-card">
+        <span class="score-big">91</span>
+        <span class="score-lbl">ForkFox Score</span>
+      </div>
+      <div class="sb-card">
+        <div class="sb-title">At a Glance</div>
+        <div class="fact-row"><span class="k">Cuisine</span><span class="v">Neapolitan Pizza</span></div>
+        <div class="fact-row"><span class="k">City</span><span class="v">San Francisco</span></div>
+        <div class="fact-row"><span class="k">Author</span><span class="v">ForkFox</span></div>
+        <div class="fact-row"><span class="k">Date</span><span class="v">March 2026</span></div>
+        <div class="fact-row"><span class="k">Oven</span><span class="v">Stefano Ferrara</span></div>
+        <div class="fact-row"><span class="k">Price</span><span class="v">$22/pie</span></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-title">Related Posts</div>
+        <div class="related-post"><div class="rp-img" style="background-image:url('https://picsum.photos/seed/rp3/52/52')"></div><div class="rp-text"><span class="cat">Pizza</span>Chicago Tavern Style: The Correct Pizza for Locals</div></div>
+        <div class="related-post"><div class="rp-img" style="background-image:url('https://picsum.photos/seed/rp4/52/52')"></div><div class="rp-text"><span class="cat">Sourdough</span>How SF's fermentation culture finally helped pizza</div></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>

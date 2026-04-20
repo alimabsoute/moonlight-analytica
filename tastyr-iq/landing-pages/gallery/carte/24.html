@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Pizza in Philadelphia — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#08080f;color:#c0c0e0;font-family:'Inter',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,15,0.97);border-bottom:1px solid #12121f;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#d0d0f0}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#5050a0}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:1100px;margin:0 auto;padding:90px 24px 60px}
+.breadcrumb{font-size:12px;color:#3a3a6a;margin-bottom:18px}.breadcrumb span{color:#FA2A52}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(24px,3.5vw,42px);line-height:1.1;margin-bottom:24px;color:#d0d0f0}
+h1 em{font-style:normal;color:#FA2A52}
+
+.intro{font-size:15px;line-height:1.75;color:#7070b0;margin-bottom:28px;max-width:700px;background:#0c0c1a;border:1px solid #141430;border-radius:10px;padding:18px}
+
+.table-wrap{width:100%;overflow-x:auto;margin-bottom:40px}
+table{width:100%;border-collapse:collapse;min-width:700px}
+thead tr{background:#0a0a18;border-bottom:2px solid #FA2A52}
+thead th{padding:12px 16px;font-size:11px;font-family:'Geologica',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#3a3a6a;text-align:left}
+thead th.c{text-align:center}
+thead th.r{text-align:right}
+tbody tr{border-bottom:1px solid #0f0f22;transition:background .15s}
+tbody tr:hover{background:#0d0d1a}
+tbody tr.top{background:#0e0616}
+td{padding:13px 16px;vertical-align:middle}
+.td-rank{font-family:'Geologica',sans-serif;font-weight:900;font-size:20px;color:#1e1e40;width:36px}
+.td-rank.t{color:#FA2A52}
+.td-dish{font-weight:600;font-size:14px;color:#d0d0f0;margin-bottom:2px}
+.td-rest{font-size:11px;color:#5050a0}
+.sv{font-size:13px;color:#5050a0;text-align:center}
+.sv.hi{color:#FA2A52;font-weight:700}
+.td-total{text-align:right;font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#FA2A52}
+.td-total.d{color:#1e1e40}
+.style-tag{display:inline-block;font-size:10px;padding:3px 8px;border-radius:4px;background:#0c0c20;border:1px solid #1e1e40;color:#4040a0;font-weight:600;text-transform:uppercase}
+
+.section-title{font-family:'Geologica',sans-serif;font-weight:700;font-size:20px;margin-bottom:16px;color:#d0d0f0}
+.section-title em{font-style:normal;color:#FA2A52}
+.findings ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:32px}
+.findings ul li{font-size:13px;color:#7070b0;padding:12px 16px;background:#0c0c1a;border-radius:8px;border-left:3px solid #FA2A52}
+
+.related{display:flex;gap:8px;flex-wrap:wrap}
+.rel-link{background:#0c0c1a;border:1px solid #141430;border-radius:8px;padding:10px 16px;font-size:13px;color:#FA2A52;font-weight:500}
+
+@media(max-width:600px){.findings ul{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">Carte / Philadelphia / <span>Pizza</span></div>
+  <h1>Best <em>Pizza</em> in Philadelphia</h1>
+  <p class="intro">Philly's pizza scene is underrated nationally but deeply serious locally. South Philly red-sauce traditions, a growing Neapolitan movement, and several standout Roman-al-taglio spots create a surprisingly deep field.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Dish / Restaurant</th><th class="c">Flavor</th><th class="c">Texture</th><th class="c">Value</th><th class="c">Auth.</th><th class="c">Style</th><th class="r">Score</th></tr>
+      </thead>
+      <tbody>
+        <tr class="top"><td><span class="td-rank t">1</span></td><td><div class="td-dish">Margherita (Neapolitan)</div><div class="td-rest">Pizzeria Beddia — Fishtown</div></td><td class="sv hi">96</td><td class="sv hi">95</td><td class="sv">84</td><td class="sv hi">94</td><td><span class="style-tag">Neapolitan</span></td><td class="td-total">94</td></tr>
+        <tr class="top"><td><span class="td-rank t">2</span></td><td><div class="td-dish">White Pie Bianco</div><div class="td-rest">Angelo's Pizzeria — South Philly</div></td><td class="sv hi">93</td><td class="sv hi">91</td><td class="sv">88</td><td class="sv">89</td><td><span class="style-tag">NY Style</span></td><td class="td-total">92</td></tr>
+        <tr class="top"><td><span class="td-rank t">3</span></td><td><div class="td-dish">Tomato Pie</div><div class="td-rest">Santucci's Original Square — South Philly</div></td><td class="sv">90</td><td class="sv">88</td><td class="sv hi">92</td><td class="sv hi">96</td><td><span class="style-tag">Tomato Pie</span></td><td class="td-total">90</td></tr>
+        <tr><td><span class="td-rank t">4</span></td><td><div class="td-dish">Roman Al Taglio</div><div class="td-rest">Pizza Brain — Kensington</div></td><td class="sv">88</td><td class="sv">90</td><td class="sv">85</td><td class="sv">82</td><td><span class="style-tag">Roman</span></td><td class="td-total">87</td></tr>
+        <tr><td><span class="td-rank">5</span></td><td><div class="td-dish">South Philly Tomato Slice</div><div class="td-rest">Star Tavern — South Philly</div></td><td class="sv">86</td><td class="sv">84</td><td class="sv">90</td><td class="sv">88</td><td><span class="style-tag">Tavern</span></td><td class="td-total d">85</td></tr>
+        <tr><td><span class="td-rank">6</span></td><td><div class="td-dish">Grandma Sicilian</div><div class="td-rest">Federal Donuts — South Philly</div></td><td class="sv">84</td><td class="sv">83</td><td class="sv">88</td><td class="sv">80</td><td><span class="style-tag">Sicilian</span></td><td class="td-total d">83</td></tr>
+        <tr><td><span class="td-rank">7</span></td><td><div class="td-dish">Pepperoni Crispy</div><div class="td-rest">Stella Pizza — Old City</div></td><td class="sv">82</td><td class="sv">80</td><td class="sv">82</td><td class="sv">78</td><td><span class="style-tag">NY Style</span></td><td class="td-total d">80</td></tr>
+        <tr><td><span class="td-rank">8</span></td><td><div class="td-dish">Detroit Style Pepperoni</div><div class="td-rest">Dough — Fishtown</div></td><td class="sv">80</td><td class="sv">82</td><td class="sv">80</td><td class="sv">76</td><td><span class="style-tag">Detroit</span></td><td class="td-total d">78</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="findings">
+    <div class="section-title">Key <em>Findings</em></div>
+    <ul>
+      <li>Beddia's Margherita is the single most acclaimed pizza in Philly — cult following since 2016, still the gold standard</li>
+      <li>South Philly's tomato pie tradition (no mozzarella, sauce on top) is an authentic local style worth experiencing</li>
+      <li>Roman al taglio is growing fastest — 4 new spots opened in 2025</li>
+      <li>Value scores are notably high — Philly pizza remains 20-30% cheaper than equivalent NYC products</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Related <em>Guides</em></div>
+  <div class="related">
+    <a class="rel-link" href="#">Best Italian Hoagies in Philly →</a>
+    <a class="rel-link" href="#">Best Cheesesteak in Philly →</a>
+    <a class="rel-link" href="#">Best Sandwiches in Philly →</a>
+  </div>
+</div>
+</body>
+</html>

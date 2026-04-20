@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chicago Pizza — The Dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8f7f4; color: #111; font-family: 'Inter', sans-serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(248,247,244,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: #FA2A52; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+  .logo-text { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 17px; }
+  .logo-text span:first-child { color: #111; }
+  .logo-text span:last-child { color: #F97316; }
+  .nav-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .nav-links a { color: rgba(17,17,17,0.5); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: #111; }
+  .nav-cta { background: #FA2A52; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* CARD STACK — light version, white cards with shadow */
+  .page { padding: 80px 24px 80px; max-width: 760px; margin: 0 auto; }
+
+  .card { background: #fff; border-radius: 16px; padding: 36px 40px; margin-bottom: 20px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); }
+  .card-hero { border-top: 4px solid #FA2A52; }
+  .hero-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #FA2A52; margin-bottom: 14px; }
+  .hero-title { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: clamp(26px, 3.5vw, 50px); line-height: 1.06; letter-spacing: -1.5px; color: #111; margin-bottom: 14px; }
+  .hero-dek { font-size: 16px; line-height: 1.75; color: rgba(17,17,17,0.55); margin-bottom: 24px; }
+  .meta-row { display: flex; gap: 16px; align-items: center; font-size: 13px; color: rgba(17,17,17,0.45); border-top: 1px solid rgba(0,0,0,0.07); padding-top: 20px; flex-wrap: wrap; }
+  .score-chip { background: #FA2A52; color: #fff; font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 999px; }
+  .meta-row strong { color: #111; }
+  .hero-img { width: 100%; border-radius: 8px; margin-bottom: 28px; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/dish17/900/500') center/cover; }
+
+  .card-body h2 { font-family: 'Geologica', sans-serif; font-weight: 700; font-size: 22px; color: #111; margin-bottom: 14px; }
+  .card-body p { font-size: 16px; line-height: 1.82; color: rgba(17,17,17,0.68); }
+
+  .card-callout { background: #f8f7f4; border-left: 4px solid #FA2A52; padding: 24px 28px; }
+  .card-callout p { font-family: 'Geologica', sans-serif; font-size: 18px; font-weight: 700; color: #111; line-height: 1.5; margin: 0; }
+
+  .card-img { padding: 0; overflow: hidden; }
+  .card-img .img-inner { width: 100%; aspect-ratio: 16/9; background: url('https://picsum.photos/seed/food17/800/450') center/cover; }
+  .card-img .caption { padding: 14px 20px; font-size: 13px; color: rgba(17,17,17,0.4); }
+
+  .card-verdict { background: #111; color: #fff; }
+  .card-verdict h3 { font-family: 'Geologica', sans-serif; font-weight: 900; font-size: 20px; margin-bottom: 12px; }
+  .card-verdict p { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.7); margin: 0; }
+
+  @media (max-width: 768px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+    .card { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">FF</div>
+      <div class="logo-text"><span>Fork</span><span>Fox</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dish">The Dish</a>
+      <a href="/carte">Carte</a>
+      <a href="#" class="nav-cta">Join Beta →</a>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="card card-hero">
+    <div class="hero-img"></div>
+    <div class="hero-label">Pizza · Chicago</div>
+    <h1 class="hero-title">The Tavern-Style Pizza Revolution Chicago Didn't Know It Was Leading</h1>
+    <p class="hero-dek">While tourists wait in line for deep dish, Chicago's actual pizza culture runs thin-crust, crispy, cut in squares. Our model found the best version of it — and it's been there for 30 years.</p>
+    <div class="meta-row">
+      <span class="score-chip">Score: 85</span>
+      <strong>ForkFox Algorithm</strong>
+      <span>·</span>
+      <span>March 2026 · 4 min</span>
+    </div>
+  </div>
+
+  <div class="card card-body">
+    <h2>What Tavern-Style Actually Means</h2>
+    <p>Chicago tavern-style pizza — the kind that has been served in corner bars and neighborhood restaurants since the 1940s — is a thin, cracker-crisp crust cut into squares (not wedges) with a modest sauce and cheese application that lets the crust be the protagonist. It is the opposite of deep dish in every way, and it is what most Chicagoans actually eat most of the time. Our model has scored 44 tavern-style operations in the metro area.</p>
+  </div>
+
+  <div class="card card-callout">
+    <p>"Tavern-style pizza is what Chicago actually eats. The deep dish performance is for everyone else — and the best thin crust in the city costs half as much."</p>
+  </div>
+
+  <div class="card card-img">
+    <div class="img-inner"></div>
+    <div class="caption">The square-cut format of tavern-style pizza is not aesthetic preference — it's structural. The thin crust requires the smaller portion size to maintain integrity from cut to bite.</div>
+  </div>
+
+  <div class="card card-body">
+    <h2>The Address and the Score</h2>
+    <p>The highest-scoring tavern-style operation in our dataset is a 30-year-old restaurant in the Beverly neighborhood on the South Side. The sausage is made in-house from a 1994 recipe that uses fennel, red pepper flakes, and anise in a proportion that produces a slightly sweet, moderately spiced result that pairs with the sauce rather than competing. The crust is rolled thin — 3mm — and baked directly on the stone floor of a deck oven at 525°F. It arrives with a caramelized bottom that shatters at the first bite.</p>
+  </div>
+
+  <div class="card card-verdict">
+    <h3>The Verdict</h3>
+    <p>Our composite score of 85 reflects a tavern-style pizza that is operating at a level the tourist-facing operations cannot approach. Value index: 96. A sausage pizza for two runs $18. It is the correct pizza to eat in Chicago if you want to understand what the city actually tastes like.</p>
+  </div>
+</main>
+
+</body>
+</html>

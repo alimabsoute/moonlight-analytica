@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Dim Sum in Los Angeles — Carte by ForkFox</title>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0d0a;color:#d8c8a8;font-family:'Inter',sans-serif;min-height:100vh;line-height:1.65}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,13,10,0.97);border-bottom:1px solid #2a2418;height:60px;display:flex;align-items:center;padding:0 24px;gap:32px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-sq{width:32px;height:32px;background:#FA2A52;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:14px;color:#fff}
+.logo-text{font-family:'Geologica',sans-serif;font-weight:700;font-size:18px;color:#f0e8d8}.logo-text span{color:#F97316}
+nav ul{display:flex;gap:24px;list-style:none;margin-left:auto}
+nav ul a{font-size:14px;color:#8a7a5a}
+.nav-cta{background:#FA2A52;color:#fff!important;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px}
+
+.page-wrap{max-width:860px;margin:0 auto;padding:90px 24px 60px}
+
+.breadcrumb{font-size:11px;color:#5a4a2a;margin-bottom:10px;font-family:monospace}
+.breadcrumb span{color:#F97316}
+h1{font-family:'Geologica',sans-serif;font-weight:900;font-size:clamp(28px,4vw,44px);line-height:1.1;margin-bottom:8px;color:#f0e8d8}
+h1 em{font-style:normal;color:#F97316}
+.page-desc{font-size:14px;color:#a09070;margin:8px 0 20px;line-height:1.7}
+
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.sr-block{background:#181410;border:1px solid #3a2a18;border-radius:8px;padding:12px 16px;flex:1;min-width:90px}
+.sr-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:20px;color:#F97316}
+.sr-lbl{font-size:10px;color:#6a5a3a;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+.src-pills{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.sp{padding:5px 12px;border-radius:20px;font-size:12px;border:1px solid #3a2a18;color:#8a7a5a}
+.sp.active{background:#F97316;border-color:#F97316;color:#fff}
+
+.featured-review{background:#181410;border:1px solid #3a2a18;border-radius:12px;padding:20px;margin-bottom:24px;display:flex;gap:16px;align-items:flex-start}
+.fr-score-ring{width:60px;height:60px;border-radius:50%;background:conic-gradient(#F97316 calc(var(--pct)*1%),#2a2010 0);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fr-inner{width:46px;height:46px;border-radius:50%;background:#181410;display:flex;align-items:center;justify-content:center;font-family:'Geologica',sans-serif;font-weight:900;font-size:15px;color:#F97316}
+.fr-body{flex:1}
+.fr-dish{font-family:'Geologica',sans-serif;font-weight:700;font-size:15px;color:#f0e8d8;margin-bottom:3px}
+.fr-rest{font-size:12px;color:#6a5a3a;margin-bottom:8px}
+.fr-quote{font-size:13px;color:#a09070;line-height:1.65;font-style:italic;padding:10px 12px;background:#130f08;border-radius:6px;border-left:2px solid #F97316;margin-bottom:10px}
+.fr-meta{display:flex;gap:12px;align-items:center;font-size:11px;color:#6a5a3a}
+.src-badge{display:flex;align-items:center;gap:4px}
+.src-dot{width:7px;height:7px;border-radius:50%}
+.src-dot.reddit{background:#FF4500}
+.src-dot.yelp{background:#D32323}
+.src-dot.google{background:#4285F4}
+
+.reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+.rv-card{background:#181410;border:1px solid #2a2010;border-radius:8px;padding:14px}
+.rv-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:6px}
+.rv-dish{font-weight:700;font-size:13px;color:#d8c8a8}
+.rv-rest{font-size:11px;color:#5a4a2a;margin-top:2px}
+.rv-score{background:#F97316;color:#fff;font-family:'Geologica',sans-serif;font-weight:900;font-size:13px;padding:3px 8px;border-radius:5px;flex-shrink:0}
+.rv-quote{font-size:12px;color:#8a7a5a;line-height:1.6;font-style:italic;padding:8px 10px;background:#130f08;border-radius:5px;border-left:2px solid #F97316;margin-bottom:8px}
+.rv-footer{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#5a4a2a}
+
+.pull-quote{background:#1a1200;border:1px solid #3a2a10;border-radius:10px;padding:20px;margin-bottom:24px;position:relative}
+.pq-line{width:40px;height:3px;background:#F97316;border-radius:2px;margin-bottom:12px}
+.pq-text{font-size:15px;color:#c0a878;line-height:1.7;font-style:italic;margin-bottom:10px}
+.pq-byline{font-size:11px;color:#6a5a3a}
+
+.rank-list{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
+.rl-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#181410;border-radius:8px;border:1px solid #2a2010}
+.rl-num{font-family:'Geologica',sans-serif;font-weight:900;font-size:16px;color:#3a2a18;min-width:22px}
+.rl-num.g{color:#F97316}
+.rl-info{flex:1}
+.rl-dish{font-size:13px;font-weight:600;color:#c0b090}
+.rl-rest{font-size:11px;color:#5a4a2a;margin-top:1px}
+.rl-bar{width:90px;height:3px;background:#2a2010;border-radius:2px;overflow:hidden}
+.rl-fill{height:100%;background:#F97316;border-radius:2px}
+.rl-score{font-family:'Geologica',sans-serif;font-weight:700;font-size:14px;color:#F97316;min-width:32px;text-align:right}
+
+.see-also{display:flex;gap:8px;flex-wrap:wrap}
+.see-also a{font-size:12px;color:#F97316;background:#181410;border:1px solid #3a2a18;border-radius:4px;padding:4px 10px}
+
+@media(max-width:640px){.reviews-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-sq">FF</div><div class="logo-text">Fork<span>Fox</span></div></div>
+  <ul><li><a href="/">Home</a></li><li><a href="/dish">The Dish</a></li><li><a href="/carte">Carte</a></li><li><a href="/beta" class="nav-cta">Join Beta →</a></li></ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">ForkFox Carte &gt; Los Angeles &gt; Chinese &gt; <span>Dim Sum</span></div>
+  <h1>Best <em>Dim Sum</em> in Los Angeles</h1>
+  <p class="page-desc">Community-aggregated rankings for LA's top dim sum dishes — sourced from Reddit, Yelp, and Google review signals and normalized by ForkFox scoring methodology.</p>
+
+  <div class="stats-row">
+    <div class="sr-block"><div class="sr-num">95</div><div class="sr-lbl">Top Score</div></div>
+    <div class="sr-block"><div class="sr-num">10</div><div class="sr-lbl">Ranked</div></div>
+    <div class="sr-block"><div class="sr-num">2,100+</div><div class="sr-lbl">Reviews</div></div>
+    <div class="sr-block"><div class="sr-num">84.5</div><div class="sr-lbl">Avg Score</div></div>
+    <div class="sr-block"><div class="sr-num">Apr '26</div><div class="sr-lbl">Updated</div></div>
+  </div>
+
+  <div class="src-pills">
+    <div class="sp active">All Sources</div>
+    <div class="sp">Reddit</div>
+    <div class="sp">Yelp</div>
+    <div class="sp">Google</div>
+  </div>
+
+  <div class="featured-review" style="--pct:95">
+    <div class="fr-score-ring"><div class="fr-inner">95</div></div>
+    <div class="fr-body">
+      <div class="fr-dish">Har Gow (Shrimp Dumplings)</div>
+      <div class="fr-rest">Sea Harbour Seafood — Rosemead · #1 Ranked</div>
+      <div class="fr-quote">"The standard by which all LA har gow is measured. 12 pleats minimum, translucent wrapper, shrimp that snaps. Sea Harbour has been the SGV benchmark for 20 years and still hasn't been surpassed."</div>
+      <div class="fr-meta">
+        <div class="src-badge"><div class="src-dot reddit"></div>r/LosAngeles · 1,204 upvotes</div>
+        <span>·</span>
+        <span>Rosemead / San Gabriel Valley</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-grid">
+    <div class="rv-card">
+      <div class="rv-top">
+        <div><div class="rv-dish">Siu Mai (Pork Shrimp Dumpling)</div><div class="rv-rest">Lunasia — Alhambra</div></div>
+        <div class="rv-score">92</div>
+      </div>
+      <div class="rv-quote">"Open face dumplings with perfect fat-to-lean ratio. The shrimp stays pink and snappy. Lunasia's hong sha (red roe garnish) is the finishing touch that elevates it."</div>
+      <div class="rv-footer">
+        <div class="src-badge"><div class="src-dot yelp"></div>4.8★ (892 reviews)</div>
+        <span>Alhambra</span>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-top">
+        <div><div class="rv-dish">Char Siu Bao (BBQ Pork Bun)</div><div class="rv-rest">Empress Pavilion — Chinatown</div></div>
+        <div class="rv-score">90</div>
+      </div>
+      <div class="rv-quote">"Baked version with the glazed top — not steamed. The char siu filling has the right sweet-savory ratio. The only dim sum spot walking distance from DTLA worth the trip."</div>
+      <div class="rv-footer">
+        <div class="src-badge"><div class="src-dot google"></div>4.7★ (1,102 reviews)</div>
+        <span>Chinatown</span>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-top">
+        <div><div class="rv-dish">Cheung Fun (Rice Noodle Roll)</div><div class="rv-rest">Golden Deli — San Gabriel</div></div>
+        <div class="rv-score">88</div>
+      </div>
+      <div class="rv-quote">"Silky rice noodle sheets, loose enough to fold without tearing. The soy sauce is house-blended — you can't replicate it. The shrimp filling is the best version I've had in the SGV."</div>
+      <div class="rv-footer">
+        <div class="src-badge"><div class="src-dot reddit"></div>r/sgv · 678 upvotes</div>
+        <span>San Gabriel</span>
+      </div>
+    </div>
+    <div class="rv-card">
+      <div class="rv-top">
+        <div><div class="rv-dish">Turnip Cake (Lo Bak Go)</div><div class="rv-rest">NBC Seafood — Monterey Park</div></div>
+        <div class="rv-score">86</div>
+      </div>
+      <div class="rv-quote">"Pan-fried to crispy exterior, soft and savory inside. The Chinese sausage proportion is higher than most — it makes the difference. NBC's consistency here is unmatched over a decade."</div>
+      <div class="rv-footer">
+        <div class="src-badge"><div class="src-dot yelp"></div>4.6★ (567 reviews)</div>
+        <span>Monterey Park</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <div class="pq-line"></div>
+    <div class="pq-text">The San Gabriel Valley is the undisputed dim sum capital of the Western Hemisphere. No other city outside Hong Kong and Guangzhou can match the quality density between Monterey Park and Rosemead on a Sunday morning.</div>
+    <div class="pq-byline">ForkFox Editorial · April 2026 · Based on 2,100+ community reviews</div>
+  </div>
+
+  <div class="rank-list">
+    <div class="rl-row"><div class="rl-num g">1</div><div class="rl-info"><div class="rl-dish">Har Gow</div><div class="rl-rest">Sea Harbour — Rosemead</div></div><div class="rl-bar"><div class="rl-fill" style="width:95%"></div></div><div class="rl-score">95</div></div>
+    <div class="rl-row"><div class="rl-num g">2</div><div class="rl-info"><div class="rl-dish">Siu Mai</div><div class="rl-rest">Lunasia — Alhambra</div></div><div class="rl-bar"><div class="rl-fill" style="width:92%"></div></div><div class="rl-score">92</div></div>
+    <div class="rl-row"><div class="rl-num g">3</div><div class="rl-info"><div class="rl-dish">Char Siu Bao (Baked)</div><div class="rl-rest">Empress Pavilion — Chinatown</div></div><div class="rl-bar"><div class="rl-fill" style="width:90%"></div></div><div class="rl-score">90</div></div>
+    <div class="rl-row"><div class="rl-num">4</div><div class="rl-info"><div class="rl-dish">Cheung Fun</div><div class="rl-rest">Golden Deli — San Gabriel</div></div><div class="rl-bar"><div class="rl-fill" style="width:88%"></div></div><div class="rl-score">88</div></div>
+    <div class="rl-row"><div class="rl-num">5</div><div class="rl-info"><div class="rl-dish">Lo Bak Go</div><div class="rl-rest">NBC Seafood — Monterey Park</div></div><div class="rl-bar"><div class="rl-fill" style="width:86%"></div></div><div class="rl-score">86</div></div>
+    <div class="rl-row"><div class="rl-num">6</div><div class="rl-info"><div class="rl-dish">XO Scallop Dumpling</div><div class="rl-rest">Elite Restaurant — Monterey Park</div></div><div class="rl-bar"><div class="rl-fill" style="width:84%"></div></div><div class="rl-score">84</div></div>
+    <div class="rl-row"><div class="rl-num">7</div><div class="rl-info"><div class="rl-dish">Egg Tart (Dan Tat)</div><div class="rl-rest">Triumphal Palace — Alhambra</div></div><div class="rl-bar"><div class="rl-fill" style="width:82%"></div></div><div class="rl-score">82</div></div>
+    <div class="rl-row"><div class="rl-num">8</div><div class="rl-info"><div class="rl-dish">Crispy Taro Dumpling</div><div class="rl-rest">King Hua — Alhambra</div></div><div class="rl-bar"><div class="rl-fill" style="width:80%"></div></div><div class="rl-score">80</div></div>
+    <div class="rl-row"><div class="rl-num">9</div><div class="rl-info"><div class="rl-dish">Congee (Jook)</div><div class="rl-rest">Capital Seafood — Arcadia</div></div><div class="rl-bar"><div class="rl-fill" style="width:77%"></div></div><div class="rl-score">77</div></div>
+    <div class="rl-row"><div class="rl-num">10</div><div class="rl-info"><div class="rl-dish">Mango Pudding</div><div class="rl-rest">Newport Seafood — San Gabriel</div></div><div class="rl-bar"><div class="rl-fill" style="width:74%"></div></div><div class="rl-score">74</div></div>
+  </div>
+
+  <div class="see-also">
+    <a href="#">Best Chinese in SGV</a>
+    <a href="#">Best Dim Sum in SF</a>
+    <a href="#">Best Dim Sum in NY</a>
+    <a href="#">Best Cantonese in LA</a>
+  </div>
+</div>
+</body>
+</html>
