@@ -164,10 +164,32 @@
 }
 
 .company-logo-image {
-    max-width: 300px;
-    max-height: 120px;
+    width: 400px;               /* Fixed width for consistency */
+    height: auto;
+    max-width: 500px;
+    min-width: 350px;
     object-fit: contain;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+    filter: 
+        drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))
+        saturate(1.1)
+        contrast(1.02);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .company-logo-image {
+        width: 350px;
+        max-width: 400px;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .company-logo-image {
+        width: 280px;
+        max-width: 320px;
+        min-width: 240px;
+    }
 }
 
 /* Article Introduction */

@@ -1749,7 +1749,355 @@
                 font-size: 1rem;
             }
         }
+
+        /* 🎮 INTERACTION INDICATORS - 20 TYPES FOR CRYSTAL CLEAR USABILITY */
+        
+        /* 1. Gentle Cursor Glow */
+        .interactive-element:hover {
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+        }
+        
+        /* 2. Element Breathing */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        
+        .interactive-element {
+            animation: breathe 4s ease-in-out infinite;
+            cursor: pointer;
+        }
+        
+        /* 3. Micro-Dotted Borders */
+        @keyframes dotted-border {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 20; }
+        }
+        
+        .interactive-element::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='dots' patternUnits='userSpaceOnUse' width='4' height='4'%3e%3ccircle cx='2' cy='2' r='0.5' fill='rgba(0,191,255,0.5)'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100' height='100' fill='url(%23dots)'/%3e%3c/svg%3e");
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .interactive-element:hover::before {
+            opacity: 1;
+        }
+        
+        /* 4. Shadow Depth Change */
+        .interactive-element {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-element:hover {
+            box-shadow: 0 8px 32px rgba(0, 191, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* 5. Corner Fold */
+        .interactive-element::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-top: 20px solid rgba(0, 191, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .interactive-element:hover::after {
+            opacity: 1;
+        }
+        
+        /* 6. Magnetic Attraction */
+        .interactive-element {
+            transition: transform 0.2s ease;
+        }
+        
+        .interactive-element:hover {
+            transform: translateZ(0) scale(1.02);
+        }
+        
+        /* 7. Opacity Pulse */
+        @keyframes opacity-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .pulsing-element {
+            animation: opacity-pulse 2s ease-in-out infinite;
+        }
+        
+        /* 8. Border Gradient Flow */
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .gradient-border {
+            background: linear-gradient(270deg, rgba(0,191,255,0.3), rgba(135,206,235,0.3), rgba(0,191,255,0.3));
+            background-size: 200% 200%;
+            animation: gradient-flow 3s ease infinite;
+            padding: 2px;
+            border-radius: inherit;
+        }
+        
+        /* 9. Fingerprint Icon */
+        .touch-element::before {
+            content: '👆';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            opacity: 0;
+            animation: fingerprint-fade 2s ease-in-out infinite;
+        }
+        
+        @keyframes fingerprint-fade {
+            0%, 80% { opacity: 0; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        /* 10. Swipe Arrows */
+        .swipeable::before {
+            content: '← →';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(0, 191, 255, 0.6);
+            animation: swipe-hint 3s ease-in-out infinite;
+        }
+        
+        @keyframes swipe-hint {
+            0%, 70% { opacity: 0; }
+            85% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        /* 11. Drag Handle Dots */
+        .draggable::after {
+            content: '⋮';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(0, 191, 255, 0.4);
+            font-size: 16px;
+            line-height: 1;
+        }
+        
+        /* 12. Touch Ripples */
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        
+        .ripple-effect::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: rgba(0, 191, 255, 0.3);
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple 2s ease-out infinite;
+        }
+        
+        /* 13. Elastic Edges */
+        .elastic-element {
+            transition: border-radius 0.3s ease;
+        }
+        
+        .elastic-element:hover {
+            border-radius: 12px 4px 12px 4px;
+        }
+        
+        /* 14. Vibration Lines */
+        .draggable-item::before {
+            content: '≡';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(0, 191, 255, 0.5);
+            font-size: 12px;
+            animation: vibrate 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes vibrate {
+            0% { transform: translateY(-50%) translateX(0); }
+            100% { transform: translateY(-50%) translateX(1px); }
+        }
+        
+        /* 15. Hand Cursor */
+        .clickable {
+            cursor: grab;
+        }
+        
+        .clickable:active {
+            cursor: grabbing;
+        }
+        
+        /* 16. Progress Dots */
+        .progress-indicator::after {
+            content: '●○○';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            color: rgba(0, 191, 255, 0.6);
+        }
+        
+        /* 17. Tab Underlines */
+        .tab-element {
+            position: relative;
+        }
+        
+        .tab-element::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00bfff;
+            transition: width 0.3s ease;
+        }
+        
+        .tab-element:hover::after {
+            width: 100%;
+        }
+        
+        /* 18. Toggle Switch Glow */
+        .toggle-element {
+            box-shadow: 0 0 0 rgba(0, 191, 255, 0);
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-element:hover {
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+        }
+        
+        .toggle-element.active {
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+        }
+        
+        /* 19. Completion Checkmarks */
+        .completed::before {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: #00ff00;
+            font-size: 12px;
+            animation: checkmark-bounce 0.5s ease;
+        }
+        
+        @keyframes checkmark-bounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 20. Loading Micro-Spinners */
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%; right: 10px;
+            transform: translateY(-50%);
+            width: 12px; height: 12px;
+            border: 2px solid rgba(0, 191, 255, 0.2);
+            border-top: 2px solid rgba(0, 191, 255, 0.8);
+            border-radius: 50%;
+            animation: micro-spin 1s linear infinite;
+        }
+        
+        @keyframes micro-spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+        
+        /* Apply indicators to specific elements */
+        .cta-btn, .nav-link, .capability-card, .product-card, .email-form, .menu-toggle {
+            position: relative;
+        }
+        
+        .cta-btn:hover, .capability-card:hover, .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.3);
+        }
+        
+        .email-form {
+            animation: breathe 6s ease-in-out infinite;
+        }
+        
+        .menu-toggle::before {
+            content: '☰';
+            font-size: 1.2rem;
+        }
     </style>
+
+    <!-- Performance Optimizations -->
+    <style>
+        /* Critical CSS - Above the fold optimization */
+        .navbar, .hero-section, .hero-title, .hero-subtitle, .cta-buttons {
+            will-change: transform;
+            contain: layout style paint;
+        }
+        
+        /* GPU acceleration for animations */
+        .interactive-element, .capability-card, .cta-btn {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        /* Reduce paint complexity */
+        .glass-panel, .capability-card {
+            contain: layout style;
+        }
+        
+        /* Optimize expensive animations */
+        @media (prefers-reduced-motion: reduce) {
+            .interactive-element, .pulsing-element, .email-form {
+                animation: none;
+            }
+            .interactive-element:hover, .cta-btn:hover {
+                transform: none;
+                transition: none;
+            }
+        }
+        
+        /* Lazy load non-critical animations */
+        .ripple-effect, .gradient-border, .touch-element {
+            animation-play-state: paused;
+        }
+        
+        .ripple-effect.loaded, .gradient-border.loaded, .touch-element.loaded {
+            animation-play-state: running;
+        }
+    </style>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="data:image/svg+xml;base64,..." as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
 </head>
 <body>
     <!-- 3D Background Canvas -->
@@ -1818,19 +2166,7 @@
                         <a href="news.html" class="dropdown-item">News</a>
                         <a href="insights.html" class="dropdown-item">Insights</a>
                         <a href="trends.html" class="dropdown-item">Trends</a>
-                    </div>
-                </li>
-                <li class="nav-dropdown">
-                    <a href="#" class="nav-dropdown-toggle">Products</a>
-                    <div class="dropdown-menu">
-                        <span class="dropdown-label">Discover</span>
-                        <a href="products-discovery.html" class="dropdown-item">Today's Launches</a>
-                        <div class="dropdown-divider"></div>
-                        <span class="dropdown-label">Categories</span>
-                        <a href="products-discovery.html#ai-tools" class="dropdown-item">AI Tools</a>
-                        <a href="products-discovery.html#saas" class="dropdown-item">SaaS Solutions</a>
-                        <a href="products-discovery.html#developer" class="dropdown-item">Developer Tools</a>
-                        <a href="products-discovery.html#gaming" class="dropdown-item">Gaming</a>
+                        <a href="games.html" class="dropdown-item">Games</a>
                     </div>
                 </li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>

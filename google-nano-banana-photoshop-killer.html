@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The 'Photoshop Killer' That Went Viral Before Google Even Announced It - Moonlight Analytica</title>
+    <title>Google's Nano Banana: The Photoshop Killer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Focus states for accessibility */
+        button:focus, 
+        input:focus, 
+        textarea:focus, 
+        select:focus, 
+        a:focus {
+            outline: 2px solid var(--cyber-blue, #00bfff);
+            outline-offset: 2px;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -17,17 +31,17 @@
             --secondary-color: #f3f4f6;
             --accent-color: #ffffff;
             --text-light: #ffffff;
-            --text-dark: #000000;
+            --text-dark: #faf8f3;
             --text-muted: #9ca3af;
             --glass-bg: rgba(255, 255, 255, 0.08);
             --glass-border: rgba(255, 255, 255, 0.15);
             --shadow-light: rgba(255, 255, 255, 0.2);
-            --shadow-dark: rgba(0, 0, 0, 0.8);
+            --shadow-dark: rgba(255, 255, 255, 0.8);
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --info-color: #00bfff;
-            --bg-primary: #000000;
-            --bg-secondary: #111111;
+            --bg-primary: #faf8f3;
+            --bg-secondary: #ffffff;
             --bg-card: rgba(255, 255, 255, 0.03);
             --backdrop-blur: blur(24px);
             --neon-blue: #00bfff;
@@ -52,7 +66,7 @@
             right: 0;
             z-index: 1000;
             padding: 20px 0;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: var(--backdrop-blur);
             border-bottom: 1px solid rgba(135, 206, 235, 0.2);
         }
@@ -305,6 +319,7 @@
             text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
         }
         
+        /* Mobile-responsive infographic styles */
         @media (max-width: 768px) {
             .article-container {
                 padding: 120px 20px 40px;
@@ -317,8 +332,32 @@
             .nav-menu {
                 gap: 1.5rem;
             }
+            
+            /* Infographic mobile optimizations */
+            .market-disruption-infographic div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+            
+            .market-disruption-infographic div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+            
+            .market-disruption-infographic h3 {
+                font-size: 1.4rem !important;
+            }
+            
+            .market-disruption-infographic div[style*="padding: 40px"] {
+                padding: 25px !important;
+            }
+            
+            .market-disruption-infographic div[style*="padding: 25px"] {
+                padding: 20px !important;
+            }
         }
     </style>
+    <meta name="description" content="Google's Nano Banana AI tool challenges Photoshop dominance with revolutionary image editing capabilities.">
 </head>
 <body>
     <!-- Navigation -->
@@ -388,18 +427,229 @@
     <div class="article-container">
         <a href="news.html" class="back-to-news">← Back to News</a>
         
-        <div class="article-header">
-            <span class="article-category">AI & ML</span>
+        <header class="article-header">
             <h1 class="article-title">The 'Photoshop Killer' That Went Viral Before Google Even Announced It</h1>
-            <p class="article-subtitle">How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing</p>
+            
             <div class="article-meta">
-                <strong>Published:</strong> September 3, 2025 | <strong>Read Time:</strong> 12 minutes
+                <div class="author-info">
+                    <div class="author-avatar">🌙</div>
+                    <span>Moonlight Analytica Team</span>
+                </div>
+                <span>•</span>
+                <span>September 3, 2025</span>
+                <span>•</span>
+                <span>12 min read</span>
             </div>
-        </div>
 
-        <!-- Hero Image -->
-        <div style="width: 100%; text-align: center; margin: 40px 0; padding: 0; background: none;">
-            <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjcyIiBoZWlnaHQ9IjkyIiB2aWV3Qm94PSIwIDAgMjcyIDkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDwhLS0gTm8gYmFja2dyb3VuZCByZWN0ID0gdHJhbnNwYXJlbnQgYmFja2dyb3VuZCAtLT4KICA8ZyBpZD0iZ29vZ2xlLWxvZ28iPgogICAgPCEtLSBHIChibHVlKSAtLT4KICAgIDxwYXRoIGQ9Ik0zNS4yOSA0MS40MVYzMkg2Ny44Yy4zMSAxLjY0LjQ3IDMuNTguNDcgNS42OCAwIDcuMDYtMS45MyAxNS43OS04LjE1IDIyLjAxLTYuMDUgNi4zLTEzLjc4IDkuNjYtMjQuMDIgOS42NkMxNi4zMiA2OS4zNS4zNiA1My44OS4zNiAzNC45MS4zNiAxNS45MyAxNi4zMi40NyAzNS4zLjQ3YzEwLjUgMCAxNy45OCA0LjEyIDIzLjYgOS40OWwtNi42NCA2LjY0Yy00LjAzLTMuNzgtOS40OS02LjcyLTE2Ljk3LTYuNzItMTMuODYgMC0yNC43IDExLjE3LTI0LjcgMjUuMDMgMCAxMy44NiAxMC44NCAyNS4wMyAyNC43IDI1LjAzIDguOTkgMCAxNC4xMS0zLjYxIDE3LjM5LTYuODkgMi42Ni0yLjY2IDQuNDEtNi40NiA1LjEtMTEuNjVsLTIyLjQ5LjAxeiIgZmlsbD0iIzQyODVGNCIvPgogICAgPCEtLSBPIChyZWQpIC0tPgogICAgPHBhdGggZD0iTTExNS43NSA0Ny4xOGMwIDEyLjc3LTkuOTkgMjIuMTgtMjIuMjUgMjIuMThzLTIyLjI1LTkuNDEtMjIuMjUtMjIuMThDNzEuMjUgMzQuMzIgODEuMjQgMjUgOTMuNSAyNXMyMi4yNSA5LjMyIDIyLjI1IDIyLjE4em0tOS43NCAwYzAtNy45OC01Ljc5LTEzLjQ0LTEyLjUxLTEzLjQ0UzgwLjk5IDM5LjIgODAuOTkgNDcuMThjMCA3LjkgNS43OSAxMy40NCAxMi41MSAxMy40NHMxMi41MS01LjU1IDEyLjUxLTEzLjQ0eiIgZmlsbD0iI0VBNDMzNSIvPgogICAgPCEtLSBPICh5ZWxsb3cpIC0tPgogICAgPHBhdGggZD0iTTE2My43NSA0Ny4xOGMwIDEyLjc3LTkuOTkgMjIuMTgtMjIuMjUgMjIuMThzLTIyLjI1LTkuNDEtMjIuMjUtMjIuMThjMC0xMi44NSA5Ljk5LTIyLjE4IDIyLjI1LTIyLjE4czIyLjI1IDkuMzIgMjIuMjUgMjIuMTh6bS05Ljc0IDBjMC03Ljk4LTUuNzktMTMuNDQtMTIuNTEtMTMuNDRzLTEyLjUxIDUuNDYtMTIuNTEgMTMuNDRjMCA3LjkgNS43OSAxMy40NCAxMi41MSAxMy40NHMxMi41MS01LjU1IDEyLjUxLTEzLjQ0eiIgZmlsbD0iI0ZCQkMwNCIvPgogICAgPCEtLSBHIChibHVlKSAtLT4KICAgIDxwYXRoIGQ9Ik0yMDkuNzUgMjYuMzR2MzkuODJjMCAxNi4zOC05LjY2IDIzLjA3LTIxLjA4IDIzLjA3LTEwLjc1IDAtMTcuMjItNy4xOS0xOS42Ni0xMy4wN2w4LjQ4LTMuNTNjMS41MSAzLjYxIDUuMjEgNy44NyAxMS4xNyA3Ljg3IDcuMzEgMCAxMS44NC00LjUxIDExLjg0LTEzdi0zLjE5aC0uMzRjLTIuMTggMi42OS02LjM4IDUuMDQtMTEuNjggNS4wNC0xMS4wOSAwLTIxLjI1LTkuNjYtMjEuMjUtMjIuMDkgMC0xMi41MiAxMC4xNi0yMi4yNiAyMS4yNS0yMi4yNiA1LjI5IDAgOS40OSAyLjM1IDExLjY4IDQuOTZoLjM0di0zLjYxaDkuMjV6bS04LjU2IDIwLjkyYzAtNy44MS01LjIxLTEzLjUyLTExLjg0LTEzLjUyLTYuNzIgMC0xMi4zNSA1LjcxLTEyLjM1IDEzLjUyIDAgNy43MyA1LjYzIDEzLjM2IDEyLjM1IDEzLjM2IDYuNjMgMCAxMS44NC01LjYzIDExLjg0LTEzLjM2eiIgZmlsbD0iIzQyODVGNCIvPgogICAgPCEtLSBMIChncmVlbikgLS0+CiAgICA8cGF0aCBkPSJNMjI1IDN2NjVoLTkuNVYzaDkuNXoiIGZpbGw9IiMzNEE4NTMiLz4KICAgIDwhLS0gRSAocmVkKSAtLT4KICAgIDxwYXRoIGQ9Ik0yNjIuMDIgNTQuNDhsNy41NiA1LjA0Yy0yLjQ0IDMuNjEtOC4zMiA5LjgzLTE4LjQ4IDkuODMtMTIuNiAwLTIyLjAxLTkuNzQtMjIuMDEtMjIuMTggMC0xMy4xOSA5LjQ5LTIyLjE4IDIwLjkyLTIyLjE4IDExLjUxIDAgMTcuMTQgOS4xNiAxOC45OCAxNC4xMWwxLjAxIDIuNTItMjkuNjUgMTIuMjhjMi4yNyA0LjQ1IDUuOCA2LjcyIDEwLjc1IDYuNzIgNC45NiAwIDguNC0yLjQ0IDEwLjkyLTYuMTR6bS0yMy4yNy03Ljk4bDE5LjgyLTguMjNjLTEuMDktMi43Ny00LjM3LTQuNy04LjIzLTQuNy00Ljk1IDAtMTEuODQgNC4zNy0xMS41OSAxMi45M3oiIGZpbGw9IiNFQTQzMzUiLz4KICA8L2c+Cjwvc3ZnPg==" alt="Google Logo" style="width: 400px; height: auto; background: none; border: none; display: block; margin: 0 auto;">
+            <!-- Red Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Cost Comparison Infographic -->
+            <div class="company-logo-section">
+                <svg viewBox="0 0 800 300" style="width: 100%; max-width: 600px; height: auto;">
+                    <!-- Background -->
+                    <defs>
+                        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f8fafc"/>
+                            <stop offset="100%" style="stop-color:#e2e8f0"/>
+                        </linearGradient>
+                        <linearGradient id="googleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#4285f4"/>
+                            <stop offset="25%" style="stop-color:#ea4335"/>
+                            <stop offset="50%" style="stop-color:#fbbc04"/>
+                            <stop offset="75%" style="stop-color:#34a853"/>
+                            <stop offset="100%" style="stop-color:#4285f4"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect width="800" height="300" fill="url(#bgGrad)" rx="20"/>
+                    
+                    <!-- Title -->
+                    <text x="400" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#1f2937">
+                        Google vs Adobe: The Cost Revolution
+                    </text>
+                    
+                    <!-- Google Section -->
+                    <g transform="translate(100, 80)">
+                        <rect width="250" height="120" fill="url(#googleGrad)" rx="12" opacity="0.1"/>
+                        <text x="125" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#1f2937">
+                            Google Gemini 2.5
+                        </text>
+                        <text x="125" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="32" font-weight="800" fill="#4285f4">
+                            $0.039
+                        </text>
+                        <text x="125" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#6b7280">
+                            per image
+                        </text>
+                        <text x="125" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#34a853">
+                            ✨ 589x more cost-effective
+                        </text>
+                    </g>
+                    
+                    <!-- VS -->
+                    <text x="400" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#9ca3af">
+                        VS
+                    </text>
+                    
+                    <!-- Adobe Section -->
+                    <g transform="translate(450, 80)">
+                        <rect width="250" height="120" fill="#ff0000" rx="12" opacity="0.1"/>
+                        <text x="125" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#1f2937">
+                            Adobe Photoshop
+                        </text>
+                        <text x="125" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="32" font-weight="800" fill="#dc2626">
+                            $22.99
+                        </text>
+                        <text x="125" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#6b7280">
+                            per month
+                        </text>
+                        <text x="125" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#dc2626">
+                            💸 Traditional subscription
+                        </text>
+                    </g>
+                    
+                    <!-- Bottom insight -->
+                    <text x="400" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="#4b5563">
+                        589 AI-edited images for the price of 1 month Photoshop
+                    </text>
+                    
+                    <!-- Decorative elements -->
+                    <circle cx="80" cy="150" r="3" fill="#4285f4" opacity="0.3"/>
+                    <circle cx="720" cy="150" r="3" fill="#dc2626" opacity="0.3"/>
+                </svg>
+            </div>
+
+            <!-- Introduction Paragraph -->
+            <div class="article-intro">
+                <p>How Google's Gemini 2.5 Flash Image (Nano Banana) is disrupting Adobe's $23/month model with $0.04 per-image AI editing, going viral before Google even made an official announcement.</p>
+            </div>
+        </header>
+
+        <h2>The Disruption Landscape</h2>
+
+        <div class="article-content">
+            <p>The true scale of this disruption becomes evident when examining both the technical capabilities and economic implications that position this AI model as a genuine threat to Adobe's long-standing market dominance.</p>
+
+            <p>Google's entry into professional image editing represents more than technological advancement—it's a fundamental challenge to Adobe's business model that has dominated creative software for over three decades. The Nano Banana launch signals a shift from software-as-a-service to AI-as-a-service, potentially rendering traditional image editing interfaces obsolete.</p>
+
+            <p>Industry analysis reveals that Google's pricing strategy isn't just competitive—it's deliberately disruptive. At $0.039 per image versus Adobe's $23 monthly subscription, Google has essentially commoditized professional-grade image editing, forcing Adobe to defend market share in an entirely new competitive landscape where AI capability matters more than interface sophistication.</p>
+        </div>
+        
+        <!-- Professional Market Disruption Infographic -->
+        <div class="market-disruption-infographic" style="width: 100%; margin: 50px 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(255, 255, 255, 0.15);">
+            <div style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); padding: 40px; margin: 2px; border-radius: 14px;">
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 35px;">
+                    <h3 style="font-family: 'Poppins', sans-serif; font-size: 1.8rem; color: #2c3e50; margin-bottom: 12px; font-weight: 700;">🍌 The "Nano Banana" Market Disruption</h3>
+                    <p style="color: #666; font-size: 1rem; margin: 0; font-weight: 500;">How Google's AI-Native Approach Challenges Adobe's Legacy Model</p>
+                </div>
+                
+                <!-- Main Comparison Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px;">
+                    <!-- Google Nano Banana Side -->
+                    <div style="background: linear-gradient(135deg, #4285f4 0%, #34a853 100%); padding: 25px; border-radius: 12px; color: white; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; z-index: 1;"></div>
+                        <div style="position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                <div style="width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="font-size: 1.5rem;">🚀</span>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem; margin: 0; font-weight: 600;">Google Nano Banana</h4>
+                                    <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">(Gemini 2.5 Flash Image)</p>
+                                </div>
+                            </div>
+                            
+                            <div style="space-y: 12px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">💰</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">$0.039 per image</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">⚡</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">1-2 second generation</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">🤖</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">AI-native architecture</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFD700; margin-right: 8px;">☁️</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Cloud-first deployment</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="color: #FFD700; margin-right: 8px;">🎯</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Conversational interface</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Adobe Creative Suite Side -->
+                    <div style="background: linear-gradient(135deg, #e74c3c 0%, #8e44ad 100%); padding: 25px; border-radius: 12px; color: white; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -20px; left: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; z-index: 1;"></div>
+                        <div style="position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                <div style="width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="font-size: 1.5rem;">🎨</span>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem; margin: 0; font-weight: 600;">Adobe Creative Suite</h4>
+                                    <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">(Photoshop + Ecosystem)</p>
+                                </div>
+                            </div>
+                            
+                            <div style="space-y: 12px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">💸</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">$22.99/month per user</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">🐌</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">10-15 sec per operation</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">🖥️</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Desktop-dependent</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">📚</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Steep learning curve</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="color: #FFB6C1; margin-right: 8px;">🔧</span>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Complex tool mastery</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Impact Metrics -->
+                <div style="background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; color: #1a1a1a;">
+                        <div>
+                            <h5 style="font-size: 1.4rem; margin: 0 0 5px 0; font-weight: 700;">589x</h5>
+                            <p style="font-size: 0.85rem; margin: 0; font-weight: 500;">More images for same cost</p>
+                        </div>
+                        <div>
+                            <h5 style="font-size: 1.4rem; margin: 0 0 5px 0; font-weight: 700;">84% 📉</h5>
+                            <p style="font-size: 0.85rem; margin: 0; font-weight: 500;">Cost reduction potential</p>
+                        </div>
+                        <div>
+                            <h5 style="font-size: 1.4rem; margin: 0 0 5px 0; font-weight: 700;">#1 🏆</h5>
+                            <p style="font-size: 0.85rem; margin: 0; font-weight: 500;">LMArena ranking</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Disruption Arrow -->
+                <div style="text-align: center;">
+                    <div style="background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%); display: inline-block; padding: 12px 24px; border-radius: 25px; color: white; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);">
+                        📈 The Economics of Creative Disruption: When AI Eliminates Subscription Moats
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="article-content">
@@ -430,6 +680,14 @@
             <p>Here's where the disruption becomes existential for Adobe. At $30.00 per 1 million output tokens with each image being 1290 output tokens ($0.039 per image), Google isn't just undercutting Photoshop's monthly fees—they're obliterating them. For context, a Photoshop subscription runs $22.99 monthly for individuals.</p>
 
             <p>The pricing disparity becomes even more stark when you consider enterprise usage. For businesses managing multiple creative projects, this translates to thousands of dollars in annual savings without compromising editing quality. A marketing team that might spend $900 per month on Photoshop licenses for ten employees could instead generate over <span class="highlight">23,000 edited images</span> for the same cost using Google's model.</p>
+
+            <h2>Breaking Down the Cost Analysis</h2>
+
+            <div class="article-content">
+                <p>The economic implications extend beyond simple price comparisons to reveal fundamental shifts in how creative businesses will structure their operations. These numbers represent not just cost savings, but the democratization of professional-grade image editing capabilities that were previously locked behind expensive software barriers.</p>
+
+                <p>Enterprise adoption patterns suggest that Google's pricing model could trigger a mass migration from traditional creative software subscriptions to pay-per-use AI services. This transition fundamentally changes the economics of creative work, where marginal costs approach zero and creative teams can scale their output without proportional increases in software licensing expenses.</p>
+            </div>
 
             <table class="comparison-table">
                 <thead>
@@ -472,7 +730,7 @@
                     <li>Blur backgrounds while keeping subjects sharp</li>
                     <li>Remove objects or people from photos seamlessly</li>
                     <li>Alter poses and expressions while maintaining identity</li>
-                    <li>Add realistic colors to black and white photos</li>
+                    <li>Add realistic colors to #faf8f3 and white photos</li>
                     <li>Merge multiple images into coherent compositions</li>
                     <li>Modify text in images while preserving fonts and styles</li>
                 </ul>
@@ -484,7 +742,7 @@
 
             <!-- Professional AI Image Editing Demonstration -->
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px; margin: 40px 0; text-align: center;">
-                <div style="background: white; border-radius: 8px; padding: 25px; max-width: 550px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div style="background: white; border-radius: 8px; padding: 25px; max-width: 550px; margin: 0 auto; box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);">
                     <h3 style="color: #333; margin-bottom: 15px; font-family: 'Poppins', sans-serif; font-size: 1.1rem;">Gemini 2.5 Flash Image Generation Capabilities</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #4285f4;">
@@ -502,6 +760,107 @@
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Nano Banana Capabilities Infographic -->
+            <div style="margin: 40px 0; text-align: center;">
+                <svg viewBox="0 0 800 400" style="width: 100%; max-width: 700px; height: auto;">
+                    <!-- Background -->
+                    <defs>
+                        <linearGradient id="mainBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f8fafc"/>
+                            <stop offset="100%" style="stop-color:#e2e8f0"/>
+                        </linearGradient>
+                        <linearGradient id="googleColors" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#4285f4"/>
+                            <stop offset="33%" style="stop-color:#ea4335"/>
+                            <stop offset="66%" style="stop-color:#fbbc04"/>
+                            <stop offset="100%" style="stop-color:#34a853"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect width="800" height="400" fill="url(#mainBg)" rx="16"/>
+                    
+                    <!-- Title -->
+                    <text x="400" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#1f2937">
+                        Example of Nano Banana's Advanced Image Editing Capabilities
+                    </text>
+                    
+                    <!-- Before/After Demonstration -->
+                    <g transform="translate(50, 80)">
+                        <!-- Before Section -->
+                        <rect x="0" y="0" width="300" height="200" fill="white" stroke="#e5e7eb" stroke-width="2" rx="12"/>
+                        <text x="150" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#374151">
+                            BEFORE: Input Photos
+                        </text>
+                        
+                        <!-- Torso representation -->
+                        <rect x="20" y="40" width="80" height="60" fill="#4285f4" opacity="0.3" rx="8"/>
+                        <text x="60" y="75" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1f2937">
+                            Torso Only
+                        </text>
+                        
+                        <!-- Chair representation -->
+                        <rect x="120" y="40" width="80" height="60" fill="#ea4335" opacity="0.3" rx="8"/>
+                        <text x="160" y="75" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1f2937">
+                            Red Chair
+                        </text>
+                        
+                        <!-- Plus sign -->
+                        <text x="150" y="135" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#9ca3af">
+                            +
+                        </text>
+                        
+                        <!-- Prompt -->
+                        <rect x="20" y="150" width="260" height="30" fill="#f3f4f6" rx="6"/>
+                        <text x="150" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#6b7280">
+                            "Draw him seated in the red chair"
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow -->
+                    <g transform="translate(380, 160)">
+                        <path d="M0 20 L40 20 M30 10 L40 20 L30 30" stroke="url(#googleColors)" stroke-width="3" fill="none"/>
+                        <text x="20" y="45" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#4285f4">
+                            AI Magic
+                        </text>
+                    </g>
+                    
+                    <!-- After Section -->
+                    <g transform="translate(450, 80)">
+                        <rect x="0" y="0" width="300" height="200" fill="white" stroke="#34a853" stroke-width="3" rx="12"/>
+                        <text x="150" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#374151">
+                            AFTER: Complete Scene
+                        </text>
+                        
+                        <!-- Complete figure in chair -->
+                        <rect x="60" y="50" width="180" height="120" fill="#34a853" opacity="0.2" rx="12"/>
+                        <text x="150" y="75" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#1f2937">
+                            ✨ Complete Person
+                        </text>
+                        <text x="150" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Generated Arms & Legs
+                        </text>
+                        <text x="150" y="110" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Completed T-shirt Logo
+                        </text>
+                        <text x="150" y="125" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Perfect Chair Positioning
+                        </text>
+                        <text x="150" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">
+                            + Realistic Proportions
+                        </text>
+                    </g>
+                    
+                    <!-- Key Insight -->
+                    <rect x="100" y="320" width="600" height="60" fill="url(#googleColors)" opacity="0.1" rx="12"/>
+                    <text x="400" y="345" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#1f2937">
+                        🎯 Intelligent Context Understanding: Gemini doesn't just edit - it comprehends and creates
+                    </text>
+                    <text x="400" y="365" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#6b7280">
+                        Completion time: 1-2 seconds | Cost: $0.039 per image | Accuracy: Professional-grade
+                    </text>
+                </svg>
             </div>
 
             <h2>Adobe's Strategic Response: If You Can't Beat Them...</h2>
@@ -528,6 +887,8 @@
                 <h4>Speed Advantage</h4>
                 <p>While other tools spin for 10–15 seconds per image, Nano Banana often responds in <strong>1–2 seconds</strong>. For creative professionals who iterate rapidly, this speed difference compounds into hours saved weekly.</p>
             </div>
+            
+            <p>This speed advantage analysis reveals a crucial competitive factor often overlooked in technical comparisons—the compound effect of faster iteration cycles on creative productivity and project economics.</p>
 
             <h2>Security and Ethics: The Responsible AI Angle</h2>
 
@@ -542,7 +903,15 @@
                 <p>Adobe's stock drop year-to-date as investors price in AI disruption</p>
             </div>
 
-            <p>The financial markets have already begun pricing in this disruption. Despite Adobe's proactive integration of AI models, its stock fell 35% year-to-date as investors worry about AI's disruptive impact on traditional creative software markets. This decline reflects fundamental uncertainty about Adobe's ability to maintain its premium pricing in an era of near-free AI alternatives.</p>
+            <h2>Market Revaluation and Investor Sentiment</h2>
+
+            <div class="article-content">
+                <p>The financial markets have already begun pricing in this disruption. Despite Adobe's proactive integration of AI models, its stock fell 35% year-to-date as investors worry about AI's disruptive impact on traditional creative software markets. This decline reflects fundamental uncertainty about Adobe's ability to maintain its premium pricing in an era of near-free AI alternatives.</p>
+
+                <p>The stock decline represents more than temporary market volatility—it signals a fundamental revaluation of software-as-a-service business models in the AI era. Investors are grappling with the realization that decades of creative software moats could evaporate within months as AI capabilities democratize professional-grade tools. Adobe's challenge isn't just competing with Google; it's justifying subscription fees in a world where comparable capabilities cost pennies per use.</p>
+
+                <p>Analyst reports reveal growing concern about Adobe's customer retention rates as AI alternatives proliferate. The company's recent earnings calls have focused heavily on AI integration efforts, but investors remain skeptical about whether proprietary AI features can justify traditional software pricing when competitors offer similar capabilities at dramatically lower costs. This market sentiment suggests that Adobe's premium positioning may require fundamental restructuring to remain viable.</p>
+            </div>
 
             <h2>What This Means for Creative Professionals</h2>
 
