@@ -158,7 +158,7 @@ h1.article-title em{font-style:normal;color:#FA2A52}
 
 /* PAIR CARDS — T41 signature (SF vs Philly dish comparison) */
 .pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:28px 0 40px}
-.pair-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:22px;transition:all .3s;position:relative;overflow:hidden}
+.pair-card{display:block;text-decoration:none;color:inherit;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:22px;transition:all .3s;position:relative;overflow:hidden;cursor:pointer}
 .pair-card:hover{transform:translateY(-3px);border-color:rgba(250,42,82,.4)}
 .pair-card .pc-city{font-family:monospace;font-size:10px;color:#FA2A52;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .pair-card .pc-city::before{content:'';width:6px;height:6px;border-radius:50%;background:#FA2A52}
@@ -182,6 +182,7 @@ h1.article-title em{font-style:normal;color:#FA2A52}
 .src-chip.yelp{border-color:#D32323;color:#D32323}
 .src-chip.local{border-color:#F97316;color:#F97316}
 .voices-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+a.place-link{color:#b45309;border-bottom:1px solid rgba(180,83,9,.3);transition:border-color .2s}a.place-link:hover{border-color:#b45309}
 .voice-card{background:#050505;border:1px solid #1a1a1a;border-radius:12px;padding:20px;transition:all .3s}
 .voice-card:hover{border-color:rgba(250,42,82,.3);transform:translateY(-2px)}
 .vc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px}
@@ -499,18 +500,18 @@ footer a{color:#888}
   <p class="section-sub">The cuisines that anchor both cities — and why they matter more than the tasting menus.</p>
 
   <div class="pair-grid">
-    <div class="pair-card">
+    <a href="https://lataqueriasf.net/" class="pair-card" target="_blank" rel="noopener noreferrer">
       <div class="pc-city">San Francisco</div>
       <div class="pc-img"><div class="pc-photo" style="background-image:url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1200&q=82&auto=format&fit=crop')"></div></div>
       <div class="pc-dish">Mission burrito</div>
       <div class="pc-body">The Mission's sixty-plus-year Mexican-American kitchen culture. <strong>La Taqueria, El Farolito, Taqueria Cancún</strong> — each a study in technique. None of them have Michelin stars. All of them consistently score in the high eighties or low nineties.</div>
-    </div>
-    <div class="pair-card philly">
+    </a>
+    <a href="https://www.tommydinics.com/" class="pair-card philly" target="_blank" rel="noopener noreferrer">
       <div class="pc-city">Philadelphia</div>
       <div class="pc-img"><div class="pc-photo" style="background-image:url('https://images.unsplash.com/photo-1542528180-a1208c5169a5?w=1200&q=82&auto=format&fit=crop')"></div></div>
       <div class="pc-dish">DiNic's roast pork Italian</div>
       <div class="pc-body">The actual city sandwich — not the cheesesteak. <strong>DiNic's</strong> has run the same Italian-American tradition out of Reading Terminal since 1954. Sharp provolone, broccoli rabe, juice down your forearm. Holding a 96 on our leaderboard.</div>
-    </div>
+    </a>
   </div>
 
   <article class="prose">
@@ -522,18 +523,18 @@ footer a{color:#888}
   <p class="section-sub">Two cities, two bread philosophies — and two windows into their food cultures.</p>
 
   <div class="pair-grid">
-    <div class="pair-card">
+    <a href="https://tartinebakery.com/" class="pair-card" target="_blank" rel="noopener noreferrer">
       <div class="pc-city">San Francisco</div>
       <div class="pc-img"><div class="pc-photo" style="background-image:url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&q=82&auto=format&fit=crop')"></div></div>
       <div class="pc-dish">Sourdough</div>
       <div class="pc-body">Wild fermentation, slow proof, open crumb, brittle crackling crust. <strong>Tartine</strong> globalized the method, but the underlying culture was there for a century. SF sourdough is SF food culture compressed into a single loaf.</div>
-    </div>
-    <div class="pair-card philly">
+    </a>
+    <a href="https://www.sarconesbakery.com" class="pair-card philly" target="_blank" rel="noopener noreferrer">
       <div class="pc-city">Philadelphia</div>
       <div class="pc-img"><div class="pc-photo" style="background-image:url('https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=1200&q=82&auto=format&fit=crop')"></div></div>
       <div class="pc-dish">Hoagie roll</div>
       <div class="pc-body">Tight crumb, crackling exterior, structural integrity under wet fillings. <strong>Sarcone's</strong> is the benchmark. This is the bread engineering problem Philadelphia actually solved. SF sourdough is poetry; Philly hoagie roll is architecture.</div>
-    </div>
+    </a>
   </div>
 
   <article class="prose">
@@ -545,18 +546,18 @@ footer a{color:#888}
   <p class="section-sub">Coast access versus price-to-quality ratio — and the surprise in the data.</p>
 
   <div class="pair-grid">
-    <div class="pair-card">
+    <a href="https://www.google.com/maps/search/Swan+Oyster+Depot+San+Francisco+CA" class="pair-card" target="_blank" rel="noopener noreferrer">
       <div class="pc-city">San Francisco</div>
       <div class="pc-img"><div class="pc-photo" style="background-image:url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&q=82&auto=format&fit=crop')"></div></div>
       <div class="pc-dish">Cioppino</div>
       <div class="pc-body">North Beach invention, Portuguese-Italian sailor roots. Tomato-based stew with clams, Dungeness, sand dabs, mussels. <strong>Swan Oyster Depot</strong> is the soul-of-the-city cousin to this plate.</div>
-    </div>
-    <div class="pair-card philly">
+    </a>
+    <a href="/carte/philadelphia/fishtown-byob/" class="pair-card philly">
       <div class="pc-city">Philadelphia</div>
       <div class="pc-img"><div class="pc-photo" style="background-image:url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&q=82&auto=format&fit=crop')"></div></div>
       <div class="pc-dish">BYOB raw bar</div>
       <div class="pc-body">Fishtown and Old City BYOBs doing coastal-quality seafood without the coast premium. The neighborhood decided that distance from the ocean was not a structural disadvantage if the supply chain worked.</div>
-    </div>
+    </a>
   </div>
 
   <h3 class="section-title">Voices from both cities</h3>
@@ -629,7 +630,7 @@ footer a{color:#888}
     <div class="faq-item"><div class="faq-q">What's the single biggest difference between SF and Philly food scenes?</div><div class="faq-a">SF scales up (tasting menus, destination dining). Philly scales out (neighborhood density, BYOBs, counter service). Both produce great plates, in different packages.</div></div>
     <div class="faq-item"><div class="faq-q">Which city has better seafood?</div><div class="faq-a">SF by raw coast access. Philly by price-to-quality ratio at BYOB raw bars. Our scores are closer than the supply-chain math would suggest.</div></div>
     <div class="faq-item"><div class="faq-q">Is there a dish both cities do equally well?</div><div class="faq-a">Pizza, actually. SF's sourdough Neapolitan hybrid and Philly's tomato pie plus the post-2020 Neapolitan wave both land in the 85-to-95 execution range.</div></div>
-    <div class="faq-item"><div class="faq-q">Where should I start if I only have one weekend in each city?</div><div class="faq-a">SF: breakfast at Tartine, dim sum at Yank Sing, Mission burrito dinner. Philly: DiNic's roast pork, Italian Market Vietnamese lunch, Fishtown BYOB dinner.</div></div>
+    <div class="faq-item"><div class="faq-q">Where should I start if I only have one weekend in each city?</div><div class="faq-a">SF: breakfast at <a href="https://tartinebakery.com/" target="_blank" rel="noopener noreferrer" class="place-link">Tartine</a>, dim sum at <a href="https://yanksing.com/" target="_blank" rel="noopener noreferrer" class="place-link">Yank Sing</a>, Mission burrito dinner. Philly: <a href="https://www.tommydinics.com/" target="_blank" rel="noopener noreferrer" class="place-link">DiNic's</a> roast pork, <a href="https://www.italianmarketphilly.org/" target="_blank" rel="noopener noreferrer" class="place-link">Italian Market</a> Vietnamese lunch, Fishtown BYOB dinner.</div></div>
   </section>
 
   <aside class="beta-signup">

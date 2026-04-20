@@ -17,6 +17,8 @@ import pathlib
 import re
 from datetime import datetime, timezone
 
+import urllib.parse
+
 import anthropic
 
 # ─── LSI lookup tables ────────────────────────────────────────────────────────
@@ -105,6 +107,39 @@ def derive_lsi_terms(topic: dict) -> list[str]:
             unique.append(t)
 
     return unique[:10]
+
+
+# ─── Restaurant link helpers ──────────────────────────────────────────────────
+
+def maps_fallback(name: str, city: str = "") -> str:
+    """Return a Google Maps search URL for a restaurant name + optional city."""
+    q = urllib.parse.quote_plus(f"{name} {city}".strip())
+    return f"https://www.google.com/maps/search/{q}"
+
+
+def resolve_restaurant_links(html_body: str, restaurant_links: dict) -> str:
+    """
+    Wraps first occurrence of each restaurant name in an <a> tag.
+    restaurant_links: {name: url}  — url may be official site or Maps fallback.
+    Only replaces text that isn't already inside an <a> tag.
+    """
+    for name, url in restaurant_links.items():
+        if not url:
+            continue
+        # Only match first occurrence, case-sensitive, whole-word-ish boundary
+        pattern = re.compile(r'(?<![>"\w])(' + re.escape(name) + r')(?![<"\w])')
+        link = f'<a href="{url}" target="_blank" rel="noopener noreferrer" class="place-link">{name}</a>'
+        # Guard: skip if the name is already wrapped in an <a>
+        if f'href=' in html_body and f'>{name}<' in html_body:
+            # Check if the existing occurrence is already a link — if so, skip
+            already_linked = re.search(
+                r'<a\b[^>]*>' + re.escape(name) + r'</a>', html_body
+            )
+            if already_linked:
+                continue
+        html_body = pattern.sub(link, html_body, count=1)
+    return html_body
+
 
 REPO_ROOT = pathlib.Path(__file__).parent.parent
 PIPELINE_DIR = REPO_ROOT / "pipeline"
@@ -424,6 +459,32 @@ def run(args):
 
         render_carte(article, html_path)
         print(f"  [render] wrote {html_path}")
+
+        # ── Post-process: inject restaurant links into rendered HTML ──────────
+        article_html = html_path.read_text(encoding="utf-8")
+
+        # 1. Explicit links from queue.json restaurant_links: {name: url}
+        restaurant_links = topic.get("restaurant_links", {})
+        if restaurant_links:
+            print(f"  [links] injecting {len(restaurant_links)} explicit restaurant link(s)")
+            article_html = resolve_restaurant_links(article_html, restaurant_links)
+
+        # 2. Maps fallback for named_spots not already covered by restaurant_links
+        named_spots = topic.get("named_spots", [])
+        city = topic.get("city", "")
+        auto_links = {
+            name: maps_fallback(name, city)
+            for name in named_spots
+            if name not in restaurant_links
+        }
+        if auto_links:
+            print(f"  [links] injecting {len(auto_links)} Maps-fallback link(s)")
+            article_html = resolve_restaurant_links(article_html, auto_links)
+
+        if restaurant_links or auto_links:
+            html_path.write_text(article_html, encoding="utf-8")
+            print(f"  [links] updated {html_path}")
+        # ─────────────────────────────────────────────────────────────────────
 
         # Save social copy alongside article for post_social.py to pick up
         social_path = output_dir / "social.json"
