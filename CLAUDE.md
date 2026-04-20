@@ -18,7 +18,7 @@ type(scope): Brief description
 - Details
 
 🤖 Generated with Claude Code
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
 Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 
@@ -41,7 +41,7 @@ Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 
 | Say | Agent | Does |
 |-----|-------|------|
-| `wrap-flow` | wrap-flow | **Full close**: commit → push (create repo if missing) → Obsidian → SESSION txt → clipboard → new terminal with claude auto-loaded |
+| `wrap-flow` | wrap-flow | **Lean close**: commit dirty work → read CLAUDE.md → update Obsidian → print handoff card |
 | `wrap` | session-closer | **Quick close**: commit + Obsidian + handoff card only |
 | `wrap up` / `end session` | session-closer | Same as `wrap` |
 
