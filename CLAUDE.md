@@ -26,7 +26,7 @@ Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 | Project | Git Root | Notes |
 |---------|----------|-------|
 | Root workspace | `/c/Users/alima/` | Janus, seo-pulse, moonlight-deploy, construction-site live here |
-| ForkFox | `tastyr-iq/` | Separate repo — alimabsoute/forkfox |
+| ForkFox | `forkfox/` | Separate repo — alimabsoute/forkfox |
 | Moonlight | `moonlight-analytica/` | Separate repo |
 | BoardLord | `canvas-workbook/` | Separate repo — alimabsoute/BoardLord |
 | Prism | `v0-product-sentinel/` | Separate repo — alimabsoute/v0-product-sentinel |
@@ -42,7 +42,7 @@ Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 | Project | Directory | Stack | Status | CLAUDE.md |
 |---------|-----------|-------|--------|-----------|
 | Janus Demo | `janus-demo/` | React+Vite / Flask / SQLite | Sprint 7 done, 234 tests | `janus-demo/CLAUDE.md` |
-| ForkFox | `tastyr-iq/` | Python + HTML / Vercel | Live at forkfox.ai | `tastyr-iq/CLAUDE.md` |
+| ForkFox | `forkfox/` | Python + HTML / Vercel | Live at forkfox.ai | `forkfox/CLAUDE.md` |
 | Prism | `v0-product-sentinel/` | Next.js / Supabase | Sprint 1 next (pagination) | `v0-product-sentinel/CLAUDE.md` |
 | BoardLord | `canvas-workbook/` | React / Next.js | Phase 2+3 planning | `canvas-workbook/CLAUDE.md` |
 | Caposeo | `seo-pulse/` | Next.js / Supabase | Phase 3 next (data backfill) | `seo-pulse/CLAUDE.md` |

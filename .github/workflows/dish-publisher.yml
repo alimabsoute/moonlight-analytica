@@ -3,14 +3,14 @@ name: Dish Publisher
 on:
   push:
     paths:
-      - 'tastyr-iq/landing-pages/the-dish/**'
+      - 'forkfox/landing-pages/the-dish/**'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: tastyr-iq
+        working-directory: forkfox
 
     steps:
       - name: Checkout
