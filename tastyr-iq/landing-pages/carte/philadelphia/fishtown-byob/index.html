@@ -119,15 +119,16 @@ h1 em{font-style:normal;color:#FA2A52}
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-4%,3%)}50%{transform:translate(3%,-4%)}75%{transform:translate(-3%,2%)}100%{transform:translate(0,0)}}
 /* ── INFO IMAGE ─────────────────────────── */
 .info-image.in-view{opacity:1;transform:translateY(0)}
-.info-image img{animation:infoFloat 18s ease-in-out infinite;transform-origin:center}
-@keyframes infoFloat{0%,100%{transform:scale(1) translate(0,0)}30%{transform:scale(1.04) translate(.7%,-.4%)}65%{transform:scale(1.03) translate(-.5%,.4%)}90%{transform:scale(1.05) translate(.4%,-.5%)}}
-.info-image::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 15% 85%,rgba(245,158,11,.22),transparent 60%),radial-gradient(ellipse 45% 38% at 85% 15%,rgba(245,158,11,.1),transparent 55%);mix-blend-mode:screen;pointer-events:none;z-index:2;animation:infoGlow 9s ease-in-out infinite}
+.info-image img{animation:infoIntro 1.6s ease-out forwards,infoFloat 20s ease-in-out 1.6s infinite alternate;transform-origin:45% 50%}
+@keyframes infoIntro{0%{transform:scale(1.15);filter:brightness(.45) blur(7px)}100%{transform:scale(1.08);filter:brightness(1) blur(0)}}
+@keyframes infoFloat{0%{transform:scale(1.08) translate(0,0)}25%{transform:scale(1.12) translate(1.8%,-.7%)}50%{transform:scale(1.1) translate(-1.4%,.6%)}75%{transform:scale(1.13) translate(1%,.9%)}100%{transform:scale(1.09) translate(-.7%,-.5%)}}
+.info-image::before{content:'';position:absolute;top:-20%;right:-45%;width:32%;height:150%;background:linear-gradient(245deg,transparent 28%,rgba(255,215,100,.07) 43%,rgba(255,215,100,.16) 50%,rgba(255,215,100,.07) 57%,transparent 72%);transform:rotate(-16deg);pointer-events:none;z-index:3;mix-blend-mode:screen;animation:infoShaft 15s ease-in-out infinite}
+@keyframes infoShaft{0%,100%{transform:translateX(0) rotate(-16deg);opacity:.2}50%{transform:translateX(-300%) rotate(-16deg);opacity:.85}}
+.info-image::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 78% 22%,rgba(245,158,11,.22),transparent 55%),radial-gradient(ellipse 40% 35% at 18% 80%,rgba(245,158,11,.12),transparent 60%);mix-blend-mode:screen;pointer-events:none;z-index:2;animation:infoGlow 10s ease-in-out infinite}
 @keyframes infoGlow{0%,100%{opacity:.4}50%{opacity:1}}
-.info-image::after{content:'';position:absolute;bottom:-40%;left:-25%;width:75%;height:160%;background:linear-gradient(130deg,transparent 35%,rgba(255,210,100,.04) 48%,rgba(255,210,100,.1) 55%,rgba(255,210,100,.04) 62%,transparent 75%);transform:rotate(-15deg);pointer-events:none;z-index:3;mix-blend-mode:screen;animation:infoLeak 17s ease-in-out infinite}
-@keyframes infoLeak{0%,100%{transform:translateX(-20%) rotate(-15deg);opacity:.2}55%{transform:translateX(260%) rotate(-15deg);opacity:.7}}
-.info-grain{position:absolute;inset:-50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ig'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ig)'/%3E%3C/svg%3E");opacity:.3;mix-blend-mode:overlay;pointer-events:none;z-index:4;animation:infoGrainShift 2.1s steps(4) infinite}
-@keyframes infoGrainShift{0%{transform:translate(0,0)}25%{transform:translate(3%,-2%)}50%{transform:translate(-2%,3%)}75%{transform:translate(2%,-3%)}100%{transform:translate(0,0)}}
-.info-image:hover img{transform:scale(1.06)!important}
+.info-grain{position:absolute;inset:-50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='ig'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .13 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ig)'/%3E%3C/svg%3E");opacity:.45;mix-blend-mode:overlay;pointer-events:none;z-index:4;animation:infoGrainShift 1.3s steps(4) infinite}
+@keyframes infoGrainShift{0%{transform:translate(0,0)}25%{transform:translate(-4%,3%)}50%{transform:translate(3%,-4%)}75%{transform:translate(-3%,2%)}100%{transform:translate(0,0)}}
+.info-image:hover img{filter:brightness(1.06)}
 /* ── PICK CARDS ─────────────────────────── */
 .pick{opacity:0;transform:translateX(-22px) scale(.97);transition:opacity .5s ease,transform .55s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease}
 .pick.in-view{opacity:1;transform:translateX(0) scale(1)}
