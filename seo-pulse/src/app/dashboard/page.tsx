@@ -106,7 +106,7 @@ export function DashboardPage() {
   const navigate = useNavigate()
   const activeProject = useProjectStore(s => s.activeProject)
 
-  const { data: overview, isLoading: overviewLoading } = useQuery({
+  const { data: overview, isLoading: overviewLoading, isError: overviewError, refetch: refetchOverview } = useQuery({
     queryKey: ['domain-overview', activeProject?.domain],
     queryFn: () => getDomainOverview(activeProject!.domain),
     enabled: !!activeProject?.domain,
@@ -135,6 +135,24 @@ export function DashboardPage() {
               className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Go to Onboarding
+            </button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (overviewError) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Card className="w-full max-w-md border-destructive/40">
+          <CardContent className="pt-8 pb-8 px-8 text-center">
+            <p className="text-sm font-medium text-destructive mb-4">Failed to load domain data for {activeProject?.domain}</p>
+            <button
+              onClick={() => refetchOverview()}
+              className="inline-flex items-center justify-center rounded-md border border-destructive/40 px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
+            >
+              Retry
             </button>
           </CardContent>
         </Card>

@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useProjectStore } from '@/stores/project'
-import { persistProject } from '@/lib/supabase'
+import { updateProjectInDB } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/auth'
+import { toast } from '@/components/ui/toast'
 
 const STEPS = [
   { label: 'Your Website', icon: Globe },
@@ -32,7 +33,9 @@ function cleanDomain(raw: string): string {
 export function OnboardingPage() {
   const navigate = useNavigate()
   const addProject = useProjectStore((s) => s.addProject)
+  const updateProject = useProjectStore((s) => s.updateProject)
   const setActiveProject = useProjectStore((s) => s.setActiveProject)
+  const activeProject = useProjectStore((s) => s.activeProject)
 
   const [step, setStep] = useState(0)
   const [domain, setDomain] = useState('')
@@ -90,7 +93,7 @@ export function OnboardingPage() {
       .map(cleanDomain)
       .filter((c) => c && isValidDomain(c))
 
-    const projectData = {
+    const patch = {
       name: domain,
       domain,
       competitors: validCompetitors,
@@ -98,27 +101,38 @@ export function OnboardingPage() {
     }
 
     const userId = useAuthStore.getState().user?.id
-    let project: { id: string; name: string; domain: string; competitors: string[]; trackedKeywords: string[]; createdAt: string; updatedAt: string }
 
-    try {
-      if (userId) {
-        project = await persistProject(projectData, userId)
-      } else {
-        throw new Error('no user')
+    // If there's already an active project (default created on signup), update it.
+    // Otherwise fall back to creating a local-only project (dev-user or race condition).
+    if (activeProject) {
+      // Optimistically update the store
+      updateProject(activeProject.id, patch)
+
+      // Persist to DB for real users (not mock dev projects)
+      if (userId && userId !== 'dev-user' && activeProject.id !== 'mock-default-project') {
+        try {
+          await updateProjectInDB(activeProject.id, patch)
+        } catch (err) {
+          console.error('[onboarding] updateProjectInDB failed:', err)
+          toast('Could not save project details — changes saved locally only.', 'error')
+        }
       }
-    } catch (err) {
-      console.error('[onboarding] persistProject failed, falling back to local:', err)
+
+      setActiveProject(activeProject.id)
+    } else {
+      // No default project in store yet — create one locally
+      console.warn('[onboarding] No active project in store, creating local fallback')
       const now = new Date().toISOString()
-      project = {
+      const fallback = {
         id: crypto.randomUUID(),
-        ...projectData,
+        ...patch,
         createdAt: now,
         updatedAt: now,
       }
+      addProject(fallback)
+      setActiveProject(fallback.id)
     }
 
-    addProject(project)
-    setActiveProject(project.id)
     navigate('/dashboard')
   }
 

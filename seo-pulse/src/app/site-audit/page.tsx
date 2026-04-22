@@ -24,7 +24,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useProjectStore } from '@/stores/project'
 import { getDomainOverview } from '@/lib/data-for-seo'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'react-router-dom'
 
 const HEALTH_SCORE_FALLBACK = 84
 
@@ -156,14 +156,14 @@ function HealthGauge({ score, loading }: { score: number; loading: boolean }) {
 }
 
 export function SiteAuditPage() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const activeProject = useProjectStore((s) => s.activeProject)
 
   const [auditRun, setAuditRun] = useState(true)
   const [auditRunning, setAuditRunning] = useState(false)
   const [lastAuditedAt, setLastAuditedAt] = useState<Date | null>(null)
 
-  const { data: overview, isLoading: overviewLoading, refetch: refetchOverview } = useQuery({
+  const { data: overview, isLoading: overviewLoading, isError: overviewError, refetch: refetchOverview } = useQuery({
     queryKey: ['domain-overview', activeProject?.domain],
     queryFn: () => getDomainOverview(activeProject!.domain),
     enabled: !!activeProject?.domain,
@@ -205,9 +205,36 @@ export function SiteAuditPage() {
             <Button
               size="lg"
               className="mt-6 gap-2"
-              onClick={() => router.push('/onboarding')}
+              onClick={() => navigate('/onboarding')}
             >
               Go to Onboarding
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (overviewError && !overviewLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Site Audit</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Comprehensive technical SEO analysis of your website
+          </p>
+        </div>
+        <Card className="border-destructive/40">
+          <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="text-sm text-destructive mb-4">
+              Failed to load domain data for {activeProject?.domain}
+            </p>
+            <Button
+              variant="outline"
+              className="border-destructive/40 text-destructive hover:bg-destructive/10"
+              onClick={() => refetchOverview()}
+            >
+              Retry
             </Button>
           </CardContent>
         </Card>

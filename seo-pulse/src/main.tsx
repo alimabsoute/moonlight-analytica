@@ -7,6 +7,7 @@ import { App } from './App'
 import { toast } from '@/components/ui/toast'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/auth'
+import { useProjectStore } from '@/stores/project'
 import type { User } from '@/stores/auth'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import './index.css'
@@ -33,6 +34,7 @@ function AuthInitializer({ children }: { children: ReactNode }) {
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
         })
+        useProjectStore.getState().loadFromDB(data.session.user.id)
       }
       initialize()
     })
@@ -44,6 +46,7 @@ function AuthInitializer({ children }: { children: ReactNode }) {
           access_token: session.access_token,
           refresh_token: session.refresh_token,
         })
+        useProjectStore.getState().loadFromDB(session.user.id)
         initialize()
       } else if (event === 'SIGNED_OUT') {
         logout()

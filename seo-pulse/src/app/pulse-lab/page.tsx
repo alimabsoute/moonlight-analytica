@@ -775,7 +775,7 @@ function SeasonalPatternsTab() {
                         borderRadius: '8px',
                         fontSize: '12px',
                       }}
-                      formatter={(value: number, _name, props) => {
+                      formatter={(value, _name, props) => {
                         const isPeak = props.payload?.month === chartData[peakIdx]?.month
                         return [`${value}${isPeak ? ' (Peak month)' : ''}`, 'Volume Index']
                       }}

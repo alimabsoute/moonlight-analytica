@@ -148,6 +148,84 @@ export async function deleteProject(projectId: string) {
   if (error) throw error
 }
 
+/**
+ * Create a default project for a new user.
+ * If a project with name="My Site" already exists for that user, returns it instead.
+ */
+export async function createDefaultProject(
+  userId: string,
+  name = 'My Site',
+  domain = 'example.com',
+): Promise<{
+  id: string
+  name: string
+  domain: string
+  competitors: string[]
+  trackedKeywords: string[]
+  createdAt: string
+  updatedAt: string
+}> {
+  // Check if default already exists
+  const { data: existing } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('name', name)
+    .maybeSingle()
+
+  if (existing) {
+    return {
+      id: existing.id as string,
+      name: existing.name as string,
+      domain: existing.domain as string,
+      competitors: (existing.competitors ?? []) as string[],
+      trackedKeywords: (existing.tracked_keywords ?? []) as string[],
+      createdAt: existing.created_at as string,
+      updatedAt: existing.updated_at as string,
+    }
+  }
+
+  const { data, error } = await supabase
+    .from('projects')
+    .insert({
+      user_id: userId,
+      name,
+      domain,
+      competitors: [],
+      tracked_keywords: [],
+    })
+    .select()
+    .single()
+  if (error) throw error
+  return {
+    id: data.id as string,
+    name: data.name as string,
+    domain: data.domain as string,
+    competitors: (data.competitors ?? []) as string[],
+    trackedKeywords: (data.tracked_keywords ?? []) as string[],
+    createdAt: data.created_at as string,
+    updatedAt: data.updated_at as string,
+  }
+}
+
+/**
+ * Update an existing project row by id.
+ */
+export async function updateProjectInDB(
+  projectId: string,
+  patch: Partial<{ name: string; domain: string; competitors: string[]; trackedKeywords: string[] }>,
+): Promise<void> {
+  const dbPatch: Record<string, unknown> = {}
+  if (patch.name !== undefined) dbPatch.name = patch.name
+  if (patch.domain !== undefined) dbPatch.domain = patch.domain
+  if (patch.competitors !== undefined) dbPatch.competitors = patch.competitors
+  if (patch.trackedKeywords !== undefined) dbPatch.tracked_keywords = patch.trackedKeywords
+  dbPatch.updated_at = new Date().toISOString()
+
+  const { error } = await supabase.from('projects').update(dbPatch).eq('id', projectId)
+  if (error) throw error
+}
+
 export async function fetchIntegrations(userId: string) {
   const { data, error } = await supabase
     .from('integrations')

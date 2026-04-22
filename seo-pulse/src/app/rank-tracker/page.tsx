@@ -233,6 +233,7 @@ export function RankTrackerPage() {
     data: keywordMetrics = [],
     isLoading,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ['keyword-metrics', activeProject?.trackedKeywords],
     queryFn: () => getKeywordData(activeProject!.trackedKeywords),
@@ -426,8 +427,11 @@ export function RankTrackerPage() {
 
       {/* Error banner — non-blocking */}
       {isError && (
-        <div className="rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
-          Could not load keyword data — using demo data.
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <span>Could not load keyword data — showing demo data.</span>
+          <Button size="sm" variant="outline" className="shrink-0 border-destructive/40 text-destructive hover:bg-destructive/10" onClick={() => refetch()}>
+            Retry
+          </Button>
         </div>
       )}
 

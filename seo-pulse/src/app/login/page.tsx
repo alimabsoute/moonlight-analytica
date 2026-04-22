@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { useAuthStore } from '@/stores/auth'
+import { useProjectStore } from '@/stores/project'
 import { signInWithEmail, signUpWithEmail, signInWithGoogle } from '@/lib/supabase'
 
 const FEATURES = [
@@ -104,6 +105,20 @@ export function LoginPage() {
       console.log('[login] Google auth error:', err)
       setError('Google sign-in is not configured yet.')
     }
+  }
+
+  async function handleDevBypass() {
+    setUser({
+      id: 'dev-user',
+      email: 'dev@caposeo.local',
+      fullName: 'Dev User',
+      avatarUrl: null,
+      plan: 'pro',
+      createdAt: new Date().toISOString(),
+    })
+    await useProjectStore.getState().loadFromDB('dev-user')
+    setLoading(false)
+    navigate('/dashboard')
   }
 
   return (
@@ -294,6 +309,18 @@ export function LoginPage() {
               )}
             </Button>
           </form>
+
+          {import.meta.env.DEV && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="w-full text-xs text-muted-foreground"
+              onClick={handleDevBypass}
+            >
+              Skip sign-in (dev) →
+            </Button>
+          )}
 
           {/* Toggle mode */}
           <p className="text-center text-sm text-muted-foreground">

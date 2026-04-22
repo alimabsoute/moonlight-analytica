@@ -88,6 +88,18 @@ export function ExplorerPage() {
     return typeof val === 'number' ? val.toLocaleString() : String(val)
   }
 
+  if (!activeProject) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-center">
+        <Globe className="mb-4 h-10 w-10 text-muted-foreground/50" />
+        <h2 className="text-lg font-semibold text-foreground mb-2">No project selected</h2>
+        <p className="text-sm text-muted-foreground">
+          No project selected — head to Settings to create one.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}

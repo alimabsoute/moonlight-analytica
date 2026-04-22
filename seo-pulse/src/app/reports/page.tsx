@@ -195,6 +195,30 @@ export function ReportsPage() {
     }
   }
 
+  if (!activeProject) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Reports</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Generate comprehensive SEO reports to share with your team or clients
+          </p>
+        </div>
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-muted">
+              <FileText className="h-7 w-7 text-muted-foreground" />
+            </div>
+            <h3 className="text-base font-semibold text-foreground mb-2">No project selected</h3>
+            <p className="text-sm text-muted-foreground">
+              No project selected — head to Settings to create one.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
