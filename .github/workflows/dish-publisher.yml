@@ -1,9 +1,9 @@
 name: Dish Publisher
 
 on:
-  push:
-    paths:
-      - 'forkfox/landing-pages/the-dish/**'
+  schedule:
+    - cron: '0 7 * * *'  # daily at 7am UTC
+  workflow_dispatch:     # manual trigger for testing
 
 jobs:
   publish:
@@ -22,22 +22,13 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install anthropic requests
+        run: pip install anthropic firecrawl-py requests jinja2
 
-      - name: Detect changed Dish article
-        id: detect
-        run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'the-dish/' | grep 'index.html' | head -1)
-          echo "html_path=$CHANGED" >> $GITHUB_OUTPUT
-          echo "Changed: $CHANGED"
-
-      - name: Generate social copy
-        if: steps.detect.outputs.html_path != ''
+      - name: Generate Dish article
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          python pipeline/generate_social_copy.py \
-            --html-path "${{ steps.detect.outputs.html_path }}"
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: python pipeline/generate_dish.py --batch 1
 
       - name: Generate sitemap
         run: python pipeline/generate_sitemap.py

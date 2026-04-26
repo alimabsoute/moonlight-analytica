@@ -2,7 +2,7 @@ name: Carte Generator
 
 on:
   schedule:
-    - cron: '0 * * * *'   # every hour on the hour
+    - cron: '0 6,9,12,15,18 * * *'  # 5x daily: 6am, 9am, 12pm, 3pm, 6pm UTC
   workflow_dispatch:       # manual trigger for testing
     inputs:
       batch:
@@ -39,13 +39,13 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
-          CARTE_BATCH_SIZE: ${{ github.event.inputs.batch || '3' }}
         run: |
           DRY=${{ github.event.inputs.dry_run || 'false' }}
+          BATCH=${{ github.event.inputs.batch || '1' }}
           if [ "$DRY" = "true" ]; then
             python pipeline/generate_carte.py --dry-run
           else
-            python pipeline/generate_carte.py --batch ${{ github.event.inputs.batch || '3' }}
+            python pipeline/generate_carte.py --batch $BATCH
           fi
 
       - name: Generate sitemap
