@@ -1,0 +1,24 @@
+{
+  "scenario": "Restaurant — Service Floor",
+  "reference_resolution": [1280, 720],
+  "zones": [
+    {
+      "name": "entrance",
+      "type": "entrance",
+      "color": "#2074FF",
+      "polygon": [[0, 0], [380, 0], [380, 720], [0, 720]]
+    },
+    {
+      "name": "dining",
+      "type": "general",
+      "color": "#FF8800",
+      "polygon": [[380, 0], [800, 0], [800, 720], [380, 720]]
+    },
+    {
+      "name": "bar",
+      "type": "queue",
+      "color": "#9C27B0",
+      "polygon": [[800, 0], [1280, 0], [1280, 720], [800, 720]]
+    }
+  ]
+}

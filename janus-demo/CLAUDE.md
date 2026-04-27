@@ -2,6 +2,14 @@
 
 Real-time people counting & analytics platform. Computer vision + dashboards for foot traffic in physical spaces (retail, restaurants, venues). Privacy-first: no video/images stored, only counts and journey metadata.
 
+## ⚠️ ZONE MODEL — READ THIS FIRST (locked 2026-04-27)
+
+**Zones are 3D world-space planes, NOT 2D screen overlays.** They are anchored to physical surfaces (floor, bar top, table, ramp) and projected through the camera homography onto the image. Counting happens in world space, not pixel space.
+
+**Canonical interaction:** Create → Rotate (in 3D) → Place (on surface) → Commit (fills + label).
+
+**Before touching any zone-related code, demo asset, or UI: read [`JANUS-ZONE-MODEL.md`](JANUS-ZONE-MODEL.md) and open [`demo_assets/zone_concept.html`](demo_assets/zone_concept.html) in a browser.** If you find yourself drawing flat polygons on a video frame, STOP — that's the wrong model.
+
 ## Current Status: CV Architecture Upgraded (RF-DETR + Supervision)
 
 **Phase**: Detection pipeline migrated from YOLO/ultralytics (AGPL) → RF-DETR + Supervision (Apache 2.0/MIT)

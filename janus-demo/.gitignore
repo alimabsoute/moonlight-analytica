@@ -21,6 +21,12 @@ edge_agent/video_library/*_tracking.json
 edge_agent/video_library/*_progress.json
 edge_agent/video_library/*.bak
 
+# Demo asset render outputs (regenerable, large)
+demo_assets/*.mp4
+demo_assets/*.mov
+demo_assets/*.webm
+demo_assets/output/
+
 # Environment
 .env
 *.env
