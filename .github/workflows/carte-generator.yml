@@ -2,7 +2,10 @@ name: Carte Generator
 
 on:
   schedule:
-    - cron: '0 6,9,12,15,18 * * *'  # 5x daily: 6am, 9am, 12pm, 3pm, 6pm UTC
+    # Weekdays: every 2hrs during business hours (9am-7pm ET) — ~6 articles/day
+    - cron: '15 13,15,17,19,21,23 * * 1-5'
+    # Weekends: lighter cadence, 2 articles per day
+    - cron: '15 14,18 * * 0,6'
   workflow_dispatch:       # manual trigger for testing
     inputs:
       batch:
@@ -33,12 +36,14 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install anthropic firecrawl-py requests jinja2 tweepy
+        run: pip install anthropic firecrawl-py requests jinja2 pillow
 
       - name: Generate Carte articles
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          BRAVE_SEARCH_API_KEY: ${{ secrets.BRAVE_SEARCH_API_KEY }}
         run: |
           DRY=${{ github.event.inputs.dry_run || 'false' }}
           BATCH=${{ github.event.inputs.batch || '1' }}
@@ -47,6 +52,11 @@ jobs:
           else
             python pipeline/generate_carte.py --batch $BATCH
           fi
+
+      - name: Slop-repair pass (zero-tolerance gate — repair-or-skip)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python pipeline/slop_repair.py
 
       - name: Generate sitemap
         run: python pipeline/generate_sitemap.py

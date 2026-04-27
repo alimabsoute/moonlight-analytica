@@ -2,7 +2,8 @@ name: Dish Publisher
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # daily at 7am UTC
+    # Mon/Wed/Fri at 12:00 UTC (8am ET) — 3 longform Dish pieces per week
+    - cron: '0 12 * * 1,3,5'
   workflow_dispatch:     # manual trigger for testing
 
 jobs:
@@ -22,13 +23,20 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install anthropic firecrawl-py requests jinja2
+        run: pip install anthropic firecrawl-py requests jinja2 pillow
 
       - name: Generate Dish article
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          BRAVE_SEARCH_API_KEY: ${{ secrets.BRAVE_SEARCH_API_KEY }}
         run: python pipeline/generate_dish.py --batch 1
+
+      - name: Slop-repair pass (zero-tolerance gate)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python pipeline/slop_repair.py
 
       - name: Generate sitemap
         run: python pipeline/generate_sitemap.py

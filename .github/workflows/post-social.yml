@@ -2,7 +2,8 @@ name: Post Social
 
 on:
   schedule:
-    - cron: '30 * * * *'  # 30 min after every hour — catches Carte and Dish posts
+    # Hourly at :30 — picks up any social.json from the last 2hr without a .scheduled.lock
+    - cron: '30 * * * *'
   workflow_dispatch:
     inputs:
       test:
