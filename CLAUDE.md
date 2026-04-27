@@ -27,13 +27,24 @@ Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
 |---------|----------|-------|
 | Root workspace | `/c/Users/alima/` | Janus, seo-pulse, moonlight-deploy, construction-site live here |
 | ForkFox | `forkfox/` | Separate repo — alimabsoute/forkfox |
-| Moonlight | `moonlight-analytica/` | Separate repo |
+| Moonlight | `moonlight-deploy/` (tracked from root workspace) | **DO NOT use `moonlight-analytica/` clone.** It was archived 2026-04-26 after a rogue auto-deploy regression. Source of truth = `moonlight-deploy/` only. Deploy with `cd moonlight-deploy && vercel --prod --yes`. GitHub auto-deploy is disconnected on the Vercel project — keep it disconnected. |
 | BoardLord | `canvas-workbook/` | Separate repo — alimabsoute/BoardLord |
 | Prism | `v0-product-sentinel/` | Separate repo — alimabsoute/v0-product-sentinel |
 | PhynxTimer | `phynxtimer/` | Separate repo |
 | Ink & Ivory | `ink-and-ivory/` | Separate repo — alimabsoute/ink-and-ivory |
 
 **Push Policy**: DO NOT auto-push. Only push when explicitly requested.
+
+### ⚠️ Vercel Auto-Deploy Gotchas (CRITICAL)
+
+Two projects have had production regress because Vercel's GitHub integration auto-deployed from a stale or wrong source. **Always deploy via the CLI from the source-of-truth folder** for these projects:
+
+| Project | Source of truth | Deploy command | Vector closed? |
+|---------|-----------------|----------------|----------------|
+| Moonlight | `moonlight-deploy/` (root workspace) | `cd moonlight-deploy && vercel --prod --yes` | GitHub auto-deploy disconnected 2026-04-26. Rogue clone archived. |
+| ForkFox | `forkfox/landing-pages/` | `cd forkfox/landing-pages && vercel --prod --yes` | Still wired — must redeploy after every push. |
+
+If you find a duplicate clone of either project anywhere on the filesystem, **archive it, do not work in it**. Memory notes: `feedback_moonlight_vercel_autodeploy.md`, `feedback_forkfox_vercel_autodeploy.md`.
 
 ---
 

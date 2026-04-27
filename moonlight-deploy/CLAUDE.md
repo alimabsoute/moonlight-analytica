@@ -2,13 +2,26 @@
 
 Static HTML website live at **https://moonlightanalytica.com**
 
-## Deployment
+## ⚠️ Deployment — READ THIS FIRST
 
+**Source of truth**: this folder (`C:\Users\alima\moonlight-deploy\`). Nowhere else.
+
+**Deploy command** (the only correct one):
 ```bash
-cd moonlight-deploy && vercel --prod --yes
+cd /c/Users/alima/moonlight-deploy && vercel --prod --yes
 ```
 
+**Critical rules**:
+1. **Never deploy moonlight from any other folder.** A second clone of `alimabsoute/moonlight-analytica` once existed at `C:\Users\alima\moonlight-analytica\` (now archived in `ARCHIVED_MOONLIGHT_PROJECTS/`). Both folders were Vercel-linked to the same project. On 2026-04-21, that rogue clone pushed an old snapshot to GitHub `main` and Vercel auto-deployed it — silently regressing prod for ~6 days.
+2. **Never `git push` to `alimabsoute/moonlight-analytica`** unless you're certain GitHub auto-deploy is still disconnected on the Vercel project.
+3. **GitHub auto-deploy is currently DISCONNECTED** (done 2026-04-26 via `vercel git disconnect`). If anyone reconnects it in the Vercel dashboard, the regression vector is back.
+4. **Files in this folder are tracked from `/c/Users/alima/.git`** (the root workspace), not by a `.git` here. Commits to moonlight content live in the root workspace's history.
+5. **Verify every deploy**: `curl -I https://www.moonlightanalytica.com` — expect `Content-Length` ~212000 and a recent `Last-Modified`. A drop to ~114KB means an old build is live.
+
+See also: `~/.claude/projects/C--Users-alima/memory/feedback_moonlight_vercel_autodeploy.md`
+
 - **Platform**: Vercel (domain registered through Vercel)
+- **Vercel project**: `prj_iG4IHhU5S6isbMKAFMLoIM1jb5Xq` (org `team_Bad3oPaEHzUceO3LVH5KXIN1`)
 - **No build step** — static HTML files served directly
 - **No database, no env vars, no backend** (except `/api/subscribe.js` which logs only)
 
