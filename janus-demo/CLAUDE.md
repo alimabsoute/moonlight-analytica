@@ -10,6 +10,16 @@ Real-time people counting & analytics platform. Computer vision + dashboards for
 
 **Before touching any zone-related code, demo asset, or UI: read [`JANUS-ZONE-MODEL.md`](JANUS-ZONE-MODEL.md) and open [`demo_assets/zone_concept.html`](demo_assets/zone_concept.html) in a browser.** If you find yourself drawing flat polygons on a video frame, STOP — that's the wrong model.
 
+## Strategy Documents (locked 2026-04-27)
+
+These gate every roadmap decision. Any feature/capability/vertical question should be answered against these docs first.
+
+- **[`strategy/JANUS-DATA-MOAT.md`](strategy/JANUS-DATA-MOAT.md)** — The defensibility argument. The CV is not the moat; the normalized cross-venue event log is. Compounds with every onboarded customer.
+- **[`strategy/JANUS-USE-CASES.md`](strategy/JANUS-USE-CASES.md)** — Sector-by-sector use case analysis (12 sectors). Buyer, pain, zones, metrics, $/cam/mo, GTM motion, moat depth, recommended phase.
+- **[`strategy/JANUS-DEFENSE-VERTICAL.md`](strategy/JANUS-DEFENSE-VERTICAL.md)** — Defense as parallel track. Buyer landscape, contracting paths (SBIR/DIU/OTA/GSA), service-branch use cases, compliance posture, 24-month roadmap to first pilot.
+
+**Hard rule:** No feature ships if it disqualifies Janus from defense (facial recognition, stored video, cloud-only). Architectural integrity protects both the commercial moat and the defense fit.
+
 ## Current Status: CV Architecture Upgraded (RF-DETR + Supervision)
 
 **Phase**: Detection pipeline migrated from YOLO/ultralytics (AGPL) → RF-DETR + Supervision (Apache 2.0/MIT)
