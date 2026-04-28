@@ -41,8 +41,10 @@ def test_polygon_world_3d_to_image_floor_zone():
     # 1m x 1m square on floor at origin
     poly = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]]
     R = identity_rotation()
-    # Homography: world (0,0)->image (100,100), 1m = 50px
-    H = [[50, 0, 100], [0, 50, 100], [0, 0, 1]]
+    # H is pixel -> world (the direction stored in camera_calibration).
+    # 50 px = 1 m and pixel (100,100) -> world (0,0). The inverse is what
+    # actually projects world points to pixel coords.
+    H = [[1.0 / 50, 0, -2.0], [0, 1.0 / 50, -2.0], [0, 0, 1.0]]
     img = polygon_world_3d_to_image(poly, R, H)
     assert img == [[100, 100], [150, 100], [150, 150], [100, 150]]
 
@@ -51,7 +53,7 @@ def test_polygon_world_3d_to_image_elevated_zone():
     # Bar top: 1m x 1m at z=1.0 (counter height)
     poly = [[0, 0, 1.0], [1, 0, 1.0], [1, 1, 1.0], [0, 1, 1.0]]
     R = identity_rotation()
-    H = [[50, 0, 100], [0, 50, 100], [0, 0, 1]]
+    H = [[1.0 / 50, 0, -2.0], [0, 1.0 / 50, -2.0], [0, 0, 1.0]]
     # Floor-only homography ignores z, projects xy
     img = polygon_world_3d_to_image(poly, R, H)
     assert img == [[100, 100], [150, 100], [150, 150], [100, 150]]

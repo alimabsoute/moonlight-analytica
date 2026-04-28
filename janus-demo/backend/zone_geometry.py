@@ -76,7 +76,9 @@ def polygon_world_3d_to_image(
     Args:
         polygon_world_3d: 4 corners as [[x, y, z], ...] in world meters.
         rotation_matrix: 3x3 rotation matrix applied to corners around their centroid.
-        h_matrix: 3x3 homography mapping world-floor (x, y) -> image (u, v).
+        h_matrix: 3x3 homography mapping pixel -> world (the direction stored in
+            the `camera_calibration` table; matches edge_agent.project_to_world).
+            We invert it internally to project world -> pixel.
         floor_only_homography: if True, the homography only maps the z=0 plane.
             For elevated zones (z != 0), we currently project the (x, y) component
             ignoring z, which is approximate. Full perspective projection requires
@@ -88,18 +90,20 @@ def polygon_world_3d_to_image(
     pts = np.array(polygon_world_3d, dtype=np.float64)  # (4, 3)
     R = np.array(rotation_matrix, dtype=np.float64)
     H = np.array(h_matrix, dtype=np.float64)
+    H_inv = np.linalg.inv(H)
 
     centroid = pts.mean(axis=0)
     centered = pts - centroid
     rotated = (R @ centered.T).T
     world_pts = rotated + centroid
 
-    # Project the (x, y) component through the floor homography. Z is dropped under
-    # floor_only_homography assumption — this is sufficient for floor zones and
-    # approximate for slightly-elevated zones (bar tops at consistent height).
+    # Project the (x, y) component through the inverse homography (world -> pixel).
+    # Z is dropped under floor_only_homography assumption — this is sufficient for
+    # floor zones and approximate for slightly-elevated zones (bar tops at
+    # consistent height).
     if floor_only_homography:
         homog = np.column_stack([world_pts[:, 0], world_pts[:, 1], np.ones(world_pts.shape[0])])
-        projected = (H @ homog.T).T  # (4, 3)
+        projected = (H_inv @ homog.T).T  # (4, 3)
         projected /= projected[:, 2:3]
         return [[int(round(p[0])), int(round(p[1]))] for p in projected[:, :2]]
     else:

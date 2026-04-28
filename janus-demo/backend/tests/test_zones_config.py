@@ -202,3 +202,209 @@ class TestZonePersistenceRoundTrip:
         resp = client.get("/api/zones/config")
         zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "capacity_zone")
         assert zone["capacity"] == 42
+
+
+# ── v2 (3D world-space) HTTP round-trip ────────────────────────────────
+#
+# The lower-level zone_geometry helpers are unit-tested in
+# test_zone_geometry.py and the edge-side hit test is covered by
+# edge_agent/tests/test_zone_v2_migration.py. These tests exercise the
+# full Flask request/response layer for the v2 zone schema:
+# polygon_world_3d + rotation_matrix + surface_type + camera_id +
+# schema_version, including auto-derivation of polygon_image via the
+# camera homography.
+
+# 1m × 0.5m bar-top zone elevated to 1.05m, parallel to the floor.
+BAR_TOP_3D = [
+    [0.0, 0.0, 1.05],
+    [1.0, 0.0, 1.05],
+    [1.0, 0.5, 1.05],
+    [0.0, 0.5, 1.05],
+]
+IDENTITY_R = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+
+# 4m × 3m floor zone.
+FLOOR_3D = [
+    [0.0, 0.0, 0.0],
+    [4.0, 0.0, 0.0],
+    [4.0, 3.0, 0.0],
+    [0.0, 3.0, 0.0],
+]
+
+
+class TestZoneV2HttpRoundTrip:
+    """The full POST → DB → GET path with the schema_version 2 fields."""
+
+    def test_v2_post_returns_schema_version_2(self, client):
+        resp = client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "bar_top",
+                "polygon_world_3d": BAR_TOP_3D,
+                "rotation_matrix": IDENTITY_R,
+                "surface_type": "counter_top",
+                "color": "#b56cff",
+            },
+        )
+        assert resp.status_code == 201
+        data = resp.get_json()
+        assert data["schema_version"] == 2
+        assert data["surface_type"] == "counter_top"
+        assert data["polygon_world_3d"] == BAR_TOP_3D
+        assert data["rotation_matrix"] == IDENTITY_R
+
+    def test_v2_get_round_trips_3d_fields(self, client):
+        client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "bar_top",
+                "polygon_world_3d": BAR_TOP_3D,
+                "rotation_matrix": IDENTITY_R,
+                "surface_type": "counter_top",
+            },
+        )
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "bar_top")
+        assert zone["schema_version"] == 2
+        assert zone["polygon_world_3d"] == BAR_TOP_3D
+        assert zone["rotation_matrix"] == IDENTITY_R
+        assert zone["surface_type"] == "counter_top"
+
+    def test_v2_default_rotation_is_identity_when_omitted(self, client):
+        """POST polygon_world_3d without rotation_matrix → identity is filled in."""
+        resp = client.post(
+            "/api/zones/config",
+            json={"zone_name": "floor_zone", "polygon_world_3d": FLOOR_3D},
+        )
+        assert resp.status_code == 201
+        data = resp.get_json()
+        assert data["rotation_matrix"] == IDENTITY_R
+
+    def test_v2_default_surface_type_is_floor(self, client):
+        resp = client.post(
+            "/api/zones/config",
+            json={"zone_name": "auto_floor", "polygon_world_3d": FLOOR_3D},
+        )
+        assert resp.json["surface_type"] == "floor"
+
+    def test_v2_legacy_polygon_world_2d_backfilled_from_3d(self, client):
+        """polygon_world (2D) is populated as the (x,y) drop of polygon_world_3d
+        so legacy v1 consumers see something sensible."""
+        client.post(
+            "/api/zones/config",
+            json={"zone_name": "fb_zone", "polygon_world_3d": BAR_TOP_3D},
+        )
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "fb_zone")
+        assert zone["polygon_world"] == [[p[0], p[1]] for p in BAR_TOP_3D]
+
+    def test_v1_legacy_post_returns_schema_version_1(self, client):
+        """POSTs that only carry polygon_image keep schema_version 1."""
+        resp = client.post(
+            "/api/zones/config",
+            json={"zone_name": "legacy_2d", "polygon_image": ENTRANCE_POLYGON},
+        )
+        assert resp.status_code == 201
+        data = resp.get_json()
+        assert data["schema_version"] == 1
+        assert data["polygon_world_3d"] is None
+
+    def test_v2_camera_id_round_trips(self, client):
+        client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "cam_zone",
+                "polygon_world_3d": FLOOR_3D,
+                "camera_id": "cam_a",
+            },
+        )
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "cam_zone")
+        assert zone["camera_id"] == "cam_a"
+
+    def test_v2_polygon_image_auto_derived_when_calibration_exists(self, client):
+        """When a v2 zone is POSTed with camera_id but no polygon_image, AND a
+        calibration exists for that camera, the backend auto-derives the pixel
+        polygon from the homography and persists it."""
+        # Seed a calibration: 100 px = 1 metre, floor rectangle 0..400 × 0..300.
+        cal_resp = client.post(
+            "/api/calibration/cam_a",
+            json={
+                "pixel_points": [[0, 0], [400, 0], [400, 300], [0, 300]],
+                "world_points": [[0.0, 0.0], [4.0, 0.0], [4.0, 3.0], [0.0, 3.0]],
+            },
+        )
+        assert cal_resp.status_code == 201
+
+        # Floor zone exactly matching the calibrated rectangle.
+        client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "calibrated_floor",
+                "polygon_world_3d": FLOOR_3D,
+                "camera_id": "cam_a",
+            },
+        )
+
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "calibrated_floor")
+        assert zone["polygon_image"] is not None, "polygon_image should be auto-derived"
+        # Each corner should be within ~5 px of the calibration rectangle.
+        expected = [[0, 0], [400, 0], [400, 300], [0, 300]]
+        for got, want in zip(zone["polygon_image"], expected):
+            assert abs(got[0] - want[0]) <= 5, f"x off: {got} vs {want}"
+            assert abs(got[1] - want[1]) <= 5, f"y off: {got} vs {want}"
+
+    def test_v2_polygon_image_left_null_when_no_calibration(self, client):
+        """If camera_id is given but no calibration row exists, the route should
+        not crash — it just leaves polygon_image NULL."""
+        client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "uncalibrated",
+                "polygon_world_3d": FLOOR_3D,
+                "camera_id": "ghost_cam",
+            },
+        )
+        resp = client.get("/api/zones/config")
+        zone = next(z for z in resp.get_json()["zones"] if z["zone_name"] == "uncalibrated")
+        assert zone["schema_version"] == 2
+        assert zone["polygon_image"] is None
+
+    def test_v2_upsert_preserves_v2_fields(self, client):
+        """Re-POST same zone_name with updated v2 fields → values overwrite cleanly."""
+        client.post(
+            "/api/zones/config",
+            json={"zone_name": "upsert_zone", "polygon_world_3d": FLOOR_3D, "surface_type": "floor"},
+        )
+        resp = client.post(
+            "/api/zones/config",
+            json={
+                "zone_name": "upsert_zone",
+                "polygon_world_3d": BAR_TOP_3D,
+                "surface_type": "counter_top",
+                "capacity": 7,
+            },
+        )
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert data["action"] == "updated"
+        assert data["polygon_world_3d"] == BAR_TOP_3D
+        assert data["surface_type"] == "counter_top"
+        assert data["capacity"] == 7
+
+    def test_v2_surface_types_round_trip(self, client):
+        """All valid surface types make the round trip without coercion."""
+        for surf in ("floor", "counter_top", "table", "wall", "ramp", "other"):
+            client.post(
+                "/api/zones/config",
+                json={
+                    "zone_name": f"surf_{surf}",
+                    "polygon_world_3d": FLOOR_3D,
+                    "surface_type": surf,
+                },
+            )
+        resp = client.get("/api/zones/config")
+        zones = {z["zone_name"]: z for z in resp.get_json()["zones"]}
+        for surf in ("floor", "counter_top", "table", "wall", "ramp", "other"):
+            assert zones[f"surf_{surf}"]["surface_type"] == surf
