@@ -32,7 +32,9 @@
     "react-hot-toast": "^2.4.1",
     "recharts": "^2.10.3",
     "three": "^0.183.2",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "@react-three/fiber": "^8.17.0",
+    "@react-three/drei": "^9.115.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",

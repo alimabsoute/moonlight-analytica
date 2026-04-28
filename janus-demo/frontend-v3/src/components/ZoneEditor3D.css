@@ -1,0 +1,189 @@
+.zoneEditor3D {
+  position: fixed;
+  inset: 0;
+  background: #0a0c10;
+  color: #f0f2f6;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+}
+
+.zoneEditor3D__canvas {
+  position: relative;
+  background: #0a0c10;
+}
+
+.zoneEditor3D__panel {
+  background: rgba(12, 14, 20, 0.92);
+  backdrop-filter: blur(18px);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.ze__brandRow {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 22px;
+}
+.ze__brandMark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #4d9bff 0%, #b56cff 100%);
+  display: grid; place-items: center;
+  box-shadow: 0 4px 12px -4px rgba(77, 155, 255, 0.5);
+}
+.ze__brandMark svg { width: 18px; height: 18px; color: white; }
+.ze__brandWord { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+.ze__brandByline { font-size: 11px; color: #6a6f78; }
+
+.ze__stepPill {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.ze__stepNum {
+  font-size: 12px; font-weight: 700;
+  color: #4d9bff; letter-spacing: 0.10em;
+  min-width: 26px;
+}
+.ze__stepNameWrap { flex: 1; }
+.ze__stepName { font-size: 14px; font-weight: 600; }
+.ze__stepProgress { height: 2px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.ze__stepProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #4d9bff, #b56cff);
+  transition: width 0.3s;
+}
+
+.ze__hint { font-size: 12px; color: #8a909c; margin-bottom: 18px; }
+
+.ze__body { flex: 1; }
+
+.ze__label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #6a6f78;
+  margin: 14px 0 6px;
+}
+.ze__input {
+  width: 100%;
+  padding: 9px 11px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+  color: #f0f2f6;
+  font-family: inherit;
+  font-size: 14px;
+}
+.ze__input:focus { outline: none; border-color: #4d9bff; }
+.ze__input--small { padding: 6px 8px; font-size: 13px; max-width: 100%; }
+
+.ze__row { display: flex; gap: 8px; align-items: flex-end; }
+.ze__sub { flex: 1; font-size: 11px; color: #8a909c; }
+
+.ze__note {
+  font-size: 12px;
+  color: #6a6f78;
+  background: rgba(77, 155, 255, 0.06);
+  border-left: 2px solid #4d9bff;
+  padding: 8px 10px;
+  margin: 12px 0;
+  border-radius: 4px;
+}
+
+.ze__btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.ze__btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.ze__btn--primary { background: #f0f2f6; color: #0a0c10; border: none; }
+.ze__btn--primary:hover:not(:disabled) { transform: translateY(-1px); }
+.ze__btn--ghost { background: transparent; color: #cbd0d8; border: 1px solid rgba(255,255,255,0.10); }
+.ze__btn--ghost:hover:not(:disabled) { background: rgba(255,255,255,0.05); }
+.ze__btn--full { width: 100%; }
+
+.ze__nav {
+  display: flex; gap: 10px; justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 14px;
+}
+
+/* Anchor step presets */
+.ze__presets { display: grid; gap: 6px; margin-bottom: 6px; }
+.ze__preset {
+  text-align: left;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  display: flex; flex-direction: column; gap: 2px;
+  font-family: inherit; color: inherit;
+}
+.ze__preset:hover { background: rgba(255,255,255,0.05); }
+.ze__preset--active { background: rgba(77, 155, 255, 0.10); border-color: #4d9bff; }
+.ze__presetTop { display: flex; justify-content: space-between; align-items: baseline; }
+.ze__presetLabel { font-size: 13px; font-weight: 600; }
+.ze__presetZ { font-size: 11px; color: #8a909c; font-variant-numeric: tabular-nums; }
+.ze__presetHint { font-size: 11px; color: #6a6f78; }
+
+/* Commit step */
+.ze__colorPicker {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(255,255,255,0.10); border-radius: 6px;
+  background: transparent; cursor: pointer;
+}
+.ze__summary {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.ze__summaryRow {
+  display: flex; justify-content: space-between;
+  padding: 4px 0;
+  font-size: 12px;
+}
+.ze__summaryRow span { color: #8a909c; }
+.ze__summaryRow strong { color: #f0f2f6; font-weight: 500; }
+
+.ze__error {
+  margin-top: 12px; padding: 10px 12px;
+  background: rgba(255, 90, 90, 0.10);
+  border: 1px solid rgba(255, 90, 90, 0.3);
+  border-radius: 6px;
+  color: #ff8888;
+  font-size: 12px;
+}
+
+.ze__success {
+  text-align: center;
+  padding: 24px 16px;
+}
+.ze__successIcon {
+  width: 48px; height: 48px;
+  margin: 0 auto 14px;
+  background: rgba(46, 204, 113, 0.18);
+  color: #2ecc71;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 22px; font-weight: 700;
+}
+.ze__successTitle { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.ze__successDetail { font-size: 12px; color: #8a909c; margin-bottom: 4px; }
+.ze__successId { color: #6a6f78; font-variant-numeric: tabular-nums; }
