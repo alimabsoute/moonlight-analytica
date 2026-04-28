@@ -313,6 +313,11 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 // ====================== AUDIO (Web Audio API synthesized) ======================
 let audioCtx = null;
@@ -432,19 +437,19 @@ document.getElementById('soundToggle').addEventListener('click', () => {
 
 // ====================== THREE.JS SCENE ======================
 const root = document.getElementById('app');
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 1.05;
 root.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0c10);
-scene.fog = new THREE.Fog(0x0a0c10, 28, 70);
+scene.fog = new THREE.Fog(0x0a0c10, 32, 80);
 
 const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.position.set(14, 11, 18);
@@ -458,83 +463,494 @@ controls.minDistance = 6;
 controls.maxDistance = 50;
 controls.enabled = false; // disabled during cinematic intro
 
-// ============= LIGHTING (warmer, more cinematic) =============
-scene.add(new THREE.AmbientLight(0xffffff, 0.40));
+// ============= IMAGE-BASED LIGHTING (PMREM from RoomEnvironment) =============
+// Provides coherent ambient + reflections for PBR materials. No external HDR file needed.
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileEquirectangularShader();
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+scene.environmentIntensity = 0.45;
 
-const key = new THREE.DirectionalLight(0xfff0d8, 1.2);
+// ============= DIRECT LIGHTS (shadow-casting key + cool fill + warm bar rim) =============
+const key = new THREE.DirectionalLight(0xfff0d8, 2.0);
 key.position.set(12, 18, 8);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
 key.shadow.camera.left = -20; key.shadow.camera.right = 20;
 key.shadow.camera.top = 20; key.shadow.camera.bottom = -20;
 key.shadow.bias = -0.0005;
-key.shadow.radius = 6;
+key.shadow.radius = 8;
 scene.add(key);
 
-const fill = new THREE.DirectionalLight(0x6a8eff, 0.32);
+const fill = new THREE.DirectionalLight(0x88a4ff, 0.5);
 fill.position.set(-10, 8, -6);
 scene.add(fill);
 
-// Warm rim light from the bar area — sells "indoor restaurant"
-const barRim = new THREE.PointLight(0xff9a55, 0.9, 20, 1.6);
+const barRim = new THREE.PointLight(0xff9a55, 1.4, 18, 1.6);
 barRim.position.set(6, 2.2, -8);
 scene.add(barRim);
 
-// Subtle hemispheric for ambient occlusion fake
-const hemi = new THREE.HemisphereLight(0xb8c8ff, 0x1a1d24, 0.25);
-scene.add(hemi);
+// ============= PROCEDURAL TEXTURES =============
+function makeWoodTexture(w, h, base, grain) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const x = c.getContext('2d');
+  x.fillStyle = base; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < h; i++) {
+    if (Math.random() > 0.6) continue;
+    x.strokeStyle = grain;
+    x.globalAlpha = 0.04 + Math.random() * 0.18;
+    x.lineWidth = 1;
+    x.beginPath();
+    let y = i;
+    x.moveTo(0, y);
+    for (let xx = 0; xx < w; xx += 6) {
+      y += (Math.random() - 0.5) * 1.4;
+      x.lineTo(xx, y);
+    }
+    x.stroke();
+  }
+  for (let k = 0; k < 7; k++) {
+    const cx = Math.random() * w, cy = Math.random() * h;
+    const r = 4 + Math.random() * 12;
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, grain); g.addColorStop(1, 'transparent');
+    x.globalAlpha = 0.4; x.fillStyle = g;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  }
+  x.globalAlpha = 1;
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function makeConcreteTexture(size) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const x = c.getContext('2d');
+  x.fillStyle = '#26292f'; x.fillRect(0, 0, size, size);
+  for (let i = 0; i < size * size * 0.05; i++) {
+    const v = 30 + Math.random() * 40;
+    x.fillStyle = `rgb(${v},${v},${v + 6})`;
+    x.fillRect(Math.random() * size, Math.random() * size, 1, 1);
+  }
+  for (let p = 0; p < 50; p++) {
+    const cx = Math.random() * size, cy = Math.random() * size;
+    const r = 8 + Math.random() * 32;
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, 'rgba(0,0,0,0.18)'); g.addColorStop(1, 'transparent');
+    x.fillStyle = g;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function makeFabricTexture(size, hex) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const x = c.getContext('2d');
+  x.fillStyle = hex; x.fillRect(0, 0, size, size);
+  const step = 3;
+  x.globalAlpha = 0.10;
+  for (let yy = 0; yy < size; yy += step) {
+    for (let xx = 0; xx < size; xx += step) {
+      x.fillStyle = ((xx / step + yy / step) % 2 === 0) ? '#ffffff' : '#000000';
+      x.fillRect(xx, yy, step / 2, step / 2);
+    }
+  }
+  x.globalAlpha = 0.04;
+  for (let i = 0; i < size * size * 0.02; i++) {
+    x.fillStyle = '#ffffff';
+    x.fillRect(Math.random() * size, Math.random() * size, 1, 1);
+  }
+  x.globalAlpha = 1;
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
 
-// ============= ENVIRONMENT =============
-const floorGeo = new THREE.PlaneGeometry(40, 30, 1, 1);
-const floorMat = new THREE.MeshStandardMaterial({ color: 0x161920, roughness: 0.92, metalness: 0.0 });
-const floor = new THREE.Mesh(floorGeo, floorMat);
+// ============= PBR MATERIAL LIBRARY =============
+const concreteMap = makeConcreteTexture(512); concreteMap.repeat.set(8, 6);
+const barTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
+const tableTopMap = makeWoodTexture(384, 384, '#4a3520', '#241510');
+
+const MATS = {
+  floor: new THREE.MeshStandardMaterial({ color: 0x2c2f36, roughness: 0.86, metalness: 0.05, map: concreteMap }),
+  wallDark: new THREE.MeshStandardMaterial({ color: 0x1a1d24, roughness: 0.92, metalness: 0.0 }),
+  wallAccent: new THREE.MeshStandardMaterial({ color: 0x2d2419, roughness: 0.88, metalness: 0.0 }),
+  barFront: new THREE.MeshStandardMaterial({ color: 0x33384a, roughness: 0.55, metalness: 0.15 }),
+  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: barTopMap }),
+  hostStand: new THREE.MeshStandardMaterial({ color: 0x3d4654, roughness: 0.55, metalness: 0.10 }),
+  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: tableTopMap }),
+  tableLeg: new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.42, metalness: 0.55 }),
+  brass: new THREE.MeshStandardMaterial({ color: 0xb59047, roughness: 0.28, metalness: 0.85 }),
+  steel: new THREE.MeshStandardMaterial({ color: 0x4a5060, roughness: 0.35, metalness: 0.75 }),
+  glass: new THREE.MeshPhysicalMaterial({
+    color: 0xc8e4ec, roughness: 0.06, metalness: 0.0, transmission: 0.95,
+    thickness: 0.4, ior: 1.45, transparent: true, opacity: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.05,
+  }),
+  bottleAmber: new THREE.MeshPhysicalMaterial({ color: 0x6e3a14, roughness: 0.18, metalness: 0.0,
+    transmission: 0.4, transparent: true, opacity: 0.85, clearcoat: 0.7 }),
+  bottleClear: new THREE.MeshPhysicalMaterial({ color: 0xd4dec4, roughness: 0.10, metalness: 0.0,
+    transmission: 0.8, transparent: true, opacity: 0.70, clearcoat: 0.7 }),
+  bottleDark: new THREE.MeshPhysicalMaterial({ color: 0x142010, roughness: 0.20, metalness: 0.05,
+    transmission: 0.25, transparent: true, opacity: 0.92, clearcoat: 0.8 }),
+  bottleGreen: new THREE.MeshPhysicalMaterial({ color: 0x1f3018, roughness: 0.20, metalness: 0.05,
+    transmission: 0.3, transparent: true, opacity: 0.88, clearcoat: 0.8 }),
+  label: new THREE.MeshStandardMaterial({ color: 0xeeeae0, roughness: 0.78, metalness: 0.0 }),
+  labelDark: new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.7, metalness: 0.0 }),
+  pendantBulb: new THREE.MeshStandardMaterial({
+    color: 0xfff5d6, emissive: 0xffc97a, emissiveIntensity: 3.5, roughness: 0.4,
+  }),
+  pendantShade: new THREE.MeshStandardMaterial({ color: 0x2a1f15, roughness: 0.45, metalness: 0.6 }),
+  cord: new THREE.MeshStandardMaterial({ color: 0x0e1014, roughness: 0.9, metalness: 0.0 }),
+};
+
+// ============= ENVIRONMENT (floor, walls, grid) =============
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), MATS.floor);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-const grid = new THREE.GridHelper(40, 40, 0x252934, 0x1c1f27);
+const grid = new THREE.GridHelper(40, 40, 0x2a2f3a, 0x1c1f27);
 grid.position.y = 0.001;
 grid.material.transparent = true;
-grid.material.opacity = 0.6;
+grid.material.opacity = 0.35;
 scene.add(grid);
 
-function box(w, h, d, color, x, y, z, opts={}) {
-  const g = new THREE.BoxGeometry(w, h, d);
-  const m = new THREE.MeshStandardMaterial({ color, roughness: 0.7, metalness: 0.05, ...opts });
-  const mesh = new THREE.Mesh(g, m);
-  mesh.position.set(x, y + h / 2, z);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  scene.add(mesh);
-  return mesh;
+// Walls (taller, with a darker accent strip near the bar)
+const backWall = new THREE.Mesh(new THREE.BoxGeometry(40, 6, 0.2), MATS.wallDark);
+backWall.position.set(0, 3, -15);
+backWall.receiveShadow = true; scene.add(backWall);
+const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
+leftWall.position.set(-20, 3, 0); leftWall.receiveShadow = true; scene.add(leftWall);
+const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
+rightWall.position.set(20, 3, 0); rightWall.receiveShadow = true; scene.add(rightWall);
+// Wall accent behind the bar (warm wood panel)
+const barAccent = new THREE.Mesh(new THREE.BoxGeometry(12, 4, 0.05), MATS.wallAccent);
+barAccent.position.set(6, 2, -14.85); scene.add(barAccent);
+
+// ============= HOST STAND =============
+function buildHostStand(x, z) {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.10, 0.9), MATS.hostStand);
+  body.position.y = 0.55; body.castShadow = true; body.receiveShadow = true; g.add(body);
+  const top = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.04, 1.0), MATS.tableTop);
+  top.position.y = 1.12; top.castShadow = true; g.add(top);
+  // Reading lamp
+  const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.35, 8), MATS.brass);
+  lampStem.position.set(-0.9, 1.30, 0.0); g.add(lampStem);
+  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.10, 0.10, 12, 1, true), MATS.brass);
+  lampShade.position.set(-0.9, 1.5, 0); g.add(lampShade);
+  const lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.04, 10, 10), MATS.pendantBulb);
+  lampBulb.position.set(-0.9, 1.45, 0); g.add(lampBulb);
+  const lampLight = new THREE.PointLight(0xffd47a, 0.3, 3, 1.8); lampLight.position.set(-0.9, 1.4, 0); g.add(lampLight);
+  g.position.set(x, 0, z); scene.add(g); return g;
+}
+buildHostStand(-8, -6);
+
+// ============= BAR (with bottles, glass shelves, foot rail) =============
+function buildBottle(seed) {
+  const g = new THREE.Group();
+  const styles = [
+    { mat: MATS.bottleAmber, bodyR: 0.075, bodyH: 0.42, neckR: 0.025, neckH: 0.10, label: MATS.label },
+    { mat: MATS.bottleClear, bodyR: 0.07, bodyH: 0.46, neckR: 0.022, neckH: 0.12, label: MATS.label },
+    { mat: MATS.bottleDark, bodyR: 0.08, bodyH: 0.48, neckR: 0.026, neckH: 0.12, label: MATS.labelDark },
+    { mat: MATS.bottleGreen, bodyR: 0.072, bodyH: 0.44, neckR: 0.024, neckH: 0.11, label: MATS.label },
+  ];
+  const s = styles[seed % styles.length];
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(s.bodyR, s.bodyR, s.bodyH, 14), s.mat);
+  body.position.y = s.bodyH / 2; body.castShadow = true; g.add(body);
+  const shoulder = new THREE.Mesh(new THREE.CylinderGeometry(s.neckR, s.bodyR, 0.05, 14), s.mat);
+  shoulder.position.y = s.bodyH + 0.025; g.add(shoulder);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(s.neckR, s.neckR, s.neckH, 12), s.mat);
+  neck.position.y = s.bodyH + 0.05 + s.neckH / 2; g.add(neck);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(s.neckR + 0.005, s.neckR + 0.005, 0.025, 12), MATS.brass);
+  cap.position.y = s.bodyH + 0.05 + s.neckH + 0.012; g.add(cap);
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(s.bodyR * 1.7, s.bodyH * 0.45), s.label);
+  label.position.set(0, s.bodyH * 0.4, s.bodyR + 0.001); g.add(label);
+  return g;
 }
 
-// Walls
-box(40, 0.3, 0.2, 0x252934, 0, 0, -15);
-box(0.2, 0.3, 30, 0x252934, -20, 0, 0);
-box(0.2, 0.3, 30, 0x252934, 20, 0, 0);
-
-// Host stand
-box(3, 1.0, 1.6, 0x3d4654, -8, 0, -6);
-
-// Bar counter (with warmer wood top)
-box(11, 1.05, 1.4, 0x3d4654, 6, 0, -8);
-box(11, 0.05, 1.4, 0x6b5235, 6, 1.05, -8, { roughness: 0.3, metalness: 0.05 });
-// Bar back wall (bottles abstracted)
-for (let i = 0; i < 8; i++) {
-  const bx = 1.5 + i * 1.3;
-  box(0.35, 0.8 + Math.random() * 0.4, 0.3, 0x55462a, bx, 0, -9.4, { roughness: 0.4, metalness: 0.2 });
+function buildBar(x, z) {
+  const g = new THREE.Group();
+  const length = 11, depth = 1.4, height = 1.05, topT = 0.05;
+  const front = new THREE.Mesh(new THREE.BoxGeometry(length, height, depth), MATS.barFront);
+  front.position.y = height / 2; front.castShadow = true; front.receiveShadow = true; g.add(front);
+  // Beveled top via Shape + ExtrudeGeometry
+  const shape = new THREE.Shape();
+  const tw = length, td = depth + 0.10, r = 0.04;
+  shape.moveTo(-tw / 2 + r, -td / 2);
+  shape.lineTo(tw / 2 - r, -td / 2); shape.quadraticCurveTo(tw / 2, -td / 2, tw / 2, -td / 2 + r);
+  shape.lineTo(tw / 2, td / 2 - r); shape.quadraticCurveTo(tw / 2, td / 2, tw / 2 - r, td / 2);
+  shape.lineTo(-tw / 2 + r, td / 2); shape.quadraticCurveTo(-tw / 2, td / 2, -tw / 2, td / 2 - r);
+  shape.lineTo(-tw / 2, -td / 2 + r); shape.quadraticCurveTo(-tw / 2, -td / 2, -tw / 2 + r, -td / 2);
+  const topGeo = new THREE.ExtrudeGeometry(shape, { depth: topT, bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.008, bevelSegments: 2 });
+  topGeo.rotateX(-Math.PI / 2);
+  const top = new THREE.Mesh(topGeo, MATS.barTop);
+  top.position.y = height + topT;
+  top.castShadow = true; top.receiveShadow = true;
+  g.add(top);
+  // Foot rail
+  const railGeo = new THREE.CylinderGeometry(0.025, 0.025, length - 0.6, 12);
+  railGeo.rotateZ(Math.PI / 2);
+  const rail = new THREE.Mesh(railGeo, MATS.brass);
+  rail.position.set(0, 0.18, depth / 2 + 0.18); rail.castShadow = true; g.add(rail);
+  for (let bx = -length / 2 + 1; bx <= length / 2 - 1; bx += 2.2) {
+    const bracket = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.18, 8), MATS.brass);
+    bracket.position.set(bx, 0.09, depth / 2 + 0.18); g.add(bracket);
+  }
+  // Glass shelving + bottles behind
+  for (let s = 0; s < 4; s++) {
+    const shelfY = 1.45 + s * 0.42;
+    const shelfBracket = new THREE.Mesh(new THREE.BoxGeometry(length - 0.4, 0.018, 0.30), MATS.steel);
+    shelfBracket.position.set(0, shelfY - 0.011, -depth / 2 - 0.18); g.add(shelfBracket);
+    const shelfGlass = new THREE.Mesh(new THREE.BoxGeometry(length - 0.4, 0.012, 0.28), MATS.glass);
+    shelfGlass.position.set(0, shelfY, -depth / 2 - 0.18); g.add(shelfGlass);
+    const bottleCount = 8 + (s % 2);
+    for (let b = 0; b < bottleCount; b++) {
+      const bx = -length / 2 + 0.5 + (b * (length - 1.0) / (bottleCount - 1));
+      const bottle = buildBottle(s * 3 + b);
+      bottle.position.set(bx, shelfY + 0.006, -depth / 2 - 0.18);
+      g.add(bottle);
+    }
+  }
+  // Top decorative shelf with backlit space
+  const topShelfBack = new THREE.Mesh(new THREE.BoxGeometry(length, 0.05, 0.04), MATS.steel);
+  topShelfBack.position.set(0, 3.25, -depth / 2 - 0.34); g.add(topShelfBack);
+  // Subtle warm uplight along the back wall
+  for (let lx = -length / 2 + 1.5; lx <= length / 2 - 1.5; lx += 3) {
+    const upl = new THREE.PointLight(0xffaa55, 0.25, 3.5, 2.0);
+    upl.position.set(lx, 1.2, -depth / 2 - 0.10); g.add(upl);
+  }
+  g.position.set(x, 0, z);
+  scene.add(g); return g;
 }
+buildBar(6, -8);
 
-// Dining tables + chairs
+// ============= TABLES + CHAIRS =============
+function buildTable(x, z) {
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.05, 32), MATS.tableTop);
+  top.position.y = 0.74; top.castShadow = true; top.receiveShadow = true; g.add(top);
+  const topBevel = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.012, 8, 32), MATS.tableLeg);
+  topBevel.rotation.x = Math.PI / 2; topBevel.position.y = 0.715; g.add(topBevel);
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.085, 0.74, 12), MATS.tableLeg);
+  leg.position.y = 0.37; leg.castShadow = true; g.add(leg);
+  const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.36, 0.05, 24), MATS.tableLeg);
+  foot.position.y = 0.025; foot.castShadow = true; foot.receiveShadow = true; g.add(foot);
+  // Decorative tabletop items: water glass + tea light
+  const waterGlass = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.04, 0.10, 12), MATS.glass);
+  waterGlass.position.set(0.2, 0.82, 0.1); g.add(waterGlass);
+  const teaCandle = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.025, 12), MATS.brass);
+  teaCandle.position.set(-0.15, 0.78, -0.1); g.add(teaCandle);
+  const candleFlame = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 8), MATS.pendantBulb);
+  candleFlame.position.set(-0.15, 0.81, -0.1); g.add(candleFlame);
+  g.position.set(x, 0, z); scene.add(g); return g;
+}
+function buildChair(x, z, rotY) {
+  const g = new THREE.Group();
+  const fabric = new THREE.MeshStandardMaterial({
+    color: 0x3a4456, roughness: 0.65, metalness: 0.0,
+    map: makeFabricTexture(128, '#3a4456'),
+  });
+  const seat = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.05, 0.42), fabric);
+  seat.position.y = 0.46; seat.castShadow = true; g.add(seat);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.50, 0.04), fabric);
+  back.position.set(0, 0.74, -0.21); back.rotation.x = -0.05; back.castShadow = true; g.add(back);
+  for (const [lx, lz] of [[-0.18, -0.18], [0.18, -0.18], [-0.18, 0.18], [0.18, 0.18]]) {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.024, 0.46, 8), MATS.tableLeg);
+    leg.position.set(lx, 0.23, lz); leg.castShadow = true; g.add(leg);
+  }
+  g.position.set(x, 0, z); g.rotation.y = rotY; scene.add(g); return g;
+}
+const tableSeatRots = [0, Math.PI / 2, Math.PI, -Math.PI / 2];
 for (let i = 0; i < 6; i++) {
   const tx = -10 + (i % 3) * 5;
   const tz = i < 3 ? 2 : 7;
-  box(1.6, 0.75, 1.6, 0x3d4654, tx, 0, tz);
+  buildTable(tx, tz);
+  const seatOffsets = [[0, -1.1], [-1.1, 0], [0, 1.1], [1.1, 0]];
   for (let c = 0; c < 4; c++) {
-    const cx = tx + (c % 2 === 0 ? -1.0 : 1.0);
-    const cz = tz + (c < 2 ? -1.0 : 1.0);
-    box(0.45, 0.45, 0.45, 0x2f3744, cx, 0, cz);
+    const [ox, oz] = seatOffsets[c];
+    buildChair(tx + ox, tz + oz, tableSeatRots[c]);
+  }
+}
+
+// ============= PENDANT LIGHTS =============
+function buildPendant(x, y, z, intensity = 0.5) {
+  const g = new THREE.Group();
+  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 4, 6), MATS.cord);
+  cord.position.y = y + 2; g.add(cord);
+  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.20, 0.25, 16, 1, true), MATS.pendantShade);
+  shade.position.y = y; shade.castShadow = true; g.add(shade);
+  const inner = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.23, 16, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0xffe0a0, side: THREE.BackSide, roughness: 0.7, emissive: 0xffd47a, emissiveIntensity: 0.4 }));
+  inner.position.y = y - 0.005; g.add(inner);
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), MATS.pendantBulb);
+  bulb.position.y = y - 0.06; g.add(bulb);
+  const light = new THREE.PointLight(0xffd47a, intensity, 7, 1.7);
+  light.position.y = y - 0.10; g.add(light);
+  g.position.x = x; g.position.z = z; scene.add(g); return g;
+}
+// Pendants over each table
+for (let i = 0; i < 6; i++) {
+  const tx = -10 + (i % 3) * 5; const tz = i < 3 ? 2 : 7;
+  buildPendant(tx, 3.6, tz, 0.45);
+}
+// Pendants along the bar
+for (let bx = 1.5; bx <= 10.5; bx += 3) {
+  buildPendant(bx, 3.4, -8 + 0.2, 0.35);
+}
+
+// ============= HUMANOID (procedural articulated person) =============
+class Humanoid extends THREE.Group {
+  constructor(skin, shirt, pants) {
+    super();
+    const skinMat = new THREE.MeshStandardMaterial({ color: skin, roughness: 0.72, metalness: 0.0 });
+    const shirtMat = new THREE.MeshStandardMaterial({
+      color: shirt, roughness: 0.62, metalness: 0.0,
+      map: makeFabricTexture(128, '#' + shirt.toString(16).padStart(6, '0')),
+    });
+    const pantsMat = new THREE.MeshStandardMaterial({ color: pants, roughness: 0.7, metalness: 0.0 });
+    const shoeMat = new THREE.MeshStandardMaterial({ color: 0x12161e, roughness: 0.42, metalness: 0.18 });
+
+    // Pelvis at root
+    this.pelvis = new THREE.Group();
+    this.pelvis.position.y = 0.95;
+    this.add(this.pelvis);
+    const pelvisMesh = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.12, 0.18), pantsMat);
+    pelvisMesh.castShadow = true; this.pelvis.add(pelvisMesh);
+
+    // Torso
+    this.torso = new THREE.Group();
+    this.torso.position.y = 0.06;
+    this.pelvis.add(this.torso);
+    const torsoMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.36, 4, 10), shirtMat);
+    torsoMesh.scale.set(1.0, 0.95, 0.62);
+    torsoMesh.position.y = 0.28;
+    torsoMesh.castShadow = true;
+    this.torso.add(torsoMesh);
+    // Neck
+    const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.07, 12), skinMat);
+    neckMesh.position.y = 0.55;
+    this.torso.add(neckMesh);
+    // Head
+    this.head = new THREE.Group();
+    this.head.position.y = 0.62;
+    this.torso.add(this.head);
+    const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 14), skinMat);
+    headMesh.scale.set(0.95, 1.05, 1.0);
+    headMesh.castShadow = true;
+    this.head.add(headMesh);
+    // Hair (random color)
+    const hairColors = [0x1a1310, 0x2a1f15, 0x3d2818, 0x4a3528, 0x5e4028, 0x150f0a];
+    const hairMat = new THREE.MeshStandardMaterial({
+      color: hairColors[Math.floor(Math.random() * hairColors.length)],
+      roughness: 0.85, metalness: 0.0,
+    });
+    const hair = new THREE.Mesh(
+      new THREE.SphereGeometry(0.122, 14, 12, 0, Math.PI * 2, 0, Math.PI / 2 + 0.15),
+      hairMat,
+    );
+    hair.position.y = 0.025;
+    this.head.add(hair);
+
+    // Arms
+    this.leftArm = this._buildArm(shirtMat, skinMat);
+    this.leftArm.position.set(-0.21, 0.45, 0);
+    this.torso.add(this.leftArm);
+    this.rightArm = this._buildArm(shirtMat, skinMat);
+    this.rightArm.position.set(0.21, 0.45, 0);
+    this.torso.add(this.rightArm);
+
+    // Legs
+    this.leftLeg = this._buildLeg(pantsMat, shoeMat);
+    this.leftLeg.position.set(-0.09, -0.06, 0);
+    this.pelvis.add(this.leftLeg);
+    this.rightLeg = this._buildLeg(pantsMat, shoeMat);
+    this.rightLeg.position.set(0.09, -0.06, 0);
+    this.pelvis.add(this.rightLeg);
+
+    this.walkPhase = Math.random() * Math.PI * 2;
+    this.targetPose = 'stand';
+  }
+
+  _buildArm(shirtMat, skinMat) {
+    const arm = new THREE.Group();
+    const shoulder = new THREE.Group();
+    arm.add(shoulder);
+    const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.045, 0.20, 4, 8), shirtMat);
+    upper.position.y = -0.13; upper.castShadow = true; shoulder.add(upper);
+    const elbow = new THREE.Group();
+    elbow.position.y = -0.26;
+    shoulder.add(elbow);
+    const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.04, 0.18, 4, 8), skinMat);
+    lower.position.y = -0.11; lower.castShadow = true; elbow.add(lower);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 10), skinMat);
+    hand.scale.set(1, 0.85, 0.7); hand.position.y = -0.22; elbow.add(hand);
+    arm.userData = { shoulder, elbow };
+    return arm;
+  }
+
+  _buildLeg(pantsMat, shoeMat) {
+    const leg = new THREE.Group();
+    const hip = new THREE.Group();
+    leg.add(hip);
+    const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.30, 4, 8), pantsMat);
+    upper.position.y = -0.18; upper.castShadow = true; hip.add(upper);
+    const knee = new THREE.Group();
+    knee.position.y = -0.36;
+    hip.add(knee);
+    const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.06, 0.28, 4, 8), pantsMat);
+    lower.position.y = -0.16; lower.castShadow = true; knee.add(lower);
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.05, 0.20), shoeMat);
+    foot.position.set(0, -0.32, 0.04); foot.castShadow = true; knee.add(foot);
+    leg.userData = { hip, knee };
+    return leg;
+  }
+
+  setPose(pose) { this.targetPose = pose; }
+
+  update(dt, speed, time) {
+    if (this.targetPose === 'sit') {
+      this.pelvis.position.y = 0.46;
+      this.leftLeg.userData.hip.rotation.x = Math.PI / 2;
+      this.rightLeg.userData.hip.rotation.x = Math.PI / 2;
+      this.leftLeg.userData.knee.rotation.x = -Math.PI / 2;
+      this.rightLeg.userData.knee.rotation.x = -Math.PI / 2;
+      this.leftArm.userData.shoulder.rotation.x = 0.05;
+      this.rightArm.userData.shoulder.rotation.x = 0.05;
+      this.leftArm.userData.elbow.rotation.x = 0.0;
+      this.rightArm.userData.elbow.rotation.x = 0.0;
+      this.torso.rotation.x = -0.08;
+    } else if (speed > 0.05) {
+      const rate = 5.5;
+      this.walkPhase += dt * rate * Math.max(0.4, Math.min(1.2, speed));
+      const ph = this.walkPhase, ph2 = ph + Math.PI;
+      this.leftLeg.userData.hip.rotation.x = Math.sin(ph) * 0.55;
+      this.rightLeg.userData.hip.rotation.x = Math.sin(ph2) * 0.55;
+      this.leftLeg.userData.knee.rotation.x = Math.max(0, -Math.sin(ph)) * 0.65;
+      this.rightLeg.userData.knee.rotation.x = Math.max(0, -Math.sin(ph2)) * 0.65;
+      this.leftArm.userData.shoulder.rotation.x = Math.sin(ph2) * 0.40;
+      this.rightArm.userData.shoulder.rotation.x = Math.sin(ph) * 0.40;
+      this.leftArm.userData.elbow.rotation.x = -0.15 + Math.abs(Math.sin(ph2)) * 0.20;
+      this.rightArm.userData.elbow.rotation.x = -0.15 + Math.abs(Math.sin(ph)) * 0.20;
+      this.pelvis.position.y = 0.95 + Math.abs(Math.sin(ph * 2)) * 0.025;
+      this.torso.rotation.x = speed > 0.4 ? -0.04 : 0;
+    } else {
+      this.pelvis.position.y = 0.95 + Math.sin(time * 1.2 + this.walkPhase) * 0.005;
+      this.leftLeg.userData.hip.rotation.x *= 0.85;
+      this.rightLeg.userData.hip.rotation.x *= 0.85;
+      this.leftLeg.userData.knee.rotation.x *= 0.85;
+      this.rightLeg.userData.knee.rotation.x *= 0.85;
+      this.leftArm.userData.shoulder.rotation.x *= 0.90;
+      this.rightArm.userData.shoulder.rotation.x *= 0.90;
+      this.leftArm.userData.elbow.rotation.x = -0.12;
+      this.rightArm.userData.elbow.rotation.x = -0.12;
+      this.torso.rotation.x *= 0.9;
+    }
   }
 }
 
@@ -627,50 +1043,44 @@ function roundRect(ctx, x, y, w, h, r) {
 
 const zoneObjects = ZONES.map(buildZone);
 
-// ============= MANNEQUINS =============
-// More lifelike behavior: assigned roles (queue, sit, mingle)
+// ============= POPULATE WITH HUMANOIDS =============
+const SKIN_TONES = [0xe8c4a8, 0xd4a37e, 0xc08960, 0xa07050, 0x824f30, 0x624028, 0xf5dcc4, 0xb88560];
+const SHIRT_COLORS = [0x4d6dbb, 0x8b4f3a, 0x3a6b4f, 0x7a5599, 0x4d4d4d, 0x9c8559, 0x5e7d8a, 0xa84a52, 0x355a7d, 0x6e3838];
+const PANTS_COLORS = [0x1a1d24, 0x2a2520, 0x14181f, 0x252a30, 0x352824, 0x1f2530];
+
 const PEOPLE_COUNT = 16;
 const people = [];
 const peopleGroup = new THREE.Group();
 scene.add(peopleGroup);
 
-const PERSON_COLORS = [0xc9d4e5, 0xd4cfc4, 0xc4d4cf, 0xd4c4cf, 0xcfc4d4, 0xb8c4d4];
-
 for (let i = 0; i < PEOPLE_COUNT; i++) {
-  const personGroup = new THREE.Group();
-  const colorIdx = i % PERSON_COLORS.length;
-  const bodyMat = new THREE.MeshStandardMaterial({ color: PERSON_COLORS[colorIdx], roughness: 0.65 });
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 1.2, 16), bodyMat);
-  body.position.y = 0.6; body.castShadow = true;
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), bodyMat);
-  head.position.y = 1.45; head.castShadow = true;
-  personGroup.add(body); personGroup.add(head);
+  const skin = SKIN_TONES[i % SKIN_TONES.length];
+  const shirt = SHIRT_COLORS[(i * 3) % SHIRT_COLORS.length];
+  const pants = PANTS_COLORS[(i * 5) % PANTS_COLORS.length];
+  const human = new Humanoid(skin, shirt, pants);
 
   const startSide = Math.random() < 0.5 ? -1 : 1;
-  personGroup.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
+  human.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
 
-  // Assign role:
-  // 0-1: queue at host stand (slow shuffle)
-  // 2-7: dining (sit at tables, mostly stationary)
-  // 8-10: bar (hang at counter)
-  // 11-15: mingle (general movement)
   let role;
   if (i < 2) role = 'queue';
   else if (i < 8) role = 'dining';
   else if (i < 11) role = 'bar';
   else role = 'mingle';
 
-  personGroup.userData = {
+  human.userData = {
     target: new THREE.Vector3(),
-    speed: role === 'dining' ? 0.4 : (role === 'queue' ? 0.5 : 1.0 + Math.random() * 0.6),
+    speed: role === 'dining' ? 0.4 : (role === 'queue' ? 0.55 : 1.0 + Math.random() * 0.5),
     waitTime: 0,
     pickNew: true,
     role,
     homeZone: role === 'dining' ? 'Dining' : role === 'queue' ? 'Entrance' : role === 'bar' ? 'Bar Top' : null,
     bobOffset: Math.random() * Math.PI * 2,
+    velocityCache: 0,
+    sittingAt: null,
   };
-  peopleGroup.add(personGroup);
-  people.push(personGroup);
+  peopleGroup.add(human);
+  people.push(human);
 }
 
 const TARGETS_BY_ZONE = {
@@ -979,23 +1389,36 @@ function tick() {
       if (ud.pickNew) pickTarget(person);
       const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
       const dist = dir.length();
+      let velocity = 0;
       if (dist > 0.4) {
-        dir.normalize().multiplyScalar(ud.speed * dt);
+        const step = ud.speed * dt;
+        dir.normalize().multiplyScalar(step);
         person.position.add(dir);
         person.rotation.y = Math.atan2(dir.x, dir.z);
-        // gentle bob while walking
-        person.position.y = Math.sin((loopT + ud.bobOffset) * 8) * 0.02;
+        velocity = ud.speed;
+        person.setPose && person.setPose(ud.role === 'dining' ? 'walk' : 'walk');
+        ud.sittingAt = null;
       } else {
         ud.waitTime -= dt;
-        person.position.y = Math.sin((loopT + ud.bobOffset) * 1.5) * 0.005;
+        velocity = 0;
+        // Dining mannequins sit when they arrive at a table
+        if (ud.role === 'dining' && person.setPose) {
+          person.setPose('sit');
+          ud.sittingAt = ud.target.clone();
+        } else if (person.setPose) {
+          person.setPose('stand');
+        }
         if (ud.waitTime <= 0) ud.pickNew = true;
       }
+      // Drive the humanoid skeleton
+      if (person.update) person.update(dt, velocity, loopT);
+      // Hit-test in floor xy
       const sample = new THREE.Vector3(person.position.x, 0, person.position.z);
       for (const z of ZONES) {
         if (z.name === 'Bar Top') {
           const t = z.target;
           const dx = sample.x - t.pos.x, dz = sample.z - t.pos.z;
-          if (Math.abs(dx) < t.size.w/2 + 0.5 && Math.abs(dz) < t.size.h/2 + 0.5) { occ['Bar Top']++; break; }
+          if (Math.abs(dx) < t.size.w / 2 + 0.5 && Math.abs(dz) < t.size.h / 2 + 0.5) { occ['Bar Top']++; break; }
         } else if (pointInZone(sample, z)) { occ[z.name]++; break; }
       }
     }
@@ -1007,18 +1430,27 @@ function tick() {
         ud.driftTarget = TARGETS_BY_ZONE[ud.homeZone]();
         ud.driftSet = true;
       }
+      let velocity = 0;
       if (ud.driftTarget) {
         const dx = ud.driftTarget.x - person.position.x;
         const dz = ud.driftTarget.z - person.position.z;
+        const step = Math.hypot(dx, dz) * 0.008;
         person.position.x += dx * 0.008;
         person.position.z += dz * 0.008;
         if (Math.abs(dx) > 0.05 || Math.abs(dz) > 0.05) {
           person.rotation.y = Math.atan2(dx, dz);
+          velocity = step / Math.max(dt, 0.001);
         }
       }
+      if (person.setPose) person.setPose('stand');
+      if (person.update) person.update(dt, Math.min(velocity, 1.2), loopT);
     }
-  } else if (phase.kind === 'endcard') {
-    // hold positions
+  } else if (phase.kind === 'endcard' || phase.kind === 'intro') {
+    // hold positions, idle pose
+    for (const person of people) {
+      if (person.setPose) person.setPose('stand');
+      if (person.update) person.update(dt, 0, loopT);
+    }
   }
 
   for (const z of ZONES) {
@@ -1036,15 +1468,32 @@ function tick() {
     }
   }
 
-  renderer.render(scene, camera);
+  composer.render();
   requestAnimationFrame(tick);
 }
+
+// ============= POST-PROCESSING (Unreal Bloom) =============
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+composer.setSize(window.innerWidth, window.innerHeight);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.45,   // strength
+  0.85,   // radius
+  0.85,   // threshold (only bright pixels bloom — pendant bulbs, zone glows)
+);
+composer.addPass(bloomPass);
+composer.addPass(new OutputPass());
+
 tick();
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+  bloomPass.setSize(window.innerWidth, window.innerHeight);
 });
 
 document.getElementById('replay').addEventListener('click', () => {
