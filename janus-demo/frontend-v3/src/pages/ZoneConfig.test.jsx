@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor, act } from '@testing-library/react'
+import { render, screen, waitFor, act, fireEvent } from '@testing-library/react'
 import ZoneConfig, { polygonToBBox } from './ZoneConfig'
 
 // jsdom has no canvas — stub getContext
@@ -189,5 +189,53 @@ describe('ZoneConfig zone persistence round-trip (Gate 7.2)', () => {
       const matches = screen.getAllByText('42')
       expect(matches.length).toBeGreaterThanOrEqual(1)
     })
+  })
+})
+
+// ── 3D Zone Editor integration — overlay open/close ──────────────────────
+
+describe('ZoneConfig 3D editor overlay', () => {
+  it('does not render the 3D editor by default', async () => {
+    mockFetch([])
+    render(<ZoneConfig />)
+    await waitFor(() => expect(screen.getByTestId('open-3d-editor')).toBeTruthy())
+    expect(screen.queryByTestId('zone-3d-loading')).toBeNull()
+    expect(screen.queryByTestId('close-3d-editor')).toBeNull()
+  })
+
+  it('opens the 3D editor overlay when "Draw Zone (3D)" is clicked', async () => {
+    mockFetch([])
+    render(<ZoneConfig />)
+    await waitFor(() => expect(screen.getByTestId('open-3d-editor')).toBeTruthy())
+
+    act(() => { fireEvent.click(screen.getByTestId('open-3d-editor')) })
+
+    // Suspense fallback shows while ZoneEditor3D's lazy chunk resolves;
+    // the close button is rendered outside Suspense, so it appears immediately.
+    expect(screen.getByTestId('close-3d-editor')).toBeTruthy()
+  })
+
+  it('closes the 3D editor when the close button is clicked', async () => {
+    mockFetch([])
+    render(<ZoneConfig />)
+    await waitFor(() => expect(screen.getByTestId('open-3d-editor')).toBeTruthy())
+
+    act(() => { fireEvent.click(screen.getByTestId('open-3d-editor')) })
+    expect(screen.getByTestId('close-3d-editor')).toBeTruthy()
+
+    act(() => { fireEvent.click(screen.getByTestId('close-3d-editor')) })
+    expect(screen.queryByTestId('close-3d-editor')).toBeNull()
+  })
+
+  it('closes the 3D editor on Escape key', async () => {
+    mockFetch([])
+    render(<ZoneConfig />)
+    await waitFor(() => expect(screen.getByTestId('open-3d-editor')).toBeTruthy())
+
+    act(() => { fireEvent.click(screen.getByTestId('open-3d-editor')) })
+    expect(screen.getByTestId('close-3d-editor')).toBeTruthy()
+
+    act(() => { fireEvent.keyDown(window, { key: 'Escape' }) })
+    expect(screen.queryByTestId('close-3d-editor')).toBeNull()
   })
 })

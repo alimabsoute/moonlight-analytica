@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus, Trash2, Edit2, Save, X, Move, Maximize2,
-  Copy, Eye, EyeOff, Lock, Unlock, Settings, Palette, PenTool
+  Copy, Eye, EyeOff, Lock, Unlock, Settings, Palette, PenTool, Box
 } from 'lucide-react'
 import ZoneDrawer from '../components/ZoneDrawer'
+
+const ZoneEditor3D = lazy(() => import('../components/ZoneEditor3D'))
 
 const API = 'http://localhost:8000'
 
@@ -247,6 +249,7 @@ export default function ZoneConfig() {
   const [isDragging, setIsDragging] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const [showDrawer, setShowDrawer] = useState(false)
+  const [show3DEditor, setShow3DEditor] = useState(false)
   const [savedNotice, setSavedNotice] = useState(null)
 
   const fetchZones = useCallback(async () => {
@@ -273,6 +276,20 @@ export default function ZoneConfig() {
     setTimeout(() => setSavedNotice(null), 3000)
     fetchZones()
   }
+
+  const handle3DEditorSaved = (savedZone) => {
+    setShow3DEditor(false)
+    setSavedNotice(`Zone "${savedZone.zone_name}" saved (3D, schema v${savedZone.schema_version || 2})`)
+    setTimeout(() => setSavedNotice(null), 3000)
+    fetchZones()
+  }
+
+  useEffect(() => {
+    if (!show3DEditor) return
+    const onKey = (e) => { if (e.key === 'Escape') setShow3DEditor(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [show3DEditor])
 
   // Draw zones on canvas
   useEffect(() => {
@@ -437,6 +454,14 @@ export default function ZoneConfig() {
           >
             <PenTool size={16} />
             {showDrawer ? 'Hide Drawer' : 'Draw Zone'}
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShow3DEditor(true)}
+            data-testid="open-3d-editor"
+          >
+            <Box size={16} />
+            Draw Zone (3D)
           </button>
           <button className="btn btn-primary" onClick={addZone}>
             <Plus size={16} />
@@ -639,6 +664,51 @@ export default function ZoneConfig() {
           </div>
         </motion.div>
       </div>
+
+      {/* 3D Zone Editor — fullscreen overlay (lazy-loaded) */}
+      {show3DEditor && (
+        <>
+          <Suspense fallback={
+            <div
+              data-testid="zone-3d-loading"
+              style={{
+                position: 'fixed', inset: 0, zIndex: 9999,
+                background: '#0a0c10', color: '#f0f2f6',
+                display: 'grid', placeItems: 'center',
+                fontFamily: 'Inter, system-ui, sans-serif', fontSize: 14,
+              }}
+            >
+              Loading 3D editor…
+            </div>
+          }>
+            <ZoneEditor3D cameraId="primary" onSaved={handle3DEditorSaved} />
+          </Suspense>
+          <button
+            data-testid="close-3d-editor"
+            onClick={() => setShow3DEditor(false)}
+            aria-label="Close 3D editor"
+            style={{
+              position: 'fixed',
+              top: 16,
+              right: 16,
+              zIndex: 10000,
+              width: 40,
+              height: 40,
+              borderRadius: 8,
+              background: 'rgba(20,20,28,0.85)',
+              color: '#f0f2f6',
+              border: '1px solid rgba(255,255,255,0.12)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            <X size={18} />
+          </button>
+        </>
+      )}
     </div>
   )
 }
