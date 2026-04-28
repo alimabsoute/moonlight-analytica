@@ -1,0 +1,1182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Janus — Built for the floor. Not the screen.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --bg-elev: #11141b;
+    --line: rgba(255,255,255,0.06);
+    --line-strong: rgba(255,255,255,0.12);
+    --text: #f0f2f6;
+    --text-mute: #8a909c;
+    --text-dim: #5a606b;
+    --accent: #4d9bff;
+    --accent-bg: rgba(77, 155, 255, 0.10);
+    --good: #2ecc71;
+    --warn: #ffb547;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--text);
+    font-family: 'Inter', -apple-system, "SF Pro Display", system-ui, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app { position: fixed; inset: 0; }
+
+  /* ============== HUD: brand + status ============== */
+  #hud {
+    position: fixed; top: 24px; left: 24px; z-index: 10; width: 360px;
+    background: rgba(12, 14, 20, 0.72); backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px 16px;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+  }
+  .brandRow { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .brandMark {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: linear-gradient(135deg, #4d9bff 0%, #b56cff 100%);
+    display: grid; place-items: center;
+    box-shadow: 0 4px 12px -4px rgba(77, 155, 255, 0.6);
+  }
+  .brandMark svg { width: 16px; height: 16px; color: white; }
+  .brandWord { font-weight: 800; font-size: 17px; letter-spacing: -0.02em; }
+  .brandByline {
+    font-size: 11px; color: var(--text-dim); letter-spacing: 0.02em;
+    margin-top: -2px;
+  }
+  .liveBadge {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 9px; background: rgba(46, 204, 113, 0.10);
+    color: var(--good); border-radius: 999px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.10em;
+  }
+  .liveBadge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--good); animation: livePulse 2s ease-in-out infinite;
+  }
+  @keyframes livePulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+
+  /* ============== Step pill ============== */
+  .stepPill {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 14px;
+  }
+  .stepNum {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.10em;
+    color: var(--accent); min-width: 38px;
+  }
+  .stepName {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    flex: 1; transition: opacity 0.4s;
+  }
+  .stepProgress {
+    height: 2px; background: rgba(255,255,255,0.06);
+    border-radius: 2px; overflow: hidden;
+    margin-top: 2px;
+  }
+  .stepProgressFill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), #b56cff);
+    width: 0%; transition: width 0.12s linear;
+  }
+
+  /* ============== Zones list ============== */
+  .zonesHeader {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .zonesLabel {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+    color: var(--text-dim); text-transform: uppercase;
+  }
+  .zonesTotal { font-size: 11px; color: var(--text-mute); font-variant-numeric: tabular-nums; }
+  #zones { display: grid; gap: 6px; }
+  .zoneRow {
+    display: grid; grid-template-columns: 8px 1fr auto;
+    align-items: center; gap: 12px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .zoneRow.active { background: rgba(255,255,255,0.04); border-color: var(--line); }
+  .swatch { width: 8px; height: 8px; border-radius: 50%; }
+  .zoneName { font-size: 13px; font-weight: 500; color: var(--text); }
+  .count {
+    font-size: 14px; font-weight: 700; color: var(--text);
+    font-variant-numeric: tabular-nums;
+    min-width: 22px; text-align: right;
+  }
+  .countDash { color: var(--text-dim); font-weight: 400; }
+
+  /* ============== Caption (zone value prop) ============== */
+  #caption {
+    position: fixed; bottom: 92px; left: 50%; transform: translate(-50%, 8px);
+    z-index: 10;
+    background: rgba(12, 14, 20, 0.78); backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-size: 13px; font-weight: 500;
+    color: var(--text);
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+    white-space: nowrap;
+    max-width: calc(100vw - 80px);
+  }
+  #caption.visible { opacity: 1; transform: translate(-50%, 0); }
+  #caption .caret {
+    color: var(--accent); margin-right: 8px; font-weight: 700;
+  }
+
+  /* ============== Footer / scrubber ============== */
+  #footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 9;
+    padding: 18px 24px 16px;
+    background: linear-gradient(180deg, transparent 0%, rgba(10,12,16,0.85) 60%);
+    pointer-events: none;
+  }
+  #scrubber {
+    height: 2px; background: rgba(255,255,255,0.08);
+    border-radius: 2px; overflow: hidden;
+    margin-bottom: 12px;
+  }
+  #scrubberFill {
+    height: 100%; background: linear-gradient(90deg, #4d9bff 0%, #b56cff 50%, #ff8a3d 100%);
+    width: 0%; transition: width 0.08s linear;
+  }
+  .footerRow {
+    display: flex; align-items: center; gap: 16px;
+    color: var(--text-dim); font-size: 11px; letter-spacing: 0.04em;
+  }
+  .footerHint { flex: 1; }
+  .footerCtrl {
+    display: inline-flex; align-items: center; gap: 6px;
+    pointer-events: auto;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.03);
+    color: var(--text-mute);
+    border-radius: 6px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    font-family: inherit;
+  }
+  .footerCtrl:hover { background: rgba(255,255,255,0.06); color: var(--text); border-color: var(--line-strong); }
+
+  /* ============== End card ============== */
+  #endCard {
+    position: fixed; inset: 0; z-index: 20;
+    display: grid; place-items: center;
+    background: radial-gradient(ellipse at center, rgba(15, 18, 25, 0.92) 0%, rgba(8, 10, 14, 0.96) 70%);
+    backdrop-filter: blur(8px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.6s;
+  }
+  #endCard.visible { opacity: 1; pointer-events: auto; }
+  .endCardInner { text-align: center; max-width: 540px; padding: 0 32px; }
+  .endCardMark {
+    width: 56px; height: 56px; border-radius: 14px; margin: 0 auto 24px;
+    background: linear-gradient(135deg, #4d9bff 0%, #b56cff 100%);
+    display: grid; place-items: center;
+    box-shadow: 0 16px 40px -10px rgba(77, 155, 255, 0.5);
+  }
+  .endCardMark svg { width: 30px; height: 30px; color: white; }
+  .endCardTag {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700; letter-spacing: -0.025em; line-height: 1.1;
+    margin: 0 0 14px;
+  }
+  .endCardSub {
+    font-size: 16px; color: var(--text-mute);
+    line-height: 1.5; margin: 0 0 28px;
+    font-weight: 400;
+  }
+  .endCardCta {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 20px;
+    background: var(--text); color: var(--bg);
+    border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    pointer-events: auto;
+  }
+  .endCardCta:hover { transform: translateY(-1px); box-shadow: 0 12px 30px -8px rgba(255,255,255,0.2); }
+  .endCardCta svg { width: 14px; height: 14px; }
+
+  /* ============== Loading ============== */
+  #loading {
+    position: fixed; inset: 0; z-index: 30;
+    display: grid; place-items: center;
+    background: var(--bg);
+    transition: opacity 0.6s;
+  }
+  #loading.hidden { opacity: 0; pointer-events: none; }
+  .loadingDot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    animation: loadPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes loadPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="hud">
+  <div class="brandRow">
+    <div class="brandMark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7 L12 3 L21 7 L12 11 Z" />
+        <path d="M3 7 L3 17 L12 21 L21 17 L21 7" opacity="0.55" />
+        <path d="M12 11 L12 21" opacity="0.55" />
+      </svg>
+    </div>
+    <div>
+      <div class="brandWord">Janus</div>
+      <div class="brandByline">Built for the floor. Not the screen.</div>
+    </div>
+    <div class="liveBadge">LIVE</div>
+  </div>
+
+  <div class="stepPill">
+    <div class="stepNum" id="stepNum">01</div>
+    <div style="flex:1;min-width:0">
+      <div class="stepName" id="stepName">Define</div>
+      <div class="stepProgress"><div class="stepProgressFill" id="stepProgressFill"></div></div>
+    </div>
+  </div>
+
+  <div class="zonesHeader">
+    <div class="zonesLabel">Zones</div>
+    <div class="zonesTotal" id="zonesTotal">4 placed</div>
+  </div>
+  <div id="zones"></div>
+</div>
+
+<div id="caption"><span class="caret">›</span><span id="captionText"></span></div>
+
+<div id="footer">
+  <div id="scrubber"><div id="scrubberFill"></div></div>
+  <div class="footerRow">
+    <div class="footerHint">drag to orbit · scroll to zoom · zones lie on real surfaces in world space</div>
+    <button class="footerCtrl" id="soundToggle"><span id="soundIcon">♪</span><span id="soundLabel">sound off</span></button>
+    <button class="footerCtrl" id="replay">↻ replay</button>
+  </div>
+</div>
+
+<div id="endCard">
+  <div class="endCardInner">
+    <div class="endCardMark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7 L12 3 L21 7 L12 11 Z" />
+        <path d="M3 7 L3 17 L12 21 L21 17 L21 7" opacity="0.55" />
+        <path d="M12 11 L12 21" opacity="0.55" />
+      </svg>
+    </div>
+    <h1 class="endCardTag" id="endTag">Know what your floor<br>is doing.</h1>
+    <p class="endCardSub" id="endSub">Live counts at the door, the racks, the fitting room, the register. No facial recognition. No badges.</p>
+    <a class="endCardCta" href="#" id="endCta">
+      <span>See it live</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</div>
+
+<div id="loading"><div class="loadingDot"></div></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ====================== AUDIO (Web Audio API synthesized) ======================
+let audioCtx = null;
+let masterGain = null;
+let ambientNode = null;
+let soundEnabled = false;
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0;
+  masterGain.connect(audioCtx.destination);
+  startAmbient();
+}
+function startAmbient() {
+  // Soft sub-bass drone with very slow LFO modulation — lives under everything else
+  const osc1 = audioCtx.createOscillator();
+  const osc2 = audioCtx.createOscillator();
+  const filter = audioCtx.createBiquadFilter();
+  const gain = audioCtx.createGain();
+  osc1.type = 'sine'; osc1.frequency.value = 55;
+  osc2.type = 'sine'; osc2.frequency.value = 82.4; // E2
+  filter.type = 'lowpass'; filter.frequency.value = 280; filter.Q.value = 0.7;
+  gain.gain.value = 0.06;
+  osc1.connect(filter); osc2.connect(filter); filter.connect(gain); gain.connect(masterGain);
+  // very slow tremolo
+  const lfo = audioCtx.createOscillator();
+  const lfoGain = audioCtx.createGain();
+  lfo.frequency.value = 0.08; lfoGain.gain.value = 0.025;
+  lfo.connect(lfoGain); lfoGain.connect(gain.gain);
+  osc1.start(); osc2.start(); lfo.start();
+  ambientNode = gain;
+}
+function sfxClick() {
+  if (!audioCtx || !soundEnabled) return;
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = 'sine'; osc.frequency.setValueAtTime(2400, t);
+  osc.frequency.exponentialRampToValueAtTime(1200, t + 0.05);
+  g.gain.setValueAtTime(0.12, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+  osc.connect(g); g.connect(masterGain); osc.start(t); osc.stop(t + 0.07);
+}
+function sfxWhoosh() {
+  if (!audioCtx || !soundEnabled) return;
+  const t = audioCtx.currentTime;
+  const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.5, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < data.length; i++) {
+    const env = Math.exp(-i / (data.length * 0.4));
+    data[i] = (Math.random() * 2 - 1) * env;
+  }
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.setValueAtTime(400, t);
+  filter.frequency.exponentialRampToValueAtTime(2400, t + 0.4);
+  filter.Q.value = 3;
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(0.10, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+  src.connect(filter); filter.connect(g); g.connect(masterGain); src.start(t);
+}
+function sfxPlace() {
+  if (!audioCtx || !soundEnabled) return;
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(180, t);
+  osc.frequency.exponentialRampToValueAtTime(90, t + 0.15);
+  g.gain.setValueAtTime(0.18, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+  osc.connect(g); g.connect(masterGain); osc.start(t); osc.stop(t + 0.2);
+}
+function sfxCommit() {
+  if (!audioCtx || !soundEnabled) return;
+  const t = audioCtx.currentTime;
+  // E5 + B5 chime
+  [659.25, 987.77].forEach((freq, idx) => {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(0, t + idx * 0.04);
+    g.gain.linearRampToValueAtTime(0.10, t + idx * 0.04 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.04 + 0.5);
+    osc.connect(g); g.connect(masterGain); osc.start(t + idx * 0.04); osc.stop(t + idx * 0.04 + 0.55);
+  });
+}
+function sfxLiveStart() {
+  if (!audioCtx || !soundEnabled) return;
+  const t = audioCtx.currentTime;
+  // Three quick rising notes
+  [523.25, 659.25, 783.99].forEach((freq, idx) => {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sine'; osc.frequency.value = freq;
+    g.gain.setValueAtTime(0, t + idx * 0.06);
+    g.gain.linearRampToValueAtTime(0.08, t + idx * 0.06 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.06 + 0.3);
+    osc.connect(g); g.connect(masterGain); osc.start(t + idx * 0.06); osc.stop(t + idx * 0.06 + 0.35);
+  });
+}
+
+document.getElementById('soundToggle').addEventListener('click', () => {
+  if (!audioCtx) initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  soundEnabled = !soundEnabled;
+  masterGain.gain.linearRampToValueAtTime(soundEnabled ? 1.0 : 0.0, audioCtx.currentTime + 0.3);
+  document.getElementById('soundIcon').textContent = soundEnabled ? '♪' : '♪';
+  document.getElementById('soundLabel').textContent = soundEnabled ? 'sound on' : 'sound off';
+});
+
+// ====================== THREE.JS SCENE ======================
+const root = document.getElementById('app');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+root.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0c10);
+scene.fog = new THREE.Fog(0x0a0c10, 28, 70);
+
+const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(14, 11, 18);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0.5, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxPolarAngle = Math.PI * 0.49;
+controls.minDistance = 6;
+controls.maxDistance = 50;
+controls.enabled = false; // disabled during cinematic intro
+
+// ============= LIGHTING (warmer, more cinematic) =============
+scene.add(new THREE.AmbientLight(0xffffff, 0.40));
+
+const key = new THREE.DirectionalLight(0xfff0d8, 1.2);
+key.position.set(12, 18, 8);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.left = -20; key.shadow.camera.right = 20;
+key.shadow.camera.top = 20; key.shadow.camera.bottom = -20;
+key.shadow.bias = -0.0005;
+key.shadow.radius = 6;
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0x6a8eff, 0.32);
+fill.position.set(-10, 8, -6);
+scene.add(fill);
+
+// Warm rim light from the register area — sells "indoor boutique"
+const registerRim = new THREE.PointLight(0xff9a55, 0.9, 20, 1.6);
+registerRim.position.set(-8, 2.4, -8);
+scene.add(registerRim);
+
+// Subtle hemispheric for ambient occlusion fake
+const hemi = new THREE.HemisphereLight(0xb8c8ff, 0x1a1d24, 0.25);
+scene.add(hemi);
+
+// ============= ENVIRONMENT =============
+const floorGeo = new THREE.PlaneGeometry(40, 30, 1, 1);
+const floorMat = new THREE.MeshStandardMaterial({ color: 0x161920, roughness: 0.92, metalness: 0.0 });
+const floor = new THREE.Mesh(floorGeo, floorMat);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+const grid = new THREE.GridHelper(40, 40, 0x252934, 0x1c1f27);
+grid.position.y = 0.001;
+grid.material.transparent = true;
+grid.material.opacity = 0.6;
+scene.add(grid);
+
+function box(w, h, d, color, x, y, z, opts={}) {
+  const g = new THREE.BoxGeometry(w, h, d);
+  const m = new THREE.MeshStandardMaterial({ color, roughness: 0.7, metalness: 0.05, ...opts });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.position.set(x, y + h / 2, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+  return mesh;
+}
+
+// Walls (perimeter trim)
+box(40, 0.3, 0.2, 0x252934, 0, 0, -15);
+box(0.2, 0.3, 30, 0x252934, -20, 0, 0);
+box(0.2, 0.3, 30, 0x252934, 20, 0, 0);
+
+// ====== Front display table near entrance (right-front area) ======
+// Rectangular pedestal table with a lighter wood top — "lead fixture"
+box(2.4, 0.85, 1.6, 0x3d4654, 8, 0, 7);
+box(2.4, 0.05, 1.6, 0x9c7a45, 8, 0.85, 7, { roughness: 0.35, metalness: 0.05 });
+// Folded merchandise stacks on the display table (small cubes)
+for (let i = 0; i < 3; i++) {
+  for (let j = 0; j < 2; j++) {
+    const cx = 7.2 + i * 0.6;
+    const cz = 6.6 + j * 0.7;
+    const ch = 0.18 + Math.random() * 0.10;
+    const colors = [0xc9b9a3, 0x6f7a8a, 0xa0937c, 0x4a4f5a, 0xb09484];
+    const c = colors[(i * 2 + j) % colors.length];
+    box(0.45, ch, 0.45, c, cx, 0.90, cz, { roughness: 0.8 });
+  }
+}
+
+// ====== Two clothing racks down the middle of the floor ======
+// Each rack: 2 vertical posts, 1 horizontal bar, garment slabs hanging from it
+function clothingRack(centerX, centerZ, length = 4.0) {
+  // Posts
+  box(0.10, 1.85, 0.10, 0x2a2f38, centerX, 0, centerZ - length / 2, { metalness: 0.7, roughness: 0.4 });
+  box(0.10, 1.85, 0.10, 0x2a2f38, centerX, 0, centerZ + length / 2, { metalness: 0.7, roughness: 0.4 });
+  // Top bar
+  box(0.08, 0.08, length, 0x4a505c, centerX, 1.78, centerZ, { metalness: 0.6, roughness: 0.4 });
+  // Garments — thin slabs hung along the bar
+  const garmentColors = [0x8a96a8, 0x6c5a48, 0xb8a890, 0x4d556b, 0x9a7a6c, 0x5e6a78, 0xa89a82, 0x7a6e60];
+  const count = Math.floor(length / 0.22);
+  for (let i = 0; i < count; i++) {
+    const gx = centerX + (Math.random() - 0.5) * 0.06;
+    const gz = centerZ - length / 2 + 0.18 + i * 0.22;
+    const gh = 0.95 + Math.random() * 0.20;
+    const col = garmentColors[i % garmentColors.length];
+    box(0.30, gh, 0.16, col, gx, 0.55, gz, { roughness: 0.9 });
+  }
+  // Caster base hint (low rectangle)
+  box(0.6, 0.05, length + 0.4, 0x1a1e25, centerX, 0, centerZ, { roughness: 0.9 });
+}
+clothingRack(-2.5, 2.0, 4.5);
+clothingRack(2.5, 2.0, 4.5);
+
+// ====== Fitting-rooms corridor on the right side (4 doors) ======
+// A back wall slab on the right with 4 inset door panels
+const corridorX = 14;       // wall x position (right side)
+const corridorZStart = -6;  // start of corridor along z
+const corridorZEnd = 8;     // end
+const corridorLength = corridorZEnd - corridorZStart;
+// Corridor wall (the wall the doors sit in)
+box(0.4, 2.6, corridorLength, 0x2d333d, corridorX, 0, (corridorZStart + corridorZEnd) / 2);
+// Header trim above doors
+box(0.5, 0.18, corridorLength, 0x4a505c, corridorX - 0.1, 2.6, (corridorZStart + corridorZEnd) / 2, { roughness: 0.4 });
+// Floor plinth in front of doors
+box(2.0, 0.04, corridorLength, 0x1c2028, corridorX - 1.2, 0, (corridorZStart + corridorZEnd) / 2);
+// 4 door panels — recessed, paint color contrast
+const doorColors = [0x6c6155, 0x6c6155, 0x6c6155, 0x6c6155];
+const doorSpacing = corridorLength / 4;
+for (let d = 0; d < 4; d++) {
+  const dz = corridorZStart + doorSpacing / 2 + d * doorSpacing;
+  // Door slab (slightly recessed — placed just in front of the wall)
+  box(0.08, 2.0, 0.85, doorColors[d], corridorX - 0.22, 0, dz, { roughness: 0.7 });
+  // Door knob
+  const knob = new THREE.Mesh(
+    new THREE.SphereGeometry(0.05, 10, 10),
+    new THREE.MeshStandardMaterial({ color: 0xc9b27a, roughness: 0.3, metalness: 0.85 })
+  );
+  knob.position.set(corridorX - 0.30, 1.05, dz + 0.30);
+  knob.castShadow = true;
+  scene.add(knob);
+  // Number plate (subtle)
+  box(0.02, 0.12, 0.12, 0xf0e6cc, corridorX - 0.30, 1.65, dz, { roughness: 0.6, metalness: 0.1 });
+}
+
+// ====== Register counter near the back-left ======
+// L-shaped register area: long counter + small wrap return
+const regX = -10, regZ = -8;
+box(5.0, 1.05, 1.4, 0x3d4654, regX, 0, regZ);
+box(5.0, 0.05, 1.4, 0x6b5235, regX, 1.05, regZ, { roughness: 0.3, metalness: 0.05 });
+// Register POS terminal (a small box on the counter)
+box(0.55, 0.40, 0.45, 0x14181f, regX - 1.6, 1.10, regZ, { roughness: 0.4 });
+box(0.50, 0.32, 0.05, 0x2c5cff, regX - 1.6, 1.16, regZ + 0.22, { roughness: 0.4, metalness: 0.1 }); // screen face
+// Bag stack / accessory cubby behind the counter (back wall)
+for (let i = 0; i < 5; i++) {
+  const bx = regX - 2.0 + i * 1.0;
+  const bh = 0.65 + Math.random() * 0.30;
+  const cols = [0x7a6e60, 0x8a8175, 0xa39685, 0x5e544a, 0x9a8a72];
+  box(0.55, bh, 0.30, cols[i % cols.length], bx, 0, regZ - 1.0, { roughness: 0.55, metalness: 0.1 });
+}
+// Hanging pendant lamps over the register (small spheres + cord lines abstracted as thin cylinders)
+for (let i = 0; i < 3; i++) {
+  const lx = regX - 1.6 + i * 1.6;
+  const lampGeo = new THREE.SphereGeometry(0.18, 14, 14);
+  const lampMat = new THREE.MeshStandardMaterial({ color: 0xffd9a0, emissive: 0xff9a55, emissiveIntensity: 0.6, roughness: 0.4 });
+  const lamp = new THREE.Mesh(lampGeo, lampMat);
+  lamp.position.set(lx, 2.6, regZ);
+  scene.add(lamp);
+  // cord
+  const cord = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.01, 0.01, 0.6, 6),
+    new THREE.MeshStandardMaterial({ color: 0x14181f })
+  );
+  cord.position.set(lx, 2.95, regZ);
+  scene.add(cord);
+}
+
+// ============= ZONES =============
+// Retail zones — floor surfaces (XZ-plane) + the front display zone sitting at the table
+const ZONES = [
+  {
+    name: 'Entrance', shortName: 'Entrance',
+    color: 0x4d9bff,
+    target: { pos: new THREE.Vector3(8, 0.012, 11), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 6, h: 4 } },
+    caption: 'Entrance — walk-ins separated from staff and re-entries.',
+    countTarget: 2
+  },
+  {
+    name: 'Front Display', shortName: 'Front Display',
+    color: 0xff8a3d,
+    target: { pos: new THREE.Vector3(8, 0.012, 7), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 4.5, h: 3.5 } },
+    caption: 'Front Display — first-impression engagement, dwell at the lead fixture.',
+    countTarget: 2
+  },
+  {
+    name: 'Fitting Rooms', shortName: 'Fitting Rooms',
+    color: 0xb56cff,
+    target: { pos: new THREE.Vector3(12.0, 0.012, 1), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 2.6, h: 13 } },
+    caption: 'Fitting rooms — conversion, dwell time, abandonment.',
+    countTarget: 3
+  },
+  {
+    name: 'Register Queue', shortName: 'Register Queue',
+    color: 0x2ecc71,
+    target: { pos: new THREE.Vector3(-10, 0.012, -5.5), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 5.5, h: 3.0 } },
+    caption: 'Register queue — line length, wait time, walk-aways.',
+    countTarget: 2
+  }
+];
+
+function buildZone(z) {
+  const group = new THREE.Group();
+  const w = z.target.size.w, h = z.target.size.h;
+
+  const planeGeo = new THREE.PlaneGeometry(w, h);
+  const planeMat = new THREE.MeshBasicMaterial({
+    color: z.color, transparent: true, opacity: 0.0,
+    side: THREE.DoubleSide, depthWrite: false
+  });
+  const plane = new THREE.Mesh(planeGeo, planeMat);
+  group.add(plane);
+
+  const edgeGeo = new THREE.EdgesGeometry(planeGeo);
+  const edgeMat = new THREE.LineBasicMaterial({
+    color: z.color, transparent: true, opacity: 0.0
+  });
+  const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+  group.add(edges);
+
+  const corners = new THREE.Group();
+  const cornerCoords = [[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]];
+  cornerCoords.forEach(([x, y]) => {
+    const cg = new THREE.SphereGeometry(0.16, 12, 12);
+    const cm = new THREE.MeshBasicMaterial({ color: z.color, transparent: true, opacity: 0.0 });
+    const c = new THREE.Mesh(cg, cm);
+    c.position.set(x, y, 0);
+    corners.add(c);
+  });
+  group.add(corners);
+
+  const labelCanvas = document.createElement('canvas');
+  labelCanvas.width = 512; labelCanvas.height = 128;
+  const ctx = labelCanvas.getContext('2d');
+  ctx.fillStyle = `#${z.color.toString(16).padStart(6,'0')}`;
+  roundRect(ctx, 4, 4, 504, 120, 22); ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 52px Inter, -apple-system, sans-serif';
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+  ctx.fillText(z.name.toUpperCase(), 256, 64);
+  const tex = new THREE.CanvasTexture(labelCanvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const labelMat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.0, depthTest: false });
+  const label = new THREE.Sprite(labelMat);
+  label.scale.set(3.0, 0.75, 1);
+  label.position.set(0, 0, 0.04);
+  group.add(label);
+
+  group.userData = { plane, edges, corners, label };
+  scene.add(group);
+  return group;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+const zoneObjects = ZONES.map(buildZone);
+
+// ============= MANNEQUINS =============
+// Retail role assignments:
+// 0-1: entrance browsing (2)
+// 2-5: wandering racks (4)
+// 6-8: in/around fitting rooms (3)
+// 9-10: at register (2)
+// 11-15: mingling (5)
+const PEOPLE_COUNT = 16;
+const people = [];
+const peopleGroup = new THREE.Group();
+scene.add(peopleGroup);
+
+const PERSON_COLORS = [0xc9d4e5, 0xd4cfc4, 0xc4d4cf, 0xd4c4cf, 0xcfc4d4, 0xb8c4d4];
+
+for (let i = 0; i < PEOPLE_COUNT; i++) {
+  const personGroup = new THREE.Group();
+  const colorIdx = i % PERSON_COLORS.length;
+  const bodyMat = new THREE.MeshStandardMaterial({ color: PERSON_COLORS[colorIdx], roughness: 0.65 });
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 1.2, 16), bodyMat);
+  body.position.y = 0.6; body.castShadow = true;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), bodyMat);
+  head.position.y = 1.45; head.castShadow = true;
+  personGroup.add(body); personGroup.add(head);
+
+  const startSide = Math.random() < 0.5 ? -1 : 1;
+  personGroup.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
+
+  // Assign role per spec:
+  // 0-1: entrance browsing
+  // 2-5: wandering racks (mingle along middle aisle)
+  // 6-8: fitting rooms
+  // 9-10: register
+  // 11-15: mingling (general retail browse)
+  let role;
+  if (i < 2) role = 'entrance';
+  else if (i < 6) role = 'rack';
+  else if (i < 9) role = 'fitting';
+  else if (i < 11) role = 'register';
+  else role = 'mingle';
+
+  let homeZone = null;
+  if (role === 'entrance') homeZone = 'Entrance';
+  else if (role === 'rack') homeZone = 'Front Display'; // bias rack-wanderers toward front-of-store
+  else if (role === 'fitting') homeZone = 'Fitting Rooms';
+  else if (role === 'register') homeZone = 'Register Queue';
+
+  personGroup.userData = {
+    target: new THREE.Vector3(),
+    speed: role === 'fitting' ? 0.55 : (role === 'register' ? 0.55 : (role === 'entrance' ? 0.7 : 1.0 + Math.random() * 0.6)),
+    waitTime: 0,
+    pickNew: true,
+    role,
+    homeZone,
+    bobOffset: Math.random() * Math.PI * 2,
+  };
+  peopleGroup.add(personGroup);
+  people.push(personGroup);
+}
+
+// Where each retail zone draws bodies in the live phase
+const TARGETS_BY_ZONE = {
+  Entrance:        () => new THREE.Vector3(8 + (Math.random() - 0.5) * 5, 0, 11 + (Math.random() - 0.5) * 3),
+  'Front Display': () => new THREE.Vector3(8 + (Math.random() - 0.5) * 4, 0, 7 + (Math.random() - 0.5) * 3),
+  'Fitting Rooms': () => new THREE.Vector3(12.0 + (Math.random() - 0.5) * 1.8, 0, 1 + (Math.random() - 0.5) * 11),
+  'Register Queue':() => new THREE.Vector3(-10 + (Math.random() - 0.5) * 4.5, 0, -5.5 + (Math.random() - 0.5) * 2.4),
+  // Mingle zone — middle of the floor (rack aisle)
+  Aisle:           () => new THREE.Vector3((Math.random() - 0.5) * 10, 0, 2 + (Math.random() - 0.5) * 6)
+};
+
+function pickTarget(person) {
+  const ud = person.userData;
+  let zone;
+  if (ud.role === 'entrance') {
+    zone = 'Entrance';
+    ud.waitTime = 1.5 + Math.random() * 2.5;
+  } else if (ud.role === 'rack') {
+    // wandering racks — bias to the middle aisle but occasionally drift to front display
+    zone = Math.random() < 0.7 ? 'Aisle' : 'Front Display';
+    ud.waitTime = 2 + Math.random() * 4;
+  } else if (ud.role === 'fitting') {
+    zone = 'Fitting Rooms';
+    ud.waitTime = 5 + Math.random() * 7; // long dwell — trying things on
+  } else if (ud.role === 'register') {
+    zone = 'Register Queue';
+    ud.waitTime = 3 + Math.random() * 4;
+  } else {
+    // mingle — full retail browse
+    const r = Math.random();
+    if (r < 0.20) zone = 'Entrance';
+    else if (r < 0.45) zone = 'Front Display';
+    else if (r < 0.75) zone = 'Aisle';
+    else if (r < 0.90) zone = 'Fitting Rooms';
+    else zone = 'Register Queue';
+    ud.waitTime = 1.5 + Math.random() * 3;
+  }
+  ud.target.copy(TARGETS_BY_ZONE[zone]());
+  ud.targetZone = zone;
+  ud.pickNew = false;
+}
+
+function pointInZone(point, zone) {
+  const t = zone.target;
+  const dx = point.x - t.pos.x;
+  const dz = point.z - t.pos.z;
+  const w = t.size.w / 2, h = t.size.h / 2;
+  return Math.abs(dx) < w && Math.abs(dz) < h;
+}
+
+// ============= UI WIRING =============
+const zoneListEl = document.getElementById('zones');
+const zoneRowEls = {};
+ZONES.forEach((z) => {
+  const row = document.createElement('div');
+  row.className = 'zoneRow';
+  const swatch = `<div class="swatch" style="background:#${z.color.toString(16).padStart(6,'0')}"></div>`;
+  row.innerHTML = `${swatch}<div class="zoneName">${z.name}</div><div class="count countDash" data-zone="${z.name}">—</div>`;
+  zoneListEl.appendChild(row);
+  zoneRowEls[z.name] = row;
+});
+const countEls = {};
+ZONES.forEach(z => { countEls[z.name] = document.querySelector(`[data-zone="${z.name}"]`); });
+
+const STEPS = [
+  { num: '01', name: 'Define' },
+  { num: '02', name: 'Orient' },
+  { num: '03', name: 'Anchor' },
+  { num: '04', name: 'Commit' },
+];
+
+const stepNumEl = document.getElementById('stepNum');
+const stepNameEl = document.getElementById('stepName');
+const stepProgEl = document.getElementById('stepProgressFill');
+const captionEl = document.getElementById('caption');
+const captionTextEl = document.getElementById('captionText');
+const scrubberFillEl = document.getElementById('scrubberFill');
+const zonesTotalEl = document.getElementById('zonesTotal');
+const endCardEl = document.getElementById('endCard');
+
+function setStep(num, name, progress) {
+  if (stepNumEl.textContent !== num) stepNumEl.textContent = num;
+  if (stepNameEl.textContent !== name) stepNameEl.textContent = name;
+  stepProgEl.style.width = (progress * 100) + '%';
+}
+function showCaption(text) {
+  if (captionTextEl.textContent === text && captionEl.classList.contains('visible')) return;
+  captionTextEl.textContent = text;
+  captionEl.classList.add('visible');
+}
+function hideCaption() { captionEl.classList.remove('visible'); }
+
+// ============= TIMELINE =============
+// 4 zones now (vs 3 in the restaurant variant) — keep each zone segment 2.7s so total stays close
+// to ~31s. Math: intro 3.0 + 4*2.7 (10.8) + live 12.0 + endcard 4.5 = 30.3s
+const TIMELINE = [
+  { kind: 'intro', dur: 3.0 },                       // cinematic establishing shot
+  { kind: 'zone', zoneIdx: 0, dur: 2.7 },
+  { kind: 'zone', zoneIdx: 1, dur: 2.7 },
+  { kind: 'zone', zoneIdx: 2, dur: 2.7 },
+  { kind: 'zone', zoneIdx: 3, dur: 2.7 },
+  { kind: 'live', dur: 12.0 },
+  { kind: 'endcard', dur: 4.5 },
+];
+const LOOP_TOTAL = TIMELINE.reduce((a, s) => a + s.dur, 0);
+
+function easeInOut(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
+function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+function easeIn(t)  { return t * t * t; }
+
+// ============= SFX TRIGGER STATE (avoid replay on every frame) =============
+const sfxState = {
+  zoneIdx: -1,
+  cornersPlaced: -1,    // how many corner clicks fired for current zone
+  whooshFired: false,
+  placeFired: false,
+  commitFired: false,
+  liveFired: false,
+};
+function resetSfxStateForZone(zoneIdx) {
+  sfxState.zoneIdx = zoneIdx;
+  sfxState.cornersPlaced = 0;
+  sfxState.whooshFired = false;
+  sfxState.placeFired = false;
+  sfxState.commitFired = false;
+}
+
+function animateZone(zone, group, p) {
+  const { plane, edges, corners, label } = group.userData;
+  const t = zone.target;
+
+  const hoverPos = new THREE.Vector3(t.pos.x, t.pos.y + 4.2, t.pos.z + 1.2);
+
+  if (p < 0.18) {
+    // === Phase 1: Define (wireframe materializes hovering above scene) ===
+    const u = p / 0.18;
+    plane.material.opacity = 0;
+    edges.material.opacity = easeOut(u) * 0.95;
+    const cornersToPlace = Math.floor(u * 4);
+    corners.children.forEach((c, ci) => {
+      c.material.opacity = ci <= cornersToPlace ? easeOut(Math.min(1, (u * 4) - ci)) : 0;
+    });
+    if (cornersToPlace > sfxState.cornersPlaced) {
+      sfxState.cornersPlaced = cornersToPlace;
+      sfxClick();
+    }
+    group.position.copy(hoverPos);
+    group.rotation.set(-0.55, u * 0.6, u * 0.4);
+    group.scale.setScalar(0.7 + 0.3 * easeOut(u));
+    label.material.opacity = 0;
+  } else if (p < 0.55) {
+    // === Phase 2: Rotate (tumble through 3D orientations) ===
+    const u = (p - 0.18) / (0.55 - 0.18);
+    edges.material.opacity = 0.95;
+    corners.children.forEach(c => c.material.opacity = 1);
+    if (!sfxState.whooshFired && u > 0.05) { sfxState.whooshFired = true; sfxWhoosh(); }
+    group.position.copy(hoverPos);
+    const yawSpins = 1.2;
+    group.rotation.set(
+      -0.55 + (t.rotEuler.x + 0.55) * easeInOut(u) * 0.55,
+      Math.sin(u * Math.PI * 2 * yawSpins) * 0.8 * (1 - u) + 0.6 * (1 - u),
+      Math.cos(u * Math.PI * yawSpins) * 0.4 * (1 - u) + 0.4 * (1 - u)
+    );
+    group.scale.setScalar(1.0);
+  } else if (p < 0.82) {
+    // === Phase 3: Place (descend to surface) ===
+    const u = (p - 0.55) / (0.82 - 0.55);
+    const e = easeInOut(u);
+    edges.material.opacity = 0.95;
+    corners.children.forEach(c => c.material.opacity = 1);
+    group.position.lerpVectors(hoverPos, t.pos, e);
+    const startRotX = -0.55 + (t.rotEuler.x + 0.55) * 0.55;
+    group.rotation.x = startRotX + (t.rotEuler.x - startRotX) * e;
+    group.rotation.y = t.rotEuler.y;
+    group.rotation.z = t.rotEuler.z;
+    if (!sfxState.placeFired && u > 0.85) { sfxState.placeFired = true; sfxPlace(); }
+  } else {
+    // === Phase 4: Commit (fill + label) ===
+    const u = (p - 0.82) / (1.0 - 0.82);
+    const e = easeOut(u);
+    edges.material.opacity = 0.95;
+    corners.children.forEach(c => c.material.opacity = 1 - e * 0.6);
+    plane.material.opacity = e * 0.30;
+    group.position.copy(t.pos);
+    group.rotation.copy(t.rotEuler);
+    label.material.opacity = e;
+    label.position.set(0, 0, 0.06);
+    if (!sfxState.commitFired && u > 0.05) { sfxState.commitFired = true; sfxCommit(); }
+  }
+}
+
+function holdZone(group) {
+  const { plane, edges, corners, label } = group.userData;
+  plane.material.opacity = 0.30;
+  edges.material.opacity = 0.95;
+  corners.children.forEach(c => c.material.opacity = 0.4);
+  label.material.opacity = 1;
+}
+
+function hideZone(group) {
+  const { plane, edges, corners, label } = group.userData;
+  plane.material.opacity = 0;
+  edges.material.opacity = 0;
+  corners.children.forEach(c => c.material.opacity = 0);
+  label.material.opacity = 0;
+}
+
+// ============= CINEMATIC INTRO CAMERA =============
+const introStartPos = new THREE.Vector3(22, 4.5, 28);
+const introEndPos = new THREE.Vector3(14, 11, 18);
+const introStartTarget = new THREE.Vector3(0, 0.5, 0);
+
+function applyIntroCamera(p) {
+  const e = easeInOut(p);
+  camera.position.lerpVectors(introStartPos, introEndPos, e);
+  controls.target.copy(introStartTarget);
+  camera.lookAt(controls.target);
+}
+
+let liveEnabledControls = false;
+function enableControlsOnce() {
+  if (liveEnabledControls) return;
+  liveEnabledControls = true;
+  controls.enabled = true;
+}
+
+// ============= MAIN LOOP =============
+let loopT = 0;
+const clock = new THREE.Clock();
+
+// hide loading
+setTimeout(() => document.getElementById('loading').classList.add('hidden'), 400);
+
+function tick() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  loopT = (loopT + dt) % LOOP_TOTAL;
+
+  let acc = 0;
+  let phase = null;
+  let phaseT = 0;
+  let phaseIdx = 0;
+  for (let i = 0; i < TIMELINE.length; i++) {
+    const seg = TIMELINE[i];
+    if (loopT < acc + seg.dur) { phase = seg; phaseT = (loopT - acc) / seg.dur; phaseIdx = i; break; }
+    acc += seg.dur;
+  }
+
+  scrubberFillEl.style.width = (loopT / LOOP_TOTAL * 100) + '%';
+
+  // ===== CAMERA =====
+  if (phase.kind === 'intro') {
+    applyIntroCamera(phaseT);
+  } else {
+    if (!liveEnabledControls) enableControlsOnce();
+    if (phase.kind === 'live') {
+      // gentle continuous orbit during live phase (target stays centered)
+      controls.target.set(0, 0.5, 0);
+    }
+    controls.update();
+  }
+
+  // ===== ZONES =====
+  for (let i = 0; i < ZONES.length; i++) {
+    if (phase.kind === 'zone' && phase.zoneIdx === i) {
+      if (sfxState.zoneIdx !== i) resetSfxStateForZone(i);
+      animateZone(ZONES[i], zoneObjects[i], phaseT);
+      zoneRowEls[ZONES[i].name].classList.add('active');
+    } else if ((phase.kind === 'zone' && i < phase.zoneIdx) || phase.kind === 'live' || phase.kind === 'endcard') {
+      holdZone(zoneObjects[i]);
+      zoneRowEls[ZONES[i].name].classList.remove('active');
+    } else {
+      hideZone(zoneObjects[i]);
+      zoneRowEls[ZONES[i].name].classList.remove('active');
+    }
+  }
+
+  // ===== STEP PILL + CAPTION =====
+  if (phase.kind === 'intro') {
+    setStep('—', 'Ready', phaseT);
+    hideCaption();
+    zonesTotalEl.textContent = '0 placed';
+  } else if (phase.kind === 'zone') {
+    let stepIdx = 0;
+    if (phaseT < 0.18) stepIdx = 0;
+    else if (phaseT < 0.55) stepIdx = 1;
+    else if (phaseT < 0.82) stepIdx = 2;
+    else stepIdx = 3;
+    setStep(STEPS[stepIdx].num, STEPS[stepIdx].name, phaseT);
+    showCaption(ZONES[phase.zoneIdx].caption);
+    zonesTotalEl.textContent = `${phase.zoneIdx} placed`;
+  } else if (phase.kind === 'live') {
+    setStep('—', 'Tracking', 1);
+    if (!sfxState.liveFired) { sfxState.liveFired = true; sfxLiveStart(); }
+    showCaption('Counts are physical. Zones are surfaces, not pixels.');
+    zonesTotalEl.textContent = `${ZONES.length} placed`;
+  } else if (phase.kind === 'endcard') {
+    setStep('—', 'Complete', 1);
+    hideCaption();
+    sfxState.liveFired = false;
+  }
+
+  // Reset live SFX if we left live phase
+  if (phase.kind !== 'live' && phase.kind !== 'endcard') sfxState.liveFired = false;
+
+  // ===== END CARD VISIBILITY =====
+  if (phase.kind === 'endcard') {
+    endCardEl.classList.add('visible');
+  } else {
+    endCardEl.classList.remove('visible');
+  }
+
+  // ===== MANNEQUINS =====
+  const occ = { 'Entrance': 0, 'Front Display': 0, 'Fitting Rooms': 0, 'Register Queue': 0 };
+  if (phase.kind === 'live') {
+    for (const person of people) {
+      const ud = person.userData;
+      if (ud.pickNew) pickTarget(person);
+      const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
+      const dist = dir.length();
+      if (dist > 0.4) {
+        dir.normalize().multiplyScalar(ud.speed * dt);
+        person.position.add(dir);
+        person.rotation.y = Math.atan2(dir.x, dir.z);
+        // gentle bob while walking
+        person.position.y = Math.sin((loopT + ud.bobOffset) * 8) * 0.02;
+      } else {
+        ud.waitTime -= dt;
+        person.position.y = Math.sin((loopT + ud.bobOffset) * 1.5) * 0.005;
+        if (ud.waitTime <= 0) ud.pickNew = true;
+      }
+      const sample = new THREE.Vector3(person.position.x, 0, person.position.z);
+      // Priority: small zones first (Front Display, Register Queue) so they don't get
+      // shadowed by the larger Fitting Rooms corridor sample that overlaps spatially.
+      let counted = false;
+      for (const z of ZONES) {
+        if (pointInZone(sample, z)) {
+          occ[z.name]++; counted = true; break;
+        }
+      }
+    }
+  } else if (phase.kind === 'zone') {
+    // gentle drift to home zone during zone-creation phase
+    for (const person of people) {
+      const ud = person.userData;
+      if (!ud.driftSet && ud.homeZone) {
+        ud.driftTarget = TARGETS_BY_ZONE[ud.homeZone]();
+        ud.driftSet = true;
+      } else if (!ud.driftSet && !ud.homeZone) {
+        // mingle types: drift to the middle aisle
+        ud.driftTarget = TARGETS_BY_ZONE.Aisle();
+        ud.driftSet = true;
+      }
+      if (ud.driftTarget) {
+        const dx = ud.driftTarget.x - person.position.x;
+        const dz = ud.driftTarget.z - person.position.z;
+        person.position.x += dx * 0.008;
+        person.position.z += dz * 0.008;
+        if (Math.abs(dx) > 0.05 || Math.abs(dz) > 0.05) {
+          person.rotation.y = Math.atan2(dx, dz);
+        }
+      }
+    }
+  } else if (phase.kind === 'endcard') {
+    // hold positions
+  }
+
+  for (const z of ZONES) {
+    if (phase.kind === 'live') {
+      countEls[z.name].textContent = occ[z.name];
+      countEls[z.name].classList.remove('countDash');
+    } else if (phase.kind === 'zone' && phase.zoneIdx >= ZONES.indexOf(ZONES.find(zo => zo.name === z.name))) {
+      // after zone is placed, show zero (no live tracking yet)
+      // keep dash for simplicity
+      countEls[z.name].textContent = '—';
+      countEls[z.name].classList.add('countDash');
+    } else {
+      countEls[z.name].textContent = '—';
+      countEls[z.name].classList.add('countDash');
+    }
+  }
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(tick);
+}
+tick();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+document.getElementById('replay').addEventListener('click', () => {
+  loopT = 0;
+  liveEnabledControls = false;
+  controls.enabled = false;
+  // reset mannequin drift
+  people.forEach(p => { p.userData.driftSet = false; });
+});
+
+document.getElementById('endCta').addEventListener('click', (e) => {
+  e.preventDefault();
+  // placeholder — replace with real Calendly / book-a-demo URL
+  window.open('https://calendly.com', '_blank');
+});
+</script>
+</body>
+</html>

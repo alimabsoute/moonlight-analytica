@@ -35,6 +35,22 @@ MIGRATIONS = [
             """
         ],
     ),
+    (
+        3,
+        "World-space 3D zones: polygon_world_3d + rotation_matrix + surface_type + camera_id",
+        # JANUS-ZONE-MODEL.md (locked 2026-04-27): zones are 3D world-space planes
+        # anchored to physical surfaces (floor, counter, ramp, table, wall) via a
+        # rotation matrix. polygon_world_3d (4x3 floats) + rotation_matrix (3x3 floats)
+        # is the new source of truth. polygon_world (2D) and polygon_image are kept
+        # for backward compat as derived/cached projections.
+        [
+            "ALTER TABLE zones ADD COLUMN polygon_world_3d TEXT",   # JSON: [[x,y,z],...] 4 corners in meters
+            "ALTER TABLE zones ADD COLUMN rotation_matrix TEXT",    # JSON: 3x3 [[r11,r12,r13],...] identity = floor zone
+            "ALTER TABLE zones ADD COLUMN surface_type TEXT DEFAULT 'floor'",  # floor|counter_top|table|ramp|wall|other
+            "ALTER TABLE zones ADD COLUMN camera_id TEXT",          # nullable FK to camera_calibration.camera_id
+            "ALTER TABLE zones ADD COLUMN schema_version INTEGER DEFAULT 1",  # 1=2D legacy, 2=3D world-space
+        ],
+    ),
 ]
 
 
