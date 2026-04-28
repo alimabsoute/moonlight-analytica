@@ -1,0 +1,2717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Janus — The Operating System for Physical Spaces</title>
+<style>
+:root{
+  /* base palette */
+  --bg:           #0a0c10;
+  --bg-2:         #0f1218;
+  --bg-3:         #14181f;
+  --panel:        #131820;
+  --panel-2:      #1a2030;
+  --line:         rgba(255,255,255,0.07);
+  --line-2:       rgba(255,255,255,0.12);
+  --ink:          #f6f7fa;
+  --ink-2:        #c8ccd6;
+  --ink-3:        #8c93a3;
+  --ink-4:        #5d6473;
+  --warm:         #f8f7f4;
+  --cool:         #fafafa;
+  --on-warm:      #1a1d23;
+
+  /* zone palette (locked) */
+  --orange:       #ff8a3d;
+  --blue:         #4d9bff;
+  --green:        #2ecc71;
+  --purple:       #b56cff;
+  --gold:         #d4af37;
+  --yellow:       #ffb547;
+
+  /* utility accents */
+  --red:          #ff5d5d;
+  --teal:         #3ad6c8;
+  --deep-blue:    #1c3a5f;
+
+  /* typography */
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Display",
+          "SF Pro Text", "Segoe UI", system-ui, Helvetica, Arial, sans-serif;
+  --mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-feature-settings:"ss01","cv11";
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  letter-spacing:-0.005em;
+  line-height:1.5;
+}
+body{
+  overflow-y:scroll;
+  scroll-behavior:smooth;
+}
+::selection{background:var(--gold);color:var(--bg)}
+
+/* ---------- slide skeleton ---------- */
+.slide{
+  position:relative;
+  width:100vw;
+  min-height:100vh;
+  padding:64px 88px 96px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  border-bottom:1px solid var(--line);
+  overflow:hidden;
+  animation:fadeIn .6s ease both;
+}
+.slide.alt{background:var(--warm);color:var(--on-warm)}
+.slide.alt .wordmark, .slide.alt .counter{color:#1a1d23;opacity:.55}
+.slide.alt .eyebrow{color:#5d6473}
+.slide.alt .lede{color:#1a1d23}
+.slide.alt .ink2{color:#3a3f4a}
+.slide.alt .ink3{color:#5d6473}
+.slide.alt .glass{background:rgba(20,24,30,.04);border-color:rgba(20,24,30,.08)}
+.slide.alt .chip{background:rgba(20,24,30,.06);border-color:rgba(20,24,30,.1);color:#1a1d23}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+
+.wordmark{
+  position:absolute;top:24px;left:32px;
+  font-family:var(--sans);
+  font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-3);opacity:.7;
+}
+.counter{
+  position:absolute;top:24px;right:32px;
+  font-family:var(--mono);
+  font-size:12px;letter-spacing:.08em;
+  color:var(--ink-3);opacity:.65;
+  font-feature-settings:"tnum";
+}
+
+/* eyebrow + headline pattern */
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:18px;
+}
+h1.deck-title{
+  font-size:clamp(42px,5.6vw,92px);
+  font-weight:200;
+  letter-spacing:-0.035em;
+  line-height:1.02;
+  margin-bottom:18px;
+}
+h1.deck-title b{font-weight:600}
+h2.section-title{
+  font-size:clamp(34px,4.2vw,64px);
+  font-weight:300;
+  letter-spacing:-0.028em;
+  line-height:1.05;
+  margin-bottom:16px;
+}
+.lede{
+  font-size:clamp(16px,1.3vw,21px);
+  font-weight:400;
+  line-height:1.55;
+  color:var(--ink-2);
+  max-width:920px;
+}
+.lede.tight{max-width:720px}
+.ink2{color:var(--ink-2)}
+.ink3{color:var(--ink-3)}
+
+/* glass cards */
+.glass{
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+  border:1px solid var(--line-2);
+  border-radius:14px;
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  box-shadow:
+    0 1px 0 0 rgba(255,255,255,.06) inset,
+    0 30px 60px -30px rgba(0,0,0,.6);
+}
+.flat{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+
+/* metric typography */
+.metric-num{
+  font-family:var(--mono);
+  font-feature-settings:"tnum","ss01";
+  font-weight:200;
+  letter-spacing:-0.03em;
+  line-height:1;
+}
+.metric-cap{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-top:8px;
+}
+.tnum{font-feature-settings:"tnum"}
+
+/* chips & color tokens */
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);
+  font-size:11px;letter-spacing:.06em;
+  padding:5px 10px;border-radius:999px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line-2);
+  color:var(--ink-2);
+}
+.dot{width:8px;height:8px;border-radius:999px;display:inline-block}
+.d-orange{background:var(--orange);box-shadow:0 0 0 3px rgba(255,138,61,.15)}
+.d-blue  {background:var(--blue);  box-shadow:0 0 0 3px rgba(77,155,255,.15)}
+.d-green {background:var(--green); box-shadow:0 0 0 3px rgba(46,204,113,.15)}
+.d-purple{background:var(--purple);box-shadow:0 0 0 3px rgba(181,108,255,.15)}
+.d-gold  {background:var(--gold);  box-shadow:0 0 0 3px rgba(212,175,55,.15)}
+.d-yellow{background:var(--yellow);box-shadow:0 0 0 3px rgba(255,181,71,.15)}
+.d-red   {background:var(--red);   box-shadow:0 0 0 3px rgba(255,93,93,.15)}
+.d-teal  {background:var(--teal);  box-shadow:0 0 0 3px rgba(58,214,200,.15)}
+
+/* generic grid helpers */
+.row{display:flex;gap:24px;flex-wrap:wrap}
+.row.tight{gap:14px}
+.col{flex:1;min-width:0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.grid-5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+.grid-6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+
+/* hr divider */
+.hr{height:1px;background:var(--line);margin:24px 0}
+.hr-2{height:1px;background:linear-gradient(90deg,transparent,var(--line-2),transparent);margin:32px 0}
+
+/* ---------- nav pill ---------- */
+.nav-pill{
+  position:fixed;
+  right:24px;bottom:24px;
+  z-index:50;
+  display:flex;align-items:center;gap:6px;
+  background:rgba(20,24,30,.85);
+  border:1px solid var(--line-2);
+  border-radius:999px;
+  padding:6px 8px;
+  font-family:var(--mono);
+  font-size:12px;
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 36px -12px rgba(0,0,0,.6);
+}
+.nav-pill button{
+  appearance:none;border:0;background:transparent;color:var(--ink-2);
+  font-family:var(--mono);font-size:12px;
+  padding:6px 10px;border-radius:999px;cursor:pointer;
+  transition:background .15s ease;
+}
+.nav-pill button:hover{background:rgba(255,255,255,.06)}
+.nav-pill .ctr{padding:6px 10px;color:var(--ink-2);font-feature-settings:"tnum"}
+.nav-pill .ctr b{color:var(--ink);font-weight:600}
+
+/* ---------- overview grid ---------- */
+.overview{
+  display:none;
+  position:fixed;inset:0;z-index:60;
+  background:rgba(8,10,14,.92);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  padding:48px 60px;overflow-y:auto;
+}
+.overview.open{display:block}
+.overview h3{
+  font-weight:300;font-size:24px;letter-spacing:-0.02em;margin-bottom:24px;
+  color:var(--ink-2);
+}
+.overview h3 b{color:var(--ink);font-weight:500}
+.thumb-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;
+}
+.thumb{
+  background:var(--panel);
+  border:1px solid var(--line-2);
+  border-radius:8px;
+  padding:14px 14px 12px;
+  cursor:pointer;
+  position:relative;
+  min-height:122px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:border-color .15s ease,transform .15s ease;
+}
+.thumb:hover{border-color:var(--gold);transform:translateY(-1px)}
+.thumb .num{
+  position:absolute;top:10px;right:12px;
+  font-family:var(--mono);font-size:10.5px;color:var(--ink-3);
+}
+.thumb .ttl{
+  font-size:13.5px;font-weight:500;color:var(--ink);margin-top:14px;line-height:1.25;
+}
+.thumb .sub{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink-3);
+  text-transform:uppercase;
+}
+.overview .close-hint{
+  position:absolute;top:24px;right:32px;
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);
+}
+
+/* ---------- slide 1 cover ---------- */
+.cover{
+  background:
+    radial-gradient(1000px 600px at 80% -10%, rgba(212,175,55,.08), transparent 60%),
+    radial-gradient(800px 500px at 0% 110%, rgba(77,155,255,.08), transparent 60%),
+    var(--bg);
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:80px 88px 80px;
+}
+.cover-mark{
+  font-weight:200;font-size:clamp(120px,16vw,260px);
+  letter-spacing:-0.06em;line-height:1;
+  background:linear-gradient(180deg,#fff 0%, #cdd2db 70%, #8a8f9b 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:24px;
+}
+.cover-mark .stem{font-weight:500;color:var(--gold);-webkit-text-fill-color:var(--gold)}
+.cover-tag{
+  font-size:clamp(22px,2.4vw,40px);font-weight:300;color:var(--ink);
+  letter-spacing:-0.02em;line-height:1.18;max-width:920px;
+}
+.cover-sub{
+  font-size:clamp(15px,1.2vw,18px);
+  font-weight:400;color:var(--ink-3);margin-top:10px;
+  letter-spacing:.02em;
+}
+.cover-foot{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+/* ---------- slide 2 problem columns ---------- */
+.col-card{
+  padding:36px 32px;
+  display:flex;flex-direction:column;gap:14px;
+  min-height:340px;
+}
+.col-card .ico{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.22);
+  color:var(--gold);
+  font-family:var(--mono);font-size:13px;font-weight:600;
+}
+.col-card h3{
+  font-size:24px;font-weight:500;letter-spacing:-0.018em;color:var(--ink);
+}
+.col-card p{font-size:15px;line-height:1.62;color:var(--ink-2);}
+.callout{
+  margin-top:32px;padding:22px 26px;border-radius:14px;
+  background:linear-gradient(180deg, rgba(212,175,55,.08), rgba(212,175,55,.02));
+  border:1px solid rgba(212,175,55,.25);
+  font-size:17px;color:var(--ink);
+}
+.callout b{color:var(--gold);font-weight:600}
+
+/* ---------- slide 3 zone-model svg pane ---------- */
+.split{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;flex:1}
+.split.r{grid-template-columns:1fr 1.05fr}
+.zone-svg-wrap, .arch-svg-wrap{
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+  border:1px solid var(--line-2);
+  padding:24px;
+  position:relative;
+}
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+.step{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:14px 16px;
+}
+.step .n{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  color:var(--gold);text-transform:uppercase;
+}
+.step h4{font-weight:500;font-size:15px;margin:6px 0 4px}
+.step p{font-size:13px;color:var(--ink-3);line-height:1.5}
+
+/* ---------- slide 4 architecture ---------- */
+.arch-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;
+  margin-top:30px;
+}
+.arch-row .arch-tile{
+  padding:22px;
+  border-radius:12px;
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--line-2);
+  position:relative;
+}
+.arch-tile h4{font-weight:500;font-size:17px;margin-bottom:6px}
+.arch-tile .desc{font-size:13px;color:var(--ink-3);line-height:1.55}
+.arch-tile .pill{
+  display:inline-block;
+  margin-top:10px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  color:var(--gold);
+  padding:3px 8px;border-radius:6px;
+  background:rgba(212,175,55,.1);
+  border:1px solid rgba(212,175,55,.25);
+}
+.arch-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px;
+}
+.strip-tile{
+  padding:18px 20px;border-radius:10px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+}
+.strip-tile .big{
+  font-family:var(--mono);font-weight:300;font-size:30px;
+  letter-spacing:-0.02em;color:var(--gold);
+}
+.strip-tile .lab{
+  font-size:13px;color:var(--ink-2);margin-top:6px;line-height:1.45;
+}
+
+/* ---------- slide 5 moat ---------- */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.two-col .panel-card{
+  padding:32px;border-radius:14px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line-2);
+  min-height:300px;
+}
+.two-col .commodity{border-color:rgba(255,93,93,.25);background:linear-gradient(180deg, rgba(255,93,93,.05), transparent)}
+.two-col .moat-side{border-color:rgba(46,204,113,.3);background:linear-gradient(180deg, rgba(46,204,113,.06), transparent)}
+.two-col h3{font-size:20px;font-weight:500;margin-bottom:14px}
+.two-col li{font-size:14.5px;color:var(--ink-2);line-height:1.6;margin-left:18px;margin-bottom:6px}
+.compound{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px;
+}
+.cstep{
+  padding:18px 20px;border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+}
+.cstep .ord{
+  font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.16em;
+}
+.cstep h4{font-weight:500;font-size:15px;margin-top:6px;margin-bottom:4px}
+.cstep p{font-size:12.5px;color:var(--ink-3);line-height:1.5}
+
+/* ---------- slide 6 comparison table ---------- */
+.cmp{
+  width:100%;border-collapse:separate;border-spacing:0;
+  font-size:14px;margin-top:14px;
+}
+.cmp thead th{
+  text-align:left;padding:14px 14px;
+  font-weight:500;font-size:13px;color:var(--ink-2);
+  background:rgba(255,255,255,.04);
+  border-bottom:1px solid var(--line-2);
+  border-top:1px solid var(--line-2);
+}
+.cmp thead th:first-child{border-radius:10px 0 0 0}
+.cmp thead th:last-child{border-radius:0 10px 0 0}
+.cmp thead th.j{color:var(--gold);background:rgba(212,175,55,.12)}
+.cmp tbody td{
+  padding:13px 14px;border-bottom:1px solid var(--line);
+  color:var(--ink-2);
+}
+.cmp tbody td:first-child{color:var(--ink);font-weight:450}
+.cmp .yes{color:var(--green);font-weight:600}
+.cmp .no{color:var(--red);font-weight:600}
+.cmp .partial{color:var(--yellow);font-weight:500}
+.cmp .nope{color:var(--ink-3)}
+.cmp .disq{color:var(--red);font-weight:600;letter-spacing:.04em}
+.cmp tbody tr:hover td{background:rgba(255,255,255,.02)}
+.cmp .j-col{background:rgba(212,175,55,.04)}
+
+/* ---------- industry slide layout ---------- */
+.ind-hero{
+  display:grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap:36px;align-items:end;
+  padding:8px 0 30px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:32px;
+}
+.ind-hero .ind-meta .eyebrow{margin-bottom:8px}
+.ind-hero .ind-name{
+  font-size:clamp(40px,4.6vw,72px);
+  font-weight:200;letter-spacing:-0.03em;line-height:1.02;
+}
+.ind-hero .ind-prop{
+  margin-top:14px;font-size:18px;color:var(--ink-2);max-width:640px;line-height:1.5;
+}
+.ind-hero .hero-metric{
+  text-align:right;
+}
+.ind-hero .hero-metric .num{
+  font-family:var(--mono);font-weight:200;
+  font-size:clamp(40px,4.5vw,72px);
+  letter-spacing:-0.025em;line-height:1;color:var(--gold);
+}
+.ind-hero .hero-metric .cap{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:10px;
+}
+
+.ind-body{
+  display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:24px;
+  margin-bottom:32px;
+}
+.col-block{
+  padding:22px 22px;
+  border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  min-height:300px;
+}
+.col-block .lbl{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:14px;
+}
+.col-block h4{font-weight:500;font-size:17px;margin-bottom:6px;color:var(--ink);letter-spacing:-0.01em}
+.col-block .body p{font-size:14px;color:var(--ink-2);line-height:1.6}
+.kpi-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.kpi-row{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:8px;
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+}
+.kpi-row .k{font-size:13.5px;color:var(--ink);}
+.kpi-row .v{
+  font-family:var(--mono);font-size:12px;color:var(--gold);
+  font-feature-settings:"tnum";white-space:nowrap;
+}
+.zone-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+
+.ind-footer{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+  padding:22px 24px;
+  border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.005));
+  border:1px solid var(--line-2);
+}
+.ft-cell .lbl{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;
+}
+.ft-cell .val{
+  font-family:var(--mono);font-size:15px;color:var(--ink);
+  font-feature-settings:"tnum";letter-spacing:-0.01em;
+}
+.ft-cell .val .accent{color:var(--gold)}
+.moat-low   {color:var(--ink-3) !important}
+.moat-med   {color:var(--yellow) !important}
+.moat-high  {color:var(--green) !important}
+
+/* ---------- pricing slide ---------- */
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:18px;
+}
+.tier{
+  padding:24px 22px;
+  border-radius:14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line-2);
+  display:flex;flex-direction:column;gap:14px;
+  min-height:460px;
+  position:relative;
+}
+.tier.featured{
+  background:linear-gradient(180deg, rgba(212,175,55,.08), rgba(212,175,55,.02));
+  border-color:rgba(212,175,55,.4);
+}
+.tier .badge{
+  position:absolute;top:14px;right:14px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  color:var(--gold);text-transform:uppercase;
+  padding:3px 8px;border-radius:6px;
+  background:rgba(212,175,55,.1);
+  border:1px solid rgba(212,175,55,.3);
+}
+.tier .lvl{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.tier h4{font-weight:500;font-size:22px;letter-spacing:-0.018em}
+.tier .price{
+  font-family:var(--mono);font-weight:200;font-size:30px;
+  letter-spacing:-0.02em;color:var(--ink);
+}
+.tier .price small{
+  font-size:13px;color:var(--ink-3);
+  font-weight:400;letter-spacing:0;display:block;margin-top:4px;
+}
+.tier ul{list-style:none;padding:0;margin-top:auto}
+.tier li{
+  font-size:13px;color:var(--ink-2);line-height:1.55;
+  padding:7px 0;border-top:1px solid var(--line);
+  display:flex;gap:8px;
+}
+.tier li::before{
+  content:"";display:inline-block;flex:0 0 auto;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);margin-top:8px;
+}
+
+/* ---------- roadmap slide ---------- */
+.roadmap-rail{
+  position:relative;margin-top:30px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.roadmap-rail::before{
+  content:"";
+  position:absolute;left:0;right:0;top:32px;height:1px;
+  background:linear-gradient(90deg,var(--green),var(--gold),var(--blue));
+  opacity:.4;
+}
+.phase-card{
+  position:relative;
+  padding:36px 24px 24px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line-2);
+  border-radius:14px;
+}
+.phase-card::before{
+  content:"";position:absolute;top:24px;left:50%;transform:translateX(-50%);
+  width:18px;height:18px;border-radius:50%;
+  background:var(--bg);border:2px solid currentColor;
+}
+.phase-card.shipped{color:var(--green)}
+.phase-card.next{color:var(--gold)}
+.phase-card.future{color:var(--blue)}
+.phase-card .when{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  color:currentColor;text-transform:uppercase;
+  margin-top:14px;
+}
+.phase-card h4{
+  color:var(--ink);font-size:20px;font-weight:500;
+  letter-spacing:-0.018em;margin-top:6px;margin-bottom:14px;
+}
+.phase-card ul{list-style:none}
+.phase-card li{
+  color:var(--ink-2);font-size:13.5px;line-height:1.55;
+  padding:7px 0;border-top:1px solid var(--line);
+  display:flex;gap:10px;
+}
+.phase-card li::before{
+  content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;
+  background:currentColor;margin-top:8px;
+}
+
+/* ---------- why now slide ---------- */
+.why-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px;
+}
+.why-card{
+  padding:30px 28px;border-radius:14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line-2);
+  position:relative;
+}
+.why-card .icn{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(212,175,55,.1);
+  border:1px solid rgba(212,175,55,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:13px;color:var(--gold);
+  margin-bottom:14px;
+}
+.why-card h4{
+  font-weight:500;font-size:20px;letter-spacing:-0.018em;margin-bottom:8px;
+}
+.why-card p{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+
+/* ---------- close slide ---------- */
+.close-pane{
+  flex:1;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;padding-bottom:60px;
+}
+.close-pane h1{
+  font-size:clamp(60px,7vw,120px);
+  font-weight:200;letter-spacing:-0.04em;line-height:1;
+  background:linear-gradient(180deg,#fff,#aab1bf);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:36px;
+}
+.cta-btn{
+  display:inline-block;
+  padding:18px 36px;
+  border-radius:12px;
+  background:linear-gradient(180deg,var(--gold),#a8851d);
+  color:#1a1d23;font-weight:600;font-size:17px;letter-spacing:.01em;
+  border:1px solid rgba(212,175,55,.5);
+  box-shadow:
+    0 16px 32px -10px rgba(212,175,55,.45),
+    inset 0 1px 0 rgba(255,255,255,.4);
+  cursor:pointer;text-decoration:none;
+}
+.close-pane .stat-strip{
+  margin-top:46px;display:flex;gap:32px;
+  font-family:var(--mono);font-size:13px;color:var(--ink-2);letter-spacing:.04em;
+}
+.close-pane .stat-strip span b{color:var(--gold);font-weight:600}
+.close-foot{
+  position:absolute;bottom:32px;left:0;right:0;
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.16em;
+  text-transform:uppercase;text-align:center;
+}
+
+/* small helpers */
+.muted{color:var(--ink-3)}
+.kbd{
+  font-family:var(--mono);font-size:11px;
+  padding:2px 7px;border-radius:5px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line-2);
+  color:var(--ink-2);
+}
+.row-cap{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:8px;color:var(--ink-3);
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+}
+.row-cap::after{
+  content:"";flex:1;height:1px;background:var(--line);
+}
+.flex-end{display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
+
+/* ---------- print ---------- */
+@media print{
+  html,body{background:#0a0c10;color:#fff}
+  body{overflow:visible}
+  .nav-pill, .overview, .close-hint{display:none !important}
+  .slide{
+    page-break-after:always;break-after:page;
+    min-height:100vh;height:100vh;
+    overflow:hidden;
+    box-shadow:none;border:0;
+  }
+  *{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+/* small viewports */
+@media (max-width: 1100px){
+  .slide{padding:48px 44px 80px}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .grid-4, .grid-5, .pricing-grid{grid-template-columns:1fr 1fr}
+  .ind-body{grid-template-columns:1fr}
+  .ind-hero{grid-template-columns:1fr;gap:14px}
+  .ind-hero .hero-metric{text-align:left}
+  .arch-row, .roadmap-rail, .why-grid{grid-template-columns:1fr}
+  .split, .split.r{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ====================================================================
+SLIDE 1 — COVER
+==================================================================== -->
+<section class="slide cover" id="slide-1">
+  <div class="cover-foot" style="margin-top:0">
+    <div style="font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--ink-3)">JANUS / DECK / 2026</div>
+    <div style="font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--ink-3)">CONFIDENTIAL</div>
+  </div>
+
+  <div style="margin-top:auto;margin-bottom:auto">
+    <div class="cover-mark">JANU<span class="stem">S</span></div>
+    <div class="cover-tag">Built for the floor.<br/>Not the screen.</div>
+    <div class="cover-sub">The Operating System for Physical Spaces.</div>
+  </div>
+
+  <div class="cover-foot">
+    <div>3D world-space zones · Edge-only · No facial recognition</div>
+    <div>2026 · Confidential</div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 2 — THE PROBLEM
+==================================================================== -->
+<section class="slide" id="slide-2">
+  <div class="wordmark">Janus</div>
+  <div class="counter">02 / 27</div>
+
+  <div class="eyebrow">The problem</div>
+  <h2 class="section-title">Physical spaces are operated <span style="color:var(--red);font-style:italic;font-weight:400">blind.</span></h2>
+  <p class="lede">Operators run multi-million-dollar floors on gut feel. The cameras are everywhere. The intelligence is nowhere.</p>
+
+  <div class="grid-3" style="margin-top:48px">
+
+    <div class="glass col-card">
+      <div class="ico">01</div>
+      <h3>Pixels lie.</h3>
+      <p>Flat 2D zone polygons drawn on a video frame break the moment the camera moves an inch.
+      A "zone" measured in pixels has no relationship to a foot of real floor — so the numbers can't compound, can't benchmark, can't survive a lens swap.</p>
+      <div style="margin-top:auto">
+        <span class="chip"><span class="dot d-red"></span>Polygon-on-frame model</span>
+      </div>
+    </div>
+
+    <div class="glass col-card">
+      <div class="ico">02</div>
+      <h3>POS is half the story.</h3>
+      <p>Toast and Square tell you what was sold. They can't tell you what almost happened — the
+      40% of customers who walked in, hit the host stand, waited 6 minutes, and walked back out.
+      That gap is where 60–80% of operational decisions live.</p>
+      <div style="margin-top:auto">
+        <span class="chip"><span class="dot d-orange"></span>Transactions ≠ behavior</span>
+      </div>
+    </div>
+
+    <div class="glass col-card">
+      <div class="ico">03</div>
+      <h3>Surveillance ≠ intelligence.</h3>
+      <p>CCTV records. It does not measure. Milestone, Genetec, and the next-tier VMS stack
+      give you a video archive — not a dwell time, not a queue length, not a turn rate. Every
+      operator on the planet still staffs on intuition.</p>
+      <div style="margin-top:auto">
+        <span class="chip"><span class="dot d-blue"></span>Footage, not signal</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    Existing tools optimize for <b>the screen</b>. <br/>
+    Janus optimizes for <b>the floor</b>.
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 3 — THE BREAKTHROUGH (3D world-space zones)
+==================================================================== -->
+<section class="slide" id="slide-3">
+  <div class="wordmark">Janus</div>
+  <div class="counter">03 / 27</div>
+
+  <div class="eyebrow">The breakthrough</div>
+  <h2 class="section-title">Zones are <span style="color:var(--gold);font-style:italic;font-weight:400">surfaces,</span> not pixels.</h2>
+
+  <div class="split">
+    <div>
+      <p class="lede tight" style="margin-bottom:18px">
+        Janus zones are flat planes living in 3D world space, anchored to physical surfaces in real meters. Every count is computed against a measured floor — not a pixel area on a 2D frame.
+      </p>
+      <p class="lede tight" style="margin-bottom:0;color:var(--ink-3);font-size:15px">
+        Bar top at <b style="color:var(--ink)">1.05m</b>. Dining table at <b style="color:var(--ink)">0.74m</b>. Service counter at <b style="color:var(--ink)">0.91m</b>. Floor at <b style="color:var(--ink)">0.00m</b>.
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="n">01 Define</div>
+          <h4>Name + size</h4>
+          <p>Type, label, dimensions in meters.</p>
+        </div>
+        <div class="step">
+          <div class="n">02 Orient</div>
+          <h4>Pitch · yaw · roll</h4>
+          <p>Rotate the plane in 3D — TransformControls.</p>
+        </div>
+        <div class="step">
+          <div class="n">03 Anchor</div>
+          <h4>Drop on surface</h4>
+          <p>Translate to the bar top, table, ramp, dock.</p>
+        </div>
+        <div class="step">
+          <div class="n">04 Commit</div>
+          <h4>Fill, label, live</h4>
+          <p>Project through homography. Counts begin.</p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:30px">
+        Move the camera, the zone stays. Swap the lens, the zone stays.
+        <b>Recalibrate once — zones survive forever.</b>
+      </div>
+    </div>
+
+    <div class="zone-svg-wrap">
+      <svg viewBox="0 0 560 480" width="100%" preserveAspectRatio="xMidYMid meet" aria-label="Side-view of 4 horizontal zone planes at different heights with camera frustum">
+        <defs>
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#1a2030" stop-opacity=".0"/>
+            <stop offset="100%" stop-color="#0a0c10" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="orangePlane" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"  stop-color="#ff8a3d" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#ff8a3d" stop-opacity=".15"/>
+          </linearGradient>
+          <linearGradient id="bluePlane" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"  stop-color="#4d9bff" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#4d9bff" stop-opacity=".15"/>
+          </linearGradient>
+          <linearGradient id="purplePlane" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"  stop-color="#b56cff" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#b56cff" stop-opacity=".15"/>
+          </linearGradient>
+          <linearGradient id="greenPlane" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"  stop-color="#2ecc71" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#2ecc71" stop-opacity=".12"/>
+          </linearGradient>
+          <linearGradient id="frustGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"  stop-color="#d4af37" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- background -->
+        <rect width="560" height="480" fill="url(#bgGrad)"/>
+
+        <!-- height ruler -->
+        <line x1="60" y1="60" x2="60" y2="430" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+        <g font-family="SF Mono, monospace" font-size="11" fill="#8c93a3">
+          <text x="34" y="72">2.0m</text>
+          <text x="34" y="170">1.5m</text>
+          <text x="34" y="195">1.05m</text>
+          <text x="34" y="240">0.91m</text>
+          <text x="34" y="298">0.74m</text>
+          <text x="34" y="430">0.00m</text>
+        </g>
+        <g stroke="rgba(255,255,255,.06)" stroke-dasharray="3 4">
+          <line x1="60" y1="195" x2="540" y2="195"/>
+          <line x1="60" y1="240" x2="540" y2="240"/>
+          <line x1="60" y1="298" x2="540" y2="298"/>
+          <line x1="60" y1="430" x2="540" y2="430"/>
+        </g>
+
+        <!-- camera (side view) -->
+        <g transform="translate(95,90)">
+          <rect x="0" y="0" width="36" height="22" rx="4" fill="#1a2030" stroke="#d4af37" stroke-width="1.4"/>
+          <circle cx="34" cy="11" r="6" fill="#d4af37" opacity=".4"/>
+          <circle cx="34" cy="11" r="3" fill="#d4af37"/>
+          <text x="-6" y="-8" font-family="SF Mono, monospace" font-size="10" fill="#d4af37">CAM</text>
+        </g>
+        <!-- camera frustum -->
+        <polygon points="135,101 135,101 540,420 540,180" fill="url(#frustGrad)" opacity=".55"/>
+        <line x1="135" y1="101" x2="540" y2="180" stroke="#d4af37" stroke-opacity=".55" stroke-dasharray="3 3"/>
+        <line x1="135" y1="101" x2="540" y2="420" stroke="#d4af37" stroke-opacity=".55" stroke-dasharray="3 3"/>
+
+        <!-- bar top plane (orange) z=1.05m -->
+        <g>
+          <polygon points="200,205 460,180 480,206 220,231" fill="url(#orangePlane)" stroke="#ff8a3d" stroke-width="1.2"/>
+          <text x="244" y="180" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#ff8a3d" font-weight="500">bar_top · 1.05m</text>
+        </g>
+
+        <!-- counter plane (blue) z=0.91m -->
+        <g>
+          <polygon points="170,255 440,225 462,253 192,283" fill="url(#bluePlane)" stroke="#4d9bff" stroke-width="1.2"/>
+          <text x="210" y="225" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#4d9bff" font-weight="500">counter · 0.91m</text>
+        </g>
+
+        <!-- table plane (purple) z=0.74m -->
+        <g>
+          <polygon points="150,310 420,278 446,310 175,342" fill="url(#purplePlane)" stroke="#b56cff" stroke-width="1.2"/>
+          <text x="190" y="280" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#b56cff" font-weight="500">table · 0.74m</text>
+        </g>
+
+        <!-- floor plane (green) z=0.00m -->
+        <g>
+          <polygon points="100,420 540,360 540,442 100,442" fill="url(#greenPlane)" stroke="#2ecc71" stroke-width="1.2"/>
+          <text x="240" y="408" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#2ecc71" font-weight="500">floor · 0.00m</text>
+        </g>
+
+        <!-- person standing on floor -->
+        <g transform="translate(330,355)" stroke="#f6f7fa" stroke-width="1.6" fill="none">
+          <circle cx="0" cy="-58" r="6" fill="#f6f7fa"/>
+          <line x1="0" y1="-52" x2="0" y2="-22"/>
+          <line x1="0" y1="-22" x2="-8" y2="0"/>
+          <line x1="0" y1="-22" x2="8" y2="0"/>
+          <line x1="0" y1="-44" x2="-9" y2="-30"/>
+          <line x1="0" y1="-44" x2="9" y2="-30"/>
+        </g>
+        <!-- ground anchor mark -->
+        <circle cx="330" cy="355" r="4" fill="#d4af37"/>
+        <circle cx="330" cy="355" r="9" fill="none" stroke="#d4af37" stroke-opacity=".5"/>
+
+        <text x="60" y="455" font-family="SF Mono, monospace" font-size="10" fill="#5d6473">SIDE VIEW · ZONES = WORLD-SPACE PLANES</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 4 — SYSTEM ARCHITECTURE
+==================================================================== -->
+<section class="slide" id="slide-4">
+  <div class="wordmark">Janus</div>
+  <div class="counter">04 / 27</div>
+
+  <div class="eyebrow">Architecture</div>
+  <h2 class="section-title">Edge-first. Privacy-first. <span style="color:var(--gold);font-style:italic;font-weight:400">Defensible.</span></h2>
+  <p class="lede tight">A three-layer stack. No cloud video. No facial recognition. No AGPL trap. Apache 2.0 detection, MIT tracking, on-prem deployable.</p>
+
+  <!-- horizontal architecture diagram -->
+  <div class="arch-svg-wrap" style="margin-top:32px;padding:32px">
+    <svg viewBox="0 0 1280 280" width="100%" preserveAspectRatio="xMidYMid meet" aria-label="Three-layer architecture diagram">
+      <defs>
+        <linearGradient id="edgeGrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#ff8a3d" stop-opacity=".18"/>
+          <stop offset="1" stop-color="#ff8a3d" stop-opacity=".05"/>
+        </linearGradient>
+        <linearGradient id="beGrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#4d9bff" stop-opacity=".18"/>
+          <stop offset="1" stop-color="#4d9bff" stop-opacity=".05"/>
+        </linearGradient>
+        <linearGradient id="feGrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#b56cff" stop-opacity=".18"/>
+          <stop offset="1" stop-color="#b56cff" stop-opacity=".05"/>
+        </linearGradient>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#d4af37"/>
+        </marker>
+      </defs>
+
+      <!-- camera input -->
+      <g transform="translate(20,110)">
+        <rect width="60" height="36" rx="6" fill="#131820" stroke="#5d6473"/>
+        <circle cx="50" cy="18" r="6" fill="none" stroke="#d4af37"/>
+        <circle cx="50" cy="18" r="2" fill="#d4af37"/>
+        <text x="0" y="-8" font-family="SF Mono, monospace" font-size="10" fill="#8c93a3">CAMERA</text>
+        <text x="0" y="60" font-family="SF Mono, monospace" font-size="10" fill="#5d6473">RTSP / USB</text>
+      </g>
+
+      <line x1="92" y1="128" x2="190" y2="128" stroke="#d4af37" stroke-width="1.4" marker-end="url(#arr)"/>
+
+      <!-- LAYER 1: edge agent -->
+      <g transform="translate(200,40)">
+        <rect width="320" height="200" rx="14" fill="url(#edgeGrad)" stroke="#ff8a3d" stroke-opacity=".5"/>
+        <text x="20" y="32" font-family="SF Mono, monospace" font-size="11" letter-spacing="2" fill="#ff8a3d">LAYER 01 · EDGE AGENT</text>
+        <text x="20" y="60" font-family="-apple-system, Inter, sans-serif" font-size="20" fill="#f6f7fa" font-weight="500">RF-DETR + ByteTrack</text>
+        <text x="20" y="84" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#c8ccd6">Apache 2.0 · MIT tracker</text>
+
+        <line x1="20" y1="100" x2="300" y2="100" stroke="rgba(255,255,255,.08)"/>
+        <g font-family="-apple-system, Inter, sans-serif" font-size="12" fill="#c8ccd6">
+          <text x="20" y="124">· Supervision PolygonZone</text>
+          <text x="20" y="146">· Per-camera homography</text>
+          <text x="20" y="168">· Counts + journey events only</text>
+          <text x="20" y="190">· Runs on iGPU / Jetson / M-series</text>
+        </g>
+      </g>
+
+      <line x1="528" y1="128" x2="618" y2="128" stroke="#d4af37" stroke-width="1.4" marker-end="url(#arr)"/>
+      <text x="540" y="118" font-family="SF Mono, monospace" font-size="9" fill="#8c93a3">events.json</text>
+
+      <!-- LAYER 2: backend -->
+      <g transform="translate(625,40)">
+        <rect width="320" height="200" rx="14" fill="url(#beGrad)" stroke="#4d9bff" stroke-opacity=".5"/>
+        <text x="20" y="32" font-family="SF Mono, monospace" font-size="11" letter-spacing="2" fill="#4d9bff">LAYER 02 · BACKEND</text>
+        <text x="20" y="60" font-family="-apple-system, Inter, sans-serif" font-size="20" fill="#f6f7fa" font-weight="500">Flask + SQLite</text>
+        <text x="20" y="84" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#c8ccd6">32 endpoints · WAL mode · 9 indexes</text>
+
+        <line x1="20" y1="100" x2="300" y2="100" stroke="rgba(255,255,255,.08)"/>
+        <g font-family="-apple-system, Inter, sans-serif" font-size="12" fill="#c8ccd6">
+          <text x="20" y="124">· counts · sessions · events · zones</text>
+          <text x="20" y="146">· KPI compute (dwell, queue, conv)</text>
+          <text x="20" y="168">· Cross-venue benchmark joins</text>
+          <text x="20" y="190">· Air-gap-friendly · no cloud</text>
+        </g>
+      </g>
+
+      <line x1="952" y1="128" x2="1042" y2="128" stroke="#d4af37" stroke-width="1.4" marker-end="url(#arr)"/>
+      <text x="970" y="118" font-family="SF Mono, monospace" font-size="9" fill="#8c93a3">REST · CSV</text>
+
+      <!-- LAYER 3: frontend -->
+      <g transform="translate(1050,40)">
+        <rect width="220" height="200" rx="14" fill="url(#feGrad)" stroke="#b56cff" stroke-opacity=".5"/>
+        <text x="20" y="32" font-family="SF Mono, monospace" font-size="11" letter-spacing="2" fill="#b56cff">LAYER 03 · UI</text>
+        <text x="20" y="60" font-family="-apple-system, Inter, sans-serif" font-size="18" fill="#f6f7fa" font-weight="500">React + Three.js</text>
+        <text x="20" y="84" font-family="-apple-system, Inter, sans-serif" font-size="12" fill="#c8ccd6">drei TransformControls</text>
+
+        <line x1="20" y1="100" x2="200" y2="100" stroke="rgba(255,255,255,.08)"/>
+        <g font-family="-apple-system, Inter, sans-serif" font-size="12" fill="#c8ccd6">
+          <text x="20" y="124">· 4-step zone editor</text>
+          <text x="20" y="146">· 13-page ops dashboard</text>
+          <text x="20" y="168">· Cross-venue rollup</text>
+          <text x="20" y="190">· No video in browser</text>
+        </g>
+      </g>
+
+      <text x="20" y="270" font-family="SF Mono, monospace" font-size="10" fill="#5d6473">DATA FLOW · CAMERA → DETECTION → KPI → DASHBOARD · NO CLOUD HOP</text>
+    </svg>
+  </div>
+
+  <div class="arch-strip">
+    <div class="strip-tile">
+      <div class="big">0</div>
+      <div class="lab">Frames of video stored. Counts and journey metadata only.</div>
+    </div>
+    <div class="strip-tile">
+      <div class="big">0</div>
+      <div class="lab">Facial-recognition models. Architecturally absent. Never built.</div>
+    </div>
+    <div class="strip-tile">
+      <div class="big">100<span style="font-size:18px">%</span></div>
+      <div class="lab">Edge-deployable. Air-gap-friendly. No cloud dependency.</div>
+    </div>
+    <div class="strip-tile">
+      <div class="big">Apache <span style="font-size:18px">2.0</span></div>
+      <div class="lab">Open weights. No AGPL licensing trap on the detection layer.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 5 — DATA MOAT
+==================================================================== -->
+<section class="slide" id="slide-5">
+  <div class="wordmark">Janus</div>
+  <div class="counter">05 / 27</div>
+
+  <div class="eyebrow">The moat</div>
+  <h2 class="section-title">The CV is open source.<br/>The <span style="color:var(--gold);font-style:italic;font-weight:400">data layer</span> is the moat.</h2>
+
+  <div class="two-col" style="margin-top:36px">
+    <div class="panel-card commodity">
+      <div class="row-cap" style="color:var(--red)">Commodity</div>
+      <h3 style="color:var(--red)">What anyone can ship in a quarter</h3>
+      <ul style="list-style:none;padding:0">
+        <li style="padding:7px 0;border-top:1px solid rgba(255,93,93,.2);color:var(--ink-2)">Detection models — RF-DETR, YOLO, COCO-SSD all public</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(255,93,93,.2);color:var(--ink-2)">Multi-object tracking — ByteTrack, BoT-SORT, OC-SORT all open</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(255,93,93,.2);color:var(--ink-2)">Dashboards & charts — Recharts / Nivo / Plotly</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(255,93,93,.2);color:var(--ink-2)">"People counter" SaaS — RetailNext, Aislelabs, etc.</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(255,93,93,.2);color:var(--ink-2)">Generic CV consulting — every CV firm offers this</li>
+      </ul>
+      <div style="margin-top:18px;font-size:12.5px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.04em">
+        ZERO-MARGIN OPERATING ENVIRONMENT
+      </div>
+    </div>
+
+    <div class="panel-card moat-side">
+      <div class="row-cap" style="color:var(--green)">Defensible</div>
+      <h3 style="color:var(--green)">What competitors cannot reproduce</h3>
+      <ul style="list-style:none;padding:0">
+        <li style="padding:7px 0;border-top:1px solid rgba(46,204,113,.2);color:var(--ink-2)"><b style="color:#fff">World-space zone schema</b> — every event tagged in real meters</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(46,204,113,.2);color:var(--ink-2)"><b style="color:#fff">Owner-validated labels</b> — bar_top, host_stand, drive_thru_pickup</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(46,204,113,.2);color:var(--ink-2)"><b style="color:#fff">Per-venue homography</b> — manually calibrated, 30–60 min/install</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(46,204,113,.2);color:var(--ink-2)"><b style="color:#fff">60–90 days of foot traffic</b> per venue to make a benchmark valid</li>
+        <li style="padding:7px 0;border-top:1px solid rgba(46,204,113,.2);color:var(--ink-2)"><b style="color:#fff">Cross-venue normalization</b> — same KPI shape across 30+ venues</li>
+      </ul>
+      <div style="margin-top:18px;font-size:12.5px;color:var(--green);font-family:var(--mono);letter-spacing:.04em">
+        14–18 MONTHS FOR A WELL-FUNDED COMPETITOR TO MATCH 30 VENUES
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-2"></div>
+  <div class="row-cap">Four compounding products from one data layer</div>
+  <div class="compound">
+    <div class="cstep">
+      <div class="ord">01 · Wedge</div>
+      <h4>Real-time dashboards</h4>
+      <p>Per-venue KPIs. Sells on day one. The thing the operator pays for.</p>
+    </div>
+    <div class="cstep">
+      <div class="ord">02 · Retention</div>
+      <h4>Cross-venue benchmarks</h4>
+      <p>"Your bar conversion vs the SF top quartile." Worth more than the dashboard.</p>
+    </div>
+    <div class="cstep">
+      <div class="ord">03 · Power</div>
+      <h4>Predictive operations</h4>
+      <p>Forecast models on top of the schema. 3–5x pricing power.</p>
+    </div>
+    <div class="cstep">
+      <div class="ord">04 · Second business</div>
+      <h4>Industry intelligence</h4>
+      <p>Anonymized aggregate data licensed to insurers, REITs, brands.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 6 — JANUS VS COMPARABLES
+==================================================================== -->
+<section class="slide" id="slide-6">
+  <div class="wordmark">Janus</div>
+  <div class="counter">06 / 27</div>
+
+  <div class="eyebrow">Comparison</div>
+  <h2 class="section-title">What's missing in <span style="color:var(--gold);font-style:italic;font-weight:400">every other tool.</span></h2>
+  <p class="lede tight">Side by side with the four categories Janus actually competes against.</p>
+
+  <table class="cmp" style="margin-top:24px">
+    <thead>
+      <tr>
+        <th style="width:30%">Capability</th>
+        <th class="j">Janus</th>
+        <th>CCTV / VMS<br/><span class="muted" style="font-size:11px;font-family:var(--mono)">Milestone, Genetec</span></th>
+        <th>People counting<br/><span class="muted" style="font-size:11px;font-family:var(--mono)">RetailNext, ShopperTrak</span></th>
+        <th>POS analytics<br/><span class="muted" style="font-size:11px;font-family:var(--mono)">Toast, Square</span></th>
+        <th>Facial recognition<br/><span class="muted" style="font-size:11px;font-family:var(--mono)">Clearview &c.</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>3D world-space zones</td>
+        <td class="j-col yes">YES</td>
+        <td class="no">—</td>
+        <td class="no">—</td>
+        <td class="nope">n/a</td>
+        <td class="no">—</td>
+      </tr>
+      <tr>
+        <td>Surface-anchored (bar top, table, ramp)</td>
+        <td class="j-col yes">YES</td>
+        <td class="no">—</td>
+        <td class="no">—</td>
+        <td class="nope">n/a</td>
+        <td class="no">—</td>
+      </tr>
+      <tr>
+        <td>No facial recognition (defense / civic compliant)</td>
+        <td class="j-col yes">YES</td>
+        <td class="partial">partial</td>
+        <td class="no">—</td>
+        <td class="nope">n/a</td>
+        <td class="disq">DISQUALIFIED</td>
+      </tr>
+      <tr>
+        <td>Edge-only deployable</td>
+        <td class="j-col yes">YES</td>
+        <td class="yes">YES</td>
+        <td class="partial">partial</td>
+        <td class="no">—</td>
+        <td class="nope">rare</td>
+      </tr>
+      <tr>
+        <td>Cross-venue normalized event log</td>
+        <td class="j-col yes">YES</td>
+        <td class="no">—</td>
+        <td class="partial">partial</td>
+        <td class="partial">per-merchant</td>
+        <td class="no">—</td>
+      </tr>
+      <tr>
+        <td>Pre-transaction behavioral data</td>
+        <td class="j-col yes">YES</td>
+        <td class="no">—</td>
+        <td class="partial">partial</td>
+        <td class="no">—</td>
+        <td class="no">—</td>
+      </tr>
+      <tr>
+        <td>Open detection weights (Apache 2.0)</td>
+        <td class="j-col yes">YES</td>
+        <td class="nope">n/a</td>
+        <td class="no">—</td>
+        <td class="nope">n/a</td>
+        <td class="no">—</td>
+      </tr>
+      <tr>
+        <td>HIPAA-pre-compliant (no PHI, no biometric)</td>
+        <td class="j-col yes">YES</td>
+        <td class="no">—</td>
+        <td class="no">—</td>
+        <td class="nope">n/a</td>
+        <td class="disq">DISQUALIFIED</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:30px">
+    Most CV vendors locked themselves out of healthcare, defense, and civic by shipping facial recognition.
+    <b>Janus did the opposite — and the architectural restraint is the moat.</b>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 7 — RESTAURANTS & BARS (BEACHHEAD)
+==================================================================== -->
+<section class="slide" id="slide-7">
+  <div class="wordmark">Janus</div>
+  <div class="counter">07 / 27</div>
+
+  <div class="eyebrow">Vertical 01 · Beachhead</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Restaurants &amp; Bars</div>
+      <div class="ind-prop">Independent owner-operators in SF and NYC. Every percentage point of line abandonment is $200–$800 per night out the door. Janus measures what Toast and Resy can't see — the gap between walk-in and order.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$1.2k–$5k</div>
+      <div class="cap">Annual contract value · per venue</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Owner-operator</h4>
+      <p>$1.5M–$15M annual revenue. Single venue or 2–3 location group. <b style="color:var(--gold)">2-week sales cycle.</b> Cold DM on Instagram or LinkedIn → 30-day pilot → conversion.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Wedge segment: bar-forward concepts in <b style="color:var(--ink-2)">SF Mission/SoMa</b> and <b style="color:var(--ink-2)">NYC LES/Williamsburg</b>. Integrated with the ForkFox merchant network.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Walk-in to seated conversion</span><span class="v">% — joined w/ POS</span></div>
+        <div class="kpi-row"><span class="k">Host-stand wait time (p95)</span><span class="v">seconds</span></div>
+        <div class="kpi-row"><span class="k">Line abandonment rate</span><span class="v">~$200–$800/night each %</span></div>
+        <div class="kpi-row"><span class="k">Per-table turn rate</span><span class="v">+0.3 turn = $200k–$400k/yr</span></div>
+        <div class="kpi-row"><span class="k">Bar-rail concurrent occupancy</span><span class="v">persons @ 1.05m</span></div>
+        <div class="kpi-row"><span class="k">Section utilization</span><span class="v">close-section savings $80–$150/shift</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>entrance</span>
+        <span class="chip"><span class="dot d-blue"></span>host_stand</span>
+        <span class="chip"><span class="dot d-purple"></span>bar_top · 1.05m</span>
+        <span class="chip"><span class="dot d-green"></span>dining_main · 0.74m</span>
+        <span class="chip"><span class="dot d-yellow"></span>dining_back</span>
+        <span class="chip"><span class="dot d-gold"></span>kitchen_window</span>
+        <span class="chip"><span class="dot d-red"></span>exit</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">What only Janus does</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Toast tracks transactions. Resy tracks reservations. Neither tracks pre-transaction physical behavior. Janus measures the gap.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell">
+      <div class="lbl">$/cam/mo</div>
+      <div class="val">$50<span style="color:var(--ink-3)">–</span>$200</div>
+    </div>
+    <div class="ft-cell">
+      <div class="lbl">Annual contract value</div>
+      <div class="val"><span class="accent">$1.2k–$5k</span> / venue · $1.5k–$5k group</div>
+    </div>
+    <div class="ft-cell">
+      <div class="lbl">GTM motion</div>
+      <div class="val">Cold DM · 30-day pilot</div>
+    </div>
+    <div class="ft-cell">
+      <div class="lbl">Moat depth</div>
+      <div class="val moat-high">HIGH · cross-venue benchmark</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 8 — QSR
+==================================================================== -->
+<section class="slide" id="slide-8">
+  <div class="wordmark">Janus</div>
+  <div class="counter">08 / 27</div>
+
+  <div class="eyebrow">Vertical 02 · Phase 2</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">QSR &amp; Fast-Casual</div>
+      <div class="ind-prop">Drive-thru cycle time is the OKR every QSR chain tracks at corporate. Janus segments it — order, payment, pickup — and the bottleneck is always one of the three.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">−23<span style="font-size:.55em">%</span></div>
+      <div class="cap">Drive-thru cycle time · pilot result</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>VP Ops · franchise GM</h4>
+      <p>50–500 location chains. Multi-stakeholder, RFP-driven. <b style="color:var(--gold)">2–4 month cycle</b> via 3–5 store pilot. Multi-year master agreement on conversion.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">$200/mo per camera × 3–6 cameras per store. <b style="color:var(--ink-2)">$20k–$80k ACV / store.</b> Multi-million-dollar contract value at chain level.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Drive-thru cycle time per lane</span><span class="v">seconds (entry → exit)</span></div>
+        <div class="kpi-row"><span class="k">Per-segment dwell (order/pay/pickup)</span><span class="v">isolates the bottleneck</span></div>
+        <div class="kpi-row"><span class="k">Drive-thru abandonment rate</span><span class="v">% lane balance trigger</span></div>
+        <div class="kpi-row"><span class="k">Counter queue length + wait time</span><span class="v">redeploy from kitchen</span></div>
+        <div class="kpi-row"><span class="k">Mobile-order pickup-to-departure</span><span class="v">seconds</span></div>
+        <div class="kpi-row"><span class="k">Per-store rank (national)</span><span class="v">percentile · manager bonus</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>drive_thru_lane_1</span>
+        <span class="chip"><span class="dot d-orange"></span>drive_thru_lane_2</span>
+        <span class="chip"><span class="dot d-yellow"></span>drive_thru_pickup</span>
+        <span class="chip"><span class="dot d-blue"></span>counter_queue</span>
+        <span class="chip"><span class="dot d-purple"></span>pos_area</span>
+        <span class="chip"><span class="dot d-green"></span>pickup_shelf</span>
+        <span class="chip"><span class="dot d-gold"></span>dining_in</span>
+        <span class="chip"><span class="dot d-teal"></span>kitchen_handoff</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Wedge into the chain</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Day-part transition smoothness (breakfast → lunch staffing) and day-of-week × time-of-day occupancy heatmap are the artifacts the corporate team passes around — not the dashboard.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$100<span style="color:var(--ink-3)">–</span>$300</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$20k–$80k</span> / store</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">RFP · 3–5 store pilot</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · per-store rank</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 9 — BOUTIQUE RETAIL
+==================================================================== -->
+<section class="slide alt" id="slide-9">
+  <div class="wordmark">Janus</div>
+  <div class="counter">09 / 27</div>
+
+  <div class="eyebrow">Vertical 03 · Phase 2</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Boutique Retail</div>
+      <div class="ind-prop">Apparel, home, beauty, books, eyewear — 1–10 location specialty retail. The single most important retail metric is walk-in to register conversion, and most owners can only guess at it.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$1.8k–$8k</div>
+      <div class="cap">Annual contract value · per location</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Owner of 1–10 stores</h4>
+      <p>$500k–$5M revenue per store. <b style="color:var(--gold)">3–6 week cycle.</b> Direct-to-owner sale via founder community / boutique-retail Slack channels.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink3)">1–4 cameras per store. Per-fixture dwell + fitting-room conversion are the artifacts owners use to negotiate brand-rep co-op dollars.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Walk-in to register conversion</span><span class="v">% · the single most important metric</span></div>
+        <div class="kpi-row"><span class="k">Per-fixture dwell time</span><span class="v">which displays attract real attention</span></div>
+        <div class="kpi-row"><span class="k">Fitting room conversion</span><span class="v">% entered → bought</span></div>
+        <div class="kpi-row"><span class="k">Dead-zone identification</span><span class="v">m² of unused floor</span></div>
+        <div class="kpi-row"><span class="k">Register queue (persons + sec)</span><span class="v">open second register threshold</span></div>
+        <div class="kpi-row"><span class="k">First-touch fixture</span><span class="v">lead-display effectiveness</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>entrance</span>
+        <span class="chip"><span class="dot d-yellow"></span>front_display</span>
+        <span class="chip"><span class="dot d-purple"></span>feature_wall_left</span>
+        <span class="chip"><span class="dot d-blue"></span>fitting_rooms</span>
+        <span class="chip"><span class="dot d-green"></span>register_queue</span>
+        <span class="chip"><span class="dot d-gold"></span>register_pos</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Pre-transaction segment</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Browse vs purchase segments — % of traffic that touches a fixture but never reaches the register. Pricing and merchandising fix it.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$75<span style="color:var(--ink-3)">–</span>$250</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$1.8k–$8k</span> / location</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Direct-to-owner</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">MEDIUM-HIGH · category benchmark</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 10 — BIG-BOX RETAIL
+==================================================================== -->
+<section class="slide" id="slide-10">
+  <div class="wordmark">Janus</div>
+  <div class="counter">10 / 27</div>
+
+  <div class="eyebrow">Vertical 04 · Phase 4</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Big-Box Retail</div>
+      <div class="ind-prop">100+ location chains with incumbent vendors (RetailNext, ShopperTrak). Janus replaces the people-counter category with per-department conversion benchmarking and high-shrink fixture loss-prevention triage.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">20–50</div>
+      <div class="cap">Cameras / store · multi-million ACV</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>District manager · VP Stores</h4>
+      <p>Often have an incumbent. <b style="color:var(--gold)">12–18 month enterprise cycle.</b> Win on per-department conversion + loss-prevention triage at high-shrink fixtures.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Reference customers from Phase 1–3 are the unlock. Janus enters with the existing-vendor displacement narrative.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Per-department conversion</span><span class="v">% · drives budget allocation</span></div>
+        <div class="kpi-row"><span class="k">Department-level dwell heatmap</span><span class="v">seconds / m²</span></div>
+        <div class="kpi-row"><span class="k">High-shrink fixture loitering</span><span class="v">events &gt;X seconds</span></div>
+        <div class="kpi-row"><span class="k">Self-checkout vs cashier ratio</span><span class="v">% · future capex</span></div>
+        <div class="kpi-row"><span class="k">Cart abandonment near register</span><span class="v">% · queue length lever</span></div>
+        <div class="kpi-row"><span class="k">Promotional area lift</span><span class="v">visitor delta vs baseline</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per-department floors</span>
+        <span class="chip"><span class="dot d-purple"></span>jewelry · electronics</span>
+        <span class="chip"><span class="dot d-yellow"></span>cashier_lines</span>
+        <span class="chip"><span class="dot d-green"></span>self_checkout</span>
+        <span class="chip"><span class="dot d-blue"></span>entry_directional</span>
+        <span class="chip"><span class="dot d-blue"></span>exit_directional</span>
+        <span class="chip"><span class="dot d-red"></span>promo_endcap</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Department visit sequence</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        The journey across departments is the strategic-placement lever — impulse fixtures get re-merchandised after three weeks of journey data.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$200<span style="color:var(--ink-3)">–</span>$500</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">Multi-million</span> · enterprise</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Vendor displacement RFP</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-med">MEDIUM · incumbents own data</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 11 — FITNESS & STUDIOS
+==================================================================== -->
+<section class="slide" id="slide-11">
+  <div class="wordmark">Janus</div>
+  <div class="counter">11 / 27</div>
+
+  <div class="eyebrow">Vertical 05 · Phase 3</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Fitness &amp; Studios</div>
+      <div class="ind-prop">Independent gyms, yoga, pilates, climbing — class fill rate vs booking rate is the gap that drives instructor allocation, equipment capex, and off-peak pricing experiments. Locker rooms stay private; Janus only sees the entry.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">68<span style="font-size:.55em">%</span></div>
+      <div class="cap">Avg booked-vs-actual fill rate · industry baseline</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Owner / GM</h4>
+      <p>Independent gym, boutique studio, or 10–30 location chain. <b style="color:var(--gold)">3–5 week cycle.</b> Member privacy is a hard line — Janus's no-FR architecture closes the legal team's questions in one call.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">2–4 cameras per location. Insurance / liability documentation alone justifies the spend at most studios.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Class fill rate (booked vs actual)</span><span class="v">% · scheduling lever</span></div>
+        <div class="kpi-row"><span class="k">Per-equipment dwell</span><span class="v">seconds · capex decision</span></div>
+        <div class="kpi-row"><span class="k">Equipment availability %</span><span class="v">when to add machines</span></div>
+        <div class="kpi-row"><span class="k">Peak-hour density (per zone)</span><span class="v">persons / m²</span></div>
+        <div class="kpi-row"><span class="k">Off-peak utilization</span><span class="v">% · pricing experiments</span></div>
+        <div class="kpi-row"><span class="k">Member visit frequency</span><span class="v">visits/wk · retention model</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>class_studio_1</span>
+        <span class="chip"><span class="dot d-yellow"></span>cardio_cluster</span>
+        <span class="chip"><span class="dot d-purple"></span>weight_cluster</span>
+        <span class="chip"><span class="dot d-blue"></span>free_weights</span>
+        <span class="chip"><span class="dot d-green"></span>stretching</span>
+        <span class="chip"><span class="dot d-red"></span>locker_entry · privacy boundary</span>
+        <span class="chip"><span class="dot d-gold"></span>reception</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Locker room hard line</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Cameras stop at the door. Janus measures the entry zone only — full count, zero interior visibility.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$50<span style="color:var(--ink-3)">–</span>$150</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$2.4k–$10k</span> / location</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Direct · founder community</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-med">MEDIUM · class-fill benchmark</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 12 — HOTELS & HOSPITALITY
+==================================================================== -->
+<section class="slide" id="slide-12">
+  <div class="wordmark">Janus</div>
+  <div class="counter">12 / 27</div>
+
+  <div class="eyebrow">Vertical 06 · Phase 3</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Hotels &amp; Hospitality</div>
+      <div class="ind-prop">Independent boutique hotels and chains. Cross-property amenity utilization is the F&amp;B Director's killer artifact — the same KPI shape across 30 properties means group-level rankings and capital reallocation.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">15–40</div>
+      <div class="cap">Cameras / property · $2k–$8k MRR</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>F&amp;B Director · GM · VP Ops</h4>
+      <p>Boutique 10–60 rooms or chain. <b style="color:var(--gold)">2–6 month cycle</b> at the property; longer at corporate. Cross-property benchmark is the upsell.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">F&amp;B foot ↔ revenue correlation closes the F&amp;B director — pool-deck capacity closes the GM (insurance + safety).</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Check-in / out queue wait</span><span class="v">seconds · staffing</span></div>
+        <div class="kpi-row"><span class="k">Lobby occupancy through day</span><span class="v">persons</span></div>
+        <div class="kpi-row"><span class="k">F&amp;B outlet occupancy by hour</span><span class="v">cross-outlet revenue routing</span></div>
+        <div class="kpi-row"><span class="k">Pool-deck capacity</span><span class="v">persons · liability + safety</span></div>
+        <div class="kpi-row"><span class="k">Conf room ghost-meeting rate</span><span class="v">% booked but empty</span></div>
+        <div class="kpi-row"><span class="k">Cross-property benchmark</span><span class="v">percentile vs portfolio</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>lobby_checkin</span>
+        <span class="chip"><span class="dot d-blue"></span>lobby_seating</span>
+        <span class="chip"><span class="dot d-purple"></span>lobby_bar · 1.05m</span>
+        <span class="chip"><span class="dot d-yellow"></span>bell_stand</span>
+        <span class="chip"><span class="dot d-green"></span>per_FB_outlet</span>
+        <span class="chip"><span class="dot d-teal"></span>pool_deck</span>
+        <span class="chip"><span class="dot d-gold"></span>spa · gym</span>
+        <span class="chip"><span class="dot d-red"></span>conference_rooms</span>
+        <span class="chip"><span class="dot d-orange"></span>elevator_banks</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$150<span style="color:var(--ink-3)">–</span>$400</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$24k–$96k</span> / property</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Property pilot · group rollup</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · cross-property benchmark</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 13 — HEALTHCARE
+==================================================================== -->
+<section class="slide" id="slide-13">
+  <div class="wordmark">Janus</div>
+  <div class="counter">13 / 27</div>
+
+  <div class="eyebrow">Vertical 07 · Phase 4</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Healthcare · Outpatient</div>
+      <div class="ind-prop">Outpatient clinics, urgent care, dental, dermatology. Patient wait time is the NPS-critical board metric. HIPAA-pre-compliant by architecture — no video, no biometrics, no PHI processed.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">−32<span style="font-size:.55em">%</span></div>
+      <div class="cap">Median patient wait time · pilot</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Practice manager</h4>
+      <p>1–5 location practice. <b style="color:var(--gold)">2–4 month cycle</b> with compliance review built in. The sales call ends at "we don't store video and we don't use facial recognition" — and that's the point.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)"><b style="color:var(--ink-2)">Compliance posture:</b> HIPAA-pre-compliant. No facial recognition, no stored video, no PHI. Already structurally aligned.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Patient wait-room time (p95)</span><span class="v">NPS-critical board metric</span></div>
+        <div class="kpi-row"><span class="k">Check-in counter wait</span><span class="v">seconds · staffing</span></div>
+        <div class="kpi-row"><span class="k">Exam room turnover time</span><span class="v">patient out → next in</span></div>
+        <div class="kpi-row"><span class="k">Exam room utilization</span><span class="v">% of operating hours</span></div>
+        <div class="kpi-row"><span class="k">Provider productivity</span><span class="v">rooms / provider hour</span></div>
+        <div class="kpi-row"><span class="k">Lab / draw queue length</span><span class="v">persons · tech allocation</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>waiting_room</span>
+        <span class="chip"><span class="dot d-blue"></span>checkin_counter</span>
+        <span class="chip"><span class="dot d-purple"></span>per_exam_room</span>
+        <span class="chip"><span class="dot d-yellow"></span>hallways</span>
+        <span class="chip"><span class="dot d-green"></span>lab_draw</span>
+        <span class="chip"><span class="dot d-gold"></span>pharmacy_queue</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">The retention hook</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Cross-practice benchmark: "your wait time vs the regional average." Practice managers don't churn off that artifact.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$200<span style="color:var(--ink-3)">–</span>$500</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$15k–$60k</span> / clinic</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Compliance-first sale</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · HIPAA + benchmark</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 14 — COWORKING & MODERN OFFICE
+==================================================================== -->
+<section class="slide alt" id="slide-14">
+  <div class="wordmark">Janus</div>
+  <div class="counter">14 / 27</div>
+
+  <div class="eyebrow">Vertical 08 · Phase 3</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Coworking &amp; Enterprise Office</div>
+      <div class="ind-prop">Industrious, Convene, Mindspace at the coworking layer. Workplace directors and VP Real Estate at the enterprise. The conference room ghost-meeting rate is the artifact that drives 8-figure real-estate decisions.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">47<span style="font-size:.55em">%</span></div>
+      <div class="cap">Conf rooms booked but empty · industry baseline</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Workplace director · RE/Facilities VP</h4>
+      <p>Coworking operator or Fortune 1000 RE team. <b style="color:var(--gold)">3–9 month cycle</b> at the enterprise. The KPI feeds an 8-figure floor consolidation or sublease decision.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Per-desk neighborhood utilization + Tue vs Thu RTO data are the inputs to the next lease cycle.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Conf room ghost-meeting rate</span><span class="v">% booked but empty</span></div>
+        <div class="kpi-row"><span class="k">Conf room utilization by capacity</span><span class="v">right-size meeting rooms</span></div>
+        <div class="kpi-row"><span class="k">Per-desk neighborhood utilization</span><span class="v">% · floor consolidation</span></div>
+        <div class="kpi-row"><span class="k">Day-of-week occupancy (Tue vs Thu)</span><span class="v">RTO policy data</span></div>
+        <div class="kpi-row"><span class="k">Phone booth usage</span><span class="v">minutes/booth/day</span></div>
+        <div class="kpi-row"><span class="k">Cafe / kitchen throughput</span><span class="v">amenity ROI</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per_desk_neighborhood</span>
+        <span class="chip"><span class="dot d-blue"></span>conf_rooms</span>
+        <span class="chip"><span class="dot d-purple"></span>cafe_kitchen</span>
+        <span class="chip"><span class="dot d-yellow"></span>phone_booths</span>
+        <span class="chip"><span class="dot d-green"></span>lounge</span>
+        <span class="chip"><span class="dot d-gold"></span>reception</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Drives capital decisions</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        $100–$300/mo per camera at coworking; $200–$500 at enterprise office where the data drives 8-figure RE.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$100<span style="color:var(--ink-3)">–</span>$500</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$30k–$300k</span> · enterprise</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">RE / workplace pilot</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · 8-fig RE decisions</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 15 — STADIUMS & ARENAS
+==================================================================== -->
+<section class="slide" id="slide-15">
+  <div class="wordmark">Janus</div>
+  <div class="counter">15 / 27</div>
+
+  <div class="eyebrow">Vertical 09 · Phase 4</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Stadiums &amp; Arenas</div>
+      <div class="ind-prop">ASM Global, Oak View Group, NFL/NBA-tier venues. Per-concession queue speed correlates directly with revenue lift. Restroom-by-inning distribution justifies the next capital expansion.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">100–500+</div>
+      <div class="cap">Cameras / venue · multi-million ACV</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Operations VP · Facility Manager</h4>
+      <p>Stadium / arena or facility-management firm. <b style="color:var(--gold)">9–18 month cycle.</b> Concession revenue ↔ queue speed correlation is the financial proof point.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Egress-flow validation (persons/min through portal) is the safety case that closes the procurement officer.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Per-concession queue length</span><span class="v">persons · register trigger</span></div>
+        <div class="kpi-row"><span class="k">Per-concession throughput</span><span class="v">persons/hr · revenue lift</span></div>
+        <div class="kpi-row"><span class="k">Restroom queue by inning</span><span class="v">capital expansion case</span></div>
+        <div class="kpi-row"><span class="k">Concourse density heatmap</span><span class="v">persons/m² · safety</span></div>
+        <div class="kpi-row"><span class="k">Egress flow rate</span><span class="v">persons/min through portal</span></div>
+        <div class="kpi-row"><span class="k">VIP / club lounge occupancy</span><span class="v">premium product utilization</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per_concession_queue</span>
+        <span class="chip"><span class="dot d-blue"></span>per_restroom_corridor</span>
+        <span class="chip"><span class="dot d-purple"></span>section_portals</span>
+        <span class="chip"><span class="dot d-yellow"></span>concourse_intersections</span>
+        <span class="chip"><span class="dot d-green"></span>VIP_club</span>
+        <span class="chip"><span class="dot d-gold"></span>egress_paths</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Halftime restroom surge</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Persons-over-15-minute window during halftime — converts to portable-restroom capital plan.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$300<span style="color:var(--ink-3)">–</span>$1,000</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">Multi-million</span> / venue</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Facility-mgmt firm partnership</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · revenue correlation</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 16 — CASINOS
+==================================================================== -->
+<section class="slide" id="slide-16">
+  <div class="wordmark">Janus</div>
+  <div class="counter">16 / 27</div>
+
+  <div class="eyebrow">Vertical 10 · Phase 5</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Casinos</div>
+      <div class="ind-prop">Regional, tribal, and commercial casinos. Per-pit and per-table activity tracking + suspicious-dwell flagging without facial recognition — aligns with state gaming control board direction.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$500–$2k</div>
+      <div class="cap">$/cam/mo · highest commercial tier</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Director of Surveillance / Ops</h4>
+      <p>Regional, tribal, commercial casinos. <b style="color:var(--gold)">12–24 month cycle</b> with state-regulator review. The no-FR architecture is a procurement asset, not a limitation.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">50–500+ cameras per property. Cross-property benchmark for multi-property chains is the corporate-level value driver.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Per-pit occupancy</span><span class="v">hot vs cold pit ID</span></div>
+        <div class="kpi-row"><span class="k">Per-table game activity</span><span class="v">minutes occupied</span></div>
+        <div class="kpi-row"><span class="k">Slot floor density</span><span class="v">persons/m²</span></div>
+        <div class="kpi-row"><span class="k">Suspicious dwell at table</span><span class="v">events &gt;X min · advantage play</span></div>
+        <div class="kpi-row"><span class="k">VIP / high-limit utilization</span><span class="v">host coverage</span></div>
+        <div class="kpi-row"><span class="k">Cage queue length</span><span class="v">persons · cashier deployment</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per_gaming_pit</span>
+        <span class="chip"><span class="dot d-purple"></span>per_table</span>
+        <span class="chip"><span class="dot d-yellow"></span>slot_floor_section</span>
+        <span class="chip"><span class="dot d-blue"></span>cage</span>
+        <span class="chip"><span class="dot d-gold"></span>VIP_high_limit</span>
+        <span class="chip"><span class="dot d-green"></span>FB_floor</span>
+        <span class="chip"><span class="dot d-teal"></span>player_card_lounge</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Compliance posture</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Aligns with state gaming control board direction (no FR). Architecturally compliant from the first install.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$500<span style="color:var(--ink-3)">–</span>$2,000</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$300k–$5M+</span> / property</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Surveillance director · regulator</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · no-FR + benchmark</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 17 — CIVIC / SMART CITY
+==================================================================== -->
+<section class="slide" id="slide-17">
+  <div class="wordmark">Janus</div>
+  <div class="counter">17 / 27</div>
+
+  <div class="eyebrow">Vertical 11 · Phase 5</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Civic &amp; Smart City</div>
+      <div class="ind-prop">Public works, planning, transit authorities, parks, downtown BIDs. Privacy-first architecture (no FR, no stored video) is the major political asset for any city procurement.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$200–$1.5k</div>
+      <div class="cap">$/cam/mo · stable civic budgets</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Public works · planning · BID</h4>
+      <p>Smaller per-camera budgets but stable. <b style="color:var(--gold)">12–24 month cycle</b> with city council review. The no-FR architecture removes the political objection in one slide.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">San Francisco, Boston, Portland have already banned FR. Janus is one of the only systems that can bid these contracts.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Plaza occupancy by hour</span><span class="v">programming · vendor placement</span></div>
+        <div class="kpi-row"><span class="k">Transit platform crowding</span><span class="v">persons/m² · surge capacity</span></div>
+        <div class="kpi-row"><span class="k">Fare gate throughput</span><span class="v">persons/min</span></div>
+        <div class="kpi-row"><span class="k">Crosswalk wait time</span><span class="v">seconds · signal timing</span></div>
+        <div class="kpi-row"><span class="k">Event-day vs baseline traffic</span><span class="v">persons delta</span></div>
+        <div class="kpi-row"><span class="k">Park amenity utilization</span><span class="v">persons-hours · maintenance budget</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>plaza_subzones</span>
+        <span class="chip"><span class="dot d-blue"></span>transit_platforms</span>
+        <span class="chip"><span class="dot d-purple"></span>fare_gates</span>
+        <span class="chip"><span class="dot d-yellow"></span>escalators</span>
+        <span class="chip"><span class="dot d-green"></span>crosswalk_approach</span>
+        <span class="chip"><span class="dot d-gold"></span>event_areas</span>
+        <span class="chip"><span class="dot d-teal"></span>park_amenities</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$200<span style="color:var(--ink-3)">–</span>$1,500</div></div>
+    <div class="ft-cell"><div class="lbl">Annual contract value</div><div class="val"><span class="accent">$50k–$500k</span> / agency</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">RFP · privacy-first wedge</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-med">MEDIUM · political durability</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 18 — DEFENSE: AIR FORCE
+==================================================================== -->
+<section class="slide" id="slide-18">
+  <div class="wordmark">Janus</div>
+  <div class="counter">18 / 27</div>
+
+  <div class="eyebrow">Defense · Vertical 12 · Parallel track</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Air Force · Flightline &amp; Hangar Ops</div>
+      <div class="ind-prop">Squadron commanders, MX group commanders, AFRL, AFWERX. Personnel-in-exclusion-zone alerts during running engines and prop arcs are immediate safety interventions — that's the wedge.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$1M–$10M</div>
+      <div class="cap">Single-base contract · annual</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Path</div>
+      <h4>Squadron CMD · MX group · AFRL</h4>
+      <p>Path: <b style="color:var(--gold)">AFWERX SBIR</b> Phase I → Phase II → Strategic Funding Increase. 24-month roadmap to first pilot.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">No-FR + edge-only + air-gap-friendly is the architectural fit DoD has been asking for since the CDAO direction shift.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Personnel-in-exclusion-zone alerts</span><span class="v">binary · immediate safety</span></div>
+        <div class="kpi-row"><span class="k">Aircraft turn time per bay</span><span class="v">minutes · MX productivity</span></div>
+        <div class="kpi-row"><span class="k">GSE dwell at aircraft</span><span class="v">seconds per piece</span></div>
+        <div class="kpi-row"><span class="k">Per-tail maintenance window</span><span class="v">mission readiness reporting</span></div>
+        <div class="kpi-row"><span class="k">SCIF entry audit log</span><span class="v">entries/exits · no PII</span></div>
+        <div class="kpi-row"><span class="k">Munitions storage approach</span><span class="v">two-person rule flagging</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per_tail_aircraft_parking</span>
+        <span class="chip"><span class="dot d-purple"></span>GSE_staging</span>
+        <span class="chip"><span class="dot d-red"></span>engine_exclusion</span>
+        <span class="chip"><span class="dot d-yellow"></span>hangar_entry_exit</span>
+        <span class="chip"><span class="dot d-blue"></span>tool_crib</span>
+        <span class="chip"><span class="dot d-gold"></span>SCIF_entry</span>
+        <span class="chip"><span class="dot d-green"></span>munitions_zone</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$1,000<span style="color:var(--ink-3)">–</span>$3,000</div></div>
+    <div class="ft-cell"><div class="lbl">Single-base contract</div><div class="val"><span class="accent">$1M–$10M</span> annually</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">AFWERX SBIR · AFRL</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · architectural fit</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 19 — DEFENSE: ARMY
+==================================================================== -->
+<section class="slide" id="slide-19">
+  <div class="wordmark">Janus</div>
+  <div class="counter">19 / 27</div>
+
+  <div class="eyebrow">Defense · Vertical 13 · Parallel track</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Army · Ranges &amp; Motor Pools</div>
+      <div class="ind-prop">Range Operations, Training Center commands, Garrison Commander, xTech Search. Real-time exclusion-zone clearance verification is an immediate safety stop during live-fire — paper checklists become ground-truth data.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$500k–$5M</div>
+      <div class="cap">Range complex contract · annual</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Path</div>
+      <h4>Range ops · Training cmd · Garrison</h4>
+      <p>Path: <b style="color:var(--gold)">Army Applied SBIR / xTech Search.</b> Garrison-level pilots → multi-installation expansion → program of record.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Cross-range benchmark (shooters/hour by similar range type) is the best-practice identification artifact at TRADOC.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Downrange personnel during live-fire</span><span class="v">binary · immediate stop</span></div>
+        <div class="kpi-row"><span class="k">Firing line shooter count</span><span class="v">range capacity utilization</span></div>
+        <div class="kpi-row"><span class="k">Range-day shooter throughput</span><span class="v">shooters/hr · training pace</span></div>
+        <div class="kpi-row"><span class="k">Motor pool vehicle dwell</span><span class="v">minutes per maintenance bay</span></div>
+        <div class="kpi-row"><span class="k">Yard turn rate</span><span class="v">vehicle-cycles/day</span></div>
+        <div class="kpi-row"><span class="k">Cross-range benchmark</span><span class="v">shooters/hr by range type</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per_shooter_firing_line</span>
+        <span class="chip"><span class="dot d-red"></span>down_range_exclusion</span>
+        <span class="chip"><span class="dot d-yellow"></span>OP_RSO_position</span>
+        <span class="chip"><span class="dot d-blue"></span>vehicle_staging</span>
+        <span class="chip"><span class="dot d-purple"></span>ammo_handling</span>
+        <span class="chip"><span class="dot d-green"></span>motor_pool_bays</span>
+        <span class="chip"><span class="dot d-gold"></span>fuel_point</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$500<span style="color:var(--ink-3)">–</span>$2,000</div></div>
+    <div class="ft-cell"><div class="lbl">Range complex contract</div><div class="val"><span class="accent">$500k–$5M</span> annually</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">xTech Search · Applied SBIR</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · safety-stop signal</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 20 — DEFENSE: NAVY
+==================================================================== -->
+<section class="slide" id="slide-20">
+  <div class="wordmark">Janus</div>
+  <div class="counter">20 / 27</div>
+
+  <div class="eyebrow">Defense · Vertical 14 · Parallel track</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Navy · Quarterdecks &amp; Piers</div>
+      <div class="ind-prop">Pier-side operations, Quarterdeck OOD, Type Commander, NavalX. Janus replaces paper quarterdeck logs with audit-grade transition logs — anonymous tracks, no PII, OOD watch standard compliance measured by minute.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$500k–$2M</div>
+      <div class="cap">Per-pier · per-ship · annual</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Path</div>
+      <h4>OOD · Type CMD · NavalX</h4>
+      <p>Path: <b style="color:var(--gold)">Navy SBIR · NavalX · OTA.</b> Single-pier or single-ship pilot → Type Commander expansion.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Crane operating zone clearance + catapult / arresting gear exclusion are binary safety alerts — every pilot wins on the first day.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Brow throughput (boarding rate)</span><span class="v">persons/hour</span></div>
+        <div class="kpi-row"><span class="k">ID check zone dwell</span><span class="v">seconds · anomaly detection</span></div>
+        <div class="kpi-row"><span class="k">Quarterdeck OOD coverage</span><span class="v">minutes covered / total</span></div>
+        <div class="kpi-row"><span class="k">Pier patrol coverage</span><span class="v">minutes per zone</span></div>
+        <div class="kpi-row"><span class="k">Crane operating zone clearance</span><span class="v">binary alert during lifts</span></div>
+        <div class="kpi-row"><span class="k">Visitor escort tracking</span><span class="v">paired tracks · two-person rule</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per_berth_pier</span>
+        <span class="chip"><span class="dot d-yellow"></span>brow_gangway</span>
+        <span class="chip"><span class="dot d-purple"></span>crane_operating</span>
+        <span class="chip"><span class="dot d-blue"></span>provisioning_loading</span>
+        <span class="chip"><span class="dot d-green"></span>quarterdeck_queue</span>
+        <span class="chip"><span class="dot d-gold"></span>ID_check</span>
+        <span class="chip"><span class="dot d-red"></span>brow_approach</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$1,000<span style="color:var(--ink-3)">–</span>$3,000</div></div>
+    <div class="ft-cell"><div class="lbl">Per-pier · per-ship</div><div class="val"><span class="accent">$500k–$2M</span> annually</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Navy SBIR · NavalX · OTA</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · audit-grade replacement</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 21 — DEFENSE: MARINES + SOF (USSOCOM)
+==================================================================== -->
+<section class="slide" id="slide-21">
+  <div class="wordmark">Janus</div>
+  <div class="counter">21 / 27</div>
+
+  <div class="eyebrow">Defense · Vertical 15 · Highest WTP</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Marines + SOF (USSOCOM)</div>
+      <div class="ind-prop">Tier-1/2 SOF units, MARSOC, JSOC. Kill house AAR — time-in-room per fireteam, replayable. Converts art-form trainer-debriefs into ground-truth quantitative data on movement patterns and team performance.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$250k–$2M</div>
+      <div class="cap">Single training facility · annual</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Path</div>
+      <h4>USSOCOM · MARSOC · JSOC</h4>
+      <p>Path: <b style="color:var(--gold)">SOCOM direct · SOFWERX</b> Bullet → Pitch Day → Phase II OTA. Highest WTP in the deck.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Currently runs on body cam + trainer observation. The kill house / MOUT AAR application is the highest-value defense use of Janus.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Kill house room time per fireteam</span><span class="v">seconds per room</span></div>
+        <div class="kpi-row"><span class="k">Movement pattern across kill house</span><span class="v">sequence of zone entries</span></div>
+        <div class="kpi-row"><span class="k">Per-team performance trend</span><span class="v">over multiple iterations</span></div>
+        <div class="kpi-row"><span class="k">MOUT exercise pacing</span><span class="v">room-clearings/hour</span></div>
+        <div class="kpi-row"><span class="k">Embarkation throughput</span><span class="v">persons + equip-pieces/hour</span></div>
+        <div class="kpi-row"><span class="k">FOS perimeter sector activity</span><span class="v">events / sector / hour</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>per_room_kill_house</span>
+        <span class="chip"><span class="dot d-yellow"></span>hallways</span>
+        <span class="chip"><span class="dot d-purple"></span>entry_breach</span>
+        <span class="chip"><span class="dot d-red"></span>exit</span>
+        <span class="chip"><span class="dot d-blue"></span>FOS_compound_gates</span>
+        <span class="chip"><span class="dot d-gold"></span>FOS_perimeter_sectors</span>
+        <span class="chip"><span class="dot d-green"></span>embark_loading</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">From art-form to data product</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Trainer-debrief → ground-truth quantitative AAR. Cross-team benchmarking becomes possible for the first time.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$2,000<span style="color:var(--ink-3)">–</span>$5,000+</div></div>
+    <div class="ft-cell"><div class="lbl">Single facility</div><div class="val"><span class="accent">$250k–$2M</span> annually</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">SOCOM direct · SOFWERX</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · only quantitative AAR</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 22 — PMC
+==================================================================== -->
+<section class="slide" id="slide-22">
+  <div class="wordmark">Janus</div>
+  <div class="counter">22 / 27</div>
+
+  <div class="eyebrow">Adjacent · Vertical 16 · Parallel track</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Private Military Contractors</div>
+      <div class="ind-prop">Constellis, GardaWorld, Amentum, MPRI. Cost-plus and fixed-price firms operating base ops + perimeter contracts globally. Janus produces audit-grade gate-throughput logs that map to contract line items.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$250k–$3M</div>
+      <div class="cap">Per-compound contract · annual</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Cycle</div>
+      <h4>Program manager · Constellis / GardaWorld / Amentum</h4>
+      <p>PMC corporate or subcontracted under prime (Lockheed, Booz Allen). <b style="color:var(--gold)">6–12 month cycle.</b> Multi-compound enterprise deals: $5M–$50M+.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">No FR is a feature — operators work under hostile-intel threat. Edge-deployable matters at remote sites with no reliable internet (Mali, Iraq, deep maritime).</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Personnel on station per shift</span><span class="v">contract billing accuracy</span></div>
+        <div class="kpi-row"><span class="k">Shift handoff coverage gap</span><span class="v">minutes of zero overlap</span></div>
+        <div class="kpi-row"><span class="k">Compound entry response time</span><span class="v">QRF readiness · contract OKR</span></div>
+        <div class="kpi-row"><span class="k">Perimeter integrity events</span><span class="v">breaches / 24h per sector</span></div>
+        <div class="kpi-row"><span class="k">Convoy assembly time</span><span class="v">pre-stage to roll</span></div>
+        <div class="kpi-row"><span class="k">Cross-site benchmark</span><span class="v">across compound contracts</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>vehicle_inspection_in</span>
+        <span class="chip"><span class="dot d-orange"></span>vehicle_inspection_out</span>
+        <span class="chip"><span class="dot d-purple"></span>pedestrian_gates</span>
+        <span class="chip"><span class="dot d-yellow"></span>visitor_center_queue</span>
+        <span class="chip"><span class="dot d-blue"></span>perimeter_sectors</span>
+        <span class="chip"><span class="dot d-gold"></span>response_staging</span>
+        <span class="chip"><span class="dot d-green"></span>LZ_helicopter</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">Documentation defense</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        Quantitative audit data on personnel placement, response times, and coverage is gold for contract retention and dispute resolution.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$1,000<span style="color:var(--ink-3)">–</span>$4,000</div></div>
+    <div class="ft-cell"><div class="lbl">Per-compound contract</div><div class="val"><span class="accent">$250k–$3M</span> · multi: $5M–$50M+</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Direct enterprise · prime sub</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · contract-line-item KPIs</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 23 — CORPORATE SECURITY
+==================================================================== -->
+<section class="slide" id="slide-23">
+  <div class="wordmark">Janus</div>
+  <div class="counter">23 / 27</div>
+
+  <div class="eyebrow">Adjacent · Vertical 17 · Largest commercial TAM</div>
+
+  <div class="ind-hero">
+    <div class="ind-meta">
+      <div class="ind-name">Corporate Security · Allied Universal · Securitas</div>
+      <div class="ind-prop">$45B+ US private security industry. 1.1M+ guards. Janus replaces 60% of on-site human presence checks with measured zone events — turning paper guard-tour logs into ground-truth data and audit-defensible billing.</div>
+    </div>
+    <div class="hero-metric">
+      <div class="num">$15B+</div>
+      <div class="cap">US TAM · the single largest commercial vertical</div>
+    </div>
+  </div>
+
+  <div class="ind-body">
+    <div class="col-block">
+      <div class="lbl">Buyer · Why Janus wins</div>
+      <h4>VP Operations · $5B+ contract security firms</h4>
+      <p>Allied Universal, Securitas, GardaWorld, Brinks, Pinkerton. <b style="color:var(--gold)">6–18 month cycle.</b> Volume-friendly SaaS pricing — $99–$299/mo per camera is the sweet spot.</p>
+      <div class="hr"></div>
+      <p style="font-size:13px;color:var(--ink-3)">Insurance / litigation defense — quantitative coverage data defends slip-and-fall, premises liability, and inadequate-security lawsuits. The cameras already exist; Janus is the analytics overlay.</p>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Top KPIs</div>
+      <div class="kpi-list">
+        <div class="kpi-row"><span class="k">Guard tour compliance</span><span class="v">% · audit-defensible billing</span></div>
+        <div class="kpi-row"><span class="k">Post coverage gap</span><span class="v">minutes of zero presence</span></div>
+        <div class="kpi-row"><span class="k">Alarm response time</span><span class="v">seconds · SLA reporting</span></div>
+        <div class="kpi-row"><span class="k">Tailgating at access-controlled door</span><span class="v">events / day</span></div>
+        <div class="kpi-row"><span class="k">After-hours loitering events</span><span class="v">events / night · threat detection</span></div>
+        <div class="kpi-row"><span class="k">Cross-property benchmark</span><span class="v">portfolio expansion</span></div>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <div class="lbl">Anchor zones</div>
+      <div class="zone-chips">
+        <span class="chip"><span class="dot d-orange"></span>lobby_checkin</span>
+        <span class="chip"><span class="dot d-blue"></span>dock_loading</span>
+        <span class="chip"><span class="dot d-purple"></span>perimeter_sectors</span>
+        <span class="chip"><span class="dot d-yellow"></span>sensitive_area_entry</span>
+        <span class="chip"><span class="dot d-green"></span>parking_deck</span>
+        <span class="chip"><span class="dot d-gold"></span>executive_floor</span>
+        <span class="chip"><span class="dot d-red"></span>vault · server_room</span>
+      </div>
+      <div class="hr"></div>
+      <h4 style="font-size:14px;margin-bottom:6px">The 1% scenario</h4>
+      <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55">
+        1% of the cameras these firms operate against = 9-figure ARR. Sells to firms that already have the customer relationship.
+      </p>
+    </div>
+  </div>
+
+  <div class="ind-footer">
+    <div class="ft-cell"><div class="lbl">$/cam/mo</div><div class="val">$200<span style="color:var(--ink-3)">–</span>$800</div></div>
+    <div class="ft-cell"><div class="lbl">Per-site ACV</div><div class="val"><span class="accent">$50k–$500k</span> × thousands of sites</div></div>
+    <div class="ft-cell"><div class="lbl">GTM motion</div><div class="val">Enterprise · ISC West</div></div>
+    <div class="ft-cell"><div class="lbl">Moat depth</div><div class="val moat-high">HIGH · guard-augmentation play</div></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 24 — PRICING
+==================================================================== -->
+<section class="slide" id="slide-24">
+  <div class="wordmark">Janus</div>
+  <div class="counter">24 / 27</div>
+
+  <div class="eyebrow">Pricing</div>
+  <h2 class="section-title">Five tiers. <span style="color:var(--gold);font-style:italic;font-weight:400">One product.</span></h2>
+  <p class="lede tight">Same engine — different data retention, integration depth, and compliance posture per tier. The data layer compounds across all five.</p>
+
+  <div class="pricing-grid">
+
+    <div class="tier">
+      <div class="lvl">Tier 0</div>
+      <h4>Free</h4>
+      <div class="price">$0<small>self-serve</small></div>
+      <ul>
+        <li>1 camera</li>
+        <li>Basic dwell + counts</li>
+        <li>14-day data retention</li>
+        <li>Community support</li>
+        <li>Sandbox for the data moat</li>
+      </ul>
+    </div>
+
+    <div class="tier">
+      <div class="lvl">Tier 1</div>
+      <h4>Starter</h4>
+      <div class="price">$99<small>/ camera / month</small></div>
+      <ul>
+        <li>Up to 3 cameras</li>
+        <li>Full 3D zones</li>
+        <li>90-day retention</li>
+        <li>Email support</li>
+        <li>Single venue</li>
+      </ul>
+    </div>
+
+    <div class="tier featured">
+      <div class="badge">Wedge</div>
+      <div class="lvl">Tier 2</div>
+      <h4>Pro</h4>
+      <div class="price">$199<small>/ camera / month</small></div>
+      <ul>
+        <li>Unlimited cameras</li>
+        <li>Cross-venue benchmark</li>
+        <li>1-year retention</li>
+        <li>Priority support</li>
+        <li>Multi-venue rollup</li>
+      </ul>
+    </div>
+
+    <div class="tier">
+      <div class="lvl">Tier 3</div>
+      <h4>Enterprise</h4>
+      <div class="price">$299–$499<small>/ camera / month</small></div>
+      <ul>
+        <li>Multi-tenant + SSO</li>
+        <li>Custom KPIs</li>
+        <li>Toast · Square · Reservation integrations</li>
+        <li>SOC 2 + audit log</li>
+        <li>Dedicated CSM</li>
+      </ul>
+    </div>
+
+    <div class="tier">
+      <div class="lvl">Tier 4</div>
+      <h4>Defense / Regulated</h4>
+      <div class="price">$1k–$5k<small>/ camera / month</small></div>
+      <ul>
+        <li>Edge-only · air-gap</li>
+        <li>ATO support · CMMC 2.0</li>
+        <li>FIPS 140-2 encryption</li>
+        <li>RBAC + audit log</li>
+        <li>Classified-network deploy</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="hr-2"></div>
+  <div class="row-cap">Same engine. The compounding data layer is what changes per tier.</div>
+</section>
+
+<!-- ====================================================================
+SLIDE 25 — ROADMAP
+==================================================================== -->
+<section class="slide" id="slide-25">
+  <div class="wordmark">Janus</div>
+  <div class="counter">25 / 27</div>
+
+  <div class="eyebrow">Roadmap</div>
+  <h2 class="section-title">Where we are. <span style="color:var(--gold);font-style:italic;font-weight:400">Where we're going.</span></h2>
+
+  <div class="roadmap-rail">
+
+    <div class="phase-card shipped">
+      <div class="when">Shipped · 2026 Q1–Q2</div>
+      <h4>Foundation locked</h4>
+      <ul>
+        <li>3D world-space zone model locked</li>
+        <li>283 tests across backend / edge / frontend</li>
+        <li>10 vertical demos: restaurant, retail, fitness, casino, hotel, office, stadium, Air Force, Army, Navy</li>
+        <li>Edge agent v2 — polygon_world_3d hit-testing</li>
+        <li>React 3D Zone Editor (Define→Orient→Anchor→Commit)</li>
+        <li>HTTP-level v2 round-trip + homography fix</li>
+      </ul>
+    </div>
+
+    <div class="phase-card next">
+      <div class="when">Next · Q3 2026 · Sprint 8</div>
+      <h4>Performance + camera ingest</h4>
+      <ul>
+        <li>OpenVINO INT8 export → 35–50 FPS on Intel iGPU</li>
+        <li>Edit-existing zones (currently create-only)</li>
+        <li>Calibration UX inline in the editor</li>
+        <li>RTSP / ONVIF camera ingest</li>
+        <li>Zone editing keyboard shortcuts</li>
+        <li>Multi-zone batch operations</li>
+      </ul>
+    </div>
+
+    <div class="phase-card future">
+      <div class="when">Future · Q4 2026</div>
+      <h4>Multi-camera fusion + Defense</h4>
+      <ul>
+        <li>Multi-camera world-space fusion</li>
+        <li>AFWERX SBIR Phase I submitted</li>
+        <li>DIU CSO response prepared</li>
+        <li>CMMC 2.0 Level 1 self-attestation</li>
+        <li>Hardened uptime + audit log + RBAC</li>
+        <li>First defense pilot live</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 26 — WHY NOW
+==================================================================== -->
+<section class="slide" id="slide-26">
+  <div class="wordmark">Janus</div>
+  <div class="counter">26 / 27</div>
+
+  <div class="eyebrow">Timing</div>
+  <h2 class="section-title">Four tailwinds. <span style="color:var(--gold);font-style:italic;font-weight:400">One window.</span></h2>
+  <p class="lede tight">The full stack — privacy law, open weights, edge silicon, defense procurement — moved into alignment in the last 18 months. Janus is one of the few companies architecturally configured to ride all four.</p>
+
+  <div class="why-grid">
+
+    <div class="why-card">
+      <div class="icn">01</div>
+      <h4>Edge compute is cheap.</h4>
+      <p>Intel Iris Xe, Apple M-series, and Jetson Orin all run RF-DETR-Nano in real time. Cloud GPUs are no longer required for accurate detection — and that means no per-stream cloud cost line in the customer's deal.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="icn">02</div>
+      <h4>Open detection weights.</h4>
+      <p>RF-DETR is Apache 2.0 (replaces AGPL ultralytics). ByteTrack is MIT. Supervision is MIT. The whole detection / tracking / zone stack is permissive — no licensing trap on commercial deployment.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="icn">03</div>
+      <h4>Facial recognition is off the table.</h4>
+      <p>San Francisco, Boston, Portland banned it. The EU AI Act restricts it. CDAO direction moves DoD away from it. Janus's no-FR architecture isn't a limitation — it's the only thing left standing in healthcare, defense, and civic.</p>
+    </div>
+
+    <div class="why-card">
+      <div class="icn">04</div>
+      <h4>Defense modernization push.</h4>
+      <p>SBIR funding is at all-time highs. AFWERX, DIU, SOFWERX onboard commercial tech faster than any time in the last 20 years. The window for an architecturally compliant CV stack to enter is open right now.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====================================================================
+SLIDE 27 — CLOSE
+==================================================================== -->
+<section class="slide" id="slide-27">
+  <div class="wordmark">Janus</div>
+  <div class="counter">27 / 27</div>
+
+  <div class="close-pane">
+    <div class="eyebrow">In closing</div>
+    <h1>See it live.</h1>
+    <a href="mailto:alimabsoute@gmail.com?subject=Janus%20demo" class="cta-btn">Schedule a demo</a>
+
+    <div class="stat-strip">
+      <span><b>10</b> vertical reels at hand</span>
+      <span><b>283</b> tests green</span>
+      <span><b>World-space</b> zones locked</span>
+    </div>
+
+    <div style="margin-top:64px;font-size:14px;color:var(--ink-3);max-width:640px;line-height:1.6">
+      Janus is the operating system for physical spaces. It measures real meters, in real time, with no facial recognition and no stored video. It's already live across 10 vertical demos and built on a stack that's defensible by license, by architecture, and by data layer.
+    </div>
+  </div>
+
+  <div class="close-foot">alimabsoute@gmail.com · Janus · 2026 · Confidential</div>
+</section>
+
+<!-- ====================================================================
+NAV PILL
+==================================================================== -->
+<div class="nav-pill" role="navigation" aria-label="Slide navigation">
+  <button id="prev" type="button" aria-label="Previous slide">prev</button>
+  <span class="ctr"><b id="curIdx">1</b> / 27</span>
+  <button id="next" type="button" aria-label="Next slide">next</button>
+  <button id="grid" type="button" aria-label="Overview">grid</button>
+</div>
+
+<!-- ====================================================================
+OVERVIEW GRID
+==================================================================== -->
+<div id="overview" class="overview" role="dialog" aria-label="Slide overview">
+  <div class="close-hint">esc to close</div>
+  <h3>Janus deck — <b>27 slides</b> · click any thumbnail to jump</h3>
+  <div class="thumb-grid" id="thumbs"></div>
+</div>
+
+<script>
+(function(){
+  var TOTAL = 27;
+  var titles = [
+    ["Cover", "Janus"],
+    ["The problem", "Operated blind"],
+    ["The breakthrough", "World-space zones"],
+    ["Architecture", "Edge-first stack"],
+    ["The moat", "Data layer"],
+    ["Comparison", "vs CCTV / counters / POS / FR"],
+    ["Restaurants & Bars", "Beachhead"],
+    ["QSR & fast-casual", "Phase 2"],
+    ["Boutique retail", "Phase 2"],
+    ["Big-box retail", "Phase 4"],
+    ["Fitness & studios", "Phase 3"],
+    ["Hotels & hospitality", "Phase 3"],
+    ["Healthcare", "Phase 4 · HIPAA-aligned"],
+    ["Coworking & office", "Phase 3"],
+    ["Stadiums & arenas", "Phase 4"],
+    ["Casinos", "Phase 5"],
+    ["Civic & smart city", "Phase 5"],
+    ["Air Force", "Defense · AFWERX"],
+    ["Army", "Defense · xTech"],
+    ["Navy", "Defense · NavalX"],
+    ["Marines + SOF", "Defense · SOCOM"],
+    ["PMC", "Constellis · GardaWorld"],
+    ["Corporate security", "Allied Universal · Securitas"],
+    ["Pricing", "5 tiers"],
+    ["Roadmap", "Shipped → Q3 → Q4"],
+    ["Why now", "4 tailwinds"],
+    ["Close", "See it live"]
+  ];
+
+  function getCurrent(){
+    var slides = document.querySelectorAll(".slide");
+    var midline = window.innerHeight * 0.4 + window.scrollY;
+    var current = 1;
+    for (var i = 0; i < slides.length; i++){
+      var top = slides[i].offsetTop;
+      if (top <= midline) current = i + 1;
+    }
+    return current;
+  }
+  function goTo(n){
+    if(n<1) n=1; if(n>TOTAL) n=TOTAL;
+    var s = document.getElementById("slide-"+n);
+    if(s){
+      window.scrollTo({top: s.offsetTop, behavior: "smooth"});
+      setTimeout(updateCounter, 320);
+    }
+  }
+  function updateCounter(){
+    var c = getCurrent();
+    var el = document.getElementById("curIdx");
+    if(el) el.textContent = c;
+  }
+  document.getElementById("prev").addEventListener("click", function(){ goTo(getCurrent()-1); });
+  document.getElementById("next").addEventListener("click", function(){ goTo(getCurrent()+1); });
+  document.getElementById("grid").addEventListener("click", function(){ openOverview(); });
+
+  document.addEventListener("keydown", function(e){
+    if (document.getElementById("overview").classList.contains("open")){
+      if (e.key === "Escape") closeOverview();
+      return;
+    }
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); goTo(getCurrent()+1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp")  { e.preventDefault(); goTo(getCurrent()-1); }
+    else if (e.key === "Home") { e.preventDefault(); goTo(1); }
+    else if (e.key === "End")  { e.preventDefault(); goTo(TOTAL); }
+    else if (e.key === "Escape") openOverview();
+  });
+
+  // overview grid
+  var thumbsHost = document.getElementById("thumbs");
+  for (var i = 0; i < TOTAL; i++){
+    var t = titles[i] || ["Slide " + (i+1), ""];
+    var el = document.createElement("div");
+    el.className = "thumb";
+    el.setAttribute("data-n", String(i+1));
+    el.innerHTML = '<div class="num">'+ String(i+1).padStart(2,"0") +' / 27</div>' +
+                   '<div class="ttl">'+ t[0] +'</div>' +
+                   '<div class="sub">'+ t[1] +'</div>';
+    el.addEventListener("click", function(){
+      var n = parseInt(this.getAttribute("data-n"), 10);
+      closeOverview(); setTimeout(function(){ goTo(n); }, 80);
+    });
+    thumbsHost.appendChild(el);
+  }
+  function openOverview(){ document.getElementById("overview").classList.add("open"); }
+  function closeOverview(){ document.getElementById("overview").classList.remove("open"); }
+
+  // counter updater
+  var ticking = false;
+  window.addEventListener("scroll", function(){
+    if(!ticking){
+      window.requestAnimationFrame(function(){ updateCounter(); ticking=false; });
+      ticking = true;
+    }
+  });
+  updateCounter();
+})();
+</script>
+
+</body>
+</html>
