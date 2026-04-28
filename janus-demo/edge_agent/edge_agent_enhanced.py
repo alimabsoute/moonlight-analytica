@@ -37,6 +37,18 @@ import supervision as sv
 from rfdetr import RFDETRNano
 from trackers import ByteTrackTracker
 
+# Make backend/zone_geometry.py importable for canonical world-space hit testing.
+# (JANUS-ZONE-MODEL.md: zones live in 3D world space; backend module is SSOT.)
+_BACKEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "backend")
+if _BACKEND_DIR not in sys.path:
+    sys.path.insert(0, _BACKEND_DIR)
+try:
+    from zone_geometry import point_in_zone_world, identity_rotation, _point_in_polygon_2d
+    _ZONE_GEOMETRY_AVAILABLE = True
+except Exception as _zg_err:
+    print(f"[WARN] zone_geometry not importable ({_zg_err}); v2 zones will fall back to legacy pixel-space")
+    _ZONE_GEOMETRY_AVAILABLE = False
+
 _RUNNING = True
 
 def _handle_sig(signum, frame):
@@ -55,6 +67,17 @@ def load_zones_from_api(backend_url: str, frame_w: int = 640, frame_h: int = 480
 
     Returns (zones_dict, lines_list) in the same format as load_zone_config.
     Falls back to (None, None) if the backend is unreachable or has no zones with geometry.
+
+    Each zone dict in the returned mapping contains:
+        - "zone":             sv.PolygonZone (built from polygon_image when available;
+                              required for sv.LineZone-style triggers/drawing). May be None
+                              if the zone is v2-only with no cached polygon_image.
+        - "zone_id":          int (DB primary key)
+        - "zone_type":        str — semantic type (entrance/queue/checkout/general)
+        - "schema_version":   1 or 2
+        - "surface_type":     str — floor / counter_top / table / ramp / wall (v2 only)
+        - "polygon_world_3d": [[x,y,z], ...] in world meters (v2 only)
+        - "rotation_matrix":  3x3 list (v2 only)
     """
     try:
         resp = requests.get(f"{backend_url}/api/zones/config", timeout=5)
@@ -65,30 +88,77 @@ def load_zones_from_api(backend_url: str, frame_w: int = 640, frame_h: int = 480
         print(f"[WARN] Could not fetch zones from API ({e}), falling back to config file")
         return None, None
 
-    zones_with_geo = [z for z in raw_zones if z.get("polygon_image")]
+    # Accept any zone with v2 (polygon_world_3d + rotation_matrix) OR v1 (polygon_image) geometry
+    zones_with_geo = [
+        z for z in raw_zones
+        if z.get("polygon_world_3d") or z.get("polygon_image")
+    ]
     if not zones_with_geo:
-        print("[WARN] API returned no zones with polygon_image geometry, falling back to config file")
+        print("[WARN] API returned no zones with usable geometry, falling back to config file")
         return None, None
 
     zones = {}
+    v2_count = 0
+    v1_count = 0
+    sx, sy = frame_w / 640, frame_h / 480
+
     for z in zones_with_geo:
         name = z.get("zone_name") or z.get("name") or f"zone_{z['id']}"
-        pts = np.array(z["polygon_image"], dtype=np.float32)
+        schema_version = int(z.get("schema_version") or 1)
+        # Default surface_type from API is 'floor' (see backend/routes/zones.py)
+        surface_type = z.get("surface_type") or "floor"
 
-        # Scale from config resolution (pixel coords assumed at 640×480)
-        sx, sy = frame_w / 640, frame_h / 480
-        pts[:, 0] *= sx
-        pts[:, 1] *= sy
-        pts = pts.astype(np.int32)
+        # Try to build sv.PolygonZone from polygon_image (cached pixel projection).
+        # This is still useful for legacy v1 fallback hit-tests AND for downstream
+        # supervision-based drawing/triggers if needed. v2 hit testing happens in
+        # world space via is_foot_in_zone().
+        polygon_image = z.get("polygon_image")
+        sv_zone = None
+        if polygon_image:
+            try:
+                pts = np.array(polygon_image, dtype=np.float32)
+                pts[:, 0] *= sx
+                pts[:, 1] *= sy
+                sv_zone = sv.PolygonZone(polygon=pts.astype(np.int32))
+            except Exception as e:
+                print(f"[WARN] Could not build sv.PolygonZone for '{name}': {e}")
 
-        polygon_zone = sv.PolygonZone(polygon=pts)
-        zones[name] = {
-            "zone": polygon_zone,
+        # Map zone_type for downstream conversion logic. Backend doesn't store
+        # zone_type yet; infer from surface_type / name fallbacks for now.
+        zone_type = "general"
+        lname = name.lower()
+        if "checkout" in lname:
+            zone_type = "checkout"
+        elif "queue" in lname:
+            zone_type = "queue"
+        elif "entrance" in lname or "entry" in lname:
+            zone_type = "entrance"
+
+        entry = {
+            "zone": sv_zone,
             "zone_id": z["id"],
-            "zone_type": "general",
+            "zone_type": zone_type,
+            "schema_version": schema_version,
+            "surface_type": surface_type,
+            "polygon_world_3d": z.get("polygon_world_3d"),
+            "rotation_matrix": z.get("rotation_matrix"),
         }
 
-    print(f"[INFO] Loaded {len(zones)} zones from backend API ({backend_url}/api/zones/config)")
+        if schema_version >= 2 and entry["polygon_world_3d"] and entry["rotation_matrix"]:
+            v2_count += 1
+        else:
+            # Treat as v1 even if backend reported v2 but the 3D fields were null
+            entry["schema_version"] = 1
+            v1_count += 1
+
+        zones[name] = entry
+
+    print(
+        f"[INFO] Loaded {len(zones)} zones from backend API: "
+        f"{v2_count} v2 (world-space 3D), {v1_count} v1 (legacy pixel-space)"
+    )
+    if v2_count > 0 and not _ZONE_GEOMETRY_AVAILABLE:
+        print("[WARN] zone_geometry import failed — v2 zones will use legacy pixel-space hit-test fallback")
     return zones, []   # no line zones from API yet
 
 
@@ -126,6 +196,10 @@ def load_zone_config(config_path: str, frame_w: int = 640, frame_h: int = 480):
                 "zone": polygon_zone,
                 "zone_id": z["zone_id"],
                 "zone_type": z.get("zone_type", "general"),
+                "schema_version": 1,
+                "surface_type": "floor",
+                "polygon_world_3d": None,
+                "rotation_matrix": None,
             }
 
         lines = []
@@ -157,7 +231,15 @@ def _default_zones(frame_w: int, frame_h: int):
         pts_arr[:, 0] *= sx
         pts_arr[:, 1] *= sy
         polygon_zone = sv.PolygonZone(polygon=pts_arr.astype(np.int32))
-        zones[name] = {"zone": polygon_zone, "zone_id": zid, "zone_type": ztype}
+        zones[name] = {
+            "zone": polygon_zone,
+            "zone_id": zid,
+            "zone_type": ztype,
+            "schema_version": 1,
+            "surface_type": "floor",
+            "polygon_world_3d": None,
+            "rotation_matrix": None,
+        }
     return zones
 
 
@@ -166,6 +248,52 @@ def _default_lines(frame_w: int, frame_h: int):
     start = sv.Point(int(200 * sx), int(0 * sy))
     end = sv.Point(int(200 * sx), int(480 * sy))
     return [{"name": "entry_line", "line": sv.LineZone(start=start, end=end)}]
+
+
+# ── World-Space Zone Hit Testing ─────────────────────────────────────
+
+def is_foot_in_zone(world_x: Optional[float], world_y: Optional[float], zone: dict) -> bool:
+    """
+    Test whether a person's foot (back-projected to world coords) lies inside a zone.
+
+    Per JANUS-ZONE-MODEL.md, zones are 3D world-space planes — hit testing happens
+    in world coords, not pixel coords. This wrapper:
+
+      - Returns False for v1 zones (caller must fall back to legacy pixel-space test).
+      - Returns False if world coords are missing (uncalibrated camera) — caller
+        must fall back to legacy pixel-space test.
+      - For v2 floor / ramp zones: 2D point-in-polygon on the xy footprint.
+      - For v2 counter_top / table zones (elevated surfaces): person standing at
+        the bar with foot z=0 still counts when their xy is inside the footprint.
+        (point_in_zone_world() would otherwise reject them due to z mismatch.)
+      - For v2 wall zones: tighter 3D distance check.
+      - For other v2 surfaces: standard point_in_zone_world.
+    """
+    if not _ZONE_GEOMETRY_AVAILABLE:
+        return False
+    if zone.get("schema_version", 1) < 2:
+        return False
+    pw3d = zone.get("polygon_world_3d")
+    rot = zone.get("rotation_matrix")
+    if pw3d is None or rot is None:
+        return False
+    if world_x is None or world_y is None:
+        return False  # uncalibrated — caller should use pixel-space fallback
+
+    surface = zone.get("surface_type", "floor")
+    foot_pt = [float(world_x), float(world_y), 0.0]
+
+    if surface in ("floor", "ramp"):
+        return point_in_zone_world(foot_pt, pw3d, rot)
+    elif surface in ("counter_top", "table"):
+        # Elevated zones: person at floor (z=0) standing under/at the bar counts
+        # if their xy footprint intersects the zone's xy footprint.
+        poly_xy = np.array([[p[0], p[1]] for p in pw3d], dtype=np.float64)
+        return _point_in_polygon_2d(np.array([float(world_x), float(world_y)]), poly_xy)
+    elif surface == "wall":
+        return point_in_zone_world(foot_pt, pw3d, rot, surface_tolerance=1.0)
+    else:
+        return point_in_zone_world(foot_pt, pw3d, rot)
 
 
 # ── Homography / World-Coordinate Helpers ────────────────────────────
@@ -300,7 +428,9 @@ def main():
     if zones is None:
         zones, lines = load_zone_config(args.config, frame_w, frame_h)
     for name, z in zones.items():
-        print(f"  Zone: {name} [{z['zone_type']}]")
+        sv_str = f"v{z.get('schema_version', 1)}"
+        surf = z.get("surface_type", "floor")
+        print(f"  Zone: {name} [{z['zone_type']}] ({sv_str}, surface={surf})")
 
     # Load homography calibration for world-coordinate projection
     H_matrix = load_calibration_from_api(args.backend, args.camera_id)
@@ -340,9 +470,11 @@ def main():
             # 2. Track with ByteTrack
             detections = tracker.update(detections)
 
-            # 3. Zone analytics
+            # 3. Zone analytics — only run sv.PolygonZone.trigger for zones that have one
             for name, z_info in zones.items():
-                z_info["zone"].trigger(detections)
+                sv_zone = z_info.get("zone")
+                if sv_zone is not None:
+                    sv_zone.trigger(detections)
 
             # 4. Line crossing (entry/exit)
             for ln in lines:
@@ -355,16 +487,34 @@ def main():
                     track_id = int(track_id)
                     active_ids.add(track_id)
 
-                    # Determine zone from bottom-center anchor
+                    # Determine zone from bottom-center anchor.
+                    # Per JANUS-ZONE-MODEL.md: prefer world-space hit-test (v2 zones)
+                    # and fall back to legacy pixel-space (v1 zones / uncalibrated camera).
                     feet = detections.get_anchors_coordinates(sv.Position.BOTTOM_CENTER)
                     fx, fy = feet[i]
                     world_x, world_y = project_to_world(H_matrix, fx, fy)
                     current_zone = None
                     for name, z_info in zones.items():
-                        poly = z_info["zone"].polygon
-                        if cv2.pointPolygonTest(poly.astype(np.float32), (float(fx), float(fy)), False) >= 0:
-                            current_zone = name
-                            break
+                        is_v2 = (
+                            z_info.get("schema_version", 1) >= 2
+                            and z_info.get("polygon_world_3d") is not None
+                            and z_info.get("rotation_matrix") is not None
+                        )
+                        if is_v2 and world_x is not None:
+                            if is_foot_in_zone(world_x, world_y, z_info):
+                                current_zone = name
+                                break
+                        else:
+                            # Legacy v1 fallback: pixel-space point-in-polygon
+                            sv_zone = z_info.get("zone")
+                            if sv_zone is None:
+                                continue  # v2-only zone with no cached polygon_image; skip
+                            poly = sv_zone.polygon
+                            if cv2.pointPolygonTest(
+                                poly.astype(np.float32), (float(fx), float(fy)), False
+                            ) >= 0:
+                                current_zone = name
+                                break
 
                     person_id = f"P{track_id:06d}"
 

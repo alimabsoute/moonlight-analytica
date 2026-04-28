@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Janus — Map your gym floor.</title>
+<title>Janus — Hangar Operations.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -253,7 +253,7 @@
     </div>
     <div>
       <div class="brandWord">Janus</div>
-      <div class="brandByline">Built for the floor. Not the screen.</div>
+      <div class="brandByline">Hangar floor analytics.</div>
     </div>
     <div class="liveBadge">LIVE</div>
   </div>
@@ -293,8 +293,8 @@
         <path d="M12 11 L12 21" opacity="0.55" />
       </svg>
     </div>
-    <h1 class="endCardTag" id="endTag">Know what your floor<br>is doing.</h1>
-    <p class="endCardSub" id="endSub">Live counts at the door, the cardio floor, the weight area, the studio. No facial recognition. No badges.</p>
+    <h1 class="endCardTag" id="endTag">Know what your hangar<br>is doing.</h1>
+    <p class="endCardSub" id="endSub">Live counts in every bay, every exclusion zone. No facial recognition. No badges.</p>
     <a class="endCardCta" href="#" id="endCta">
       <span>See it live</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -449,10 +449,10 @@ root.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0c10);
-scene.fog = new THREE.Fog(0x0a0c10, 32, 80);
+scene.fog = new THREE.Fog(0x0a0c10, 36, 90);
 
 const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(14, 11, 18);
+camera.position.set(16, 12, 22);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0.5, 0);
@@ -460,7 +460,7 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.maxPolarAngle = Math.PI * 0.49;
 controls.minDistance = 6;
-controls.maxDistance = 50;
+controls.maxDistance = 60;
 controls.enabled = false; // disabled during cinematic intro
 
 // ============= IMAGE-BASED LIGHTING (PMREM from RoomEnvironment) =============
@@ -468,27 +468,27 @@ controls.enabled = false; // disabled during cinematic intro
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
-scene.environmentIntensity = 0.45;
+scene.environmentIntensity = 0.55;
 
-// ============= DIRECT LIGHTS (shadow-casting key + cool fill + warm studio rim) =============
-const key = new THREE.DirectionalLight(0xfff0d8, 2.0);
+// ============= DIRECT LIGHTS (cooler hangar palette) =============
+const key = new THREE.DirectionalLight(0xfff8e8, 2.0);
 key.position.set(12, 18, 8);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
-key.shadow.camera.left = -20; key.shadow.camera.right = 20;
-key.shadow.camera.top = 20; key.shadow.camera.bottom = -20;
+key.shadow.camera.left = -24; key.shadow.camera.right = 24;
+key.shadow.camera.top = 24; key.shadow.camera.bottom = -24;
 key.shadow.bias = -0.0005;
 key.shadow.radius = 8;
 scene.add(key);
 
-const fill = new THREE.DirectionalLight(0x88a4ff, 0.5);
+const fill = new THREE.DirectionalLight(0x88a4ff, 0.55);
 fill.position.set(-10, 8, -6);
 scene.add(fill);
 
-// Warm rim light over the class studio — sells "boutique gym ambience"
-const studioRim = new THREE.PointLight(0xff9a55, 1.4, 22, 1.6);
-studioRim.position.set(9.5, 2.4, 6);
-scene.add(studioRim);
+// Cool fluorescent center light replacing the restaurant warm bar rim
+const hangarCenterLight = new THREE.PointLight(0xe8f0ff, 1.4, 28, 1.4);
+hangarCenterLight.position.set(0, 6.5, 0);
+scene.add(hangarCenterLight);
 
 // ============= PROCEDURAL TEXTURES =============
 function makeWoodTexture(w, h, base, grain) {
@@ -573,291 +573,368 @@ function makeFabricTexture(size, hex) {
 }
 
 // ============= PBR MATERIAL LIBRARY =============
-const concreteMap = makeConcreteTexture(512); concreteMap.repeat.set(8, 6);
-const deskTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
-const studioFloorMap = makeWoodTexture(512, 512, '#5a4028', '#2a1810');
+const concreteMap = makeConcreteTexture(512); concreteMap.repeat.set(12, 10);
+const barTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
+const tableTopMap = makeWoodTexture(384, 384, '#4a3520', '#241510');
 
 const MATS = {
   floor: new THREE.MeshStandardMaterial({ color: 0x2c2f36, roughness: 0.86, metalness: 0.05, map: concreteMap }),
   wallDark: new THREE.MeshStandardMaterial({ color: 0x1a1d24, roughness: 0.92, metalness: 0.0 }),
   wallAccent: new THREE.MeshStandardMaterial({ color: 0x2d2419, roughness: 0.88, metalness: 0.0 }),
   barFront: new THREE.MeshStandardMaterial({ color: 0x33384a, roughness: 0.55, metalness: 0.15 }),
-  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: deskTopMap }),
+  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: barTopMap }),
   hostStand: new THREE.MeshStandardMaterial({ color: 0x3d4654, roughness: 0.55, metalness: 0.10 }),
-  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: studioFloorMap }),
+  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: tableTopMap }),
   tableLeg: new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.42, metalness: 0.55 }),
   brass: new THREE.MeshStandardMaterial({ color: 0xb59047, roughness: 0.28, metalness: 0.85 }),
   steel: new THREE.MeshStandardMaterial({ color: 0x4a5060, roughness: 0.35, metalness: 0.75 }),
-  rubberDark: new THREE.MeshStandardMaterial({ color: 0x0c0e12, roughness: 0.85, metalness: 0.05 }),
   glass: new THREE.MeshPhysicalMaterial({
     color: 0xc8e4ec, roughness: 0.06, metalness: 0.0, transmission: 0.95,
     thickness: 0.4, ior: 1.45, transparent: true, opacity: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.05,
   }),
+  bottleAmber: new THREE.MeshPhysicalMaterial({ color: 0x6e3a14, roughness: 0.18, metalness: 0.0,
+    transmission: 0.4, transparent: true, opacity: 0.85, clearcoat: 0.7 }),
+  bottleClear: new THREE.MeshPhysicalMaterial({ color: 0xd4dec4, roughness: 0.10, metalness: 0.0,
+    transmission: 0.8, transparent: true, opacity: 0.70, clearcoat: 0.7 }),
+  bottleDark: new THREE.MeshPhysicalMaterial({ color: 0x142010, roughness: 0.20, metalness: 0.05,
+    transmission: 0.25, transparent: true, opacity: 0.92, clearcoat: 0.8 }),
+  bottleGreen: new THREE.MeshPhysicalMaterial({ color: 0x1f3018, roughness: 0.20, metalness: 0.05,
+    transmission: 0.3, transparent: true, opacity: 0.88, clearcoat: 0.8 }),
+  label: new THREE.MeshStandardMaterial({ color: 0xeeeae0, roughness: 0.78, metalness: 0.0 }),
+  labelDark: new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.7, metalness: 0.0 }),
   pendantBulb: new THREE.MeshStandardMaterial({
-    color: 0xfff5d6, emissive: 0xffc97a, emissiveIntensity: 3.5, roughness: 0.4,
+    color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 3.5, roughness: 0.4,
   }),
   pendantShade: new THREE.MeshStandardMaterial({ color: 0x2a1f15, roughness: 0.45, metalness: 0.6 }),
   cord: new THREE.MeshStandardMaterial({ color: 0x0e1014, roughness: 0.9, metalness: 0.0 }),
-  // Console screen — emissive so it blooms
-  screen: new THREE.MeshStandardMaterial({
-    color: 0x0a1a2a, emissive: 0x4d9bff, emissiveIntensity: 1.4, roughness: 0.25, metalness: 0.4,
-  }),
-  // Mirror panel (standalone, not shared) — uses dark blue with slight emissive tint
-  mirror: new THREE.MeshStandardMaterial({
-    color: 0x1a2638, roughness: 0.15, metalness: 0.7, emissive: 0x1a2638, emissiveIntensity: 0.30,
-  }),
-  // Yoga mat colors (subtle muted)
-  yoga1: new THREE.MeshStandardMaterial({ color: 0x4d6b8a, roughness: 0.6, metalness: 0.0 }),
-  yoga2: new THREE.MeshStandardMaterial({ color: 0x6a4a5e, roughness: 0.6, metalness: 0.0 }),
-  yoga3: new THREE.MeshStandardMaterial({ color: 0x4a6a55, roughness: 0.6, metalness: 0.0 }),
-  yoga4: new THREE.MeshStandardMaterial({ color: 0x7a6044, roughness: 0.6, metalness: 0.0 }),
+  // ===== Aerospace-specific additions =====
+  hangarPanel: new THREE.MeshStandardMaterial({ color: 0x2b313c, roughness: 0.55, metalness: 0.35 }),
+  truss: new THREE.MeshStandardMaterial({ color: 0x3e4654, roughness: 0.42, metalness: 0.7 }),
+  aircraftSkin: new THREE.MeshStandardMaterial({ color: 0x7a8590, roughness: 0.42, metalness: 0.55 }),
+  aircraftDark: new THREE.MeshStandardMaterial({ color: 0x3a4250, roughness: 0.5, metalness: 0.6 }),
+  gseYellow: new THREE.MeshStandardMaterial({ color: 0xe6b62a, roughness: 0.55, metalness: 0.3 }),
+  gseDark: new THREE.MeshStandardMaterial({ color: 0x222630, roughness: 0.6, metalness: 0.4 }),
+  rubber: new THREE.MeshStandardMaterial({ color: 0x14171c, roughness: 0.85, metalness: 0.05 }),
+  paintLine: new THREE.MeshBasicMaterial({ color: 0xf0c930, transparent: true, opacity: 0.55 }),
 };
 
-// ============= ENVIRONMENT (floor, walls, grid) =============
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), MATS.floor);
+// ============= ENVIRONMENT (hangar floor, walls, trusses) =============
+const HANGAR_W = 44, HANGAR_D = 32, HANGAR_H = 8;
+
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(HANGAR_W, HANGAR_D), MATS.floor);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-const grid = new THREE.GridHelper(40, 40, 0x2a2f3a, 0x1c1f27);
+const grid = new THREE.GridHelper(HANGAR_W, 22, 0x2a2f3a, 0x1c1f27);
 grid.position.y = 0.001;
 grid.material.transparent = true;
-grid.material.opacity = 0.35;
+grid.material.opacity = 0.30;
 scene.add(grid);
 
-// Walls
-const backWall = new THREE.Mesh(new THREE.BoxGeometry(40, 6, 0.2), MATS.wallDark);
-backWall.position.set(0, 3, -15);
+// Yellow boundary line across the front of parking positions (low emissive)
+const boundaryGeo = new THREE.PlaneGeometry(HANGAR_W - 4, 0.18);
+const boundaryMat = new THREE.MeshBasicMaterial({ color: 0xf0c930, transparent: true, opacity: 0.55 });
+const boundaryLine = new THREE.Mesh(boundaryGeo, boundaryMat);
+boundaryLine.rotation.x = -Math.PI / 2;
+boundaryLine.position.set(0, 0.012, 4.5);
+scene.add(boundaryLine);
+
+// Hangar walls (taller, dark metal panels)
+const backWall = new THREE.Mesh(new THREE.BoxGeometry(HANGAR_W, HANGAR_H, 0.25), MATS.hangarPanel);
+backWall.position.set(0, HANGAR_H / 2, -HANGAR_D / 2);
 backWall.receiveShadow = true; scene.add(backWall);
-const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
-leftWall.position.set(-20, 3, 0); leftWall.receiveShadow = true; scene.add(leftWall);
-const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
-rightWall.position.set(20, 3, 0); rightWall.receiveShadow = true; scene.add(rightWall);
+const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, HANGAR_H, HANGAR_D), MATS.hangarPanel);
+leftWall.position.set(-HANGAR_W / 2, HANGAR_H / 2, 0); leftWall.receiveShadow = true; scene.add(leftWall);
+const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, HANGAR_H, HANGAR_D), MATS.hangarPanel);
+rightWall.position.set(HANGAR_W / 2, HANGAR_H / 2, 0); rightWall.receiveShadow = true; scene.add(rightWall);
 
-// ============= RECEPTION DESK =============
-function buildReception(x, z) {
+// Vertical wall ribs on back wall for industrial detail
+for (let rx = -HANGAR_W / 2 + 2; rx <= HANGAR_W / 2 - 2; rx += 2.5) {
+  const rib = new THREE.Mesh(new THREE.BoxGeometry(0.10, HANGAR_H - 0.4, 0.08), MATS.steel);
+  rib.position.set(rx, HANGAR_H / 2, -HANGAR_D / 2 + 0.18);
+  scene.add(rib);
+}
+
+// Overhead trusses (4 I-beams running across the hangar at y = 7)
+function buildTruss(z) {
   const g = new THREE.Group();
-  // Desk body
-  const body = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.10, 1.4), MATS.barFront);
+  const beam = new THREE.Mesh(new THREE.BoxGeometry(HANGAR_W - 1, 0.35, 0.20), MATS.truss);
+  beam.position.y = 7;
+  beam.castShadow = true;
+  g.add(beam);
+  // top + bottom flanges
+  const top = new THREE.Mesh(new THREE.BoxGeometry(HANGAR_W - 1, 0.06, 0.50), MATS.truss);
+  top.position.y = 7.15; g.add(top);
+  const bottom = new THREE.Mesh(new THREE.BoxGeometry(HANGAR_W - 1, 0.06, 0.50), MATS.truss);
+  bottom.position.y = 6.85; g.add(bottom);
+  g.position.z = z;
+  scene.add(g);
+  return g;
+}
+[-10, -3.5, 3.5, 10].forEach(z => buildTruss(z));
+
+// ============= AIRCRAFT (simplified low-poly) =============
+function buildAircraft(x, z, yawRad) {
+  const g = new THREE.Group();
+  // Fuselage — long capped cylinder
+  const fuselage = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 7.2, 18), MATS.aircraftSkin);
+  fuselage.rotation.z = Math.PI / 2;
+  fuselage.position.y = 1.3;
+  fuselage.castShadow = true; fuselage.receiveShadow = true;
+  g.add(fuselage);
+  // Nose cone
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.55, 1.2, 18), MATS.aircraftSkin);
+  nose.rotation.z = -Math.PI / 2;
+  nose.position.set(4.1, 1.3, 0);
+  nose.castShadow = true;
+  g.add(nose);
+  // Tail cone
+  const tailCone = new THREE.Mesh(new THREE.ConeGeometry(0.55, 1.0, 18), MATS.aircraftSkin);
+  tailCone.rotation.z = Math.PI / 2;
+  tailCone.position.set(-4.1, 1.3, 0);
+  tailCone.castShadow = true;
+  g.add(tailCone);
+  // Cockpit canopy — small dark glass dome
+  const canopy = new THREE.Mesh(new THREE.SphereGeometry(0.42, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), MATS.aircraftDark);
+  canopy.position.set(2.4, 1.78, 0);
+  canopy.scale.set(1.6, 0.7, 1);
+  g.add(canopy);
+  // Wings — two flat low boxes extending sideways
+  const wingL = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.14, 4.6), MATS.aircraftSkin);
+  wingL.position.set(0.2, 1.15, 3.3);
+  wingL.castShadow = true; wingL.receiveShadow = true;
+  g.add(wingL);
+  const wingR = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.14, 4.6), MATS.aircraftSkin);
+  wingR.position.set(0.2, 1.15, -3.3);
+  wingR.castShadow = true; wingR.receiveShadow = true;
+  g.add(wingR);
+  // Wing leading edge accent strips (subtle dark)
+  const leL = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.16, 4.4), MATS.aircraftDark);
+  leL.position.set(0.95, 1.16, 3.3); g.add(leL);
+  const leR = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.16, 4.4), MATS.aircraftDark);
+  leR.position.set(0.95, 1.16, -3.3); g.add(leR);
+  // Tail vertical fin
+  const fin = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.5, 0.12), MATS.aircraftSkin);
+  fin.position.set(-3.2, 2.5, 0);
+  fin.castShadow = true;
+  g.add(fin);
+  // Horizontal stabilizers
+  const stabL = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.10, 1.6), MATS.aircraftSkin);
+  stabL.position.set(-3.5, 1.6, 1.0); g.add(stabL);
+  const stabR = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.10, 1.6), MATS.aircraftSkin);
+  stabR.position.set(-3.5, 1.6, -1.0); g.add(stabR);
+  // Engines (cylinder under each wing)
+  const engL = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 1.6, 14), MATS.aircraftDark);
+  engL.rotation.z = Math.PI / 2;
+  engL.position.set(0.4, 0.65, 3.0);
+  engL.castShadow = true;
+  g.add(engL);
+  const engR = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 1.6, 14), MATS.aircraftDark);
+  engR.rotation.z = Math.PI / 2;
+  engR.position.set(0.4, 0.65, -3.0);
+  engR.castShadow = true;
+  g.add(engR);
+  // Engine intake rim accents
+  const intakeL = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.03, 8, 18), MATS.steel);
+  intakeL.rotation.y = Math.PI / 2; intakeL.position.set(1.2, 0.65, 3.0); g.add(intakeL);
+  const intakeR = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.03, 8, 18), MATS.steel);
+  intakeR.rotation.y = Math.PI / 2; intakeR.position.set(1.2, 0.65, -3.0); g.add(intakeR);
+  // Landing gear — main wheels under wings, nose wheel under fuselage
+  for (const [gx, gz] of [[-1.2, 0], [0.6, 1.4], [0.6, -1.4]]) {
+    const strut = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.65, 8), MATS.steel);
+    strut.position.set(gx, 0.35, gz); g.add(strut);
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.18, 14), MATS.rubber);
+    wheel.rotation.z = Math.PI / 2;
+    wheel.position.set(gx, 0.10, gz);
+    wheel.castShadow = true;
+    g.add(wheel);
+  }
+
+  g.position.set(x, 0, z);
+  g.rotation.y = yawRad;
+  scene.add(g);
+  return g;
+}
+
+// Two aircraft, parking positions in the back half of the hangar.
+// Wing half-span is ~5.6m, so we space the bays 9m apart (z = -10 and z = -1) to avoid overlap.
+// Built with nose facing +X (toward the open side of the hangar); yaw = 0 keeps that orientation.
+const aircraft1 = buildAircraft(-3, -10, 0);
+const aircraft2 = buildAircraft(-3, -1, 0);
+
+// ============= GROUND SUPPORT EQUIPMENT (GSE) =============
+function buildTowTractor(x, z) {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.85, 0.95), MATS.gseYellow);
   body.position.y = 0.55; body.castShadow = true; body.receiveShadow = true; g.add(body);
-  // Desk top (wood)
-  const top = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 1.5), MATS.barTop);
-  top.position.y = 1.13; top.castShadow = true; g.add(top);
-  // Backdrop wall slab (gym brand panel)
-  const backdrop = new THREE.Mesh(new THREE.BoxGeometry(4.2, 2.0, 0.15), MATS.wallAccent);
-  backdrop.position.set(0, 1.0, -1.6); g.add(backdrop);
-  // Subtle accent stripe on backdrop (emissive cool blue — gym brand-y)
-  const stripe = new THREE.Mesh(
-    new THREE.BoxGeometry(3.6, 0.06, 0.04),
-    new THREE.MeshStandardMaterial({ color: 0x4d9bff, emissive: 0x4d9bff, emissiveIntensity: 1.1, roughness: 0.4 })
-  );
-  stripe.position.set(0, 1.6, -1.52); g.add(stripe);
-  // Reading lamp
-  const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.40, 8), MATS.brass);
-  lampStem.position.set(-1.3, 1.33, 0.0); g.add(lampStem);
-  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.12, 12, 1, true), MATS.brass);
-  lampShade.position.set(-1.3, 1.55, 0); g.add(lampShade);
-  const lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 10), MATS.pendantBulb);
-  lampBulb.position.set(-1.3, 1.50, 0); g.add(lampBulb);
-  const lampLight = new THREE.PointLight(0xffd47a, 0.35, 3, 1.8); lampLight.position.set(-1.3, 1.45, 0); g.add(lampLight);
-  // Small clipboard / tablet on desk (just decoration)
-  const tablet = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.02, 0.28),
-    new THREE.MeshStandardMaterial({ color: 0x0a1a2a, emissive: 0x4d9bff, emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.4 })
-  );
-  tablet.position.set(0.7, 1.16, 0.1); g.add(tablet);
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildReception(-8, -6);
-
-// ============= TREADMILL ROW (cardio) =============
-function buildTreadmill(x, z) {
-  const g = new THREE.Group();
-  // Deck base — long flat box on the floor
-  const deck = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.20, 1.85), MATS.steel);
-  deck.position.y = 0.10; deck.castShadow = true; deck.receiveShadow = true; g.add(deck);
-  // Belt — thin dark slab on top of deck
-  const belt = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.025, 1.55), MATS.rubberDark);
-  belt.position.y = 0.215; g.add(belt);
-  // Side rails — vertical cylinder uprights
-  const upL = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.30, 10), MATS.steel);
-  upL.position.set(-0.42, 0.85, 0.65); upL.castShadow = true; g.add(upL);
-  const upR = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.30, 10), MATS.steel);
-  upR.position.set(0.42, 0.85, 0.65); upR.castShadow = true; g.add(upR);
-  // Horizontal grab bar across the front (between uprights)
-  const barGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.86, 10);
-  barGeo.rotateZ(Math.PI / 2);
-  const grabBar = new THREE.Mesh(barGeo, MATS.steel);
-  grabBar.position.set(0, 1.40, 0.65); g.add(grabBar);
-  // Extra side rails (long horizontal — running along the side of the deck)
-  const sideRailGeo = new THREE.CylinderGeometry(0.020, 0.020, 1.50, 10);
-  const sideRailL = new THREE.Mesh(sideRailGeo, MATS.steel);
-  sideRailL.position.set(-0.42, 1.05, 0.0); g.add(sideRailL);
-  const sideRailR = new THREE.Mesh(sideRailGeo, MATS.steel);
-  sideRailR.position.set(0.42, 1.05, 0.0); g.add(sideRailR);
-  // Console panel — small dark box with glowing screen at the front
-  const consoleBack = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.50, 0.10), MATS.barFront);
-  consoleBack.position.set(0, 1.55, 0.78); g.add(consoleBack);
-  const screen = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.36, 0.04), MATS.screen);
-  screen.position.set(0, 1.55, 0.835); g.add(screen);
-  // Tiny LED highlights on console (bloom-friendly)
-  for (let i = 0; i < 3; i++) {
-    const led = new THREE.Mesh(
-      new THREE.SphereGeometry(0.018, 8, 8),
-      new THREE.MeshStandardMaterial({ color: 0xff5b5b, emissive: 0xff5b5b, emissiveIntensity: 4.0, roughness: 0.4 })
-    );
-    led.position.set(-0.30 + i * 0.30, 1.32, 0.835); g.add(led);
+  // Cab / roof
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.55, 0.85), MATS.gseDark);
+  cab.position.set(-0.2, 1.20, 0); g.add(cab);
+  // Wheels (4)
+  for (const [wx, wz] of [[-0.55, 0.50], [0.55, 0.50], [-0.55, -0.50], [0.55, -0.50]]) {
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.20, 0.18, 14), MATS.rubber);
+    wheel.rotation.x = Math.PI / 2;
+    wheel.position.set(wx, 0.20, wz);
+    wheel.castShadow = true;
+    g.add(wheel);
   }
-  g.position.set(x, 0, z); scene.add(g); return g;
+  // Tow hitch
+  const hitch = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.06, 0.06), MATS.steel);
+  hitch.position.set(0.95, 0.30, 0); g.add(hitch);
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
-const treadmillX = -16.6;
-for (let i = 0; i < 4; i++) {
-  const tz = -2.5 + i * 2.4;
-  buildTreadmill(treadmillX, tz);
-}
-
-// ============= SQUAT RACK =============
-function buildSquatRack(x, z) {
+function buildBoardingStairs(x, z, rotY = 0) {
   const g = new THREE.Group();
-  // Two vertical uprights (cylinders)
-  const upGeo = new THREE.CylinderGeometry(0.07, 0.07, 2.6, 12);
-  const upL = new THREE.Mesh(upGeo, MATS.steel);
-  upL.position.set(-1.0, 1.30, 0); upL.castShadow = true; g.add(upL);
-  const upR = new THREE.Mesh(upGeo, MATS.steel);
-  upR.position.set(1.0, 1.30, 0); upR.castShadow = true; g.add(upR);
-  // Cross-bracket near the top
-  const xb = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.10, 0.10), MATS.steel);
-  xb.position.set(0, 2.45, 0); g.add(xb);
-  // Horizontal barbell on rack at chest height (cylinder spanning the uprights, slightly wider)
-  const barbellGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.5, 14);
-  barbellGeo.rotateZ(Math.PI / 2);
-  const barbell = new THREE.Mesh(barbellGeo, MATS.steel);
-  barbell.position.set(0, 1.45, 0); barbell.castShadow = true; g.add(barbell);
-  // Two weight plates on each end (cylinder discs)
-  const plateGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.06, 24);
-  plateGeo.rotateZ(Math.PI / 2);
-  const plateMat = MATS.rubberDark;
-  for (const px of [-1.20, -1.30, 1.20, 1.30]) {
-    const plate = new THREE.Mesh(plateGeo, plateMat);
-    plate.position.set(px, 1.45, 0); plate.castShadow = true; g.add(plate);
+  // Platform top
+  const platform = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.08, 0.9), MATS.gseYellow);
+  platform.position.y = 1.55; platform.castShadow = true; g.add(platform);
+  // Angled stair body
+  const stairBody = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.10, 0.85), MATS.gseYellow);
+  stairBody.rotation.z = -Math.atan2(1.55, 2.0);
+  stairBody.position.set(-1.1, 0.78, 0);
+  stairBody.castShadow = true; stairBody.receiveShadow = true;
+  g.add(stairBody);
+  // Steps
+  for (let i = 0; i < 6; i++) {
+    const step = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.04, 0.78), MATS.gseDark);
+    const sx = -2.1 + i * 0.36;
+    const sy = 0.20 + i * 0.24;
+    step.position.set(sx, sy, 0);
+    g.add(step);
   }
-  // Base platform (rubber matting)
-  const base = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.08, 2.4), MATS.rubberDark);
-  base.position.set(0, 0.04, 0); base.receiveShadow = true; g.add(base);
-  g.position.set(x, 0, z); scene.add(g); return g;
+  // Handrails
+  for (const side of [-1, 1]) {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.04, 0.04), MATS.steel);
+    rail.rotation.z = -Math.atan2(1.55, 2.0);
+    rail.position.set(-1.1, 1.40, side * 0.40);
+    g.add(rail);
+    for (let i = 0; i < 4; i++) {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.50, 6), MATS.steel);
+      post.position.set(-2.1 + i * 0.6, 1.0 + i * 0.18, side * 0.40);
+      g.add(post);
+    }
+  }
+  // Wheels (4 small)
+  for (const [wx, wz] of [[-2.1, 0.40], [-2.1, -0.40], [0.0, 0.40], [0.0, -0.40]]) {
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.12, 12), MATS.rubber);
+    wheel.rotation.x = Math.PI / 2;
+    wheel.position.set(wx, 0.14, wz);
+    g.add(wheel);
+  }
+  g.position.set(x, 0, z);
+  g.rotation.y = rotY;
+  scene.add(g);
+  return g;
 }
-buildSquatRack(4, -10);
-
-// ============= BENCH PRESS =============
-function buildBench(x, z) {
+function buildFuelCart(x, z) {
   const g = new THREE.Group();
-  // Two short legs (boxes)
-  const legGeo = new THREE.BoxGeometry(0.12, 0.50, 0.50);
-  const legA = new THREE.Mesh(legGeo, MATS.steel);
-  legA.position.set(0, 0.25, -0.6); legA.castShadow = true; g.add(legA);
-  const legB = new THREE.Mesh(legGeo, MATS.steel);
-  legB.position.set(0, 0.25, 0.6); legB.castShadow = true; g.add(legB);
-  // Bench pad (long, fabric texture)
-  const padMat = new THREE.MeshStandardMaterial({
-    color: 0x222a36, roughness: 0.55, metalness: 0.05,
-    map: makeFabricTexture(128, '#222a36'),
-  });
-  const pad = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.10, 1.7), padMat);
-  pad.position.set(0, 0.55, 0); pad.castShadow = true; g.add(pad);
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildBench(7.5, -9.7);
+  // Tank body
+  const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.6, 18), MATS.gseYellow);
+  tank.rotation.z = Math.PI / 2;
+  tank.position.y = 0.75; tank.castShadow = true; tank.receiveShadow = true;
+  g.add(tank);
+  // End caps detail
+  const cap = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.04, 8, 16), MATS.gseDark);
+  cap.rotation.y = Math.PI / 2;
+  cap.position.set(0.8, 0.75, 0); g.add(cap);
+  const cap2 = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.04, 8, 16), MATS.gseDark);
+  cap2.rotation.y = Math.PI / 2;
+  cap2.position.set(-0.8, 0.75, 0); g.add(cap2);
+  // Frame chassis
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.18, 0.85), MATS.gseDark);
+  frame.position.y = 0.35; g.add(frame);
+  // Wheels (4)
+  for (const [wx, wz] of [[-0.7, 0.45], [0.7, 0.45], [-0.7, -0.45], [0.7, -0.45]]) {
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.16, 12), MATS.rubber);
+    wheel.rotation.x = Math.PI / 2;
+    wheel.position.set(wx, 0.18, wz);
+    wheel.castShadow = true; g.add(wheel);
+  }
+  // Hose detail (dark coiled cylinder bent over the side)
+  const hoseSeg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.6, 8), MATS.rubber);
+  hoseSeg1.position.set(0.4, 1.20, 0.5);
+  hoseSeg1.rotation.x = Math.PI / 2;
+  g.add(hoseSeg1);
+  const hoseSeg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.7, 8), MATS.rubber);
+  hoseSeg2.position.set(0.4, 0.85, 0.85);
+  hoseSeg2.rotation.x = Math.PI / 4;
+  g.add(hoseSeg2);
+  // Nozzle
+  const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.18, 8), MATS.steel);
+  nozzle.position.set(0.4, 0.50, 1.18);
+  nozzle.rotation.x = Math.PI / 2;
+  g.add(nozzle);
+  // Tow handle
+  const handle = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.05, 0.05), MATS.gseDark);
+  handle.position.set(-1.25, 0.50, 0); g.add(handle);
 
-// ============= DUMBBELL RACK =============
-function buildDumbbellRack(x, z) {
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
+}
+
+// GSE staging area on the right side of the hangar
+buildTowTractor(15, -4);
+buildBoardingStairs(15.5, -8, -Math.PI / 2);
+buildFuelCart(15, 0);
+
+// ============= TOOL BOX / SUPPLY RACK along left wall =============
+function buildSupplyRack(x, z) {
   const g = new THREE.Group();
-  // Two-tier rack frame
-  const frameGeo = new THREE.BoxGeometry(3.6, 0.10, 0.55);
-  const t1 = new THREE.Mesh(frameGeo, MATS.steel);
-  t1.position.set(0, 0.30, 0); g.add(t1);
-  const t2 = new THREE.Mesh(frameGeo, MATS.steel);
-  t2.position.set(0, 0.85, 0); g.add(t2);
-  // End supports
-  for (const ex of [-1.75, 1.75]) {
-    const sup = new THREE.Mesh(new THREE.BoxGeometry(0.10, 1.0, 0.55), MATS.steel);
-    sup.position.set(ex, 0.50, 0); g.add(sup);
+  // Frame uprights
+  for (const [fx, fz] of [[-1.0, -0.40], [1.0, -0.40], [-1.0, 0.40], [1.0, 0.40]]) {
+    const upright = new THREE.Mesh(new THREE.BoxGeometry(0.06, 2.4, 0.06), MATS.steel);
+    upright.position.set(fx, 1.20, fz);
+    upright.castShadow = true; g.add(upright);
   }
-  // 5 pairs of dumbbells (ascending size) on two tiers
-  function dumbbell(size) {
-    const dg = new THREE.Group();
-    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.38, 10), MATS.steel);
-    handle.rotation.z = Math.PI / 2; dg.add(handle);
-    const headGeo = new THREE.SphereGeometry(0.10 + size * 0.025, 12, 10);
-    const headMat = MATS.steel;
-    const hL = new THREE.Mesh(headGeo, headMat); hL.position.set(-0.22, 0, 0); dg.add(hL);
-    const hR = new THREE.Mesh(headGeo, headMat); hR.position.set(0.22, 0, 0); dg.add(hR);
-    return dg;
+  // Shelves (4)
+  for (let s = 0; s < 4; s++) {
+    const shelf = new THREE.Mesh(new THREE.BoxGeometry(2.05, 0.04, 0.85), MATS.steel);
+    shelf.position.y = 0.30 + s * 0.6;
+    shelf.castShadow = true; shelf.receiveShadow = true;
+    g.add(shelf);
+    // Random tools / boxes on shelves
+    const itemCount = 3;
+    for (let i = 0; i < itemCount; i++) {
+      const w = 0.25 + Math.random() * 0.30;
+      const h = 0.18 + Math.random() * 0.16;
+      const d = 0.30 + Math.random() * 0.18;
+      const matChoice = Math.random() < 0.5 ? MATS.gseYellow : MATS.gseDark;
+      const box = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), matChoice);
+      const bx = -0.85 + i * 0.55 + Math.random() * 0.05;
+      box.position.set(bx, 0.30 + s * 0.6 + h / 2 + 0.02, 0);
+      box.castShadow = true; g.add(box);
+    }
   }
-  for (let i = 0; i < 5; i++) {
-    const dx = -1.45 + i * 0.7;
-    const t1d = dumbbell(i);
-    t1d.position.set(dx, 0.42, 0); g.add(t1d);
-    const t2d = dumbbell(i);
-    t2d.position.set(dx, 0.97, 0); g.add(t2d);
-  }
-  g.position.set(x, 0, z); scene.add(g); return g;
+  // Top sign / label panel
+  const sign = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.18, 0.10), MATS.gseYellow);
+  sign.position.set(0, 2.55, 0); g.add(sign);
+
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
-buildDumbbellRack(4, -12.4);
+buildSupplyRack(-19, -10);
+buildSupplyRack(-19, 6);
 
-// ============= YOGA MATS =============
-const yogaMats = [MATS.yoga1, MATS.yoga2, MATS.yoga3, MATS.yoga4];
-const yogaPositions = [
-  [7.5, 4.5], [11.5, 4.5], [7.5, 7.5], [11.5, 7.5]
-];
-yogaPositions.forEach(([mx, mz], i) => {
-  const mat = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.02, 1.7), yogaMats[i]);
-  mat.position.set(mx, 0.011, mz); mat.receiveShadow = true; scene.add(mat);
-});
-
-// ============= CLASS STUDIO (warm wood floor + partial wall divider + mirror) =============
-// Studio floor slab (warm wood)
-const studioFloor = new THREE.Mesh(new THREE.BoxGeometry(8.5, 0.03, 8.5), MATS.tableTop);
-studioFloor.position.set(9.5, 0.016, 6); studioFloor.receiveShadow = true; scene.add(studioFloor);
-
-// Partial divider wall (open on one side)
-const dividerL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.6, 8.5), MATS.wallAccent);
-dividerL.position.set(5.3, 1.30, 6); dividerL.castShadow = true; dividerL.receiveShadow = true; scene.add(dividerL);
-const dividerB = new THREE.Mesh(new THREE.BoxGeometry(8.5, 2.6, 0.18), MATS.wallAccent);
-dividerB.position.set(9.5, 1.30, 10.15); dividerB.castShadow = true; dividerB.receiveShadow = true; scene.add(dividerB);
-
-// Mirror panel on the divider wall (uses standalone mirror material — not shared MATS.glass)
-const mirror = new THREE.Mesh(new THREE.BoxGeometry(7.5, 2.0, 0.05), MATS.mirror);
-mirror.position.set(9.7, 1.20, 10.05); scene.add(mirror);
-// Mirror frame
-const frameH = new THREE.Mesh(new THREE.BoxGeometry(7.7, 0.06, 0.08), MATS.brass);
-frameH.position.set(9.7, 2.22, 10.06); scene.add(frameH);
-const frameH2 = new THREE.Mesh(new THREE.BoxGeometry(7.7, 0.06, 0.08), MATS.brass);
-frameH2.position.set(9.7, 0.18, 10.06); scene.add(frameH2);
-
-// ============= LOCKER CORRIDOR (10 lockers along back wall) =============
-function buildLocker(x, z) {
-  const g = new THREE.Group();
-  // Locker box
-  const door = new THREE.Mesh(new THREE.BoxGeometry(1.20, 1.9, 0.55), MATS.barFront);
-  door.position.y = 0.95; door.castShadow = true; door.receiveShadow = true; g.add(door);
-  // Vertical seam down the middle (fakes door split)
-  const seam = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.86, 0.02), MATS.wallDark);
-  seam.position.set(0, 0.95, 0.28); g.add(seam);
-  // Brass handle (small sphere)
-  const handle = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 12), MATS.brass);
-  handle.position.set(0.30, 1.05, 0.30); g.add(handle);
-  const handle2 = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 12), MATS.brass);
-  handle2.position.set(-0.30, 1.05, 0.30); g.add(handle2);
-  // Number plate (small brass square)
-  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.10, 0.012), MATS.brass);
-  plate.position.set(0, 1.65, 0.282); g.add(plate);
-  g.position.set(x, 0, z); scene.add(g); return g;
+// ============= EXCLUSION ZONE PAINTED MARKERS (decorative wireframe rectangles) =============
+function paintExclusionRect(cx, cz, w, d, color = 0xf0c930, alpha = 0.18) {
+  const geo = new THREE.PlaneGeometry(w, d);
+  const edges = new THREE.EdgesGeometry(geo);
+  const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: alpha });
+  const line = new THREE.LineSegments(edges, mat);
+  line.rotation.x = -Math.PI / 2;
+  line.position.set(cx, 0.014, cz);
+  scene.add(line);
 }
-for (let i = 0; i < 10; i++) {
-  const lx = -14 + i * 1.4;
-  buildLocker(lx, -14.4);
-}
+// Painted boundary rectangles around each aircraft footprint
+paintExclusionRect(-3, -10, 9.5, 7.5);
+paintExclusionRect(-3, -1, 9.5, 7.5);
 
-// ============= PENDANT LIGHTS =============
+// ============= PENDANT WORK LIGHTS (cooler industrial white, 4x2 grid at 6m) =============
 function buildPendant(x, y, z, intensity = 0.5) {
   const g = new THREE.Group();
   const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 4, 6), MATS.cord);
@@ -865,30 +942,22 @@ function buildPendant(x, y, z, intensity = 0.5) {
   const shade = new THREE.Mesh(new THREE.ConeGeometry(0.20, 0.25, 16, 1, true), MATS.pendantShade);
   shade.position.y = y; shade.castShadow = true; g.add(shade);
   const inner = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.23, 16, 1, true),
-    new THREE.MeshStandardMaterial({ color: 0xffe0a0, side: THREE.BackSide, roughness: 0.7, emissive: 0xffd47a, emissiveIntensity: 0.4 }));
+    new THREE.MeshStandardMaterial({ color: 0xeaf2ff, side: THREE.BackSide, roughness: 0.7, emissive: 0xffffff, emissiveIntensity: 0.4 }));
   inner.position.y = y - 0.005; g.add(inner);
   const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), MATS.pendantBulb);
   bulb.position.y = y - 0.06; g.add(bulb);
-  const light = new THREE.PointLight(0xffd47a, intensity, 7, 1.7);
+  const light = new THREE.PointLight(0xffffff, intensity, 8, 1.7);
   light.position.y = y - 0.10; g.add(light);
   g.position.x = x; g.position.z = z; scene.add(g); return g;
 }
-// 2 over reception
-buildPendant(-9, 3.6, -6, 0.40);
-buildPendant(-7, 3.6, -6, 0.40);
-// 4 over the cardio area (treadmills)
-for (let i = 0; i < 4; i++) {
-  const tz = -2.5 + i * 2.4;
-  buildPendant(-15.6, 3.4, tz, 0.40);
+// 4x2 grid of pendants over the hangar floor at 6m height
+for (let ix = 0; ix < 4; ix++) {
+  for (let iz = 0; iz < 2; iz++) {
+    const px = -12 + ix * 8;
+    const pz = -8 + iz * 10;
+    buildPendant(px, 6, pz, 0.55);
+  }
 }
-// 2 over the weight area
-buildPendant(3, 3.5, -10.5, 0.40);
-buildPendant(7, 3.5, -10.5, 0.40);
-// 4 along the class studio (slightly higher intensity — yoga studio glow)
-buildPendant(7, 3.6, 4, 0.65);
-buildPendant(12, 3.6, 4, 0.65);
-buildPendant(7, 3.6, 8, 0.65);
-buildPendant(12, 3.6, 8, 0.65);
 
 // ============= HUMANOID (procedural articulated person) =============
 class Humanoid extends THREE.Group {
@@ -930,17 +999,18 @@ class Humanoid extends THREE.Group {
     headMesh.scale.set(0.95, 1.05, 1.0);
     headMesh.castShadow = true;
     this.head.add(headMesh);
-    // Hair (random color)
+    // Hair (random color) — short military-style cap, smaller height
     const hairColors = [0x1a1310, 0x2a1f15, 0x3d2818, 0x4a3528, 0x5e4028, 0x150f0a];
     const hairMat = new THREE.MeshStandardMaterial({
       color: hairColors[Math.floor(Math.random() * hairColors.length)],
       roughness: 0.85, metalness: 0.0,
     });
     const hair = new THREE.Mesh(
-      new THREE.SphereGeometry(0.122, 14, 12, 0, Math.PI * 2, 0, Math.PI / 2 + 0.15),
+      new THREE.SphereGeometry(0.122, 14, 12, 0, Math.PI * 2, 0, Math.PI / 2 + 0.05),
       hairMat,
     );
-    hair.position.y = 0.025;
+    hair.scale.y = 0.55;  // shorter, military-cut hair
+    hair.position.y = 0.045;
     this.head.add(hair);
 
     // Arms
@@ -1043,32 +1113,32 @@ class Humanoid extends THREE.Group {
 // ============= ZONES =============
 const ZONES = [
   {
-    name: 'Entrance', shortName: 'Entrance',
+    name: 'Aircraft 1 Bay', shortName: 'AC 1 Bay',
     color: 0x4d9bff,
-    target: { pos: new THREE.Vector3(-8, 0.012, -5), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 6, h: 5 } },
-    caption: 'Entrance — check-ins, separated from staff and re-entries.',
-    countTarget: 2
+    target: { pos: new THREE.Vector3(-3, 0.012, -10), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8, h: 6 } },
+    caption: 'Aircraft Bay 1 — personnel proximity, FOD walk-down compliance.',
+    countTarget: 4
   },
   {
-    name: 'Cardio', shortName: 'Cardio',
+    name: 'Aircraft 2 Bay', shortName: 'AC 2 Bay',
     color: 0xff8a3d,
-    target: { pos: new THREE.Vector3(-15.6, 0.012, 0.5), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 4.5, h: 11 } },
-    caption: 'Cardio — equipment dwell, peak-hour utilization.',
+    target: { pos: new THREE.Vector3(-3, 0.012, -1), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8, h: 6 } },
+    caption: 'Aircraft Bay 2 — concurrent personnel during MX windows.',
     countTarget: 4
   },
   {
-    name: 'Free Weights', shortName: 'Free Weights',
-    color: 0xb56cff,
-    target: { pos: new THREE.Vector3(5, 0.012, -10), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8, h: 6 } },
-    caption: 'Free Weights — concurrent users, station availability.',
-    countTarget: 3
+    name: 'Exclusion Zone', shortName: 'Exclusion',
+    color: 0xe63946,
+    target: { pos: new THREE.Vector3(2.0, 0.012, -10), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 3, h: 3 } },
+    caption: 'Exclusion zone — alerts on personnel inside engine danger area.',
+    countTarget: 0
   },
   {
-    name: 'Class Studio', shortName: 'Class Studio',
-    color: 0x2ecc71,
-    target: { pos: new THREE.Vector3(9.5, 0.034, 6), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8.4, h: 8.4 } },
-    caption: 'Class Studio — class fill rate, no-show vs booked.',
-    countTarget: 4
+    name: 'GSE Staging', shortName: 'GSE',
+    color: 0xffb547,
+    target: { pos: new THREE.Vector3(15, 0.012, -4), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 5, h: 9 } },
+    caption: 'GSE Staging — equipment dwell, ground-handling efficiency.',
+    countTarget: 2
   }
 ];
 
@@ -1136,15 +1206,44 @@ function roundRect(ctx, x, y, w, h, r) {
 
 const zoneObjects = ZONES.map(buildZone);
 
-// ============= POPULATE WITH HUMANOIDS =============
+// ============= POPULATE WITH HUMANOIDS (14 personnel) =============
 const SKIN_TONES = [0xe8c4a8, 0xd4a37e, 0xc08960, 0xa07050, 0x824f30, 0x624028, 0xf5dcc4, 0xb88560];
-const SHIRT_COLORS = [0x4d6dbb, 0x8b4f3a, 0x3a6b4f, 0x7a5599, 0x4d4d4d, 0x9c8559, 0x5e7d8a, 0xa84a52, 0x355a7d, 0x6e3838];
-const PANTS_COLORS = [0x1a1d24, 0x2a2520, 0x14181f, 0x252a30, 0x352824, 0x1f2530];
+const SHIRT_COLORS = [0x6b6b3a, 0x8a7d4f, 0x2c3e50, 0x4a5560, 0x5e6b3d, 0x546055];
+const PANTS_COLORS = [0x4a4d2c, 0x4a5560, 0x4a4f3a];
 
-const PEOPLE_COUNT = 16;
+const PEOPLE_COUNT = 14;
 const people = [];
 const peopleGroup = new THREE.Group();
 scene.add(peopleGroup);
+
+// Roles assigned by index:
+// 0..3 — Aircraft 1 (maintenance, mostly stationary)
+// 4..7 — Aircraft 2 (maintenance, mostly stationary)
+// 8..9 — GSE staging (slow movement)
+// 10..11 — Walking through hangar entry (back-and-forth)
+// 12..13 — Supervisory (walking between aircraft, slow pace)
+
+function roleForIndex(i) {
+  if (i < 4) return 'mx1';
+  if (i < 8) return 'mx2';
+  if (i < 10) return 'gse';
+  if (i < 12) return 'entry';
+  return 'super';
+}
+
+// Predefined "stationary maintenance" stations around each aircraft (offsets from aircraft center)
+const MX1_STATIONS = [
+  new THREE.Vector3(-3 - 2.5, 0, -10 + 2.5),
+  new THREE.Vector3(-3 + 2.5, 0, -10 + 2.5),
+  new THREE.Vector3(-3 - 2.5, 0, -10 - 2.5),
+  new THREE.Vector3(-3 + 2.5, 0, -10 - 2.5),
+];
+const MX2_STATIONS = [
+  new THREE.Vector3(-3 - 2.5, 0, -1 + 2.5),
+  new THREE.Vector3(-3 + 2.5, 0, -1 + 2.5),
+  new THREE.Vector3(-3 - 2.5, 0, -1 - 2.5),
+  new THREE.Vector3(-3 + 2.5, 0, -1 - 2.5),
+];
 
 for (let i = 0; i < PEOPLE_COUNT; i++) {
   const skin = SKIN_TONES[i % SKIN_TONES.length];
@@ -1152,90 +1251,104 @@ for (let i = 0; i < PEOPLE_COUNT; i++) {
   const pants = PANTS_COLORS[(i * 5) % PANTS_COLORS.length];
   const human = new Humanoid(skin, shirt, pants);
 
-  const startSide = Math.random() < 0.5 ? -1 : 1;
-  human.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
+  const role = roleForIndex(i);
 
-  // Role assignment (16 mannequins):
-  //   0:     reception  (anchored at desk)
-  //   1-4:   treadmill  (locked to assigned treadmill, run-in-place)
-  //   5-7:   weights    (3, slow shuffle)
-  //   8-11:  studio     (4, slow movement in studio area)
-  //   12-15: mingle     (4, drift across all 4 zones)
-  let role;
-  let treadmillIdx = -1;
-  if (i === 0) role = 'reception';
-  else if (i < 5) { role = 'treadmill'; treadmillIdx = i - 1; }
-  else if (i < 8) role = 'weights';
-  else if (i < 12) role = 'studio';
-  else role = 'mingle';
+  // Initial placement
+  if (role === 'mx1') {
+    const station = MX1_STATIONS[i % 4];
+    human.position.set(station.x, 0, station.z);
+  } else if (role === 'mx2') {
+    const station = MX2_STATIONS[i % 4];
+    human.position.set(station.x, 0, station.z);
+  } else if (role === 'gse') {
+    human.position.set(15 + (Math.random() - 0.5) * 2, 0, -4 + (Math.random() - 0.5) * 6);
+  } else if (role === 'entry') {
+    // Start near hangar entry (open side, +z)
+    human.position.set((Math.random() - 0.5) * 8, 0, 12);
+  } else {
+    // supervisory — between aircraft
+    human.position.set(-3 + (Math.random() - 0.5) * 4, 0, -5.5 + (Math.random() - 0.5) * 3);
+  }
 
   human.userData = {
     target: new THREE.Vector3(),
-    speed:
-      role === 'reception' ? 0.3
-      : role === 'treadmill' ? 0.0
-      : role === 'weights' ? 0.55
-      : role === 'studio' ? 0.5
-      : 1.0 + Math.random() * 0.4,
+    speed: role === 'mx1' || role === 'mx2' ? 0.15 :
+           role === 'gse' ? 0.35 :
+           role === 'entry' ? 1.0 :
+           0.5, // supervisory
     waitTime: 0,
     pickNew: true,
     role,
-    treadmillIdx,
-    homeZone:
-      role === 'reception' ? 'Entrance'
-      : role === 'treadmill' ? 'Cardio'
-      : role === 'weights' ? 'Free Weights'
-      : role === 'studio' ? 'Class Studio'
-      : null,
+    homeStation: role === 'mx1' ? MX1_STATIONS[i % 4] :
+                 role === 'mx2' ? MX2_STATIONS[i % 4] :
+                 null,
     bobOffset: Math.random() * Math.PI * 2,
+    velocityCache: 0,
   };
   peopleGroup.add(human);
   people.push(human);
 }
 
+// Per-zone target pickers for live phase
 const TARGETS_BY_ZONE = {
-  Entrance:       () => new THREE.Vector3(-8 + (Math.random() - 0.5) * 4, 0, -5 + (Math.random() - 0.5) * 3),
-  Cardio:         () => new THREE.Vector3(-15.6, 0, -2.5 + Math.floor(Math.random() * 4) * 2.4),
-  'Free Weights': () => new THREE.Vector3(5 + (Math.random() - 0.5) * 6, 0, -10 + (Math.random() - 0.5) * 4),
-  'Class Studio': () => new THREE.Vector3(9.5 + (Math.random() - 0.5) * 6, 0, 6 + (Math.random() - 0.5) * 6),
+  'Aircraft 1 Bay': () => new THREE.Vector3(-3 + (Math.random() - 0.5) * 6, 0, -10 + (Math.random() - 0.5) * 4),
+  'Aircraft 2 Bay': () => new THREE.Vector3(-3 + (Math.random() - 0.5) * 6, 0, -1 + (Math.random() - 0.5) * 4),
+  'Exclusion Zone': () => new THREE.Vector3(2.0 + (Math.random() - 0.5) * 1.8, 0, -10 + (Math.random() - 0.5) * 1.8),
+  'GSE Staging':    () => new THREE.Vector3(15 + (Math.random() - 0.5) * 3, 0, -4 + (Math.random() - 0.5) * 7),
 };
 
 function pickTarget(person) {
   const ud = person.userData;
-  let zone;
-  if (ud.role === 'reception') {
-    zone = 'Entrance';
-    // Anchor close to the reception desk
-    ud.target.set(-8 + (Math.random() - 0.5) * 1.6, 0, -4.6 + (Math.random() - 0.5) * 0.8);
-    ud.targetZone = zone;
-    ud.waitTime = 8 + Math.random() * 6;
-    ud.pickNew = false;
-    return;
-  } else if (ud.role === 'treadmill') {
-    zone = 'Cardio';
-    // Lock to assigned treadmill — stays put, runs in place
-    const tz = -2.5 + ud.treadmillIdx * 2.4;
-    ud.target.set(-16.6, 0, tz);
-    ud.targetZone = zone;
-    ud.waitTime = 15 + Math.random() * 10; // long sustained run
-    ud.pickNew = false;
-    return;
-  } else if (ud.role === 'weights') {
-    zone = 'Free Weights';
-    ud.waitTime = 5 + Math.random() * 5;
-  } else if (ud.role === 'studio') {
-    zone = 'Class Studio';
-    ud.waitTime = 8 + Math.random() * 6;
+  const r = ud.role;
+  if (r === 'mx1') {
+    // jiggle near home station
+    const home = ud.homeStation;
+    ud.target.set(
+      home.x + (Math.random() - 0.5) * 1.0,
+      0,
+      home.z + (Math.random() - 0.5) * 1.0
+    );
+    ud.targetZone = 'Aircraft 1 Bay';
+    ud.waitTime = 5 + Math.random() * 6;
+  } else if (r === 'mx2') {
+    const home = ud.homeStation;
+    ud.target.set(
+      home.x + (Math.random() - 0.5) * 1.0,
+      0,
+      home.z + (Math.random() - 0.5) * 1.0
+    );
+    ud.targetZone = 'Aircraft 2 Bay';
+    ud.waitTime = 5 + Math.random() * 6;
+  } else if (r === 'gse') {
+    ud.target.copy(TARGETS_BY_ZONE['GSE Staging']());
+    ud.targetZone = 'GSE Staging';
+    ud.waitTime = 3 + Math.random() * 4;
+  } else if (r === 'entry') {
+    // walk between hangar entry and the aircraft area
+    const goingIn = Math.random() < 0.5;
+    if (goingIn) {
+      ud.target.set((Math.random() - 0.5) * 6, 0, -4 + (Math.random() - 0.5) * 4);
+    } else {
+      ud.target.set((Math.random() - 0.5) * 8, 0, 12);
+    }
+    ud.targetZone = null;
+    ud.waitTime = 1 + Math.random() * 2;
   } else {
-    const r = Math.random();
-    if (r < 0.20) zone = 'Entrance';
-    else if (r < 0.45) zone = 'Cardio';
-    else if (r < 0.72) zone = 'Free Weights';
-    else zone = 'Class Studio';
-    ud.waitTime = 1.5 + Math.random() * 3;
+    // supervisory — pick alternating between aircraft 1 and aircraft 2 area
+    const choose = Math.random();
+    if (choose < 0.45) {
+      ud.target.copy(TARGETS_BY_ZONE['Aircraft 1 Bay']());
+      ud.targetZone = 'Aircraft 1 Bay';
+    } else if (choose < 0.90) {
+      ud.target.copy(TARGETS_BY_ZONE['Aircraft 2 Bay']());
+      ud.targetZone = 'Aircraft 2 Bay';
+    } else {
+      // occasionally drift through exclusion zone (briefly) to demo alert
+      ud.target.copy(TARGETS_BY_ZONE['Exclusion Zone']());
+      ud.targetZone = 'Exclusion Zone';
+    }
+    ud.waitTime = 2 + Math.random() * 4;
   }
-  ud.target.copy(TARGETS_BY_ZONE[zone]());
-  ud.targetZone = zone;
   ud.pickNew = false;
 }
 
@@ -1290,13 +1403,12 @@ function showCaption(text) {
 function hideCaption() { captionEl.classList.remove('visible'); }
 
 // ============= TIMELINE =============
-// Fitness has 4 zones (vs restaurant's 3): intro 3.0 + 4 × 3.6 + live 12.0 + endcard 4.5 = 33.9s
 const TIMELINE = [
   { kind: 'intro', dur: 3.0 },                       // cinematic establishing shot
-  { kind: 'zone', zoneIdx: 0, dur: 3.6 },
-  { kind: 'zone', zoneIdx: 1, dur: 3.6 },
-  { kind: 'zone', zoneIdx: 2, dur: 3.6 },
-  { kind: 'zone', zoneIdx: 3, dur: 3.6 },
+  { kind: 'zone', zoneIdx: 0, dur: 3.6 },            // Aircraft 1 Bay
+  { kind: 'zone', zoneIdx: 1, dur: 3.6 },            // Aircraft 2 Bay
+  { kind: 'zone', zoneIdx: 2, dur: 3.6 },            // Exclusion Zone
+  { kind: 'zone', zoneIdx: 3, dur: 3.6 },            // GSE Staging
   { kind: 'live', dur: 12.0 },
   { kind: 'endcard', dur: 4.5 },
 ];
@@ -1309,7 +1421,7 @@ function easeIn(t)  { return t * t * t; }
 // ============= SFX TRIGGER STATE (avoid replay on every frame) =============
 const sfxState = {
   zoneIdx: -1,
-  cornersPlaced: -1,    // how many corner clicks fired for current zone
+  cornersPlaced: -1,
   whooshFired: false,
   placeFired: false,
   commitFired: false,
@@ -1404,8 +1516,8 @@ function hideZone(group) {
 }
 
 // ============= CINEMATIC INTRO CAMERA =============
-const introStartPos = new THREE.Vector3(22, 4.5, 28);
-const introEndPos = new THREE.Vector3(14, 11, 18);
+const introStartPos = new THREE.Vector3(26, 5.5, 32);
+const introEndPos = new THREE.Vector3(16, 12, 22);
 const introStartTarget = new THREE.Vector3(0, 0.5, 0);
 
 function applyIntroCamera(p) {
@@ -1451,10 +1563,7 @@ function tick() {
   } else {
     if (!liveEnabledControls) enableControlsOnce();
     if (phase.kind === 'live') {
-      // gentle continuous orbit during live phase
       controls.target.set(0, 0.5, 0);
-      const angle = (loopT - 3.0 - 3.6 * 4) * 0.04;
-      // only auto-orbit if user hasn't grabbed control recently
     }
     controls.update();
   }
@@ -1510,63 +1619,57 @@ function tick() {
   }
 
   // ===== MANNEQUINS =====
-  const occ = { Entrance: 0, Cardio: 0, 'Free Weights': 0, 'Class Studio': 0 };
+  const occ = { 'Aircraft 1 Bay': 0, 'Aircraft 2 Bay': 0, 'Exclusion Zone': 0, 'GSE Staging': 0 };
   if (phase.kind === 'live') {
     for (const person of people) {
       const ud = person.userData;
       if (ud.pickNew) pickTarget(person);
-
+      const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
+      const dist = dir.length();
       let velocity = 0;
-      if (ud.role === 'treadmill') {
-        // Snap-lock to treadmill spot, drive walk cycle at high speed (running in place)
-        person.position.x += (ud.target.x - person.position.x) * 0.25;
-        person.position.z += (ud.target.z - person.position.z) * 0.25;
-        // Face the treadmill console: deck long-axis is z, console at local z=+0.78. Mannequin's +z faces console → rotation.y = 0.
-        person.rotation.y = 0;
-        velocity = 1.2; // max-rate walk → simulates running in place
-        ud.waitTime -= dt;
-        if (ud.waitTime <= 0) ud.pickNew = true;
-        if (person.setPose) person.setPose('stand'); // not seated; pelvis stays at 0.95
+      if (dist > 0.4) {
+        const step = ud.speed * dt;
+        dir.normalize().multiplyScalar(step);
+        person.position.add(dir);
+        person.rotation.y = Math.atan2(dir.x, dir.z);
+        velocity = ud.speed;
+        // No sit pose for defense mannequins — always stand/walk
+        person.setPose && person.setPose('stand');
       } else {
-        const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
-        const dist = dir.length();
-        if (dist > 0.4) {
-          const step = ud.speed * dt;
-          dir.normalize().multiplyScalar(step);
-          person.position.add(dir);
-          person.rotation.y = Math.atan2(dir.x, dir.z);
-          velocity = ud.speed;
-          if (person.setPose) person.setPose('stand');
-        } else {
-          ud.waitTime -= dt;
-          velocity = 0;
-          if (person.setPose) person.setPose('stand');
-          if (ud.waitTime <= 0) ud.pickNew = true;
-        }
+        ud.waitTime -= dt;
+        velocity = 0;
+        person.setPose && person.setPose('stand');
+        if (ud.waitTime <= 0) ud.pickNew = true;
       }
-
-      // Drive humanoid skeleton every frame
       if (person.update) person.update(dt, velocity, loopT);
-
       // Hit-test in floor xy
       const sample = new THREE.Vector3(person.position.x, 0, person.position.z);
+      // Check exclusion first (highest priority — overlaps Aircraft 1 Bay)
+      let attributed = false;
       for (const z of ZONES) {
-        if (pointInZone(sample, z)) { occ[z.name]++; break; }
+        if (z.name === 'Exclusion Zone' && pointInZone(sample, z)) {
+          occ['Exclusion Zone']++;
+          attributed = true;
+          break;
+        }
+      }
+      if (!attributed) {
+        for (const z of ZONES) {
+          if (z.name === 'Exclusion Zone') continue;
+          if (pointInZone(sample, z)) { occ[z.name]++; break; }
+        }
       }
     }
   } else if (phase.kind === 'zone') {
-    // gentle drift to home zone during zone-creation phase
+    // gentle drift to assigned home area during zone-creation phase
     for (const person of people) {
       const ud = person.userData;
-      if (!ud.driftSet && ud.homeZone) {
-        if (ud.role === 'treadmill') {
-          const tz = -2.5 + ud.treadmillIdx * 2.4;
-          ud.driftTarget = new THREE.Vector3(-16.6, 0, tz);
-        } else if (ud.role === 'reception') {
-          ud.driftTarget = new THREE.Vector3(-8 + (Math.random() - 0.5) * 1.6, 0, -4.6);
-        } else {
-          ud.driftTarget = TARGETS_BY_ZONE[ud.homeZone]();
-        }
+      if (!ud.driftSet) {
+        if (ud.role === 'mx1') ud.driftTarget = ud.homeStation.clone();
+        else if (ud.role === 'mx2') ud.driftTarget = ud.homeStation.clone();
+        else if (ud.role === 'gse') ud.driftTarget = TARGETS_BY_ZONE['GSE Staging']();
+        else if (ud.role === 'entry') ud.driftTarget = new THREE.Vector3((Math.random() - 0.5) * 6, 0, 8);
+        else ud.driftTarget = new THREE.Vector3(-3 + (Math.random() - 0.5) * 4, 0, -5.5);
         ud.driftSet = true;
       }
       let velocity = 0;
@@ -1584,8 +1687,7 @@ function tick() {
       if (person.setPose) person.setPose('stand');
       if (person.update) person.update(dt, Math.min(velocity, 1.2), loopT);
     }
-  } else {
-    // intro / endcard — hold positions, idle pose, but still update so skeletons don't T-pose
+  } else if (phase.kind === 'endcard' || phase.kind === 'intro') {
     for (const person of people) {
       if (person.setPose) person.setPose('stand');
       if (person.update) person.update(dt, 0, loopT);
@@ -1597,7 +1699,6 @@ function tick() {
       countEls[z.name].textContent = occ[z.name];
       countEls[z.name].classList.remove('countDash');
     } else if (phase.kind === 'zone' && phase.zoneIdx >= ZONES.indexOf(ZONES.find(zo => zo.name === z.name))) {
-      // after zone is placed, show zero (no live tracking yet) — keep dash for simplicity
       countEls[z.name].textContent = '—';
       countEls[z.name].classList.add('countDash');
     } else {
@@ -1619,7 +1720,7 @@ const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
   0.45,   // strength
   0.85,   // radius
-  0.85,   // threshold (only bright pixels bloom — pendant bulbs, console screens, zone glows)
+  0.85,   // threshold (only bright pixels bloom — pendant bulbs, zone glows)
 );
 composer.addPass(bloomPass);
 composer.addPass(new OutputPass());

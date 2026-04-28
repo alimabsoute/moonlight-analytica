@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Janus — Map your gym floor.</title>
+<title>Janus — Quarterdeck Operations.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -261,7 +261,7 @@
   <div class="stepPill">
     <div class="stepNum" id="stepNum">01</div>
     <div style="flex:1;min-width:0">
-      <div class="stepName" id="stepName">Define</div>
+      <div class="stepName" id="stepName">Quarterdeck Operations</div>
       <div class="stepProgress"><div class="stepProgressFill" id="stepProgressFill"></div></div>
     </div>
   </div>
@@ -293,8 +293,8 @@
         <path d="M12 11 L12 21" opacity="0.55" />
       </svg>
     </div>
-    <h1 class="endCardTag" id="endTag">Know what your floor<br>is doing.</h1>
-    <p class="endCardSub" id="endSub">Live counts at the door, the cardio floor, the weight area, the studio. No facial recognition. No badges.</p>
+    <h1 class="endCardTag" id="endTag">Know what your quarterdeck<br>is doing.</h1>
+    <p class="endCardSub" id="endSub">Live counts at the brow, the ID check, the quarterdeck. No facial recognition. No badges.</p>
     <a class="endCardCta" href="#" id="endCta">
       <span>See it live</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -448,19 +448,20 @@ renderer.toneMappingExposure = 1.05;
 root.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0c10);
-scene.fog = new THREE.Fog(0x0a0c10, 32, 80);
+// Cool overcast sky — slightly lighter than the bar interior
+scene.background = new THREE.Color(0x6a7a8c);
+scene.fog = new THREE.Fog(0x6a7a8c, 38, 90);
 
 const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(14, 11, 18);
+camera.position.set(8, 12, 22);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0.5, 0);
+controls.target.set(0, 1, 0);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.maxPolarAngle = Math.PI * 0.49;
 controls.minDistance = 6;
-controls.maxDistance = 50;
+controls.maxDistance = 60;
 controls.enabled = false; // disabled during cinematic intro
 
 // ============= IMAGE-BASED LIGHTING (PMREM from RoomEnvironment) =============
@@ -468,15 +469,15 @@ controls.enabled = false; // disabled during cinematic intro
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
-scene.environmentIntensity = 0.45;
+scene.environmentIntensity = 0.55;
 
-// ============= DIRECT LIGHTS (shadow-casting key + cool fill + warm studio rim) =============
-const key = new THREE.DirectionalLight(0xfff0d8, 2.0);
-key.position.set(12, 18, 8);
+// ============= DIRECT LIGHTS (cool overcast key + cool fill + warm sodium pier rim) =============
+const key = new THREE.DirectionalLight(0xeef0f8, 1.6);
+key.position.set(10, 25, 12);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
-key.shadow.camera.left = -20; key.shadow.camera.right = 20;
-key.shadow.camera.top = 20; key.shadow.camera.bottom = -20;
+key.shadow.camera.left = -25; key.shadow.camera.right = 25;
+key.shadow.camera.top = 25; key.shadow.camera.bottom = -25;
 key.shadow.bias = -0.0005;
 key.shadow.radius = 8;
 scene.add(key);
@@ -485,10 +486,10 @@ const fill = new THREE.DirectionalLight(0x88a4ff, 0.5);
 fill.position.set(-10, 8, -6);
 scene.add(fill);
 
-// Warm rim light over the class studio — sells "boutique gym ambience"
-const studioRim = new THREE.PointLight(0xff9a55, 1.4, 22, 1.6);
-studioRim.position.set(9.5, 2.4, 6);
-scene.add(studioRim);
+// Warm sodium-style rim light from pier lamps (kept dim for daytime)
+const pierRim = new THREE.PointLight(0xffaa55, 0.6, 22, 1.6);
+pierRim.position.set(-10, 6, 4);
+scene.add(pierRim);
 
 // ============= PROCEDURAL TEXTURES =============
 function makeWoodTexture(w, h, base, grain) {
@@ -574,321 +575,454 @@ function makeFabricTexture(size, hex) {
 
 // ============= PBR MATERIAL LIBRARY =============
 const concreteMap = makeConcreteTexture(512); concreteMap.repeat.set(8, 6);
-const deskTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
-const studioFloorMap = makeWoodTexture(512, 512, '#5a4028', '#2a1810');
+const pierConcreteMap = makeConcreteTexture(512); pierConcreteMap.repeat.set(6, 6);
+const barTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
+const tableTopMap = makeWoodTexture(384, 384, '#4a3520', '#241510');
 
 const MATS = {
   floor: new THREE.MeshStandardMaterial({ color: 0x2c2f36, roughness: 0.86, metalness: 0.05, map: concreteMap }),
   wallDark: new THREE.MeshStandardMaterial({ color: 0x1a1d24, roughness: 0.92, metalness: 0.0 }),
   wallAccent: new THREE.MeshStandardMaterial({ color: 0x2d2419, roughness: 0.88, metalness: 0.0 }),
   barFront: new THREE.MeshStandardMaterial({ color: 0x33384a, roughness: 0.55, metalness: 0.15 }),
-  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: deskTopMap }),
+  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: barTopMap }),
   hostStand: new THREE.MeshStandardMaterial({ color: 0x3d4654, roughness: 0.55, metalness: 0.10 }),
-  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: studioFloorMap }),
+  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: tableTopMap }),
   tableLeg: new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.42, metalness: 0.55 }),
   brass: new THREE.MeshStandardMaterial({ color: 0xb59047, roughness: 0.28, metalness: 0.85 }),
   steel: new THREE.MeshStandardMaterial({ color: 0x4a5060, roughness: 0.35, metalness: 0.75 }),
-  rubberDark: new THREE.MeshStandardMaterial({ color: 0x0c0e12, roughness: 0.85, metalness: 0.05 }),
   glass: new THREE.MeshPhysicalMaterial({
     color: 0xc8e4ec, roughness: 0.06, metalness: 0.0, transmission: 0.95,
     thickness: 0.4, ior: 1.45, transparent: true, opacity: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.05,
   }),
+  bottleAmber: new THREE.MeshPhysicalMaterial({ color: 0x6e3a14, roughness: 0.18, metalness: 0.0,
+    transmission: 0.4, transparent: true, opacity: 0.85, clearcoat: 0.7 }),
+  bottleClear: new THREE.MeshPhysicalMaterial({ color: 0xd4dec4, roughness: 0.10, metalness: 0.0,
+    transmission: 0.8, transparent: true, opacity: 0.70, clearcoat: 0.7 }),
+  bottleDark: new THREE.MeshPhysicalMaterial({ color: 0x142010, roughness: 0.20, metalness: 0.05,
+    transmission: 0.25, transparent: true, opacity: 0.92, clearcoat: 0.8 }),
+  bottleGreen: new THREE.MeshPhysicalMaterial({ color: 0x1f3018, roughness: 0.20, metalness: 0.05,
+    transmission: 0.3, transparent: true, opacity: 0.88, clearcoat: 0.8 }),
+  label: new THREE.MeshStandardMaterial({ color: 0xeeeae0, roughness: 0.78, metalness: 0.0 }),
+  labelDark: new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.7, metalness: 0.0 }),
   pendantBulb: new THREE.MeshStandardMaterial({
     color: 0xfff5d6, emissive: 0xffc97a, emissiveIntensity: 3.5, roughness: 0.4,
   }),
   pendantShade: new THREE.MeshStandardMaterial({ color: 0x2a1f15, roughness: 0.45, metalness: 0.6 }),
   cord: new THREE.MeshStandardMaterial({ color: 0x0e1014, roughness: 0.9, metalness: 0.0 }),
-  // Console screen — emissive so it blooms
-  screen: new THREE.MeshStandardMaterial({
-    color: 0x0a1a2a, emissive: 0x4d9bff, emissiveIntensity: 1.4, roughness: 0.25, metalness: 0.4,
+  // ===== Navy-specific additive materials =====
+  pierConcrete: new THREE.MeshStandardMaterial({ color: 0x4a5b6a, roughness: 0.92, metalness: 0.04, map: pierConcreteMap }),
+  hazeGrey: new THREE.MeshStandardMaterial({ color: 0x6e7a82, roughness: 0.55, metalness: 0.35 }),
+  hazeGreyDark: new THREE.MeshStandardMaterial({ color: 0x5a6770, roughness: 0.60, metalness: 0.30 }),
+  water: new THREE.MeshStandardMaterial({ color: 0x1c4a6a, roughness: 0.30, metalness: 0.25 }),
+  rope: new THREE.MeshStandardMaterial({ color: 0x8a7c5a, roughness: 0.92, metalness: 0.0 }),
+  poleMetal: new THREE.MeshStandardMaterial({ color: 0x2a2f36, roughness: 0.55, metalness: 0.6 }),
+  porthole: new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.4, metalness: 0.6 }),
+  emissivePanel: new THREE.MeshStandardMaterial({
+    color: 0xffefc8, emissive: 0xffd58a, emissiveIntensity: 1.6, roughness: 0.5,
   }),
-  // Mirror panel (standalone, not shared) — uses dark blue with slight emissive tint
-  mirror: new THREE.MeshStandardMaterial({
-    color: 0x1a2638, roughness: 0.15, metalness: 0.7, emissive: 0x1a2638, emissiveIntensity: 0.30,
-  }),
-  // Yoga mat colors (subtle muted)
-  yoga1: new THREE.MeshStandardMaterial({ color: 0x4d6b8a, roughness: 0.6, metalness: 0.0 }),
-  yoga2: new THREE.MeshStandardMaterial({ color: 0x6a4a5e, roughness: 0.6, metalness: 0.0 }),
-  yoga3: new THREE.MeshStandardMaterial({ color: 0x4a6a55, roughness: 0.6, metalness: 0.0 }),
-  yoga4: new THREE.MeshStandardMaterial({ color: 0x7a6044, roughness: 0.6, metalness: 0.0 }),
 };
 
-// ============= ENVIRONMENT (floor, walls, grid) =============
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), MATS.floor);
-floor.rotation.x = -Math.PI / 2;
-floor.receiveShadow = true;
-scene.add(floor);
+// ============= ENVIRONMENT (water, pier, ship deck, superstructure) =============
+// Wide water plane (the "ground" for the scene — pier and ship sit on top of it)
+const waterPlane = new THREE.Mesh(new THREE.PlaneGeometry(80, 60), MATS.water);
+waterPlane.rotation.x = -Math.PI / 2;
+waterPlane.position.y = -0.05;
+waterPlane.receiveShadow = true;
+scene.add(waterPlane);
 
-const grid = new THREE.GridHelper(40, 40, 0x2a2f3a, 0x1c1f27);
+// Subtle grid on the water for sense of scale
+const grid = new THREE.GridHelper(80, 80, 0x2a3a4a, 0x1c2832);
 grid.position.y = 0.001;
 grid.material.transparent = true;
-grid.material.opacity = 0.35;
+grid.material.opacity = 0.18;
 scene.add(grid);
 
-// Walls
-const backWall = new THREE.Mesh(new THREE.BoxGeometry(40, 6, 0.2), MATS.wallDark);
-backWall.position.set(0, 3, -15);
-backWall.receiveShadow = true; scene.add(backWall);
-const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
-leftWall.position.set(-20, 3, 0); leftWall.receiveShadow = true; scene.add(leftWall);
-const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
-rightWall.position.set(20, 3, 0); rightWall.receiveShadow = true; scene.add(rightWall);
+// ============= PIER (left half: x = -20..-1, top at y=0.4) =============
+const pierGroup = new THREE.Group();
+const pierLen = 30, pierWidth = 19, pierHeight = 0.4;
+const pierTop = new THREE.Mesh(
+  new THREE.BoxGeometry(pierWidth, pierHeight, pierLen),
+  MATS.pierConcrete
+);
+pierTop.position.set(-10.5, pierHeight / 2, 0);
+pierTop.receiveShadow = true; pierTop.castShadow = true;
+pierGroup.add(pierTop);
 
-// ============= RECEPTION DESK =============
-function buildReception(x, z) {
-  const g = new THREE.Group();
-  // Desk body
-  const body = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.10, 1.4), MATS.barFront);
-  body.position.y = 0.55; body.castShadow = true; body.receiveShadow = true; g.add(body);
-  // Desk top (wood)
-  const top = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 1.5), MATS.barTop);
-  top.position.y = 1.13; top.castShadow = true; g.add(top);
-  // Backdrop wall slab (gym brand panel)
-  const backdrop = new THREE.Mesh(new THREE.BoxGeometry(4.2, 2.0, 0.15), MATS.wallAccent);
-  backdrop.position.set(0, 1.0, -1.6); g.add(backdrop);
-  // Subtle accent stripe on backdrop (emissive cool blue — gym brand-y)
-  const stripe = new THREE.Mesh(
-    new THREE.BoxGeometry(3.6, 0.06, 0.04),
-    new THREE.MeshStandardMaterial({ color: 0x4d9bff, emissive: 0x4d9bff, emissiveIntensity: 1.1, roughness: 0.4 })
-  );
-  stripe.position.set(0, 1.6, -1.52); g.add(stripe);
-  // Reading lamp
-  const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.40, 8), MATS.brass);
-  lampStem.position.set(-1.3, 1.33, 0.0); g.add(lampStem);
-  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.12, 12, 1, true), MATS.brass);
-  lampShade.position.set(-1.3, 1.55, 0); g.add(lampShade);
-  const lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 10), MATS.pendantBulb);
-  lampBulb.position.set(-1.3, 1.50, 0); g.add(lampBulb);
-  const lampLight = new THREE.PointLight(0xffd47a, 0.35, 3, 1.8); lampLight.position.set(-1.3, 1.45, 0); g.add(lampLight);
-  // Small clipboard / tablet on desk (just decoration)
-  const tablet = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.02, 0.28),
-    new THREE.MeshStandardMaterial({ color: 0x0a1a2a, emissive: 0x4d9bff, emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.4 })
-  );
-  tablet.position.set(0.7, 1.16, 0.1); g.add(tablet);
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildReception(-8, -6);
+// Pier edge curb (slight darker raised lip on the water side)
+const pierCurb = new THREE.Mesh(
+  new THREE.BoxGeometry(0.18, 0.10, pierLen),
+  MATS.steel
+);
+pierCurb.position.set(-1.05, 0.45, 0);
+pierGroup.add(pierCurb);
 
-// ============= TREADMILL ROW (cardio) =============
-function buildTreadmill(x, z) {
-  const g = new THREE.Group();
-  // Deck base — long flat box on the floor
-  const deck = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.20, 1.85), MATS.steel);
-  deck.position.y = 0.10; deck.castShadow = true; deck.receiveShadow = true; g.add(deck);
-  // Belt — thin dark slab on top of deck
-  const belt = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.025, 1.55), MATS.rubberDark);
-  belt.position.y = 0.215; g.add(belt);
-  // Side rails — vertical cylinder uprights
-  const upL = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.30, 10), MATS.steel);
-  upL.position.set(-0.42, 0.85, 0.65); upL.castShadow = true; g.add(upL);
-  const upR = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.30, 10), MATS.steel);
-  upR.position.set(0.42, 0.85, 0.65); upR.castShadow = true; g.add(upR);
-  // Horizontal grab bar across the front (between uprights)
-  const barGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.86, 10);
-  barGeo.rotateZ(Math.PI / 2);
-  const grabBar = new THREE.Mesh(barGeo, MATS.steel);
-  grabBar.position.set(0, 1.40, 0.65); g.add(grabBar);
-  // Extra side rails (long horizontal — running along the side of the deck)
-  const sideRailGeo = new THREE.CylinderGeometry(0.020, 0.020, 1.50, 10);
-  const sideRailL = new THREE.Mesh(sideRailGeo, MATS.steel);
-  sideRailL.position.set(-0.42, 1.05, 0.0); g.add(sideRailL);
-  const sideRailR = new THREE.Mesh(sideRailGeo, MATS.steel);
-  sideRailR.position.set(0.42, 1.05, 0.0); g.add(sideRailR);
-  // Console panel — small dark box with glowing screen at the front
-  const consoleBack = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.50, 0.10), MATS.barFront);
-  consoleBack.position.set(0, 1.55, 0.78); g.add(consoleBack);
-  const screen = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.36, 0.04), MATS.screen);
-  screen.position.set(0, 1.55, 0.835); g.add(screen);
-  // Tiny LED highlights on console (bloom-friendly)
-  for (let i = 0; i < 3; i++) {
-    const led = new THREE.Mesh(
-      new THREE.SphereGeometry(0.018, 8, 8),
-      new THREE.MeshStandardMaterial({ color: 0xff5b5b, emissive: 0xff5b5b, emissiveIntensity: 4.0, roughness: 0.4 })
-    );
-    led.position.set(-0.30 + i * 0.30, 1.32, 0.835); g.add(led);
-  }
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-const treadmillX = -16.6;
-for (let i = 0; i < 4; i++) {
-  const tz = -2.5 + i * 2.4;
-  buildTreadmill(treadmillX, tz);
-}
+scene.add(pierGroup);
 
-// ============= SQUAT RACK =============
-function buildSquatRack(x, z) {
-  const g = new THREE.Group();
-  // Two vertical uprights (cylinders)
-  const upGeo = new THREE.CylinderGeometry(0.07, 0.07, 2.6, 12);
-  const upL = new THREE.Mesh(upGeo, MATS.steel);
-  upL.position.set(-1.0, 1.30, 0); upL.castShadow = true; g.add(upL);
-  const upR = new THREE.Mesh(upGeo, MATS.steel);
-  upR.position.set(1.0, 1.30, 0); upR.castShadow = true; g.add(upR);
-  // Cross-bracket near the top
-  const xb = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.10, 0.10), MATS.steel);
-  xb.position.set(0, 2.45, 0); g.add(xb);
-  // Horizontal barbell on rack at chest height (cylinder spanning the uprights, slightly wider)
-  const barbellGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.5, 14);
-  barbellGeo.rotateZ(Math.PI / 2);
-  const barbell = new THREE.Mesh(barbellGeo, MATS.steel);
-  barbell.position.set(0, 1.45, 0); barbell.castShadow = true; g.add(barbell);
-  // Two weight plates on each end (cylinder discs)
-  const plateGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.06, 24);
-  plateGeo.rotateZ(Math.PI / 2);
-  const plateMat = MATS.rubberDark;
-  for (const px of [-1.20, -1.30, 1.20, 1.30]) {
-    const plate = new THREE.Mesh(plateGeo, plateMat);
-    plate.position.set(px, 1.45, 0); plate.castShadow = true; g.add(plate);
-  }
-  // Base platform (rubber matting)
-  const base = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.08, 2.4), MATS.rubberDark);
-  base.position.set(0, 0.04, 0); base.receiveShadow = true; g.add(base);
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildSquatRack(4, -10);
+// ============= SHIP'S DECK (right half: x = 1..20, top at y=2.0) =============
+const shipGroup = new THREE.Group();
+const deckLen = 30, deckWidth = 19, deckHeight = 2.0;
+const shipDeck = new THREE.Mesh(
+  new THREE.BoxGeometry(deckWidth, deckHeight, deckLen),
+  MATS.hazeGrey
+);
+shipDeck.position.set(10.5, deckHeight / 2, 0);
+shipDeck.receiveShadow = true; shipDeck.castShadow = true;
+shipGroup.add(shipDeck);
 
-// ============= BENCH PRESS =============
-function buildBench(x, z) {
-  const g = new THREE.Group();
-  // Two short legs (boxes)
-  const legGeo = new THREE.BoxGeometry(0.12, 0.50, 0.50);
-  const legA = new THREE.Mesh(legGeo, MATS.steel);
-  legA.position.set(0, 0.25, -0.6); legA.castShadow = true; g.add(legA);
-  const legB = new THREE.Mesh(legGeo, MATS.steel);
-  legB.position.set(0, 0.25, 0.6); legB.castShadow = true; g.add(legB);
-  // Bench pad (long, fabric texture)
-  const padMat = new THREE.MeshStandardMaterial({
-    color: 0x222a36, roughness: 0.55, metalness: 0.05,
-    map: makeFabricTexture(128, '#222a36'),
-  });
-  const pad = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.10, 1.7), padMat);
-  pad.position.set(0, 0.55, 0); pad.castShadow = true; g.add(pad);
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildBench(7.5, -9.7);
+// Hull side (darker grey strip below the deck, gives a "waterline" feel on the pier-facing edge)
+const hullStrip = new THREE.Mesh(
+  new THREE.BoxGeometry(0.20, 1.6, deckLen),
+  MATS.hazeGreyDark
+);
+hullStrip.position.set(1.0, 0.8, 0);
+shipGroup.add(hullStrip);
 
-// ============= DUMBBELL RACK =============
-function buildDumbbellRack(x, z) {
-  const g = new THREE.Group();
-  // Two-tier rack frame
-  const frameGeo = new THREE.BoxGeometry(3.6, 0.10, 0.55);
-  const t1 = new THREE.Mesh(frameGeo, MATS.steel);
-  t1.position.set(0, 0.30, 0); g.add(t1);
-  const t2 = new THREE.Mesh(frameGeo, MATS.steel);
-  t2.position.set(0, 0.85, 0); g.add(t2);
-  // End supports
-  for (const ex of [-1.75, 1.75]) {
-    const sup = new THREE.Mesh(new THREE.BoxGeometry(0.10, 1.0, 0.55), MATS.steel);
-    sup.position.set(ex, 0.50, 0); g.add(sup);
-  }
-  // 5 pairs of dumbbells (ascending size) on two tiers
-  function dumbbell(size) {
-    const dg = new THREE.Group();
-    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.38, 10), MATS.steel);
-    handle.rotation.z = Math.PI / 2; dg.add(handle);
-    const headGeo = new THREE.SphereGeometry(0.10 + size * 0.025, 12, 10);
-    const headMat = MATS.steel;
-    const hL = new THREE.Mesh(headGeo, headMat); hL.position.set(-0.22, 0, 0); dg.add(hL);
-    const hR = new THREE.Mesh(headGeo, headMat); hR.position.set(0.22, 0, 0); dg.add(hR);
-    return dg;
-  }
-  for (let i = 0; i < 5; i++) {
-    const dx = -1.45 + i * 0.7;
-    const t1d = dumbbell(i);
-    t1d.position.set(dx, 0.42, 0); g.add(t1d);
-    const t2d = dumbbell(i);
-    t2d.position.set(dx, 0.97, 0); g.add(t2d);
-  }
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildDumbbellRack(4, -12.4);
+// Ship deck nonskid edge (raised lip at pier-facing edge)
+const shipEdge = new THREE.Mesh(
+  new THREE.BoxGeometry(0.10, 0.10, deckLen),
+  MATS.steel
+);
+shipEdge.position.set(1.05, 2.05, 0);
+shipGroup.add(shipEdge);
 
-// ============= YOGA MATS =============
-const yogaMats = [MATS.yoga1, MATS.yoga2, MATS.yoga3, MATS.yoga4];
-const yogaPositions = [
-  [7.5, 4.5], [11.5, 4.5], [7.5, 7.5], [11.5, 7.5]
-];
-yogaPositions.forEach(([mx, mz], i) => {
-  const mat = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.02, 1.7), yogaMats[i]);
-  mat.position.set(mx, 0.011, mz); mat.receiveShadow = true; scene.add(mat);
+// ============= SHIP SUPERSTRUCTURE (background wall behind quarterdeck) =============
+const superstructure = new THREE.Mesh(
+  new THREE.BoxGeometry(deckWidth, 7.0, 0.6),
+  MATS.hazeGrey
+);
+superstructure.position.set(10.5, 2.0 + 3.5, -10);
+superstructure.castShadow = true; superstructure.receiveShadow = true;
+shipGroup.add(superstructure);
+
+// Hatch detail (rectangular recessed plate)
+const hatch = new THREE.Mesh(
+  new THREE.BoxGeometry(2.2, 3.4, 0.06),
+  MATS.hazeGreyDark
+);
+hatch.position.set(13.5, 3.7, -9.69);
+shipGroup.add(hatch);
+
+// Hatch frame (4 thin steel strips around the hatch)
+const hatchFrameMat = MATS.steel;
+[
+  { w: 2.4, h: 0.08, x: 13.5, y: 5.45 }, // top
+  { w: 2.4, h: 0.08, x: 13.5, y: 1.95 }, // bottom
+  { w: 0.08, h: 3.5, x: 12.30, y: 3.7 }, // left
+  { w: 0.08, h: 3.5, x: 14.70, y: 3.7 }, // right
+].forEach(f => {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(f.w, f.h, 0.04), hatchFrameMat);
+  m.position.set(f.x, f.y, -9.65);
+  shipGroup.add(m);
 });
 
-// ============= CLASS STUDIO (warm wood floor + partial wall divider + mirror) =============
-// Studio floor slab (warm wood)
-const studioFloor = new THREE.Mesh(new THREE.BoxGeometry(8.5, 0.03, 8.5), MATS.tableTop);
-studioFloor.position.set(9.5, 0.016, 6); studioFloor.receiveShadow = true; scene.add(studioFloor);
+// Portholes (small dark cylinders along the superstructure)
+for (let i = 0; i < 5; i++) {
+  const px = 4 + i * 2.6;
+  const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.10, 18), MATS.steel);
+  ring.rotation.x = Math.PI / 2;
+  ring.position.set(px, 5.6, -9.68);
+  shipGroup.add(ring);
+  const glass = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.06, 18), MATS.porthole);
+  glass.rotation.x = Math.PI / 2;
+  glass.position.set(px, 5.6, -9.65);
+  shipGroup.add(glass);
+}
 
-// Partial divider wall (open on one side)
-const dividerL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.6, 8.5), MATS.wallAccent);
-dividerL.position.set(5.3, 1.30, 6); dividerL.castShadow = true; dividerL.receiveShadow = true; scene.add(dividerL);
-const dividerB = new THREE.Mesh(new THREE.BoxGeometry(8.5, 2.6, 0.18), MATS.wallAccent);
-dividerB.position.set(9.5, 1.30, 10.15); dividerB.castShadow = true; dividerB.receiveShadow = true; scene.add(dividerB);
+// Ship's name placard (small dark plate on the superstructure, behind the quarterdeck)
+const placard = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.6, 0.04), MATS.wallDark);
+placard.position.set(7.0, 4.0, -9.67);
+shipGroup.add(placard);
+// Placard text via canvas texture
+{
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 96;
+  const x = c.getContext('2d');
+  x.fillStyle = '#1a1d24'; x.fillRect(0, 0, 512, 96);
+  x.fillStyle = '#d8dde6';
+  x.font = '700 56px Inter, sans-serif';
+  x.textBaseline = 'middle'; x.textAlign = 'center';
+  x.fillText('USS  JANUS', 256, 50);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  const sign = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.0, 0.55),
+    new THREE.MeshStandardMaterial({ map: t, roughness: 0.6, metalness: 0.05 })
+  );
+  sign.position.set(7.0, 4.0, -9.64);
+  shipGroup.add(sign);
+}
 
-// Mirror panel on the divider wall (uses standalone mirror material — not shared MATS.glass)
-const mirror = new THREE.Mesh(new THREE.BoxGeometry(7.5, 2.0, 0.05), MATS.mirror);
-mirror.position.set(9.7, 1.20, 10.05); scene.add(mirror);
-// Mirror frame
-const frameH = new THREE.Mesh(new THREE.BoxGeometry(7.7, 0.06, 0.08), MATS.brass);
-frameH.position.set(9.7, 2.22, 10.06); scene.add(frameH);
-const frameH2 = new THREE.Mesh(new THREE.BoxGeometry(7.7, 0.06, 0.08), MATS.brass);
-frameH2.position.set(9.7, 0.18, 10.06); scene.add(frameH2);
+// Mounted superstructure lights (small cubes with emissive faces — daytime, low intensity)
+for (let i = 0; i < 3; i++) {
+  const lx = 5 + i * 4;
+  const housing = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.20, 0.20), MATS.steel);
+  housing.position.set(lx, 6.6, -9.55);
+  shipGroup.add(housing);
+  const lens = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.14, 0.06), MATS.emissivePanel);
+  lens.position.set(lx, 6.6, -9.43);
+  shipGroup.add(lens);
+}
 
-// ============= LOCKER CORRIDOR (10 lockers along back wall) =============
-function buildLocker(x, z) {
+scene.add(shipGroup);
+
+// ============= WATER GAP (already covered by waterPlane; add a slim deeper plane between pier + ship for parallax) =============
+{
+  const gap = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.0, 60),
+    new THREE.MeshStandardMaterial({ color: 0x143752, roughness: 0.25, metalness: 0.35 })
+  );
+  gap.rotation.x = -Math.PI / 2;
+  gap.position.set(0, 0.005, 0);
+  scene.add(gap);
+}
+
+// ============= BROW / GANGWAY (angled walkway from pier to ship, with railings) =============
+function buildBrow() {
   const g = new THREE.Group();
-  // Locker box
-  const door = new THREE.Mesh(new THREE.BoxGeometry(1.20, 1.9, 0.55), MATS.barFront);
-  door.position.y = 0.95; door.castShadow = true; door.receiveShadow = true; g.add(door);
-  // Vertical seam down the middle (fakes door split)
-  const seam = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.86, 0.02), MATS.wallDark);
-  seam.position.set(0, 0.95, 0.28); g.add(seam);
-  // Brass handle (small sphere)
-  const handle = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 12), MATS.brass);
-  handle.position.set(0.30, 1.05, 0.30); g.add(handle);
-  const handle2 = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 12), MATS.brass);
-  handle2.position.set(-0.30, 1.05, 0.30); g.add(handle2);
-  // Number plate (small brass square)
-  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.10, 0.012), MATS.brass);
-  plate.position.set(0, 1.65, 0.282); g.add(plate);
-  g.position.set(x, 0, z); scene.add(g); return g;
+  // The brow spans from the pier edge (x=-1, y=0.4) up to the ship deck edge (x=1, y=2.0).
+  // Length along the slope ~= sqrt(2^2 + 1.6^2) = 2.56. We'll model it as a single ramp.
+  const dx = 2.0, dy = 1.6;
+  const length = Math.sqrt(dx * dx + dy * dy); // slope length
+  const angle = Math.atan2(dy, dx); // pitch angle
+  const width = 1.4;
+  // Walkway plate (haze grey steel)
+  const plate = new THREE.Mesh(
+    new THREE.BoxGeometry(length, 0.08, width),
+    MATS.steel
+  );
+  // Position center of the plate at the midpoint between pier edge top (-1, 0.4) and ship edge top (1, 2.0)
+  plate.position.set(0, (0.4 + 2.0) / 2, 0);
+  plate.rotation.z = angle;
+  plate.castShadow = true; plate.receiveShadow = true;
+  g.add(plate);
+  // Cross treads (small raised strips)
+  const treadCount = 6;
+  for (let i = 0; i < treadCount; i++) {
+    const u = (i + 0.5) / treadCount; // 0..1 along the slope
+    const tx = -1 + dx * u;
+    const ty = 0.4 + dy * u;
+    const tread = new THREE.Mesh(
+      new THREE.BoxGeometry(0.06, 0.025, width - 0.05),
+      MATS.hazeGreyDark
+    );
+    tread.position.set(tx, ty + 0.06, 0);
+    tread.rotation.z = angle;
+    g.add(tread);
+  }
+  // Railings (brass posts + brass top rail) on both sides
+  for (const side of [-1, 1]) {
+    const z = side * (width / 2);
+    // Top rail
+    const rail = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.025, 0.025, length, 10),
+      MATS.brass
+    );
+    rail.rotation.z = angle - Math.PI / 2;
+    rail.position.set(0, (0.4 + 2.0) / 2 + 0.95, z);
+    rail.castShadow = true;
+    g.add(rail);
+    // Mid rail (slightly lower)
+    const midRail = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.018, 0.018, length, 8),
+      MATS.brass
+    );
+    midRail.rotation.z = angle - Math.PI / 2;
+    midRail.position.set(0, (0.4 + 2.0) / 2 + 0.50, z);
+    g.add(midRail);
+    // Posts
+    const postCount = 5;
+    for (let i = 0; i < postCount; i++) {
+      const u = (i) / (postCount - 1);
+      const tx = -1 + dx * u;
+      const ty = 0.4 + dy * u;
+      const post = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.022, 0.022, 1.0, 8),
+        MATS.brass
+      );
+      post.position.set(tx, ty + 0.5, z);
+      post.castShadow = true;
+      g.add(post);
+    }
+  }
+  return g;
 }
-for (let i = 0; i < 10; i++) {
-  const lx = -14 + i * 1.4;
-  buildLocker(lx, -14.4);
-}
+scene.add(buildBrow());
 
-// ============= PENDANT LIGHTS =============
-function buildPendant(x, y, z, intensity = 0.5) {
+// ============= QUARTERDECK BOOTH (podium + desk + name placard wall on ship side) =============
+function buildQuarterdeck() {
   const g = new THREE.Group();
-  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 4, 6), MATS.cord);
-  cord.position.y = y + 2; g.add(cord);
-  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.20, 0.25, 16, 1, true), MATS.pendantShade);
-  shade.position.y = y; shade.castShadow = true; g.add(shade);
-  const inner = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.23, 16, 1, true),
-    new THREE.MeshStandardMaterial({ color: 0xffe0a0, side: THREE.BackSide, roughness: 0.7, emissive: 0xffd47a, emissiveIntensity: 0.4 }));
-  inner.position.y = y - 0.005; g.add(inner);
-  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), MATS.pendantBulb);
-  bulb.position.y = y - 0.06; g.add(bulb);
-  const light = new THREE.PointLight(0xffd47a, intensity, 7, 1.7);
-  light.position.y = y - 0.10; g.add(light);
-  g.position.x = x; g.position.z = z; scene.add(g); return g;
+  // Podium body
+  const podium = new THREE.Mesh(
+    new THREE.BoxGeometry(1.4, 1.10, 0.85),
+    MATS.hostStand
+  );
+  podium.position.set(3.5, 2.0 + 0.55, -1.5);
+  podium.castShadow = true; podium.receiveShadow = true;
+  g.add(podium);
+  // Desk surface on top (brass-trimmed)
+  const desk = new THREE.Mesh(
+    new THREE.BoxGeometry(1.55, 0.04, 0.95),
+    MATS.tableTop
+  );
+  desk.position.set(3.5, 2.0 + 1.12, -1.5);
+  desk.castShadow = true;
+  g.add(desk);
+  // Brass trim on desk edges
+  const trim = new THREE.Mesh(new THREE.TorusGeometry(0.78, 0.012, 6, 24, Math.PI * 2), MATS.brass);
+  trim.rotation.x = Math.PI / 2;
+  trim.position.set(3.5, 2.0 + 1.14, -1.5);
+  g.add(trim);
+  // Reading lamp on the podium
+  const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.35, 8), MATS.brass);
+  lampStem.position.set(3.05, 2.0 + 1.30, -1.5); g.add(lampStem);
+  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.10, 0.10, 12, 1, true), MATS.brass);
+  lampShade.position.set(3.05, 2.0 + 1.50, -1.5); g.add(lampShade);
+  const lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.04, 10, 10), MATS.pendantBulb);
+  lampBulb.position.set(3.05, 2.0 + 1.45, -1.5); g.add(lampBulb);
+  const lampLight = new THREE.PointLight(0xffd47a, 0.4, 4, 1.8);
+  lampLight.position.set(3.05, 2.0 + 1.40, -1.5);
+  g.add(lampLight);
+  // Quarterdeck signpost (small placard on the deck, faces the brow)
+  const sign = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.32, 0.05), MATS.wallDark);
+  sign.position.set(3.5, 2.0 + 1.85, -1.5);
+  g.add(sign);
+  {
+    const c = document.createElement('canvas');
+    c.width = 512; c.height = 128;
+    const x = c.getContext('2d');
+    x.fillStyle = '#1a1d24'; x.fillRect(0, 0, 512, 128);
+    x.fillStyle = '#e6c97a';
+    x.font = '700 60px Inter, sans-serif';
+    x.textBaseline = 'middle'; x.textAlign = 'center';
+    x.fillText('QUARTERDECK', 256, 64);
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    const text = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.1, 0.28),
+      new THREE.MeshStandardMaterial({ map: t, roughness: 0.6, metalness: 0.05 })
+    );
+    text.position.set(3.5, 2.0 + 1.85, -1.47);
+    g.add(text);
+  }
+  scene.add(g);
+  return g;
 }
-// 2 over reception
-buildPendant(-9, 3.6, -6, 0.40);
-buildPendant(-7, 3.6, -6, 0.40);
-// 4 over the cardio area (treadmills)
-for (let i = 0; i < 4; i++) {
-  const tz = -2.5 + i * 2.4;
-  buildPendant(-15.6, 3.4, tz, 0.40);
+buildQuarterdeck();
+
+// ============= BOLLARDS (mooring posts along pier edge) =============
+function buildBollard(x, z) {
+  const g = new THREE.Group();
+  // Brass-painted cylinder body
+  const body = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.22, 0.26, 0.85, 18),
+    MATS.brass
+  );
+  body.position.y = 0.85 / 2 + 0.4;
+  body.castShadow = true; body.receiveShadow = true;
+  g.add(body);
+  // Cap
+  const cap = new THREE.Mesh(
+    new THREE.SphereGeometry(0.24, 18, 12, 0, Math.PI * 2, 0, Math.PI / 2),
+    MATS.brass
+  );
+  cap.position.y = 0.85 + 0.4;
+  cap.castShadow = true;
+  g.add(cap);
+  // Base ring
+  const baseRing = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.32, 0.36, 0.08, 18),
+    MATS.steel
+  );
+  baseRing.position.y = 0.04 + 0.4;
+  g.add(baseRing);
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
-// 2 over the weight area
-buildPendant(3, 3.5, -10.5, 0.40);
-buildPendant(7, 3.5, -10.5, 0.40);
-// 4 along the class studio (slightly higher intensity — yoga studio glow)
-buildPendant(7, 3.6, 4, 0.65);
-buildPendant(12, 3.6, 4, 0.65);
-buildPendant(7, 3.6, 8, 0.65);
-buildPendant(12, 3.6, 8, 0.65);
+const bollardPositions = [
+  [-1.7, -10], [-1.7, -6], [-1.7, -2], [-1.7, 2], [-1.7, 6], [-1.7, 10]
+];
+const bollards = bollardPositions.map(([x, z]) => buildBollard(x, z));
+
+// ============= MOORING LINES (rope cylinders from bollards up to ship hull) =============
+function buildMooringLine(fromX, fromY, fromZ, toX, toY, toZ) {
+  const dx = toX - fromX, dy = toY - fromY, dz = toZ - fromZ;
+  const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  const rope = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.05, len, 8),
+    MATS.rope
+  );
+  // Orient cylinder along the (from -> to) vector
+  const mid = new THREE.Vector3(fromX + dx / 2, fromY + dy / 2, fromZ + dz / 2);
+  rope.position.copy(mid);
+  // Build a quaternion that rotates +Y to the line direction
+  const dir = new THREE.Vector3(dx, dy, dz).normalize();
+  const up = new THREE.Vector3(0, 1, 0);
+  rope.quaternion.setFromUnitVectors(up, dir);
+  rope.castShadow = true;
+  scene.add(rope);
+  return rope;
+}
+// Three mooring lines (bollard top to ship hull side)
+buildMooringLine(-1.7, 1.25, -10, 1.0, 1.5, -9);
+buildMooringLine(-1.7, 1.25, 0, 1.0, 1.5, 1);
+buildMooringLine(-1.7, 1.25, 10, 1.0, 1.5, 9);
+
+// ============= PIER POLE LIGHTS (tall poles with cone shades + emissive bulbs) =============
+function buildPolelight(x, z) {
+  const g = new THREE.Group();
+  const poleHeight = 6.0;
+  // Pole
+  const pole = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.07, 0.09, poleHeight, 10),
+    MATS.poleMetal
+  );
+  pole.position.set(0, poleHeight / 2 + 0.4, 0);
+  pole.castShadow = true;
+  g.add(pole);
+  // Crossarm (small horizontal cylinder near top)
+  const arm = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.04, 0.04, 0.6, 8),
+    MATS.poleMetal
+  );
+  arm.rotation.z = Math.PI / 2;
+  arm.position.set(0.30, poleHeight + 0.4 - 0.05, 0);
+  g.add(arm);
+  // Cone shade
+  const shade = new THREE.Mesh(
+    new THREE.ConeGeometry(0.32, 0.42, 16, 1, true),
+    MATS.pendantShade
+  );
+  shade.position.set(0.55, poleHeight + 0.4 - 0.25, 0);
+  shade.castShadow = true;
+  g.add(shade);
+  // Inner emissive (visible from below)
+  const inner = new THREE.Mesh(
+    new THREE.ConeGeometry(0.30, 0.40, 16, 1, true),
+    new THREE.MeshStandardMaterial({
+      color: 0xffe0a0, side: THREE.BackSide, roughness: 0.7,
+      emissive: 0xffd47a, emissiveIntensity: 0.35
+    })
+  );
+  inner.position.set(0.55, poleHeight + 0.4 - 0.255, 0);
+  g.add(inner);
+  // Bulb
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), MATS.pendantBulb);
+  bulb.position.set(0.55, poleHeight + 0.4 - 0.32, 0);
+  g.add(bulb);
+  // Point light (warm sodium)
+  const light = new THREE.PointLight(0xffaa55, 0.6, 10, 1.7);
+  light.position.set(0.55, poleHeight + 0.4 - 0.4, 0);
+  g.add(light);
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
+}
+// 4 pole lights along the pier
+buildPolelight(-15, -10);
+buildPolelight(-15, -3);
+buildPolelight(-15, 4);
+buildPolelight(-15, 11);
 
 // ============= HUMANOID (procedural articulated person) =============
 class Humanoid extends THREE.Group {
@@ -1041,34 +1175,39 @@ class Humanoid extends THREE.Group {
 }
 
 // ============= ZONES =============
+// Pier top is at y=0.4, ship deck is at y=2.0. Zone planes are anchored to the surface they describe.
 const ZONES = [
   {
-    name: 'Entrance', shortName: 'Entrance',
+    name: 'Brow Approach', shortName: 'Brow Approach',
     color: 0x4d9bff,
-    target: { pos: new THREE.Vector3(-8, 0.012, -5), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 6, h: 5 } },
-    caption: 'Entrance — check-ins, separated from staff and re-entries.',
-    countTarget: 2
-  },
-  {
-    name: 'Cardio', shortName: 'Cardio',
-    color: 0xff8a3d,
-    target: { pos: new THREE.Vector3(-15.6, 0.012, 0.5), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 4.5, h: 11 } },
-    caption: 'Cardio — equipment dwell, peak-hour utilization.',
+    target: { pos: new THREE.Vector3(-3.5, 0.412, 0), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 4.5, h: 3.0 } },
+    caption: 'Brow approach — boarding queue, throughput per hour.',
+    surfaceY: 0.412,
     countTarget: 4
   },
   {
-    name: 'Free Weights', shortName: 'Free Weights',
-    color: 0xb56cff,
-    target: { pos: new THREE.Vector3(5, 0.012, -10), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8, h: 6 } },
-    caption: 'Free Weights — concurrent users, station availability.',
-    countTarget: 3
+    name: 'ID Check', shortName: 'ID Check',
+    color: 0xffb547,
+    target: { pos: new THREE.Vector3(-1.4, 0.412, 0), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 1.2, h: 2.0 } },
+    caption: 'ID check — dwell time, badge audit window.',
+    surfaceY: 0.412,
+    countTarget: 1
   },
   {
-    name: 'Class Studio', shortName: 'Class Studio',
+    name: 'Quarterdeck', shortName: 'Quarterdeck',
     color: 0x2ecc71,
-    target: { pos: new THREE.Vector3(9.5, 0.034, 6), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8.4, h: 8.4 } },
-    caption: 'Class Studio — class fill rate, no-show vs booked.',
-    countTarget: 4
+    target: { pos: new THREE.Vector3(3.5, 2.012, -1.0), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 3.4, h: 3.0 } },
+    caption: 'Quarterdeck — OOD coverage, watch transitions.',
+    surfaceY: 2.012,
+    countTarget: 1
+  },
+  {
+    name: 'Pier Patrol', shortName: 'Pier Patrol',
+    color: 0xff8a3d,
+    target: { pos: new THREE.Vector3(-12, 0.412, 0), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 16, h: 24 } },
+    caption: 'Pier patrol — sentry path, perimeter integrity.',
+    surfaceY: 0.412,
+    countTarget: 6
   }
 ];
 
@@ -1136,106 +1275,161 @@ function roundRect(ctx, x, y, w, h, r) {
 
 const zoneObjects = ZONES.map(buildZone);
 
-// ============= POPULATE WITH HUMANOIDS =============
+// ============= POPULATE WITH HUMANOIDS (uniformed sailors) =============
+// Skin tones (same as template)
 const SKIN_TONES = [0xe8c4a8, 0xd4a37e, 0xc08960, 0xa07050, 0x824f30, 0x624028, 0xf5dcc4, 0xb88560];
-const SHIRT_COLORS = [0x4d6dbb, 0x8b4f3a, 0x3a6b4f, 0x7a5599, 0x4d4d4d, 0x9c8559, 0x5e7d8a, 0xa84a52, 0x355a7d, 0x6e3838];
-const PANTS_COLORS = [0x1a1d24, 0x2a2520, 0x14181f, 0x252a30, 0x352824, 0x1f2530];
+// Navy uniform shirt colors:
+//   White (NWU/dress): light grey-white
+//   Navy blue (NWU Type III/utility): dark navy
+//   Khaki (officer)
+const SHIRT_COLORS_WHITE = [0xeeeeee, 0xe4e4e0];
+const SHIRT_COLORS_NAVY = [0x14223e, 0x1c2840, 0x223047];
+const SHIRT_COLORS_KHAKI = [0x9c8559, 0x8a7a4f];
+const PANTS_COLORS = [0x14181f, 0x1c2128];
 
-const PEOPLE_COUNT = 16;
+// Helper — pick a uniform shirt by role
+function pickShirt(role, idx) {
+  // OOD = officer = khaki; ID Check = senior enlisted = navy; brow = mixed; pier patrol = navy; formation = white
+  if (role === 'ood') return SHIRT_COLORS_KHAKI[idx % SHIRT_COLORS_KHAKI.length];
+  if (role === 'idcheck') return SHIRT_COLORS_NAVY[idx % SHIRT_COLORS_NAVY.length];
+  if (role === 'formation') return SHIRT_COLORS_WHITE[idx % SHIRT_COLORS_WHITE.length];
+  if (role === 'patrol') return SHIRT_COLORS_NAVY[idx % SHIRT_COLORS_NAVY.length];
+  if (role === 'cargo') return SHIRT_COLORS_NAVY[idx % SHIRT_COLORS_NAVY.length];
+  // boarding/disembarking — mix navy + khaki
+  return [SHIRT_COLORS_NAVY[0], SHIRT_COLORS_KHAKI[0], SHIRT_COLORS_NAVY[1], SHIRT_COLORS_NAVY[2]][idx % 4];
+}
+
+// Roles (14 total):
+//   1 ood   — at quarterdeck podium (stationary)
+//   1 idcheck — at ID check zone (stationary)
+//   2 boarding — walking up the brow (pier -> ship)
+//   2 disembarking — walking down the brow (ship -> pier)
+//   4 patrol — slow walking around the pier
+//   2 formation — stationary on pier, equally spaced
+//   2 cargo — walking between pier and ship, carrying boxes
+const ROLE_PLAN = [
+  'ood', 'idcheck',
+  'boarding', 'boarding',
+  'disembarking', 'disembarking',
+  'patrol', 'patrol', 'patrol', 'patrol',
+  'formation', 'formation',
+  'cargo', 'cargo'
+];
+
+const PEOPLE_COUNT = ROLE_PLAN.length; // 14
 const people = [];
 const peopleGroup = new THREE.Group();
 scene.add(peopleGroup);
 
+// Box geometry shared by cargo carriers (a small crate held in hand)
+const boxGeo = new THREE.BoxGeometry(0.42, 0.32, 0.42);
+const boxMat = new THREE.MeshStandardMaterial({ color: 0x55503a, roughness: 0.8, metalness: 0.05 });
+
 for (let i = 0; i < PEOPLE_COUNT; i++) {
+  const role = ROLE_PLAN[i];
   const skin = SKIN_TONES[i % SKIN_TONES.length];
-  const shirt = SHIRT_COLORS[(i * 3) % SHIRT_COLORS.length];
+  const shirt = pickShirt(role, i);
   const pants = PANTS_COLORS[(i * 5) % PANTS_COLORS.length];
   const human = new Humanoid(skin, shirt, pants);
 
-  const startSide = Math.random() < 0.5 ? -1 : 1;
-  human.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
+  // Initial positions per role
+  let initPos = new THREE.Vector3();
+  let initRotY = 0;
+  if (role === 'ood') {
+    // OOD stands behind the podium on ship deck
+    initPos.set(3.5, 2.0, -0.7);
+    initRotY = -Math.PI / 2; // facing the brow (towards pier)
+  } else if (role === 'idcheck') {
+    // ID check at the foot of the brow on pier side
+    initPos.set(-1.4, 0.4, 0);
+    initRotY = Math.PI / 2; // facing pier
+  } else if (role === 'boarding') {
+    // Walking up the brow — start on pier side
+    const off = (i === 2) ? 0 : -1.5;
+    initPos.set(-3 + off, 0.4, (i === 2) ? -0.3 : 0.3);
+  } else if (role === 'disembarking') {
+    // Walking down the brow — start on ship side
+    const off = (i === 4) ? 0 : 1.5;
+    initPos.set(3 + off, 2.0, (i === 4) ? 0.3 : -0.3);
+  } else if (role === 'patrol') {
+    // Random pier position
+    initPos.set(-15 + Math.random() * 12, 0.4, -10 + Math.random() * 20);
+  } else if (role === 'formation') {
+    // 2 sailors equally spaced on pier, west side
+    const idx = i - 10; // 0 or 1
+    initPos.set(-17, 0.4, -4 + idx * 8);
+    initRotY = Math.PI / 2; // facing east (toward ship)
+  } else if (role === 'cargo') {
+    // Cargo carrier — start on pier side or ship side
+    initPos.set(-12 + (i - 12) * 6, 0.4, -8);
+  }
+  human.position.copy(initPos);
+  human.rotation.y = initRotY;
 
-  // Role assignment (16 mannequins):
-  //   0:     reception  (anchored at desk)
-  //   1-4:   treadmill  (locked to assigned treadmill, run-in-place)
-  //   5-7:   weights    (3, slow shuffle)
-  //   8-11:  studio     (4, slow movement in studio area)
-  //   12-15: mingle     (4, drift across all 4 zones)
-  let role;
-  let treadmillIdx = -1;
-  if (i === 0) role = 'reception';
-  else if (i < 5) { role = 'treadmill'; treadmillIdx = i - 1; }
-  else if (i < 8) role = 'weights';
-  else if (i < 12) role = 'studio';
-  else role = 'mingle';
+  // Attach a box to cargo carriers (held in front of torso)
+  if (role === 'cargo') {
+    const box = new THREE.Mesh(boxGeo, boxMat);
+    box.position.set(0, 1.25, 0.32);
+    box.castShadow = true;
+    human.add(box);
+    human.userData.box = box;
+  }
 
-  human.userData = {
+  human.userData = Object.assign(human.userData || {}, {
+    role,
     target: new THREE.Vector3(),
-    speed:
-      role === 'reception' ? 0.3
-      : role === 'treadmill' ? 0.0
-      : role === 'weights' ? 0.55
-      : role === 'studio' ? 0.5
-      : 1.0 + Math.random() * 0.4,
+    speed: (role === 'patrol') ? 0.55 : (role === 'cargo' ? 0.65 : (role === 'boarding' || role === 'disembarking') ? 0.7 : 0.0),
     waitTime: 0,
     pickNew: true,
-    role,
-    treadmillIdx,
-    homeZone:
-      role === 'reception' ? 'Entrance'
-      : role === 'treadmill' ? 'Cardio'
-      : role === 'weights' ? 'Free Weights'
-      : role === 'studio' ? 'Class Studio'
-      : null,
     bobOffset: Math.random() * Math.PI * 2,
-  };
+    initPos: initPos.clone(),
+    initRotY,
+    // For brow-walkers, track progress along brow (0 at pier foot, 1 at ship deck top)
+    browProgress: (role === 'boarding') ? 0 : (role === 'disembarking') ? 1 : 0,
+    browDir: (role === 'boarding') ? 1 : (role === 'disembarking') ? -1 : 0,
+    // For cargo carriers, alternate between pier/ship pickup zones
+    cargoPhase: (i === 12) ? 'toShip' : 'toPier',
+  });
   peopleGroup.add(human);
   people.push(human);
 }
 
+// Walk position helper for the brow (parametric along the slope)
+// pierFoot = (-1, 0.4), shipTop = (1, 2.0)
+function browPosAt(u) {
+  const x = -1 + 2 * u;
+  const y = 0.4 + 1.6 * u;
+  return new THREE.Vector3(x, y, 0);
+}
+const browAngle = Math.atan2(2.0, 1.6); // facing direction along brow (atan2(dx, dy) used for rotY = atan2(x,z), but brow runs along X so face is +X for boarding)
+
+// Targets per zone (used during 'live' phase to pick new wander targets within a zone)
 const TARGETS_BY_ZONE = {
-  Entrance:       () => new THREE.Vector3(-8 + (Math.random() - 0.5) * 4, 0, -5 + (Math.random() - 0.5) * 3),
-  Cardio:         () => new THREE.Vector3(-15.6, 0, -2.5 + Math.floor(Math.random() * 4) * 2.4),
-  'Free Weights': () => new THREE.Vector3(5 + (Math.random() - 0.5) * 6, 0, -10 + (Math.random() - 0.5) * 4),
-  'Class Studio': () => new THREE.Vector3(9.5 + (Math.random() - 0.5) * 6, 0, 6 + (Math.random() - 0.5) * 6),
+  'Brow Approach': () => new THREE.Vector3(-3.5 + (Math.random() - 0.5) * 4, 0.4, (Math.random() - 0.5) * 2.5),
+  'ID Check':      () => new THREE.Vector3(-1.4 + (Math.random() - 0.5) * 0.6, 0.4, (Math.random() - 0.5) * 1.4),
+  'Quarterdeck':   () => new THREE.Vector3(3.5 + (Math.random() - 0.5) * 1.0, 2.0, -1.0 + (Math.random() - 0.5) * 1.4),
+  'Pier Patrol':   () => new THREE.Vector3(-15 + Math.random() * 12, 0.4, -10 + Math.random() * 20),
 };
 
 function pickTarget(person) {
   const ud = person.userData;
-  let zone;
-  if (ud.role === 'reception') {
-    zone = 'Entrance';
-    // Anchor close to the reception desk
-    ud.target.set(-8 + (Math.random() - 0.5) * 1.6, 0, -4.6 + (Math.random() - 0.5) * 0.8);
-    ud.targetZone = zone;
-    ud.waitTime = 8 + Math.random() * 6;
-    ud.pickNew = false;
-    return;
-  } else if (ud.role === 'treadmill') {
-    zone = 'Cardio';
-    // Lock to assigned treadmill — stays put, runs in place
-    const tz = -2.5 + ud.treadmillIdx * 2.4;
-    ud.target.set(-16.6, 0, tz);
-    ud.targetZone = zone;
-    ud.waitTime = 15 + Math.random() * 10; // long sustained run
-    ud.pickNew = false;
-    return;
-  } else if (ud.role === 'weights') {
-    zone = 'Free Weights';
-    ud.waitTime = 5 + Math.random() * 5;
-  } else if (ud.role === 'studio') {
-    zone = 'Class Studio';
-    ud.waitTime = 8 + Math.random() * 6;
+  // Most stationary roles do not pick wander targets
+  if (ud.role === 'patrol') {
+    ud.target.copy(TARGETS_BY_ZONE['Pier Patrol']());
+    ud.waitTime = 1 + Math.random() * 2;
+  } else if (ud.role === 'cargo') {
+    // Alternate between pier-side stash and ship-side stash
+    if (ud.cargoPhase === 'toShip') {
+      ud.target.set(2.0 + Math.random() * 2, 2.0, -3 + Math.random() * 6);
+      ud.cargoPhase = 'toPier';
+    } else {
+      ud.target.set(-13 + Math.random() * 6, 0.4, -8 + Math.random() * 4);
+      ud.cargoPhase = 'toShip';
+    }
+    ud.waitTime = 0.8 + Math.random() * 1.2;
   } else {
-    const r = Math.random();
-    if (r < 0.20) zone = 'Entrance';
-    else if (r < 0.45) zone = 'Cardio';
-    else if (r < 0.72) zone = 'Free Weights';
-    else zone = 'Class Studio';
-    ud.waitTime = 1.5 + Math.random() * 3;
+    ud.waitTime = 4;
   }
-  ud.target.copy(TARGETS_BY_ZONE[zone]());
-  ud.targetZone = zone;
   ud.pickNew = false;
 }
 
@@ -1244,7 +1438,9 @@ function pointInZone(point, zone) {
   const dx = point.x - t.pos.x;
   const dz = point.z - t.pos.z;
   const w = t.size.w / 2, h = t.size.h / 2;
-  return Math.abs(dx) < w && Math.abs(dz) < h;
+  // A zone counts if XZ is in the rectangle AND the person's y is reasonably close to the zone's surface y
+  const yClose = Math.abs(point.y - zone.surfaceY) < 0.6;
+  return Math.abs(dx) < w && Math.abs(dz) < h && yClose;
 }
 
 // ============= UI WIRING =============
@@ -1290,7 +1486,7 @@ function showCaption(text) {
 function hideCaption() { captionEl.classList.remove('visible'); }
 
 // ============= TIMELINE =============
-// Fitness has 4 zones (vs restaurant's 3): intro 3.0 + 4 × 3.6 + live 12.0 + endcard 4.5 = 33.9s
+// 4 zones × 3.6s + intro 3s + LIVE 12s + endcard 4.5s = ~33.9s
 const TIMELINE = [
   { kind: 'intro', dur: 3.0 },                       // cinematic establishing shot
   { kind: 'zone', zoneIdx: 0, dur: 3.6 },
@@ -1306,10 +1502,10 @@ function easeInOut(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
 function easeOut(t) { return 1 - Math.pow(1-t, 3); }
 function easeIn(t)  { return t * t * t; }
 
-// ============= SFX TRIGGER STATE (avoid replay on every frame) =============
+// ============= SFX TRIGGER STATE =============
 const sfxState = {
   zoneIdx: -1,
-  cornersPlaced: -1,    // how many corner clicks fired for current zone
+  cornersPlaced: -1,
   whooshFired: false,
   placeFired: false,
   commitFired: false,
@@ -1404,9 +1600,9 @@ function hideZone(group) {
 }
 
 // ============= CINEMATIC INTRO CAMERA =============
-const introStartPos = new THREE.Vector3(22, 4.5, 28);
-const introEndPos = new THREE.Vector3(14, 11, 18);
-const introStartTarget = new THREE.Vector3(0, 0.5, 0);
+const introStartPos = new THREE.Vector3(18, 6.5, 30);
+const introEndPos = new THREE.Vector3(8, 12, 22);
+const introStartTarget = new THREE.Vector3(0, 1, 0);
 
 function applyIntroCamera(p) {
   const e = easeInOut(p);
@@ -1451,10 +1647,7 @@ function tick() {
   } else {
     if (!liveEnabledControls) enableControlsOnce();
     if (phase.kind === 'live') {
-      // gentle continuous orbit during live phase
-      controls.target.set(0, 0.5, 0);
-      const angle = (loopT - 3.0 - 3.6 * 4) * 0.04;
-      // only auto-orbit if user hasn't grabbed control recently
+      controls.target.set(0, 1, 0);
     }
     controls.update();
   }
@@ -1510,83 +1703,125 @@ function tick() {
   }
 
   // ===== MANNEQUINS =====
-  const occ = { Entrance: 0, Cardio: 0, 'Free Weights': 0, 'Class Studio': 0 };
+  const occ = { 'Brow Approach': 0, 'ID Check': 0, 'Quarterdeck': 0, 'Pier Patrol': 0 };
   if (phase.kind === 'live') {
     for (const person of people) {
       const ud = person.userData;
-      if (ud.pickNew) pickTarget(person);
-
       let velocity = 0;
-      if (ud.role === 'treadmill') {
-        // Snap-lock to treadmill spot, drive walk cycle at high speed (running in place)
-        person.position.x += (ud.target.x - person.position.x) * 0.25;
-        person.position.z += (ud.target.z - person.position.z) * 0.25;
-        // Face the treadmill console: deck long-axis is z, console at local z=+0.78. Mannequin's +z faces console → rotation.y = 0.
-        person.rotation.y = 0;
-        velocity = 1.2; // max-rate walk → simulates running in place
-        ud.waitTime -= dt;
-        if (ud.waitTime <= 0) ud.pickNew = true;
-        if (person.setPose) person.setPose('stand'); // not seated; pelvis stays at 0.95
-      } else {
-        const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
+
+      if (ud.role === 'ood') {
+        // Stationary at podium — slight breathing/idle
+        person.position.copy(ud.initPos);
+        person.rotation.y = ud.initRotY;
+        person.setPose && person.setPose('stand');
+      } else if (ud.role === 'idcheck') {
+        // Stationary at ID check zone
+        person.position.copy(ud.initPos);
+        person.rotation.y = ud.initRotY;
+        person.setPose && person.setPose('stand');
+      } else if (ud.role === 'formation') {
+        // Stationary in formation
+        person.position.copy(ud.initPos);
+        person.rotation.y = ud.initRotY;
+        person.setPose && person.setPose('stand');
+      } else if (ud.role === 'boarding' || ud.role === 'disembarking') {
+        // Walk along the brow
+        const speedAlong = 0.18; // u/sec along the slope
+        ud.browProgress += ud.browDir * speedAlong * dt;
+        // Loop: when boarding (dir=+1) overshoots top, wrap to bottom; when disembarking (dir=-1) overshoots bottom, wrap to top.
+        if (ud.browDir > 0 && ud.browProgress > 1.1) {
+          ud.browProgress = -0.1;
+        } else if (ud.browDir < 0 && ud.browProgress < -0.1) {
+          ud.browProgress = 1.1;
+        }
+        const u = Math.max(0, Math.min(1, ud.browProgress));
+        const lateralOffset = (ud.role === 'boarding') ? 0.3 : -0.3;
+        const pos = browPosAt(u);
+        person.position.set(pos.x, pos.y, pos.z + lateralOffset);
+        // Face along the brow
+        person.rotation.y = (ud.browDir > 0) ? Math.PI / 2 : -Math.PI / 2;
+        velocity = 0.7;
+        person.setPose && person.setPose('walk');
+      } else if (ud.role === 'patrol') {
+        if (ud.pickNew) pickTarget(person);
+        const dir = new THREE.Vector3().subVectors(ud.target, person.position);
+        dir.y = 0;
         const dist = dir.length();
-        if (dist > 0.4) {
+        if (dist > 0.5) {
           const step = ud.speed * dt;
           dir.normalize().multiplyScalar(step);
-          person.position.add(dir);
+          person.position.x += dir.x;
+          person.position.z += dir.z;
+          person.position.y = 0.4;
           person.rotation.y = Math.atan2(dir.x, dir.z);
           velocity = ud.speed;
-          if (person.setPose) person.setPose('stand');
+          person.setPose && person.setPose('walk');
         } else {
           ud.waitTime -= dt;
-          velocity = 0;
-          if (person.setPose) person.setPose('stand');
           if (ud.waitTime <= 0) ud.pickNew = true;
+          person.setPose && person.setPose('stand');
+        }
+      } else if (ud.role === 'cargo') {
+        if (ud.pickNew) pickTarget(person);
+        const dir = new THREE.Vector3().subVectors(ud.target, person.position);
+        const dist = Math.hypot(dir.x, dir.z);
+        if (dist > 0.5) {
+          const step = ud.speed * dt;
+          // 2D movement in XZ plane; height tracks whichever surface they're closer to
+          person.position.x += (dir.x / dist) * step;
+          person.position.z += (dir.z / dist) * step;
+          // Snap to nearest surface (pier 0.4 or ship 2.0). When crossing the gap, ramp y on brow.
+          if (person.position.x < -1) {
+            person.position.y = 0.4;
+          } else if (person.position.x > 1) {
+            person.position.y = 2.0;
+          } else {
+            // On the brow (between -1 and 1)
+            const u = (person.position.x + 1) / 2;
+            person.position.y = 0.4 + 1.6 * u;
+          }
+          person.rotation.y = Math.atan2(dir.x, dir.z);
+          velocity = ud.speed;
+          person.setPose && person.setPose('walk');
+        } else {
+          ud.waitTime -= dt;
+          if (ud.waitTime <= 0) ud.pickNew = true;
+          person.setPose && person.setPose('stand');
         }
       }
 
-      // Drive humanoid skeleton every frame
       if (person.update) person.update(dt, velocity, loopT);
 
-      // Hit-test in floor xy
-      const sample = new THREE.Vector3(person.position.x, 0, person.position.z);
-      for (const z of ZONES) {
-        if (pointInZone(sample, z)) { occ[z.name]++; break; }
+      // Hit-test for zone occupancy (use full 3D position, since zones are at different heights)
+      const sample = person.position.clone();
+      // Test small/specific zones BEFORE the large containing zone (Pier Patrol).
+      // Order: ID Check (smallest) -> Quarterdeck -> Brow Approach -> Pier Patrol (largest).
+      const ZONE_TEST_ORDER = ['ID Check', 'Quarterdeck', 'Brow Approach', 'Pier Patrol'];
+      for (const zname of ZONE_TEST_ORDER) {
+        const z = ZONES.find(zo => zo.name === zname);
+        if (pointInZone(sample, z)) {
+          occ[z.name]++;
+          break;
+        }
       }
     }
   } else if (phase.kind === 'zone') {
-    // gentle drift to home zone during zone-creation phase
+    // gentle drift — keep all sailors in their initial positions, idle pose
     for (const person of people) {
-      const ud = person.userData;
-      if (!ud.driftSet && ud.homeZone) {
-        if (ud.role === 'treadmill') {
-          const tz = -2.5 + ud.treadmillIdx * 2.4;
-          ud.driftTarget = new THREE.Vector3(-16.6, 0, tz);
-        } else if (ud.role === 'reception') {
-          ud.driftTarget = new THREE.Vector3(-8 + (Math.random() - 0.5) * 1.6, 0, -4.6);
-        } else {
-          ud.driftTarget = TARGETS_BY_ZONE[ud.homeZone]();
-        }
-        ud.driftSet = true;
-      }
-      let velocity = 0;
-      if (ud.driftTarget) {
-        const dx = ud.driftTarget.x - person.position.x;
-        const dz = ud.driftTarget.z - person.position.z;
-        const step = Math.hypot(dx, dz) * 0.008;
-        person.position.x += dx * 0.008;
-        person.position.z += dz * 0.008;
-        if (Math.abs(dx) > 0.05 || Math.abs(dz) > 0.05) {
-          person.rotation.y = Math.atan2(dx, dz);
-          velocity = step / Math.max(dt, 0.001);
-        }
+      if (person.userData.initPos) {
+        person.position.copy(person.userData.initPos);
+        person.rotation.y = person.userData.initRotY || 0;
       }
       if (person.setPose) person.setPose('stand');
-      if (person.update) person.update(dt, Math.min(velocity, 1.2), loopT);
+      if (person.update) person.update(dt, 0, loopT);
     }
-  } else {
-    // intro / endcard — hold positions, idle pose, but still update so skeletons don't T-pose
+  } else if (phase.kind === 'endcard' || phase.kind === 'intro') {
+    // hold positions, idle pose
     for (const person of people) {
+      if (person.userData.initPos && phase.kind === 'intro') {
+        person.position.copy(person.userData.initPos);
+        person.rotation.y = person.userData.initRotY || 0;
+      }
       if (person.setPose) person.setPose('stand');
       if (person.update) person.update(dt, 0, loopT);
     }
@@ -1596,10 +1831,6 @@ function tick() {
     if (phase.kind === 'live') {
       countEls[z.name].textContent = occ[z.name];
       countEls[z.name].classList.remove('countDash');
-    } else if (phase.kind === 'zone' && phase.zoneIdx >= ZONES.indexOf(ZONES.find(zo => zo.name === z.name))) {
-      // after zone is placed, show zero (no live tracking yet) — keep dash for simplicity
-      countEls[z.name].textContent = '—';
-      countEls[z.name].classList.add('countDash');
     } else {
       countEls[z.name].textContent = '—';
       countEls[z.name].classList.add('countDash');
@@ -1619,7 +1850,7 @@ const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
   0.45,   // strength
   0.85,   // radius
-  0.85,   // threshold (only bright pixels bloom — pendant bulbs, console screens, zone glows)
+  0.85,   // threshold (only bright pixels bloom — pole-light bulbs, zone glows)
 );
 composer.addPass(bloomPass);
 composer.addPass(new OutputPass());
@@ -1638,8 +1869,16 @@ document.getElementById('replay').addEventListener('click', () => {
   loopT = 0;
   liveEnabledControls = false;
   controls.enabled = false;
-  // reset mannequin drift
-  people.forEach(p => { p.userData.driftSet = false; });
+  // reset mannequin state
+  people.forEach(p => {
+    p.userData.pickNew = true;
+    if (p.userData.initPos) {
+      p.position.copy(p.userData.initPos);
+      p.rotation.y = p.userData.initRotY || 0;
+    }
+    if (p.userData.role === 'boarding') p.userData.browProgress = 0;
+    if (p.userData.role === 'disembarking') p.userData.browProgress = 1;
+  });
 });
 
 document.getElementById('endCta').addEventListener('click', (e) => {

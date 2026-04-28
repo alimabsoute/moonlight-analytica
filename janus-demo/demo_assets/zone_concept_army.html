@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Janus — Map your gym floor.</title>
+<title>Janus — Range Operations.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -252,7 +252,7 @@
       </svg>
     </div>
     <div>
-      <div class="brandWord">Janus</div>
+      <div class="brandWord">Janus / Range Operations</div>
       <div class="brandByline">Built for the floor. Not the screen.</div>
     </div>
     <div class="liveBadge">LIVE</div>
@@ -293,8 +293,8 @@
         <path d="M12 11 L12 21" opacity="0.55" />
       </svg>
     </div>
-    <h1 class="endCardTag" id="endTag">Know what your floor<br>is doing.</h1>
-    <p class="endCardSub" id="endSub">Live counts at the door, the cardio floor, the weight area, the studio. No facial recognition. No badges.</p>
+    <h1 class="endCardTag" id="endTag">Know what your range<br>is doing.</h1>
+    <p class="endCardSub" id="endSub">Live counts at every firing line, every exclusion zone. No facial recognition. No badges.</p>
     <a class="endCardCta" href="#" id="endCta">
       <span>See it live</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -444,23 +444,25 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.2;
 root.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0c10);
-scene.fog = new THREE.Fog(0x0a0c10, 32, 80);
+// Outdoor sky + atmospheric haze
+scene.background = new THREE.Color(0x9ab0c2);
+scene.fog = new THREE.Fog(0xb8c2cc, 40, 120);
 
-const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(14, 11, 18);
+const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 250);
+// Pulled back + slightly higher to fit the firing line + downrange + targets
+camera.position.set(22, 14, 26);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0.5, 0);
+controls.target.set(0, 0.5, -4);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.maxPolarAngle = Math.PI * 0.49;
-controls.minDistance = 6;
-controls.maxDistance = 50;
+controls.minDistance = 8;
+controls.maxDistance = 80;
 controls.enabled = false; // disabled during cinematic intro
 
 // ============= IMAGE-BASED LIGHTING (PMREM from RoomEnvironment) =============
@@ -468,27 +470,25 @@ controls.enabled = false; // disabled during cinematic intro
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
-scene.environmentIntensity = 0.45;
+scene.environmentIntensity = 0.7; // outdoors = brighter ambient
 
-// ============= DIRECT LIGHTS (shadow-casting key + cool fill + warm studio rim) =============
-const key = new THREE.DirectionalLight(0xfff0d8, 2.0);
-key.position.set(12, 18, 8);
+// ============= DIRECT LIGHTS (sun + cool back rim) =============
+// Strong sun directional at high angle, slightly warm
+const key = new THREE.DirectionalLight(0xfff5e0, 2.5);
+key.position.set(10, 30, 8);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
-key.shadow.camera.left = -20; key.shadow.camera.right = 20;
-key.shadow.camera.top = 20; key.shadow.camera.bottom = -20;
+key.shadow.camera.left = -40; key.shadow.camera.right = 40;
+key.shadow.camera.top = 40; key.shadow.camera.bottom = -40;
+key.shadow.camera.near = 0.5; key.shadow.camera.far = 80;
 key.shadow.bias = -0.0005;
 key.shadow.radius = 8;
 scene.add(key);
 
-const fill = new THREE.DirectionalLight(0x88a4ff, 0.5);
-fill.position.set(-10, 8, -6);
+// Cool back-rim for atmospheric depth
+const fill = new THREE.DirectionalLight(0x9ab0c2, 0.5);
+fill.position.set(-10, 6, -10);
 scene.add(fill);
-
-// Warm rim light over the class studio — sells "boutique gym ambience"
-const studioRim = new THREE.PointLight(0xff9a55, 1.4, 22, 1.6);
-studioRim.position.set(9.5, 2.4, 6);
-scene.add(studioRim);
 
 // ============= PROCEDURAL TEXTURES =============
 function makeWoodTexture(w, h, base, grain) {
@@ -572,323 +572,352 @@ function makeFabricTexture(size, hex) {
   return t;
 }
 
+// New: dirt/earth texture for outdoor ground (tan/brown w/ darker vegetation patches)
+function makeDirtTexture(size) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const x = c.getContext('2d');
+  // base tan-brown
+  x.fillStyle = '#8a7a4a'; x.fillRect(0, 0, size, size);
+  // gritty noise
+  for (let i = 0; i < size * size * 0.08; i++) {
+    const r = 110 + Math.random() * 40;
+    const g = 95 + Math.random() * 35;
+    const b = 55 + Math.random() * 25;
+    x.fillStyle = `rgb(${r|0},${g|0},${b|0})`;
+    x.fillRect(Math.random() * size, Math.random() * size, 1, 1);
+  }
+  // darker vegetation / scrub patches
+  for (let p = 0; p < 30; p++) {
+    const cx = Math.random() * size, cy = Math.random() * size;
+    const r = 10 + Math.random() * 36;
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, 'rgba(40,55,28,0.35)');
+    g.addColorStop(1, 'transparent');
+    x.fillStyle = g;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  }
+  // subtle tire/foot tracks (light scuffs)
+  for (let p = 0; p < 12; p++) {
+    const cx = Math.random() * size, cy = Math.random() * size;
+    const r = 18 + Math.random() * 40;
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, 'rgba(60,48,28,0.28)');
+    g.addColorStop(1, 'transparent');
+    x.fillStyle = g;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
 // ============= PBR MATERIAL LIBRARY =============
 const concreteMap = makeConcreteTexture(512); concreteMap.repeat.set(8, 6);
-const deskTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
-const studioFloorMap = makeWoodTexture(512, 512, '#5a4028', '#2a1810');
+const barTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
+const tableTopMap = makeWoodTexture(384, 384, '#4a3520', '#241510');
 
 const MATS = {
   floor: new THREE.MeshStandardMaterial({ color: 0x2c2f36, roughness: 0.86, metalness: 0.05, map: concreteMap }),
   wallDark: new THREE.MeshStandardMaterial({ color: 0x1a1d24, roughness: 0.92, metalness: 0.0 }),
   wallAccent: new THREE.MeshStandardMaterial({ color: 0x2d2419, roughness: 0.88, metalness: 0.0 }),
   barFront: new THREE.MeshStandardMaterial({ color: 0x33384a, roughness: 0.55, metalness: 0.15 }),
-  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: deskTopMap }),
+  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: barTopMap }),
   hostStand: new THREE.MeshStandardMaterial({ color: 0x3d4654, roughness: 0.55, metalness: 0.10 }),
-  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: studioFloorMap }),
+  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: tableTopMap }),
   tableLeg: new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.42, metalness: 0.55 }),
   brass: new THREE.MeshStandardMaterial({ color: 0xb59047, roughness: 0.28, metalness: 0.85 }),
   steel: new THREE.MeshStandardMaterial({ color: 0x4a5060, roughness: 0.35, metalness: 0.75 }),
-  rubberDark: new THREE.MeshStandardMaterial({ color: 0x0c0e12, roughness: 0.85, metalness: 0.05 }),
   glass: new THREE.MeshPhysicalMaterial({
     color: 0xc8e4ec, roughness: 0.06, metalness: 0.0, transmission: 0.95,
     thickness: 0.4, ior: 1.45, transparent: true, opacity: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.05,
   }),
+  bottleAmber: new THREE.MeshPhysicalMaterial({ color: 0x6e3a14, roughness: 0.18, metalness: 0.0,
+    transmission: 0.4, transparent: true, opacity: 0.85, clearcoat: 0.7 }),
+  bottleClear: new THREE.MeshPhysicalMaterial({ color: 0xd4dec4, roughness: 0.10, metalness: 0.0,
+    transmission: 0.8, transparent: true, opacity: 0.70, clearcoat: 0.7 }),
+  bottleDark: new THREE.MeshPhysicalMaterial({ color: 0x142010, roughness: 0.20, metalness: 0.05,
+    transmission: 0.25, transparent: true, opacity: 0.92, clearcoat: 0.8 }),
+  bottleGreen: new THREE.MeshPhysicalMaterial({ color: 0x1f3018, roughness: 0.20, metalness: 0.05,
+    transmission: 0.3, transparent: true, opacity: 0.88, clearcoat: 0.8 }),
+  label: new THREE.MeshStandardMaterial({ color: 0xeeeae0, roughness: 0.78, metalness: 0.0 }),
+  labelDark: new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.7, metalness: 0.0 }),
   pendantBulb: new THREE.MeshStandardMaterial({
     color: 0xfff5d6, emissive: 0xffc97a, emissiveIntensity: 3.5, roughness: 0.4,
   }),
   pendantShade: new THREE.MeshStandardMaterial({ color: 0x2a1f15, roughness: 0.45, metalness: 0.6 }),
   cord: new THREE.MeshStandardMaterial({ color: 0x0e1014, roughness: 0.9, metalness: 0.0 }),
-  // Console screen — emissive so it blooms
-  screen: new THREE.MeshStandardMaterial({
-    color: 0x0a1a2a, emissive: 0x4d9bff, emissiveIntensity: 1.4, roughness: 0.25, metalness: 0.4,
-  }),
-  // Mirror panel (standalone, not shared) — uses dark blue with slight emissive tint
-  mirror: new THREE.MeshStandardMaterial({
-    color: 0x1a2638, roughness: 0.15, metalness: 0.7, emissive: 0x1a2638, emissiveIntensity: 0.30,
-  }),
-  // Yoga mat colors (subtle muted)
-  yoga1: new THREE.MeshStandardMaterial({ color: 0x4d6b8a, roughness: 0.6, metalness: 0.0 }),
-  yoga2: new THREE.MeshStandardMaterial({ color: 0x6a4a5e, roughness: 0.6, metalness: 0.0 }),
-  yoga3: new THREE.MeshStandardMaterial({ color: 0x4a6a55, roughness: 0.6, metalness: 0.0 }),
-  yoga4: new THREE.MeshStandardMaterial({ color: 0x7a6044, roughness: 0.6, metalness: 0.0 }),
 };
 
-// ============= ENVIRONMENT (floor, walls, grid) =============
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), MATS.floor);
+// ============= ARMY-SCENE EXTRA MATERIALS =============
+// Outdoor-specific materials. Built outside the MATS verbatim block to keep MATS unchanged.
+const dirtMap = makeDirtTexture(512); dirtMap.repeat.set(12, 10);
+const dirtMat = new THREE.MeshStandardMaterial({
+  color: 0x8a7a4a, roughness: 0.95, metalness: 0.0, map: dirtMap,
+});
+const earthBermMat = new THREE.MeshStandardMaterial({
+  color: 0x6b5a3a, roughness: 0.96, metalness: 0.0,
+});
+const woodCrateMap = makeWoodTexture(256, 256, '#6b4a25', '#2c1c10');
+const crateMat = new THREE.MeshStandardMaterial({
+  color: 0x6e4b27, roughness: 0.78, metalness: 0.0, map: woodCrateMap,
+});
+const vehicleBodyMat = new THREE.MeshStandardMaterial({
+  color: 0x5a5a52, roughness: 0.62, metalness: 0.25,
+});
+const vehicleWindowMat = new THREE.MeshPhysicalMaterial({
+  color: 0x202830, roughness: 0.18, metalness: 0.1,
+  transmission: 0.25, transparent: true, opacity: 0.85, clearcoat: 0.6,
+});
+const tireMat = new THREE.MeshStandardMaterial({
+  color: 0x141618, roughness: 0.85, metalness: 0.0,
+});
+const towerWoodMat = new THREE.MeshStandardMaterial({
+  color: 0x5a4a32, roughness: 0.78, metalness: 0.0, map: tableTopMap,
+});
+
+// ============= ENVIRONMENT (dirt floor — large outdoor extent) =============
+// Big ground plane to support firing line at z=0 and downrange targets out to ~z=-50
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), dirtMat);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-const grid = new THREE.GridHelper(40, 40, 0x2a2f3a, 0x1c1f27);
-grid.position.y = 0.001;
+// Subtle grid for the demo's "world space" feel — fades into the terrain
+const grid = new THREE.GridHelper(120, 60, 0x6a5a36, 0x4a3e22);
+grid.position.y = 0.002;
 grid.material.transparent = true;
-grid.material.opacity = 0.35;
+grid.material.opacity = 0.18;
 scene.add(grid);
 
-// Walls
-const backWall = new THREE.Mesh(new THREE.BoxGeometry(40, 6, 0.2), MATS.wallDark);
-backWall.position.set(0, 3, -15);
-backWall.receiveShadow = true; scene.add(backWall);
-const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
-leftWall.position.set(-20, 3, 0); leftWall.receiveShadow = true; scene.add(leftWall);
-const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
-rightWall.position.set(20, 3, 0); rightWall.receiveShadow = true; scene.add(rightWall);
+// ============= EARTH BERM (low rolling rise behind the targets) =============
+// Long brown box ~6m tall, 30m wide, behind the downrange target line.
+const berm = new THREE.Mesh(new THREE.BoxGeometry(60, 6, 4), earthBermMat);
+berm.position.set(0, 3, -54);
+berm.castShadow = true;
+berm.receiveShadow = true;
+scene.add(berm);
+// Slight side wing berms to suggest a contained range box
+const bermLeft = new THREE.Mesh(new THREE.BoxGeometry(4, 4.5, 50), earthBermMat);
+bermLeft.position.set(-30, 2.25, -28); bermLeft.castShadow = true; bermLeft.receiveShadow = true; scene.add(bermLeft);
+const bermRight = new THREE.Mesh(new THREE.BoxGeometry(4, 4.5, 50), earthBermMat);
+bermRight.position.set(30, 2.25, -28); bermRight.castShadow = true; bermRight.receiveShadow = true; scene.add(bermRight);
 
-// ============= RECEPTION DESK =============
-function buildReception(x, z) {
+// ============= COVERED FIRING LINE =============
+// A roof on tall posts (~4.5m), with 6 concrete shooting benches under it, all facing downrange (-Z).
+function buildFiringLine() {
   const g = new THREE.Group();
-  // Desk body
-  const body = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.10, 1.4), MATS.barFront);
-  body.position.y = 0.55; body.castShadow = true; body.receiveShadow = true; g.add(body);
-  // Desk top (wood)
-  const top = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 1.5), MATS.barTop);
-  top.position.y = 1.13; top.castShadow = true; g.add(top);
-  // Backdrop wall slab (gym brand panel)
-  const backdrop = new THREE.Mesh(new THREE.BoxGeometry(4.2, 2.0, 0.15), MATS.wallAccent);
-  backdrop.position.set(0, 1.0, -1.6); g.add(backdrop);
-  // Subtle accent stripe on backdrop (emissive cool blue — gym brand-y)
-  const stripe = new THREE.Mesh(
-    new THREE.BoxGeometry(3.6, 0.06, 0.04),
-    new THREE.MeshStandardMaterial({ color: 0x4d9bff, emissive: 0x4d9bff, emissiveIntensity: 1.1, roughness: 0.4 })
-  );
-  stripe.position.set(0, 1.6, -1.52); g.add(stripe);
-  // Reading lamp
-  const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.40, 8), MATS.brass);
-  lampStem.position.set(-1.3, 1.33, 0.0); g.add(lampStem);
-  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.12, 12, 1, true), MATS.brass);
-  lampShade.position.set(-1.3, 1.55, 0); g.add(lampShade);
-  const lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 10), MATS.pendantBulb);
-  lampBulb.position.set(-1.3, 1.50, 0); g.add(lampBulb);
-  const lampLight = new THREE.PointLight(0xffd47a, 0.35, 3, 1.8); lampLight.position.set(-1.3, 1.45, 0); g.add(lampLight);
-  // Small clipboard / tablet on desk (just decoration)
-  const tablet = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.02, 0.28),
-    new THREE.MeshStandardMaterial({ color: 0x0a1a2a, emissive: 0x4d9bff, emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.4 })
-  );
-  tablet.position.set(0.7, 1.16, 0.1); g.add(tablet);
-  g.position.set(x, 0, z); scene.add(g); return g;
+  const length = 14;       // along X
+  const depth = 4;         // along Z (shooter lane depth)
+  const postH = 4.5;
+  // Roof slab
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(length, 0.18, depth + 0.6), MATS.barFront);
+  roof.position.set(0, postH + 0.09, 0);
+  roof.castShadow = true; roof.receiveShadow = true;
+  g.add(roof);
+  // Roof underside trim
+  const trim = new THREE.Mesh(new THREE.BoxGeometry(length - 0.2, 0.04, depth + 0.4), MATS.steel);
+  trim.position.set(0, postH - 0.02, 0);
+  g.add(trim);
+  // Posts (4 along the front, 4 along the back)
+  for (let row = 0; row < 2; row++) {
+    const pz = row === 0 ? -depth / 2 + 0.2 : depth / 2 - 0.2;
+    for (let i = 0; i < 4; i++) {
+      const px = -length / 2 + 0.6 + i * (length - 1.2) / 3;
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.18, postH, 0.18), MATS.barFront);
+      post.position.set(px, postH / 2, pz);
+      post.castShadow = true; post.receiveShadow = true;
+      g.add(post);
+    }
+  }
+  // 6 concrete shooting benches under the roof, facing downrange (-Z)
+  const benchY = 0.55;
+  for (let i = 0; i < 6; i++) {
+    const bx = -length / 2 + 1.4 + i * (length - 2.8) / 5;
+    const bench = new THREE.Group();
+    // Bench top
+    const top = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.12, 1.4), MATS.barFront);
+    top.position.y = benchY + 0.06; top.castShadow = true; top.receiveShadow = true; bench.add(top);
+    // Bench legs / base
+    const base = new THREE.Mesh(new THREE.BoxGeometry(0.9, benchY, 1.0), MATS.barFront);
+    base.position.y = benchY / 2; base.castShadow = true; base.receiveShadow = true; bench.add(base);
+    // Sandbag/rest on top (small low cube)
+    const rest = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.08, 0.30), crateMat);
+    rest.position.set(0, benchY + 0.16, -0.35); bench.add(rest);
+    bench.position.set(bx, 0, -0.4); // slight forward bias toward downrange
+    g.add(bench);
+  }
+  // Front retaining curb
+  const curb = new THREE.Mesh(new THREE.BoxGeometry(length, 0.20, 0.30), MATS.barFront);
+  curb.position.set(0, 0.10, depth / 2 - 0.1);
+  curb.castShadow = true; curb.receiveShadow = true;
+  g.add(curb);
+  scene.add(g);
+  return g;
 }
-buildReception(-8, -6);
+buildFiringLine();
 
-// ============= TREADMILL ROW (cardio) =============
-function buildTreadmill(x, z) {
+// ============= DOWNRANGE TARGETS =============
+// Thin standing rectangles (target silhouettes), MATS.steel, at varying distances.
+function buildTarget(x, z, h = 1.6) {
   const g = new THREE.Group();
-  // Deck base — long flat box on the floor
-  const deck = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.20, 1.85), MATS.steel);
-  deck.position.y = 0.10; deck.castShadow = true; deck.receiveShadow = true; g.add(deck);
-  // Belt — thin dark slab on top of deck
-  const belt = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.025, 1.55), MATS.rubberDark);
-  belt.position.y = 0.215; g.add(belt);
-  // Side rails — vertical cylinder uprights
-  const upL = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.30, 10), MATS.steel);
-  upL.position.set(-0.42, 0.85, 0.65); upL.castShadow = true; g.add(upL);
-  const upR = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.30, 10), MATS.steel);
-  upR.position.set(0.42, 0.85, 0.65); upR.castShadow = true; g.add(upR);
-  // Horizontal grab bar across the front (between uprights)
-  const barGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.86, 10);
-  barGeo.rotateZ(Math.PI / 2);
-  const grabBar = new THREE.Mesh(barGeo, MATS.steel);
-  grabBar.position.set(0, 1.40, 0.65); g.add(grabBar);
-  // Extra side rails (long horizontal — running along the side of the deck)
-  const sideRailGeo = new THREE.CylinderGeometry(0.020, 0.020, 1.50, 10);
-  const sideRailL = new THREE.Mesh(sideRailGeo, MATS.steel);
-  sideRailL.position.set(-0.42, 1.05, 0.0); g.add(sideRailL);
-  const sideRailR = new THREE.Mesh(sideRailGeo, MATS.steel);
-  sideRailR.position.set(0.42, 1.05, 0.0); g.add(sideRailR);
-  // Console panel — small dark box with glowing screen at the front
-  const consoleBack = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.50, 0.10), MATS.barFront);
-  consoleBack.position.set(0, 1.55, 0.78); g.add(consoleBack);
-  const screen = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.36, 0.04), MATS.screen);
-  screen.position.set(0, 1.55, 0.835); g.add(screen);
-  // Tiny LED highlights on console (bloom-friendly)
-  for (let i = 0; i < 3; i++) {
-    const led = new THREE.Mesh(
-      new THREE.SphereGeometry(0.018, 8, 8),
-      new THREE.MeshStandardMaterial({ color: 0xff5b5b, emissive: 0xff5b5b, emissiveIntensity: 4.0, roughness: 0.4 })
-    );
-    led.position.set(-0.30 + i * 0.30, 1.32, 0.835); g.add(led);
-  }
-  g.position.set(x, 0, z); scene.add(g); return g;
+  // Stake/post
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.06, h * 0.55, 0.06), MATS.tableLeg);
+  post.position.y = h * 0.275; post.castShadow = true; g.add(post);
+  // Silhouette plate (centered above the post so post bottom = ground)
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.55, h, 0.04), MATS.steel);
+  plate.position.y = 0.55 * h + h / 2;
+  plate.castShadow = true; plate.receiveShadow = true;
+  g.add(plate);
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
-const treadmillX = -16.6;
-for (let i = 0; i < 4; i++) {
-  const tz = -2.5 + i * 2.4;
-  buildTreadmill(treadmillX, tz);
-}
-
-// ============= SQUAT RACK =============
-function buildSquatRack(x, z) {
-  const g = new THREE.Group();
-  // Two vertical uprights (cylinders)
-  const upGeo = new THREE.CylinderGeometry(0.07, 0.07, 2.6, 12);
-  const upL = new THREE.Mesh(upGeo, MATS.steel);
-  upL.position.set(-1.0, 1.30, 0); upL.castShadow = true; g.add(upL);
-  const upR = new THREE.Mesh(upGeo, MATS.steel);
-  upR.position.set(1.0, 1.30, 0); upR.castShadow = true; g.add(upR);
-  // Cross-bracket near the top
-  const xb = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.10, 0.10), MATS.steel);
-  xb.position.set(0, 2.45, 0); g.add(xb);
-  // Horizontal barbell on rack at chest height (cylinder spanning the uprights, slightly wider)
-  const barbellGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.5, 14);
-  barbellGeo.rotateZ(Math.PI / 2);
-  const barbell = new THREE.Mesh(barbellGeo, MATS.steel);
-  barbell.position.set(0, 1.45, 0); barbell.castShadow = true; g.add(barbell);
-  // Two weight plates on each end (cylinder discs)
-  const plateGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.06, 24);
-  plateGeo.rotateZ(Math.PI / 2);
-  const plateMat = MATS.rubberDark;
-  for (const px of [-1.20, -1.30, 1.20, 1.30]) {
-    const plate = new THREE.Mesh(plateGeo, plateMat);
-    plate.position.set(px, 1.45, 0); plate.castShadow = true; g.add(plate);
-  }
-  // Base platform (rubber matting)
-  const base = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.08, 2.4), MATS.rubberDark);
-  base.position.set(0, 0.04, 0); base.receiveShadow = true; g.add(base);
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildSquatRack(4, -10);
-
-// ============= BENCH PRESS =============
-function buildBench(x, z) {
-  const g = new THREE.Group();
-  // Two short legs (boxes)
-  const legGeo = new THREE.BoxGeometry(0.12, 0.50, 0.50);
-  const legA = new THREE.Mesh(legGeo, MATS.steel);
-  legA.position.set(0, 0.25, -0.6); legA.castShadow = true; g.add(legA);
-  const legB = new THREE.Mesh(legGeo, MATS.steel);
-  legB.position.set(0, 0.25, 0.6); legB.castShadow = true; g.add(legB);
-  // Bench pad (long, fabric texture)
-  const padMat = new THREE.MeshStandardMaterial({
-    color: 0x222a36, roughness: 0.55, metalness: 0.05,
-    map: makeFabricTexture(128, '#222a36'),
-  });
-  const pad = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.10, 1.7), padMat);
-  pad.position.set(0, 0.55, 0); pad.castShadow = true; g.add(pad);
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildBench(7.5, -9.7);
-
-// ============= DUMBBELL RACK =============
-function buildDumbbellRack(x, z) {
-  const g = new THREE.Group();
-  // Two-tier rack frame
-  const frameGeo = new THREE.BoxGeometry(3.6, 0.10, 0.55);
-  const t1 = new THREE.Mesh(frameGeo, MATS.steel);
-  t1.position.set(0, 0.30, 0); g.add(t1);
-  const t2 = new THREE.Mesh(frameGeo, MATS.steel);
-  t2.position.set(0, 0.85, 0); g.add(t2);
-  // End supports
-  for (const ex of [-1.75, 1.75]) {
-    const sup = new THREE.Mesh(new THREE.BoxGeometry(0.10, 1.0, 0.55), MATS.steel);
-    sup.position.set(ex, 0.50, 0); g.add(sup);
-  }
-  // 5 pairs of dumbbells (ascending size) on two tiers
-  function dumbbell(size) {
-    const dg = new THREE.Group();
-    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.38, 10), MATS.steel);
-    handle.rotation.z = Math.PI / 2; dg.add(handle);
-    const headGeo = new THREE.SphereGeometry(0.10 + size * 0.025, 12, 10);
-    const headMat = MATS.steel;
-    const hL = new THREE.Mesh(headGeo, headMat); hL.position.set(-0.22, 0, 0); dg.add(hL);
-    const hR = new THREE.Mesh(headGeo, headMat); hR.position.set(0.22, 0, 0); dg.add(hR);
-    return dg;
-  }
-  for (let i = 0; i < 5; i++) {
-    const dx = -1.45 + i * 0.7;
-    const t1d = dumbbell(i);
-    t1d.position.set(dx, 0.42, 0); g.add(t1d);
-    const t2d = dumbbell(i);
-    t2d.position.set(dx, 0.97, 0); g.add(t2d);
-  }
-  g.position.set(x, 0, z); scene.add(g); return g;
-}
-buildDumbbellRack(4, -12.4);
-
-// ============= YOGA MATS =============
-const yogaMats = [MATS.yoga1, MATS.yoga2, MATS.yoga3, MATS.yoga4];
-const yogaPositions = [
-  [7.5, 4.5], [11.5, 4.5], [7.5, 7.5], [11.5, 7.5]
+// Place targets at increasing downrange distances, varied lateral positions.
+const targetSpecs = [
+  { x: -6, z: -12 }, { x: 0, z: -14 }, { x: 6, z: -13 },
+  { x: -8, z: -28 }, { x: 0, z: -30 }, { x: 8, z: -29 },
+  { x: -4, z: -46 }, { x: 4, z: -45 },
 ];
-yogaPositions.forEach(([mx, mz], i) => {
-  const mat = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.02, 1.7), yogaMats[i]);
-  mat.position.set(mx, 0.011, mz); mat.receiveShadow = true; scene.add(mat);
-});
+targetSpecs.forEach(s => buildTarget(s.x, s.z, 1.5 + Math.random() * 0.3));
 
-// ============= CLASS STUDIO (warm wood floor + partial wall divider + mirror) =============
-// Studio floor slab (warm wood)
-const studioFloor = new THREE.Mesh(new THREE.BoxGeometry(8.5, 0.03, 8.5), MATS.tableTop);
-studioFloor.position.set(9.5, 0.016, 6); studioFloor.receiveShadow = true; scene.add(studioFloor);
-
-// Partial divider wall (open on one side)
-const dividerL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.6, 8.5), MATS.wallAccent);
-dividerL.position.set(5.3, 1.30, 6); dividerL.castShadow = true; dividerL.receiveShadow = true; scene.add(dividerL);
-const dividerB = new THREE.Mesh(new THREE.BoxGeometry(8.5, 2.6, 0.18), MATS.wallAccent);
-dividerB.position.set(9.5, 1.30, 10.15); dividerB.castShadow = true; dividerB.receiveShadow = true; scene.add(dividerB);
-
-// Mirror panel on the divider wall (uses standalone mirror material — not shared MATS.glass)
-const mirror = new THREE.Mesh(new THREE.BoxGeometry(7.5, 2.0, 0.05), MATS.mirror);
-mirror.position.set(9.7, 1.20, 10.05); scene.add(mirror);
-// Mirror frame
-const frameH = new THREE.Mesh(new THREE.BoxGeometry(7.7, 0.06, 0.08), MATS.brass);
-frameH.position.set(9.7, 2.22, 10.06); scene.add(frameH);
-const frameH2 = new THREE.Mesh(new THREE.BoxGeometry(7.7, 0.06, 0.08), MATS.brass);
-frameH2.position.set(9.7, 0.18, 10.06); scene.add(frameH2);
-
-// ============= LOCKER CORRIDOR (10 lockers along back wall) =============
-function buildLocker(x, z) {
+// ============= OBSERVATION TOWER =============
+// Small lookout post on the side. Steel framing (~4m tall), railed platform, small roof.
+function buildObservationTower(x, z) {
   const g = new THREE.Group();
-  // Locker box
-  const door = new THREE.Mesh(new THREE.BoxGeometry(1.20, 1.9, 0.55), MATS.barFront);
-  door.position.y = 0.95; door.castShadow = true; door.receiveShadow = true; g.add(door);
-  // Vertical seam down the middle (fakes door split)
-  const seam = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.86, 0.02), MATS.wallDark);
-  seam.position.set(0, 0.95, 0.28); g.add(seam);
-  // Brass handle (small sphere)
-  const handle = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 12), MATS.brass);
-  handle.position.set(0.30, 1.05, 0.30); g.add(handle);
-  const handle2 = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 12), MATS.brass);
-  handle2.position.set(-0.30, 1.05, 0.30); g.add(handle2);
-  // Number plate (small brass square)
-  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.10, 0.012), MATS.brass);
-  plate.position.set(0, 1.65, 0.282); g.add(plate);
-  g.position.set(x, 0, z); scene.add(g); return g;
+  const baseH = 3.6;
+  // 4 corner legs
+  const legPos = [[-1.0, -1.0], [1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]];
+  legPos.forEach(([lx, lz]) => {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.14, baseH, 0.14), MATS.tableLeg);
+    leg.position.set(lx, baseH / 2, lz); leg.castShadow = true; g.add(leg);
+  });
+  // X-bracing on two sides (just diagonals)
+  for (const sx of [-1, 1]) {
+    const brace = new THREE.Mesh(new THREE.BoxGeometry(0.06, baseH * 1.35, 0.06), MATS.tableLeg);
+    brace.position.set(sx * 1.0, baseH / 2, 0);
+    brace.rotation.x = Math.atan2(2.0, baseH);
+    g.add(brace);
+  }
+  // Platform deck
+  const deck = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.10, 2.4), towerWoodMat);
+  deck.position.y = baseH; deck.castShadow = true; deck.receiveShadow = true; g.add(deck);
+  // Railings (4 sides)
+  const railH = 1.0;
+  for (let s = 0; s < 4; s++) {
+    const horiz = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.04, 0.04), MATS.tableLeg);
+    horiz.position.y = baseH + railH;
+    if (s === 0) horiz.position.z = -1.18;
+    else if (s === 1) horiz.position.z = 1.18;
+    else if (s === 2) { horiz.rotation.y = Math.PI / 2; horiz.position.x = -1.18; }
+    else { horiz.rotation.y = Math.PI / 2; horiz.position.x = 1.18; }
+    g.add(horiz);
+    // mid-rail
+    const mid = horiz.clone(); mid.position.y = baseH + railH * 0.5; g.add(mid);
+  }
+  // Vertical rail posts
+  for (const [px, pz] of [[-1.18, -1.18], [1.18, -1.18], [-1.18, 1.18], [1.18, 1.18]]) {
+    const v = new THREE.Mesh(new THREE.BoxGeometry(0.06, railH, 0.06), MATS.tableLeg);
+    v.position.set(px, baseH + railH / 2, pz); g.add(v);
+  }
+  // Small roof
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.08, 2.8), MATS.barFront);
+  roof.position.y = baseH + railH + 1.2; roof.castShadow = true; g.add(roof);
+  // Roof support posts (corners)
+  for (const [px, pz] of [[-1.10, -1.10], [1.10, -1.10], [-1.10, 1.10], [1.10, 1.10]]) {
+    const rp = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.2, 0.08), MATS.tableLeg);
+    rp.position.set(px, baseH + railH + 0.6, pz); g.add(rp);
+  }
+  // Ladder (one side)
+  for (let r = 0; r < 8; r++) {
+    const rung = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.04, 0.04), MATS.tableLeg);
+    rung.position.set(0, 0.3 + r * 0.42, -1.30); g.add(rung);
+  }
+  const sideRailL = new THREE.Mesh(new THREE.BoxGeometry(0.04, baseH, 0.04), MATS.tableLeg);
+  sideRailL.position.set(-0.30, baseH / 2, -1.30); g.add(sideRailL);
+  const sideRailR = sideRailL.clone(); sideRailR.position.x = 0.30; g.add(sideRailR);
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
-for (let i = 0; i < 10; i++) {
-  const lx = -14 + i * 1.4;
-  buildLocker(lx, -14.4);
-}
+const TOWER_POS = { x: -16, z: -2 };
+buildObservationTower(TOWER_POS.x, TOWER_POS.z);
 
-// ============= PENDANT LIGHTS =============
-function buildPendant(x, y, z, intensity = 0.5) {
+// ============= VEHICLE STAGING (two Humvee-like vehicles) =============
+function buildHumvee(x, z, rotY = 0) {
   const g = new THREE.Group();
-  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 4, 6), MATS.cord);
-  cord.position.y = y + 2; g.add(cord);
-  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.20, 0.25, 16, 1, true), MATS.pendantShade);
-  shade.position.y = y; shade.castShadow = true; g.add(shade);
-  const inner = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.23, 16, 1, true),
-    new THREE.MeshStandardMaterial({ color: 0xffe0a0, side: THREE.BackSide, roughness: 0.7, emissive: 0xffd47a, emissiveIntensity: 0.4 }));
-  inner.position.y = y - 0.005; g.add(inner);
-  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), MATS.pendantBulb);
-  bulb.position.y = y - 0.06; g.add(bulb);
-  const light = new THREE.PointLight(0xffd47a, intensity, 7, 1.7);
-  light.position.y = y - 0.10; g.add(light);
-  g.position.x = x; g.position.z = z; scene.add(g); return g;
+  // Body (low boxy hull)
+  const hull = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.0, 4.4), vehicleBodyMat);
+  hull.position.y = 0.95; hull.castShadow = true; hull.receiveShadow = true; g.add(hull);
+  // Hood (slightly lower front)
+  const hood = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.55, 1.5), vehicleBodyMat);
+  hood.position.set(0, 0.72, 1.45); hood.castShadow = true; g.add(hood);
+  // Roof / cab top
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.5, 2.4), vehicleBodyMat);
+  cab.position.set(0, 1.65, -0.4); cab.castShadow = true; g.add(cab);
+  // Windows (front + sides) — slightly tinted
+  const windshield = new THREE.Mesh(new THREE.BoxGeometry(1.95, 0.45, 0.05), vehicleWindowMat);
+  windshield.position.set(0, 1.55, 0.85);
+  windshield.rotation.x = -0.18;
+  g.add(windshield);
+  const sideWindowL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.4, 1.8), vehicleWindowMat);
+  sideWindowL.position.set(-1.02, 1.6, -0.4); g.add(sideWindowL);
+  const sideWindowR = sideWindowL.clone(); sideWindowR.position.x = 1.02; g.add(sideWindowR);
+  // Wheels (4 cylinders along the bottom)
+  const wheelR = 0.45;
+  const wheelGeo = new THREE.CylinderGeometry(wheelR, wheelR, 0.4, 18);
+  const wheelPositions = [[-0.95, 1.5], [0.95, 1.5], [-0.95, -1.5], [0.95, -1.5]];
+  wheelPositions.forEach(([wx, wz]) => {
+    const w = new THREE.Mesh(wheelGeo, tireMat);
+    w.rotation.z = Math.PI / 2;
+    w.position.set(wx, wheelR, wz); w.castShadow = true; g.add(w);
+    // hub
+    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.42, 10), MATS.steel);
+    hub.rotation.z = Math.PI / 2;
+    hub.position.set(wx, wheelR, wz); g.add(hub);
+  });
+  // Antenna whip
+  const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.008, 1.6, 6), MATS.steel);
+  ant.position.set(-0.8, 1.65 + 0.8, -1.4); g.add(ant);
+  g.position.set(x, 0, z);
+  g.rotation.y = rotY;
+  scene.add(g);
+  return g;
 }
-// 2 over reception
-buildPendant(-9, 3.6, -6, 0.40);
-buildPendant(-7, 3.6, -6, 0.40);
-// 4 over the cardio area (treadmills)
-for (let i = 0; i < 4; i++) {
-  const tz = -2.5 + i * 2.4;
-  buildPendant(-15.6, 3.4, tz, 0.40);
+const VEHICLE_AREA = { cx: 16, cz: 4 };
+buildHumvee(VEHICLE_AREA.cx - 1.6, VEHICLE_AREA.cz - 1.5, -0.15);
+buildHumvee(VEHICLE_AREA.cx + 1.8, VEHICLE_AREA.cz + 1.8, 0.10);
+
+// ============= AMMO / EQUIPMENT CRATE STACKS =============
+function buildCrateStack(x, z, rows = 2, cols = 2, layers = 2) {
+  const g = new THREE.Group();
+  const cw = 0.85, ch = 0.55, cd = 0.55;
+  for (let l = 0; l < layers; l++) {
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cx = (c - (cols - 1) / 2) * (cw + 0.04) + (Math.random() - 0.5) * 0.04;
+        const cz = (r - (rows - 1) / 2) * (cd + 0.04) + (Math.random() - 0.5) * 0.04;
+        const crate = new THREE.Mesh(new THREE.BoxGeometry(cw, ch, cd), crateMat);
+        crate.position.set(cx, ch / 2 + l * ch + 0.001, cz);
+        crate.rotation.y = (Math.random() - 0.5) * 0.05;
+        crate.castShadow = true; crate.receiveShadow = true;
+        g.add(crate);
+        // metal banding
+        const band1 = new THREE.Mesh(new THREE.BoxGeometry(cw + 0.005, 0.025, 0.04), MATS.steel);
+        band1.position.set(cx, ch / 2 + l * ch + 0.001, cz + cd / 2 - 0.05);
+        g.add(band1);
+      }
+    }
+  }
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
-// 2 over the weight area
-buildPendant(3, 3.5, -10.5, 0.40);
-buildPendant(7, 3.5, -10.5, 0.40);
-// 4 along the class studio (slightly higher intensity — yoga studio glow)
-buildPendant(7, 3.6, 4, 0.65);
-buildPendant(12, 3.6, 4, 0.65);
-buildPendant(7, 3.6, 8, 0.65);
-buildPendant(12, 3.6, 8, 0.65);
+// Crate stacks near the firing line (a couple piles)
+buildCrateStack(-9.5, 1.8, 2, 2, 2);
+buildCrateStack(8.5, 1.8, 1, 2, 2);
+buildCrateStack(11.5, 5.0, 2, 1, 1);
 
 // ============= HUMANOID (procedural articulated person) =============
 class Humanoid extends THREE.Group {
@@ -930,7 +959,7 @@ class Humanoid extends THREE.Group {
     headMesh.scale.set(0.95, 1.05, 1.0);
     headMesh.castShadow = true;
     this.head.add(headMesh);
-    // Hair (random color)
+    // Hair (random color) — short cap for army setting
     const hairColors = [0x1a1310, 0x2a1f15, 0x3d2818, 0x4a3528, 0x5e4028, 0x150f0a];
     const hairMat = new THREE.MeshStandardMaterial({
       color: hairColors[Math.floor(Math.random() * hairColors.length)],
@@ -1041,34 +1070,40 @@ class Humanoid extends THREE.Group {
 }
 
 // ============= ZONES =============
+// 4 zones for the army range demo. NOTE: "Downrange Exclusion" is the safety
+// zone — personnel must NEVER be inside it during live-fire windows. The
+// pickTarget() function below specifically excludes Downrange from any
+// mannequin's possible target list.
 const ZONES = [
   {
-    name: 'Entrance', shortName: 'Entrance',
+    name: 'Firing Line', shortName: 'Firing Line',
     color: 0x4d9bff,
-    target: { pos: new THREE.Vector3(-8, 0.012, -5), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 6, h: 5 } },
-    caption: 'Entrance — check-ins, separated from staff and re-entries.',
-    countTarget: 2
-  },
-  {
-    name: 'Cardio', shortName: 'Cardio',
-    color: 0xff8a3d,
-    target: { pos: new THREE.Vector3(-15.6, 0.012, 0.5), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 4.5, h: 11 } },
-    caption: 'Cardio — equipment dwell, peak-hour utilization.',
+    // Centered to cover both the shooting benches (z~-0.4) and the RSO walking
+    // lane behind them (z~+2.4). Depth widened to ~5.5m so both register.
+    target: { pos: new THREE.Vector3(0, 0.012, 0.6), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 12, h: 5.5 } },
+    caption: 'Firing line — shooter occupancy, range officer compliance.',
     countTarget: 4
   },
   {
-    name: 'Free Weights', shortName: 'Free Weights',
-    color: 0xb56cff,
-    target: { pos: new THREE.Vector3(5, 0.012, -10), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8, h: 6 } },
-    caption: 'Free Weights — concurrent users, station availability.',
-    countTarget: 3
+    name: 'Downrange Exclusion', shortName: 'Downrange',
+    color: 0xe63946,
+    target: { pos: new THREE.Vector3(0, 0.012, -25), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 25, h: 18 } },
+    caption: 'Downrange — alerts on personnel during live-fire windows.',
+    countTarget: 0
   },
   {
-    name: 'Class Studio', shortName: 'Class Studio',
+    name: 'OP', shortName: 'OP',
     color: 0x2ecc71,
-    target: { pos: new THREE.Vector3(9.5, 0.034, 6), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 8.4, h: 8.4 } },
-    caption: 'Class Studio — class fill rate, no-show vs booked.',
-    countTarget: 4
+    target: { pos: new THREE.Vector3(TOWER_POS.x, 0.012, TOWER_POS.z), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 4.5, h: 4.5 } },
+    caption: 'OP — RSO position, time-on-station.',
+    countTarget: 1
+  },
+  {
+    name: 'Vehicle Staging', shortName: 'Vehicles',
+    color: 0xffb547,
+    target: { pos: new THREE.Vector3(VEHICLE_AREA.cx, 0.012, VEHICLE_AREA.cz), rotEuler: new THREE.Euler(-Math.PI / 2, 0, 0), size: { w: 9, h: 8 } },
+    caption: 'Vehicle staging — turn rate, equipment dwell.',
+    countTarget: 2
   }
 ];
 
@@ -1110,7 +1145,7 @@ function buildZone(z) {
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 52px Inter, -apple-system, sans-serif';
   ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
-  ctx.fillText(z.name.toUpperCase(), 256, 64);
+  ctx.fillText(z.shortName.toUpperCase(), 256, 64);
   const tex = new THREE.CanvasTexture(labelCanvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   const labelMat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.0, depthTest: false });
@@ -1138,13 +1173,37 @@ const zoneObjects = ZONES.map(buildZone);
 
 // ============= POPULATE WITH HUMANOIDS =============
 const SKIN_TONES = [0xe8c4a8, 0xd4a37e, 0xc08960, 0xa07050, 0x824f30, 0x624028, 0xf5dcc4, 0xb88560];
-const SHIRT_COLORS = [0x4d6dbb, 0x8b4f3a, 0x3a6b4f, 0x7a5599, 0x4d4d4d, 0x9c8559, 0x5e7d8a, 0xa84a52, 0x355a7d, 0x6e3838];
-const PANTS_COLORS = [0x1a1d24, 0x2a2520, 0x14181f, 0x252a30, 0x352824, 0x1f2530];
+// OCP / multicam / olive-drab approximations
+const SHIRT_COLORS = [0x4a5530, 0x6b6e3a, 0x5e5e3d, 0x4a5043, 0x646b3a];
+const PANTS_COLORS = [0x4a4530, 0x5e5e3d];
 
-const PEOPLE_COUNT = 16;
+const PEOPLE_COUNT = 14;
 const people = [];
 const peopleGroup = new THREE.Group();
 scene.add(peopleGroup);
+
+// Roles:
+//  0..3  (4) firingLine — at firing benches
+//  4     (1) op         — in observation tower (stationary)
+//  5     (1) rso        — walking the firing line behind the shooters
+//  6..7  (2) vehicle    — in the vehicle staging area
+//  8..9  (2) carrier    — moving between vehicles and firing line
+//  10..13 (4) mingle    — around the camp area, never downrange
+function roleForIndex(i) {
+  if (i < 4) return 'firingLine';
+  if (i === 4) return 'op';
+  if (i === 5) return 'rso';
+  if (i < 8) return 'vehicle';
+  if (i < 10) return 'carrier';
+  return 'mingle';
+}
+
+// Firing-bench X positions (must match buildFiringLine layout: 6 benches across length 14)
+const FIRING_BENCH_LENGTH = 14;
+const FIRING_BENCH_XS = [];
+for (let i = 0; i < 6; i++) {
+  FIRING_BENCH_XS.push(-FIRING_BENCH_LENGTH / 2 + 1.4 + i * (FIRING_BENCH_LENGTH - 2.8) / 5);
+}
 
 for (let i = 0; i < PEOPLE_COUNT; i++) {
   const skin = SKIN_TONES[i % SKIN_TONES.length];
@@ -1152,90 +1211,132 @@ for (let i = 0; i < PEOPLE_COUNT; i++) {
   const pants = PANTS_COLORS[(i * 5) % PANTS_COLORS.length];
   const human = new Humanoid(skin, shirt, pants);
 
-  const startSide = Math.random() < 0.5 ? -1 : 1;
-  human.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
+  const role = roleForIndex(i);
 
-  // Role assignment (16 mannequins):
-  //   0:     reception  (anchored at desk)
-  //   1-4:   treadmill  (locked to assigned treadmill, run-in-place)
-  //   5-7:   weights    (3, slow shuffle)
-  //   8-11:  studio     (4, slow movement in studio area)
-  //   12-15: mingle     (4, drift across all 4 zones)
-  let role;
-  let treadmillIdx = -1;
-  if (i === 0) role = 'reception';
-  else if (i < 5) { role = 'treadmill'; treadmillIdx = i - 1; }
-  else if (i < 8) role = 'weights';
-  else if (i < 12) role = 'studio';
-  else role = 'mingle';
+  // Initial spawn — keeps everyone safely OUT of the downrange exclusion zone
+  if (role === 'firingLine') {
+    // park near the firing bench they will man
+    const bx = FIRING_BENCH_XS[i % 4];
+    human.position.set(bx + (Math.random() - 0.5) * 0.3, 0, 0.2 + Math.random() * 0.4);
+    human.rotation.y = Math.PI; // face downrange (-Z)
+  } else if (role === 'op') {
+    // up on tower deck
+    human.position.set(TOWER_POS.x, 3.7, TOWER_POS.z);
+    human.rotation.y = Math.PI / 2;
+  } else if (role === 'rso') {
+    human.position.set(-2 + Math.random() * 4, 0, 2.4);
+  } else if (role === 'vehicle') {
+    human.position.set(VEHICLE_AREA.cx + (Math.random() - 0.5) * 5, 0, VEHICLE_AREA.cz + (Math.random() - 0.5) * 4);
+  } else if (role === 'carrier') {
+    human.position.set(8 + Math.random() * 4, 0, 3 + Math.random() * 2);
+  } else { // mingle around camp area (never downrange)
+    human.position.set(-12 + Math.random() * 24, 0, 4 + Math.random() * 4);
+  }
 
   human.userData = {
     target: new THREE.Vector3(),
-    speed:
-      role === 'reception' ? 0.3
-      : role === 'treadmill' ? 0.0
-      : role === 'weights' ? 0.55
-      : role === 'studio' ? 0.5
-      : 1.0 + Math.random() * 0.4,
+    speed: role === 'rso' ? 0.55 : (role === 'carrier' ? 0.85 : (role === 'vehicle' ? 0.45 : (role === 'op' ? 0.0 : 0.5))),
     waitTime: 0,
     pickNew: true,
     role,
-    treadmillIdx,
-    homeZone:
-      role === 'reception' ? 'Entrance'
-      : role === 'treadmill' ? 'Cardio'
-      : role === 'weights' ? 'Free Weights'
-      : role === 'studio' ? 'Class Studio'
-      : null,
+    homeZone: role === 'firingLine' ? 'Firing Line'
+            : role === 'op'         ? 'OP'
+            : role === 'vehicle'    ? 'Vehicle Staging'
+            : null,
     bobOffset: Math.random() * Math.PI * 2,
+    velocityCache: 0,
+    sittingAt: null,
+    benchIdx: role === 'firingLine' ? (i % 4) : -1,
   };
   peopleGroup.add(human);
   people.push(human);
 }
 
+// Target generators per zone — DOWNRANGE EXCLUSION IS DELIBERATELY ABSENT.
+// pickTarget() must never return a Downrange target — that would simulate a
+// safety violation, which is not appropriate for this demo.
 const TARGETS_BY_ZONE = {
-  Entrance:       () => new THREE.Vector3(-8 + (Math.random() - 0.5) * 4, 0, -5 + (Math.random() - 0.5) * 3),
-  Cardio:         () => new THREE.Vector3(-15.6, 0, -2.5 + Math.floor(Math.random() * 4) * 2.4),
-  'Free Weights': () => new THREE.Vector3(5 + (Math.random() - 0.5) * 6, 0, -10 + (Math.random() - 0.5) * 4),
-  'Class Studio': () => new THREE.Vector3(9.5 + (Math.random() - 0.5) * 6, 0, 6 + (Math.random() - 0.5) * 6),
+  'Firing Line':     () => new THREE.Vector3(
+    FIRING_BENCH_XS[Math.floor(Math.random() * 4)] + (Math.random() - 0.5) * 0.3,
+    0,
+    0.0 + (Math.random() - 0.5) * 0.6
+  ),
+  'OP':              () => new THREE.Vector3(
+    TOWER_POS.x + (Math.random() - 0.5) * 1.5,
+    0,
+    TOWER_POS.z + (Math.random() - 0.5) * 1.5
+  ),
+  'Vehicle Staging': () => new THREE.Vector3(
+    VEHICLE_AREA.cx + (Math.random() - 0.5) * 6,
+    0,
+    VEHICLE_AREA.cz + (Math.random() - 0.5) * 5
+  ),
 };
+// Camp-area random scatter for "mingle" role and inter-zone walks. Always +Z
+// (away from the downrange exclusion) and bounded laterally.
+function pickCampPoint() {
+  return new THREE.Vector3(
+    -12 + Math.random() * 24,
+    0,
+    3 + Math.random() * 5
+  );
+}
 
 function pickTarget(person) {
   const ud = person.userData;
   let zone;
-  if (ud.role === 'reception') {
-    zone = 'Entrance';
-    // Anchor close to the reception desk
-    ud.target.set(-8 + (Math.random() - 0.5) * 1.6, 0, -4.6 + (Math.random() - 0.5) * 0.8);
+  if (ud.role === 'firingLine') {
+    // Stay at your bench, occasionally take a small step
+    const bx = FIRING_BENCH_XS[ud.benchIdx];
+    ud.target.set(bx + (Math.random() - 0.5) * 0.4, 0, 0.0 + (Math.random() - 0.5) * 0.6);
+    ud.targetZone = 'Firing Line';
+    ud.waitTime = 4 + Math.random() * 4;
+  } else if (ud.role === 'op') {
+    // Stationary on the tower deck — small in-place targets
+    ud.target.set(TOWER_POS.x + (Math.random() - 0.5) * 0.4, 3.7, TOWER_POS.z + (Math.random() - 0.5) * 0.4);
+    ud.targetZone = 'OP';
+    ud.waitTime = 6 + Math.random() * 4;
+  } else if (ud.role === 'rso') {
+    // RSO walks the firing line — pick a new sweep point along x, behind shooters
+    ud.target.set(-5 + Math.random() * 10, 0, 2.0 + Math.random() * 0.8);
+    ud.targetZone = 'Firing Line';
+    ud.waitTime = 1.5 + Math.random() * 2;
+  } else if (ud.role === 'vehicle') {
+    zone = 'Vehicle Staging';
+    ud.target.copy(TARGETS_BY_ZONE[zone]());
     ud.targetZone = zone;
-    ud.waitTime = 8 + Math.random() * 6;
-    ud.pickNew = false;
-    return;
-  } else if (ud.role === 'treadmill') {
-    zone = 'Cardio';
-    // Lock to assigned treadmill — stays put, runs in place
-    const tz = -2.5 + ud.treadmillIdx * 2.4;
-    ud.target.set(-16.6, 0, tz);
-    ud.targetZone = zone;
-    ud.waitTime = 15 + Math.random() * 10; // long sustained run
-    ud.pickNew = false;
-    return;
-  } else if (ud.role === 'weights') {
-    zone = 'Free Weights';
-    ud.waitTime = 5 + Math.random() * 5;
-  } else if (ud.role === 'studio') {
-    zone = 'Class Studio';
-    ud.waitTime = 8 + Math.random() * 6;
+    ud.waitTime = 2.5 + Math.random() * 3;
+  } else if (ud.role === 'carrier') {
+    // Alternate between vehicle area and firing line (carrying equipment)
+    const goVehicles = Math.random() < 0.5;
+    if (goVehicles) {
+      ud.target.copy(TARGETS_BY_ZONE['Vehicle Staging']());
+      ud.targetZone = 'Vehicle Staging';
+    } else {
+      // delivery point near the firing line (not on the bench)
+      ud.target.set(-6 + Math.random() * 12, 0, 2.6 + Math.random() * 1.2);
+      ud.targetZone = 'Firing Line';
+    }
+    ud.waitTime = 1.5 + Math.random() * 2;
   } else {
+    // mingle — pick from {Firing Line approach, OP approach, Vehicle Staging, ad-hoc camp}
+    // NEVER pick Downrange.
     const r = Math.random();
-    if (r < 0.20) zone = 'Entrance';
-    else if (r < 0.45) zone = 'Cardio';
-    else if (r < 0.72) zone = 'Free Weights';
-    else zone = 'Class Studio';
+    if (r < 0.25) { ud.target.copy(TARGETS_BY_ZONE['Vehicle Staging']()); ud.targetZone = 'Vehicle Staging'; }
+    else if (r < 0.45) {
+      // approach firing line behind the shooters (z>=2)
+      ud.target.set(-5 + Math.random() * 10, 0, 2.4 + Math.random() * 1.0);
+      ud.targetZone = 'Firing Line';
+    } else if (r < 0.55) {
+      // walk toward OP base (ground level, not on the deck)
+      ud.target.set(TOWER_POS.x + (Math.random() - 0.5) * 2.0, 0, TOWER_POS.z + 1.4 + Math.random() * 1.0);
+      ud.targetZone = null;
+    } else {
+      ud.target.copy(pickCampPoint());
+      ud.targetZone = null;
+    }
     ud.waitTime = 1.5 + Math.random() * 3;
   }
-  ud.target.copy(TARGETS_BY_ZONE[zone]());
-  ud.targetZone = zone;
   ud.pickNew = false;
 }
 
@@ -1290,7 +1391,7 @@ function showCaption(text) {
 function hideCaption() { captionEl.classList.remove('visible'); }
 
 // ============= TIMELINE =============
-// Fitness has 4 zones (vs restaurant's 3): intro 3.0 + 4 × 3.6 + live 12.0 + endcard 4.5 = 33.9s
+// 4 zones × 3.6s + intro 3s + LIVE 12s + endcard 4.5s = 33.9s
 const TIMELINE = [
   { kind: 'intro', dur: 3.0 },                       // cinematic establishing shot
   { kind: 'zone', zoneIdx: 0, dur: 3.6 },
@@ -1327,7 +1428,14 @@ function animateZone(zone, group, p) {
   const { plane, edges, corners, label } = group.userData;
   const t = zone.target;
 
-  const hoverPos = new THREE.Vector3(t.pos.x, t.pos.y + 4.2, t.pos.z + 1.2);
+  // Default hover: directly above the target. For the OP zone, the observation
+  // tower (deck y=3.65, roof y~5.8) sits at the same xz, so a vertical hover
+  // at y=4.2 would tumble inside the structure. Offset OP laterally so the
+  // zone materializes in open air next to the tower, then descends to surface.
+  const isOp = zone.name === 'OP';
+  const hoverPos = isOp
+    ? new THREE.Vector3(t.pos.x + 6.5, t.pos.y + 6.5, t.pos.z + 2.5)
+    : new THREE.Vector3(t.pos.x, t.pos.y + 4.2, t.pos.z + 1.2);
 
   if (p < 0.18) {
     // === Phase 1: Define (wireframe materializes hovering above scene) ===
@@ -1404,9 +1512,9 @@ function hideZone(group) {
 }
 
 // ============= CINEMATIC INTRO CAMERA =============
-const introStartPos = new THREE.Vector3(22, 4.5, 28);
-const introEndPos = new THREE.Vector3(14, 11, 18);
-const introStartTarget = new THREE.Vector3(0, 0.5, 0);
+const introStartPos = new THREE.Vector3(34, 7, 38);
+const introEndPos = new THREE.Vector3(22, 14, 26);
+const introStartTarget = new THREE.Vector3(0, 0.5, -4);
 
 function applyIntroCamera(p) {
   const e = easeInOut(p);
@@ -1452,9 +1560,7 @@ function tick() {
     if (!liveEnabledControls) enableControlsOnce();
     if (phase.kind === 'live') {
       // gentle continuous orbit during live phase
-      controls.target.set(0, 0.5, 0);
-      const angle = (loopT - 3.0 - 3.6 * 4) * 0.04;
-      // only auto-orbit if user hasn't grabbed control recently
+      controls.target.set(0, 0.5, -4);
     }
     controls.update();
   }
@@ -1510,45 +1616,37 @@ function tick() {
   }
 
   // ===== MANNEQUINS =====
-  const occ = { Entrance: 0, Cardio: 0, 'Free Weights': 0, 'Class Studio': 0 };
+  const occ = { 'Firing Line': 0, 'Downrange Exclusion': 0, 'OP': 0, 'Vehicle Staging': 0 };
   if (phase.kind === 'live') {
     for (const person of people) {
       const ud = person.userData;
       if (ud.pickNew) pickTarget(person);
-
+      // OP role is stationary up on the tower deck — keep y locked.
+      const isOp = ud.role === 'op';
+      const targetY = isOp ? 3.7 : 0;
+      const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
+      const dist = dir.length();
       let velocity = 0;
-      if (ud.role === 'treadmill') {
-        // Snap-lock to treadmill spot, drive walk cycle at high speed (running in place)
-        person.position.x += (ud.target.x - person.position.x) * 0.25;
-        person.position.z += (ud.target.z - person.position.z) * 0.25;
-        // Face the treadmill console: deck long-axis is z, console at local z=+0.78. Mannequin's +z faces console → rotation.y = 0.
-        person.rotation.y = 0;
-        velocity = 1.2; // max-rate walk → simulates running in place
-        ud.waitTime -= dt;
-        if (ud.waitTime <= 0) ud.pickNew = true;
-        if (person.setPose) person.setPose('stand'); // not seated; pelvis stays at 0.95
+      if (dist > 0.4 && !isOp) {
+        const step = ud.speed * dt;
+        dir.normalize().multiplyScalar(step);
+        person.position.add(dir);
+        person.position.y = targetY;
+        person.rotation.y = Math.atan2(dir.x, dir.z);
+        velocity = ud.speed;
+        person.setPose && person.setPose('walk');
+        ud.sittingAt = null;
       } else {
-        const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
-        const dist = dir.length();
-        if (dist > 0.4) {
-          const step = ud.speed * dt;
-          dir.normalize().multiplyScalar(step);
-          person.position.add(dir);
-          person.rotation.y = Math.atan2(dir.x, dir.z);
-          velocity = ud.speed;
-          if (person.setPose) person.setPose('stand');
-        } else {
-          ud.waitTime -= dt;
-          velocity = 0;
-          if (person.setPose) person.setPose('stand');
-          if (ud.waitTime <= 0) ud.pickNew = true;
-        }
+        ud.waitTime -= dt;
+        velocity = 0;
+        person.position.y = targetY;
+        if (person.setPose) person.setPose('stand');
+        if (ud.waitTime <= 0) ud.pickNew = true;
       }
-
-      // Drive humanoid skeleton every frame
+      // Drive the humanoid skeleton
       if (person.update) person.update(dt, velocity, loopT);
-
-      // Hit-test in floor xy
+      // Hit-test in floor xy — all 4 zones are floor-level so a single
+      // pointInZone() per zone works (no Bar Top elevated case).
       const sample = new THREE.Vector3(person.position.x, 0, person.position.z);
       for (const z of ZONES) {
         if (pointInZone(sample, z)) { occ[z.name]++; break; }
@@ -1559,14 +1657,7 @@ function tick() {
     for (const person of people) {
       const ud = person.userData;
       if (!ud.driftSet && ud.homeZone) {
-        if (ud.role === 'treadmill') {
-          const tz = -2.5 + ud.treadmillIdx * 2.4;
-          ud.driftTarget = new THREE.Vector3(-16.6, 0, tz);
-        } else if (ud.role === 'reception') {
-          ud.driftTarget = new THREE.Vector3(-8 + (Math.random() - 0.5) * 1.6, 0, -4.6);
-        } else {
-          ud.driftTarget = TARGETS_BY_ZONE[ud.homeZone]();
-        }
+        ud.driftTarget = TARGETS_BY_ZONE[ud.homeZone] ? TARGETS_BY_ZONE[ud.homeZone]() : null;
         ud.driftSet = true;
       }
       let velocity = 0;
@@ -1581,12 +1672,16 @@ function tick() {
           velocity = step / Math.max(dt, 0.001);
         }
       }
+      // Keep OP on the tower deck during zone phase
+      if (ud.role === 'op') person.position.y = 3.7;
       if (person.setPose) person.setPose('stand');
       if (person.update) person.update(dt, Math.min(velocity, 1.2), loopT);
     }
-  } else {
-    // intro / endcard — hold positions, idle pose, but still update so skeletons don't T-pose
+  } else if (phase.kind === 'endcard' || phase.kind === 'intro') {
+    // hold positions, idle pose
     for (const person of people) {
+      const ud = person.userData;
+      if (ud.role === 'op') person.position.y = 3.7;
       if (person.setPose) person.setPose('stand');
       if (person.update) person.update(dt, 0, loopT);
     }
@@ -1597,7 +1692,6 @@ function tick() {
       countEls[z.name].textContent = occ[z.name];
       countEls[z.name].classList.remove('countDash');
     } else if (phase.kind === 'zone' && phase.zoneIdx >= ZONES.indexOf(ZONES.find(zo => zo.name === z.name))) {
-      // after zone is placed, show zero (no live tracking yet) — keep dash for simplicity
       countEls[z.name].textContent = '—';
       countEls[z.name].classList.add('countDash');
     } else {
@@ -1619,7 +1713,7 @@ const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
   0.45,   // strength
   0.85,   // radius
-  0.85,   // threshold (only bright pixels bloom — pendant bulbs, console screens, zone glows)
+  0.85,   // threshold (only bright pixels bloom — zone glows, sky highlights)
 );
 composer.addPass(bloomPass);
 composer.addPass(new OutputPass());

@@ -313,6 +313,11 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 // ====================== AUDIO (Web Audio API synthesized) ======================
 let audioCtx = null;
@@ -432,19 +437,19 @@ document.getElementById('soundToggle').addEventListener('click', () => {
 
 // ====================== THREE.JS SCENE ======================
 const root = document.getElementById('app');
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 1.05;
 root.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0c10);
-scene.fog = new THREE.Fog(0x0a0c10, 28, 70);
+scene.fog = new THREE.Fog(0x0a0c10, 32, 80);
 
 const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.position.set(14, 11, 18);
@@ -458,167 +463,539 @@ controls.minDistance = 6;
 controls.maxDistance = 50;
 controls.enabled = false; // disabled during cinematic intro
 
-// ============= LIGHTING (warmer, more cinematic) =============
-scene.add(new THREE.AmbientLight(0xffffff, 0.40));
+// ============= IMAGE-BASED LIGHTING (PMREM from RoomEnvironment) =============
+// Provides coherent ambient + reflections for PBR materials. No external HDR file needed.
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileEquirectangularShader();
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+scene.environmentIntensity = 0.45;
 
-const key = new THREE.DirectionalLight(0xfff0d8, 1.2);
+// ============= DIRECT LIGHTS (shadow-casting key + cool fill + warm register rim) =============
+const key = new THREE.DirectionalLight(0xfff0d8, 2.0);
 key.position.set(12, 18, 8);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
 key.shadow.camera.left = -20; key.shadow.camera.right = 20;
 key.shadow.camera.top = 20; key.shadow.camera.bottom = -20;
 key.shadow.bias = -0.0005;
-key.shadow.radius = 6;
+key.shadow.radius = 8;
 scene.add(key);
 
-const fill = new THREE.DirectionalLight(0x6a8eff, 0.32);
+const fill = new THREE.DirectionalLight(0x88a4ff, 0.5);
 fill.position.set(-10, 8, -6);
 scene.add(fill);
 
 // Warm rim light from the register area — sells "indoor boutique"
-const registerRim = new THREE.PointLight(0xff9a55, 0.9, 20, 1.6);
+const registerRim = new THREE.PointLight(0xff9a55, 1.2, 18, 1.6);
 registerRim.position.set(-8, 2.4, -8);
 scene.add(registerRim);
 
-// Subtle hemispheric for ambient occlusion fake
-const hemi = new THREE.HemisphereLight(0xb8c8ff, 0x1a1d24, 0.25);
-scene.add(hemi);
+// ============= PROCEDURAL TEXTURES =============
+function makeWoodTexture(w, h, base, grain) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const x = c.getContext('2d');
+  x.fillStyle = base; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < h; i++) {
+    if (Math.random() > 0.6) continue;
+    x.strokeStyle = grain;
+    x.globalAlpha = 0.04 + Math.random() * 0.18;
+    x.lineWidth = 1;
+    x.beginPath();
+    let y = i;
+    x.moveTo(0, y);
+    for (let xx = 0; xx < w; xx += 6) {
+      y += (Math.random() - 0.5) * 1.4;
+      x.lineTo(xx, y);
+    }
+    x.stroke();
+  }
+  for (let k = 0; k < 7; k++) {
+    const cx = Math.random() * w, cy = Math.random() * h;
+    const r = 4 + Math.random() * 12;
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, grain); g.addColorStop(1, 'transparent');
+    x.globalAlpha = 0.4; x.fillStyle = g;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  }
+  x.globalAlpha = 1;
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function makeConcreteTexture(size) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const x = c.getContext('2d');
+  x.fillStyle = '#26292f'; x.fillRect(0, 0, size, size);
+  for (let i = 0; i < size * size * 0.05; i++) {
+    const v = 30 + Math.random() * 40;
+    x.fillStyle = `rgb(${v},${v},${v + 6})`;
+    x.fillRect(Math.random() * size, Math.random() * size, 1, 1);
+  }
+  for (let p = 0; p < 50; p++) {
+    const cx = Math.random() * size, cy = Math.random() * size;
+    const r = 8 + Math.random() * 32;
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g.addColorStop(0, 'rgba(0,0,0,0.18)'); g.addColorStop(1, 'transparent');
+    x.fillStyle = g;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function makeFabricTexture(size, hex) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const x = c.getContext('2d');
+  x.fillStyle = hex; x.fillRect(0, 0, size, size);
+  const step = 3;
+  x.globalAlpha = 0.10;
+  for (let yy = 0; yy < size; yy += step) {
+    for (let xx = 0; xx < size; xx += step) {
+      x.fillStyle = ((xx / step + yy / step) % 2 === 0) ? '#ffffff' : '#000000';
+      x.fillRect(xx, yy, step / 2, step / 2);
+    }
+  }
+  x.globalAlpha = 0.04;
+  for (let i = 0; i < size * size * 0.02; i++) {
+    x.fillStyle = '#ffffff';
+    x.fillRect(Math.random() * size, Math.random() * size, 1, 1);
+  }
+  x.globalAlpha = 1;
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
 
-// ============= ENVIRONMENT =============
-const floorGeo = new THREE.PlaneGeometry(40, 30, 1, 1);
-const floorMat = new THREE.MeshStandardMaterial({ color: 0x161920, roughness: 0.92, metalness: 0.0 });
-const floor = new THREE.Mesh(floorGeo, floorMat);
+// ============= PBR MATERIAL LIBRARY =============
+const concreteMap = makeConcreteTexture(512); concreteMap.repeat.set(8, 6);
+const barTopMap = makeWoodTexture(512, 256, '#5a3a1f', '#2a1608');
+const tableTopMap = makeWoodTexture(384, 384, '#4a3520', '#241510');
+
+const MATS = {
+  floor: new THREE.MeshStandardMaterial({ color: 0x2c2f36, roughness: 0.86, metalness: 0.05, map: concreteMap }),
+  wallDark: new THREE.MeshStandardMaterial({ color: 0x1a1d24, roughness: 0.92, metalness: 0.0 }),
+  wallAccent: new THREE.MeshStandardMaterial({ color: 0x2d2419, roughness: 0.88, metalness: 0.0 }),
+  barFront: new THREE.MeshStandardMaterial({ color: 0x33384a, roughness: 0.55, metalness: 0.15 }),
+  barTop: new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.32, metalness: 0.08, map: barTopMap }),
+  hostStand: new THREE.MeshStandardMaterial({ color: 0x3d4654, roughness: 0.55, metalness: 0.10 }),
+  tableTop: new THREE.MeshStandardMaterial({ color: 0x5a4a32, roughness: 0.38, metalness: 0.08, map: tableTopMap }),
+  tableLeg: new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.42, metalness: 0.55 }),
+  brass: new THREE.MeshStandardMaterial({ color: 0xb59047, roughness: 0.28, metalness: 0.85 }),
+  steel: new THREE.MeshStandardMaterial({ color: 0x4a5060, roughness: 0.35, metalness: 0.75 }),
+  glass: new THREE.MeshPhysicalMaterial({
+    color: 0xc8e4ec, roughness: 0.06, metalness: 0.0, transmission: 0.95,
+    thickness: 0.4, ior: 1.45, transparent: true, opacity: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.05,
+  }),
+  label: new THREE.MeshStandardMaterial({ color: 0xeeeae0, roughness: 0.78, metalness: 0.0 }),
+  labelDark: new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.7, metalness: 0.0 }),
+  pendantBulb: new THREE.MeshStandardMaterial({
+    color: 0xfff5d6, emissive: 0xffc97a, emissiveIntensity: 3.5, roughness: 0.4,
+  }),
+  pendantShade: new THREE.MeshStandardMaterial({ color: 0x2a1f15, roughness: 0.45, metalness: 0.6 }),
+  cord: new THREE.MeshStandardMaterial({ color: 0x0e1014, roughness: 0.9, metalness: 0.0 }),
+  // Retail-only: POS terminal screen (dark blue with subtle glow)
+  posScreen: new THREE.MeshStandardMaterial({
+    color: 0x2c5cff, emissive: 0x2c5cff, emissiveIntensity: 0.6, roughness: 0.4, metalness: 0.1,
+  }),
+  posBody: new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.4, metalness: 0.3 }),
+};
+
+// ============= ENVIRONMENT (floor, walls, grid) =============
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), MATS.floor);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-const grid = new THREE.GridHelper(40, 40, 0x252934, 0x1c1f27);
+const grid = new THREE.GridHelper(40, 40, 0x2a2f3a, 0x1c1f27);
 grid.position.y = 0.001;
 grid.material.transparent = true;
-grid.material.opacity = 0.6;
+grid.material.opacity = 0.35;
 scene.add(grid);
 
-function box(w, h, d, color, x, y, z, opts={}) {
-  const g = new THREE.BoxGeometry(w, h, d);
-  const m = new THREE.MeshStandardMaterial({ color, roughness: 0.7, metalness: 0.05, ...opts });
-  const mesh = new THREE.Mesh(g, m);
-  mesh.position.set(x, y + h / 2, z);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  scene.add(mesh);
-  return mesh;
-}
+// Walls (taller, full height)
+const backWall = new THREE.Mesh(new THREE.BoxGeometry(40, 6, 0.2), MATS.wallDark);
+backWall.position.set(0, 3, -15);
+backWall.receiveShadow = true; scene.add(backWall);
+const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
+leftWall.position.set(-20, 3, 0); leftWall.receiveShadow = true; scene.add(leftWall);
+const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 30), MATS.wallDark);
+rightWall.position.set(20, 3, 0); rightWall.receiveShadow = true; scene.add(rightWall);
+// Wall accent behind the register (warm wood panel)
+const registerAccent = new THREE.Mesh(new THREE.BoxGeometry(8, 3.5, 0.05), MATS.wallAccent);
+registerAccent.position.set(-10, 1.85, -14.85); scene.add(registerAccent);
 
-// Walls (perimeter trim)
-box(40, 0.3, 0.2, 0x252934, 0, 0, -15);
-box(0.2, 0.3, 30, 0x252934, -20, 0, 0);
-box(0.2, 0.3, 30, 0x252934, 20, 0, 0);
-
-// ====== Front display table near entrance (right-front area) ======
-// Rectangular pedestal table with a lighter wood top — "lead fixture"
-box(2.4, 0.85, 1.6, 0x3d4654, 8, 0, 7);
-box(2.4, 0.05, 1.6, 0x9c7a45, 8, 0.85, 7, { roughness: 0.35, metalness: 0.05 });
-// Folded merchandise stacks on the display table (small cubes)
-for (let i = 0; i < 3; i++) {
-  for (let j = 0; j < 2; j++) {
-    const cx = 7.2 + i * 0.6;
-    const cz = 6.6 + j * 0.7;
-    const ch = 0.18 + Math.random() * 0.10;
-    const colors = [0xc9b9a3, 0x6f7a8a, 0xa0937c, 0x4a4f5a, 0xb09484];
-    const c = colors[(i * 2 + j) % colors.length];
-    box(0.45, ch, 0.45, c, cx, 0.90, cz, { roughness: 0.8 });
+// ============= FRONT DISPLAY TABLE =============
+// Round wood top with beveled edge + folded merch stacks
+function buildFrontDisplay(x, z) {
+  const g = new THREE.Group();
+  // Pedestal base (slightly tapered cylinder)
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.12, 24), MATS.tableLeg);
+  base.position.y = 0.06; base.castShadow = true; base.receiveShadow = true; g.add(base);
+  // Column
+  const col = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.14, 0.78, 16), MATS.tableLeg);
+  col.position.y = 0.51; col.castShadow = true; g.add(col);
+  // Round wood top, beveled
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.95, 0.06, 32), MATS.tableTop);
+  top.position.y = 0.93; top.castShadow = true; top.receiveShadow = true; g.add(top);
+  const topBevel = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.014, 8, 32), MATS.tableLeg);
+  topBevel.rotation.x = Math.PI / 2; topBevel.position.y = 0.90; g.add(topBevel);
+  // Folded merchandise stacks — soft-color cubes representing folded clothes
+  const merchColors = [0xc9b9a3, 0x6f7a8a, 0xa0937c, 0x4a4f5a, 0xb09484, 0x8a8175];
+  const stackPositions = [
+    { x: -0.35, z: -0.20, n: 3 },
+    { x:  0.30, z: -0.25, n: 2 },
+    { x: -0.10, z:  0.30, n: 4 },
+  ];
+  for (const sp of stackPositions) {
+    let yOff = 0;
+    for (let s = 0; s < sp.n; s++) {
+      const ch = 0.06 + Math.random() * 0.04;
+      const fabric = new THREE.MeshStandardMaterial({
+        color: merchColors[(sp.n + s) % merchColors.length],
+        roughness: 0.85, metalness: 0.0,
+        map: makeFabricTexture(64, '#' + merchColors[(sp.n + s) % merchColors.length].toString(16).padStart(6, '0')),
+      });
+      const slab = new THREE.Mesh(new THREE.BoxGeometry(0.42, ch, 0.42), fabric);
+      slab.position.set(sp.x, 0.96 + yOff + ch / 2, sp.z);
+      slab.rotation.y = (Math.random() - 0.5) * 0.18;
+      slab.castShadow = true; slab.receiveShadow = true;
+      g.add(slab);
+      yOff += ch + 0.005;
+    }
   }
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
+buildFrontDisplay(8, 7);
 
-// ====== Two clothing racks down the middle of the floor ======
-// Each rack: 2 vertical posts, 1 horizontal bar, garment slabs hanging from it
-function clothingRack(centerX, centerZ, length = 4.0) {
-  // Posts
-  box(0.10, 1.85, 0.10, 0x2a2f38, centerX, 0, centerZ - length / 2, { metalness: 0.7, roughness: 0.4 });
-  box(0.10, 1.85, 0.10, 0x2a2f38, centerX, 0, centerZ + length / 2, { metalness: 0.7, roughness: 0.4 });
-  // Top bar
-  box(0.08, 0.08, length, 0x4a505c, centerX, 1.78, centerZ, { metalness: 0.6, roughness: 0.4 });
-  // Garments — thin slabs hung along the bar
-  const garmentColors = [0x8a96a8, 0x6c5a48, 0xb8a890, 0x4d556b, 0x9a7a6c, 0x5e6a78, 0xa89a82, 0x7a6e60];
-  const count = Math.floor(length / 0.22);
+// ============= CLOTHING RACKS =============
+// Each rack: 2 vertical metal posts + horizontal rod + ~12 hanging garments
+function buildClothingRack(centerX, centerZ, length = 4.5) {
+  const g = new THREE.Group();
+  // Caster base plate (low rectangle)
+  const baseGeo = new THREE.BoxGeometry(0.6, 0.05, length + 0.4);
+  const base = new THREE.Mesh(baseGeo, MATS.tableLeg);
+  base.position.y = 0.025; base.castShadow = true; base.receiveShadow = true; g.add(base);
+  // Vertical metal posts
+  const postH = 1.85;
+  const postA = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, postH, 12), MATS.steel);
+  postA.position.set(0, postH / 2, -length / 2);
+  postA.castShadow = true; g.add(postA);
+  const postB = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, postH, 12), MATS.steel);
+  postB.position.set(0, postH / 2, length / 2);
+  postB.castShadow = true; g.add(postB);
+  // Horizontal rod (cylinder)
+  const rodGeo = new THREE.CylinderGeometry(0.025, 0.025, length, 12);
+  rodGeo.rotateX(Math.PI / 2);
+  const rod = new THREE.Mesh(rodGeo, MATS.brass);
+  rod.position.set(0, 1.78, 0);
+  rod.castShadow = true; g.add(rod);
+  // Garment slabs hanging from the rod (~12 per rack)
+  const garmentColors = [0x8a96a8, 0x6c5a48, 0xb8a890, 0x4d556b, 0x9a7a6c, 0x5e6a78, 0xa89a82, 0x7a6e60, 0x556070, 0x8c7864];
+  const count = Math.floor(length / 0.36);
   for (let i = 0; i < count; i++) {
-    const gx = centerX + (Math.random() - 0.5) * 0.06;
-    const gz = centerZ - length / 2 + 0.18 + i * 0.22;
+    const gz = -length / 2 + 0.22 + i * (length - 0.44) / Math.max(1, count - 1);
     const gh = 0.95 + Math.random() * 0.20;
-    const col = garmentColors[i % garmentColors.length];
-    box(0.30, gh, 0.16, col, gx, 0.55, gz, { roughness: 0.9 });
+    const colHex = garmentColors[i % garmentColors.length];
+    const fabric = new THREE.MeshStandardMaterial({
+      color: colHex, roughness: 0.88, metalness: 0.0,
+      map: makeFabricTexture(96, '#' + colHex.toString(16).padStart(6, '0')),
+    });
+    // Hanger hook (small wire arc — abstracted as thin torus piece)
+    const hookGeo = new THREE.TorusGeometry(0.03, 0.005, 6, 8, Math.PI);
+    const hook = new THREE.Mesh(hookGeo, MATS.steel);
+    hook.position.set(0, 1.78, gz); hook.rotation.y = Math.PI / 2;
+    g.add(hook);
+    // Garment slab — slight random sway
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(0.32, gh, 0.16), fabric);
+    slab.position.set((Math.random() - 0.5) * 0.05, 1.78 - gh / 2 - 0.04, gz);
+    slab.rotation.z = (Math.random() - 0.5) * 0.05;
+    slab.castShadow = true; slab.receiveShadow = true;
+    g.add(slab);
   }
-  // Caster base hint (low rectangle)
-  box(0.6, 0.05, length + 0.4, 0x1a1e25, centerX, 0, centerZ, { roughness: 0.9 });
+  g.position.set(centerX, 0, centerZ);
+  scene.add(g);
+  return g;
 }
-clothingRack(-2.5, 2.0, 4.5);
-clothingRack(2.5, 2.0, 4.5);
+buildClothingRack(-2.5, 2.0, 4.5);
+buildClothingRack(2.5, 2.0, 4.5);
 
-// ====== Fitting-rooms corridor on the right side (4 doors) ======
-// A back wall slab on the right with 4 inset door panels
+// ============= FITTING ROOMS CORRIDOR =============
+// Full-height wall slab + 4 doors with brass knobs and number plates
 const corridorX = 14;       // wall x position (right side)
-const corridorZStart = -6;  // start of corridor along z
-const corridorZEnd = 8;     // end
+const corridorZStart = -6;
+const corridorZEnd = 8;
 const corridorLength = corridorZEnd - corridorZStart;
-// Corridor wall (the wall the doors sit in)
-box(0.4, 2.6, corridorLength, 0x2d333d, corridorX, 0, (corridorZStart + corridorZEnd) / 2);
-// Header trim above doors
-box(0.5, 0.18, corridorLength, 0x4a505c, corridorX - 0.1, 2.6, (corridorZStart + corridorZEnd) / 2, { roughness: 0.4 });
+
+// Corridor wall (the wall the doors sit in) — full height
+const corridorWall = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.4, corridorLength), MATS.wallDark);
+corridorWall.position.set(corridorX, 1.7, (corridorZStart + corridorZEnd) / 2);
+corridorWall.castShadow = true; corridorWall.receiveShadow = true;
+scene.add(corridorWall);
+// Header trim above doors (warm wood accent)
+const corridorHeader = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.20, corridorLength), MATS.wallAccent);
+corridorHeader.position.set(corridorX - 0.10, 2.7, (corridorZStart + corridorZEnd) / 2);
+corridorHeader.castShadow = true; scene.add(corridorHeader);
 // Floor plinth in front of doors
-box(2.0, 0.04, corridorLength, 0x1c2028, corridorX - 1.2, 0, (corridorZStart + corridorZEnd) / 2);
-// 4 door panels — recessed, paint color contrast
-const doorColors = [0x6c6155, 0x6c6155, 0x6c6155, 0x6c6155];
+const corridorPlinth = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.04, corridorLength), MATS.tableLeg);
+corridorPlinth.position.set(corridorX - 1.2, 0.02, (corridorZStart + corridorZEnd) / 2);
+corridorPlinth.receiveShadow = true; scene.add(corridorPlinth);
+// 4 door panels — recessed
+const doorMat = new THREE.MeshStandardMaterial({ color: 0x6c6155, roughness: 0.7, metalness: 0.05 });
 const doorSpacing = corridorLength / 4;
 for (let d = 0; d < 4; d++) {
   const dz = corridorZStart + doorSpacing / 2 + d * doorSpacing;
   // Door slab (slightly recessed — placed just in front of the wall)
-  box(0.08, 2.0, 0.85, doorColors[d], corridorX - 0.22, 0, dz, { roughness: 0.7 });
-  // Door knob
-  const knob = new THREE.Mesh(
-    new THREE.SphereGeometry(0.05, 10, 10),
-    new THREE.MeshStandardMaterial({ color: 0xc9b27a, roughness: 0.3, metalness: 0.85 })
-  );
+  const door = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.0, 0.85), doorMat);
+  door.position.set(corridorX - 0.22, 1.0, dz);
+  door.castShadow = true; door.receiveShadow = true;
+  scene.add(door);
+  // Brass door knob
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 12), MATS.brass);
   knob.position.set(corridorX - 0.30, 1.05, dz + 0.30);
   knob.castShadow = true;
   scene.add(knob);
-  // Number plate (subtle)
-  box(0.02, 0.12, 0.12, 0xf0e6cc, corridorX - 0.30, 1.65, dz, { roughness: 0.6, metalness: 0.1 });
+  // Number plate (brass rectangle)
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.12, 0.12), MATS.brass);
+  plate.position.set(corridorX - 0.30, 1.65, dz);
+  scene.add(plate);
 }
 
-// ====== Register counter near the back-left ======
-// L-shaped register area: long counter + small wrap return
+// ============= REGISTER COUNTER =============
+// Dark wood front + lighter wood top + POS terminal
 const regX = -10, regZ = -8;
-box(5.0, 1.05, 1.4, 0x3d4654, regX, 0, regZ);
-box(5.0, 0.05, 1.4, 0x6b5235, regX, 1.05, regZ, { roughness: 0.3, metalness: 0.05 });
-// Register POS terminal (a small box on the counter)
-box(0.55, 0.40, 0.45, 0x14181f, regX - 1.6, 1.10, regZ, { roughness: 0.4 });
-box(0.50, 0.32, 0.05, 0x2c5cff, regX - 1.6, 1.16, regZ + 0.22, { roughness: 0.4, metalness: 0.1 }); // screen face
-// Bag stack / accessory cubby behind the counter (back wall)
-for (let i = 0; i < 5; i++) {
-  const bx = regX - 2.0 + i * 1.0;
-  const bh = 0.65 + Math.random() * 0.30;
-  const cols = [0x7a6e60, 0x8a8175, 0xa39685, 0x5e544a, 0x9a8a72];
-  box(0.55, bh, 0.30, cols[i % cols.length], bx, 0, regZ - 1.0, { roughness: 0.55, metalness: 0.1 });
+function buildRegister(x, z) {
+  const g = new THREE.Group();
+  const length = 5.0, depth = 1.4, height = 1.05, topT = 0.05;
+  // Dark wood front
+  const front = new THREE.Mesh(new THREE.BoxGeometry(length, height, depth), MATS.barFront);
+  front.position.y = height / 2; front.castShadow = true; front.receiveShadow = true; g.add(front);
+  // Beveled top via Shape + ExtrudeGeometry
+  const shape = new THREE.Shape();
+  const tw = length, td = depth + 0.10, r = 0.04;
+  shape.moveTo(-tw / 2 + r, -td / 2);
+  shape.lineTo(tw / 2 - r, -td / 2); shape.quadraticCurveTo(tw / 2, -td / 2, tw / 2, -td / 2 + r);
+  shape.lineTo(tw / 2, td / 2 - r); shape.quadraticCurveTo(tw / 2, td / 2, tw / 2 - r, td / 2);
+  shape.lineTo(-tw / 2 + r, td / 2); shape.quadraticCurveTo(-tw / 2, td / 2, -tw / 2, td / 2 - r);
+  shape.lineTo(-tw / 2, -td / 2 + r); shape.quadraticCurveTo(-tw / 2, -td / 2, -tw / 2 + r, -td / 2);
+  const topGeo = new THREE.ExtrudeGeometry(shape, { depth: topT, bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.008, bevelSegments: 2 });
+  topGeo.rotateX(-Math.PI / 2);
+  const top = new THREE.Mesh(topGeo, MATS.barTop);
+  top.position.y = height + topT;
+  top.castShadow = true; top.receiveShadow = true;
+  g.add(top);
+  // POS terminal — body + glowing screen
+  const posBody = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.40, 0.45), MATS.posBody);
+  posBody.position.set(-1.6, height + topT + 0.20, 0);
+  posBody.castShadow = true; g.add(posBody);
+  const posScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.50, 0.32), MATS.posScreen);
+  posScreen.position.set(-1.6, height + topT + 0.22, 0.226);
+  g.add(posScreen);
+  // Small accessory cubby behind the counter (back wall)
+  const cubbyColors = [0x7a6e60, 0x8a8175, 0xa39685, 0x5e544a, 0x9a8a72];
+  for (let i = 0; i < 5; i++) {
+    const bx = -2.0 + i * 1.0;
+    const bh = 0.65 + Math.random() * 0.30;
+    const fabric = new THREE.MeshStandardMaterial({
+      color: cubbyColors[i % cubbyColors.length], roughness: 0.7, metalness: 0.05,
+      map: makeFabricTexture(64, '#' + cubbyColors[i % cubbyColors.length].toString(16).padStart(6, '0')),
+    });
+    const item = new THREE.Mesh(new THREE.BoxGeometry(0.55, bh, 0.30), fabric);
+    item.position.set(bx, bh / 2, -1.0 - depth / 2);
+    item.castShadow = true; item.receiveShadow = true;
+    g.add(item);
+  }
+  g.position.set(x, 0, z);
+  scene.add(g);
+  return g;
 }
-// Hanging pendant lamps over the register (small spheres + cord lines abstracted as thin cylinders)
-for (let i = 0; i < 3; i++) {
-  const lx = regX - 1.6 + i * 1.6;
-  const lampGeo = new THREE.SphereGeometry(0.18, 14, 14);
-  const lampMat = new THREE.MeshStandardMaterial({ color: 0xffd9a0, emissive: 0xff9a55, emissiveIntensity: 0.6, roughness: 0.4 });
-  const lamp = new THREE.Mesh(lampGeo, lampMat);
-  lamp.position.set(lx, 2.6, regZ);
-  scene.add(lamp);
-  // cord
-  const cord = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.01, 0.01, 0.6, 6),
-    new THREE.MeshStandardMaterial({ color: 0x14181f })
-  );
-  cord.position.set(lx, 2.95, regZ);
-  scene.add(cord);
+buildRegister(regX, regZ);
+
+// ============= PENDANT LIGHTS =============
+function buildPendant(x, y, z, intensity = 0.5) {
+  const g = new THREE.Group();
+  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 4, 6), MATS.cord);
+  cord.position.y = y + 2; g.add(cord);
+  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.20, 0.25, 16, 1, true), MATS.pendantShade);
+  shade.position.y = y; shade.castShadow = true; g.add(shade);
+  const inner = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.23, 16, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0xffe0a0, side: THREE.BackSide, roughness: 0.7, emissive: 0xffd47a, emissiveIntensity: 0.4 }));
+  inner.position.y = y - 0.005; g.add(inner);
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), MATS.pendantBulb);
+  bulb.position.y = y - 0.06; g.add(bulb);
+  const light = new THREE.PointLight(0xffd47a, intensity, 7, 1.7);
+  light.position.y = y - 0.10; g.add(light);
+  g.position.x = x; g.position.z = z; scene.add(g); return g;
+}
+// 2 pendants over the register area
+buildPendant(regX - 1.6, 3.4, regZ, 0.45);
+buildPendant(regX + 1.6, 3.4, regZ, 0.45);
+// 2 pendants over the central aisle between racks
+buildPendant(0, 3.4, 0.5, 0.40);
+buildPendant(0, 3.4, 3.5, 0.40);
+// 2 pendants near the front display
+buildPendant(7, 3.4, 7, 0.45);
+buildPendant(9, 3.4, 7, 0.45);
+
+// ============= HUMANOID (procedural articulated person) =============
+class Humanoid extends THREE.Group {
+  constructor(skin, shirt, pants) {
+    super();
+    const skinMat = new THREE.MeshStandardMaterial({ color: skin, roughness: 0.72, metalness: 0.0 });
+    const shirtMat = new THREE.MeshStandardMaterial({
+      color: shirt, roughness: 0.62, metalness: 0.0,
+      map: makeFabricTexture(128, '#' + shirt.toString(16).padStart(6, '0')),
+    });
+    const pantsMat = new THREE.MeshStandardMaterial({ color: pants, roughness: 0.7, metalness: 0.0 });
+    const shoeMat = new THREE.MeshStandardMaterial({ color: 0x12161e, roughness: 0.42, metalness: 0.18 });
+
+    // Pelvis at root
+    this.pelvis = new THREE.Group();
+    this.pelvis.position.y = 0.95;
+    this.add(this.pelvis);
+    const pelvisMesh = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.12, 0.18), pantsMat);
+    pelvisMesh.castShadow = true; this.pelvis.add(pelvisMesh);
+
+    // Torso
+    this.torso = new THREE.Group();
+    this.torso.position.y = 0.06;
+    this.pelvis.add(this.torso);
+    const torsoMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.36, 4, 10), shirtMat);
+    torsoMesh.scale.set(1.0, 0.95, 0.62);
+    torsoMesh.position.y = 0.28;
+    torsoMesh.castShadow = true;
+    this.torso.add(torsoMesh);
+    // Neck
+    const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.07, 12), skinMat);
+    neckMesh.position.y = 0.55;
+    this.torso.add(neckMesh);
+    // Head
+    this.head = new THREE.Group();
+    this.head.position.y = 0.62;
+    this.torso.add(this.head);
+    const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 14), skinMat);
+    headMesh.scale.set(0.95, 1.05, 1.0);
+    headMesh.castShadow = true;
+    this.head.add(headMesh);
+    // Hair (random color)
+    const hairColors = [0x1a1310, 0x2a1f15, 0x3d2818, 0x4a3528, 0x5e4028, 0x150f0a];
+    const hairMat = new THREE.MeshStandardMaterial({
+      color: hairColors[Math.floor(Math.random() * hairColors.length)],
+      roughness: 0.85, metalness: 0.0,
+    });
+    const hair = new THREE.Mesh(
+      new THREE.SphereGeometry(0.122, 14, 12, 0, Math.PI * 2, 0, Math.PI / 2 + 0.15),
+      hairMat,
+    );
+    hair.position.y = 0.025;
+    this.head.add(hair);
+
+    // Arms
+    this.leftArm = this._buildArm(shirtMat, skinMat);
+    this.leftArm.position.set(-0.21, 0.45, 0);
+    this.torso.add(this.leftArm);
+    this.rightArm = this._buildArm(shirtMat, skinMat);
+    this.rightArm.position.set(0.21, 0.45, 0);
+    this.torso.add(this.rightArm);
+
+    // Legs
+    this.leftLeg = this._buildLeg(pantsMat, shoeMat);
+    this.leftLeg.position.set(-0.09, -0.06, 0);
+    this.pelvis.add(this.leftLeg);
+    this.rightLeg = this._buildLeg(pantsMat, shoeMat);
+    this.rightLeg.position.set(0.09, -0.06, 0);
+    this.pelvis.add(this.rightLeg);
+
+    this.walkPhase = Math.random() * Math.PI * 2;
+    this.targetPose = 'stand';
+  }
+
+  _buildArm(shirtMat, skinMat) {
+    const arm = new THREE.Group();
+    const shoulder = new THREE.Group();
+    arm.add(shoulder);
+    const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.045, 0.20, 4, 8), shirtMat);
+    upper.position.y = -0.13; upper.castShadow = true; shoulder.add(upper);
+    const elbow = new THREE.Group();
+    elbow.position.y = -0.26;
+    shoulder.add(elbow);
+    const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.04, 0.18, 4, 8), skinMat);
+    lower.position.y = -0.11; lower.castShadow = true; elbow.add(lower);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 10), skinMat);
+    hand.scale.set(1, 0.85, 0.7); hand.position.y = -0.22; elbow.add(hand);
+    arm.userData = { shoulder, elbow };
+    return arm;
+  }
+
+  _buildLeg(pantsMat, shoeMat) {
+    const leg = new THREE.Group();
+    const hip = new THREE.Group();
+    leg.add(hip);
+    const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.30, 4, 8), pantsMat);
+    upper.position.y = -0.18; upper.castShadow = true; hip.add(upper);
+    const knee = new THREE.Group();
+    knee.position.y = -0.36;
+    hip.add(knee);
+    const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.06, 0.28, 4, 8), pantsMat);
+    lower.position.y = -0.16; lower.castShadow = true; knee.add(lower);
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.05, 0.20), shoeMat);
+    foot.position.set(0, -0.32, 0.04); foot.castShadow = true; knee.add(foot);
+    leg.userData = { hip, knee };
+    return leg;
+  }
+
+  setPose(pose) { this.targetPose = pose; }
+
+  update(dt, speed, time) {
+    if (this.targetPose === 'sit') {
+      this.pelvis.position.y = 0.46;
+      this.leftLeg.userData.hip.rotation.x = Math.PI / 2;
+      this.rightLeg.userData.hip.rotation.x = Math.PI / 2;
+      this.leftLeg.userData.knee.rotation.x = -Math.PI / 2;
+      this.rightLeg.userData.knee.rotation.x = -Math.PI / 2;
+      this.leftArm.userData.shoulder.rotation.x = 0.05;
+      this.rightArm.userData.shoulder.rotation.x = 0.05;
+      this.leftArm.userData.elbow.rotation.x = 0.0;
+      this.rightArm.userData.elbow.rotation.x = 0.0;
+      this.torso.rotation.x = -0.08;
+    } else if (speed > 0.05) {
+      const rate = 5.5;
+      this.walkPhase += dt * rate * Math.max(0.4, Math.min(1.2, speed));
+      const ph = this.walkPhase, ph2 = ph + Math.PI;
+      this.leftLeg.userData.hip.rotation.x = Math.sin(ph) * 0.55;
+      this.rightLeg.userData.hip.rotation.x = Math.sin(ph2) * 0.55;
+      this.leftLeg.userData.knee.rotation.x = Math.max(0, -Math.sin(ph)) * 0.65;
+      this.rightLeg.userData.knee.rotation.x = Math.max(0, -Math.sin(ph2)) * 0.65;
+      this.leftArm.userData.shoulder.rotation.x = Math.sin(ph2) * 0.40;
+      this.rightArm.userData.shoulder.rotation.x = Math.sin(ph) * 0.40;
+      this.leftArm.userData.elbow.rotation.x = -0.15 + Math.abs(Math.sin(ph2)) * 0.20;
+      this.rightArm.userData.elbow.rotation.x = -0.15 + Math.abs(Math.sin(ph)) * 0.20;
+      this.pelvis.position.y = 0.95 + Math.abs(Math.sin(ph * 2)) * 0.025;
+      this.torso.rotation.x = speed > 0.4 ? -0.04 : 0;
+    } else {
+      this.pelvis.position.y = 0.95 + Math.sin(time * 1.2 + this.walkPhase) * 0.005;
+      this.leftLeg.userData.hip.rotation.x *= 0.85;
+      this.rightLeg.userData.hip.rotation.x *= 0.85;
+      this.leftLeg.userData.knee.rotation.x *= 0.85;
+      this.rightLeg.userData.knee.rotation.x *= 0.85;
+      this.leftArm.userData.shoulder.rotation.x *= 0.90;
+      this.rightArm.userData.shoulder.rotation.x *= 0.90;
+      this.leftArm.userData.elbow.rotation.x = -0.12;
+      this.rightArm.userData.elbow.rotation.x = -0.12;
+      this.torso.rotation.x *= 0.9;
+    }
+  }
 }
 
 // ============= ZONES =============
-// Retail zones — floor surfaces (XZ-plane) + the front display zone sitting at the table
+// Retail zones — floor surfaces (XZ-plane)
 const ZONES = [
   {
     name: 'Entrance', shortName: 'Entrance',
@@ -714,39 +1091,31 @@ function roundRect(ctx, x, y, w, h, r) {
 
 const zoneObjects = ZONES.map(buildZone);
 
-// ============= MANNEQUINS =============
-// Retail role assignments:
-// 0-1: entrance browsing (2)
-// 2-5: wandering racks (4)
-// 6-8: in/around fitting rooms (3)
-// 9-10: at register (2)
-// 11-15: mingling (5)
+// ============= POPULATE WITH HUMANOIDS =============
+const SKIN_TONES = [0xe8c4a8, 0xd4a37e, 0xc08960, 0xa07050, 0x824f30, 0x624028, 0xf5dcc4, 0xb88560];
+const SHIRT_COLORS = [0x4d6dbb, 0x8b4f3a, 0x3a6b4f, 0x7a5599, 0x4d4d4d, 0x9c8559, 0x5e7d8a, 0xa84a52, 0x355a7d, 0x6e3838];
+const PANTS_COLORS = [0x1a1d24, 0x2a2520, 0x14181f, 0x252a30, 0x352824, 0x1f2530];
+
+// Retail role assignments (16 mannequins):
+//   0-1: entrance browsing (2)
+//   2-5: wandering racks (4)
+//   6-8: in/around fitting rooms (3) — stand-idle when arriving (no sit pose in retail)
+//   9-10: at register (2)
+//   11-15: mingling (5)
 const PEOPLE_COUNT = 16;
 const people = [];
 const peopleGroup = new THREE.Group();
 scene.add(peopleGroup);
 
-const PERSON_COLORS = [0xc9d4e5, 0xd4cfc4, 0xc4d4cf, 0xd4c4cf, 0xcfc4d4, 0xb8c4d4];
-
 for (let i = 0; i < PEOPLE_COUNT; i++) {
-  const personGroup = new THREE.Group();
-  const colorIdx = i % PERSON_COLORS.length;
-  const bodyMat = new THREE.MeshStandardMaterial({ color: PERSON_COLORS[colorIdx], roughness: 0.65 });
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 1.2, 16), bodyMat);
-  body.position.y = 0.6; body.castShadow = true;
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), bodyMat);
-  head.position.y = 1.45; head.castShadow = true;
-  personGroup.add(body); personGroup.add(head);
+  const skin = SKIN_TONES[i % SKIN_TONES.length];
+  const shirt = SHIRT_COLORS[(i * 3) % SHIRT_COLORS.length];
+  const pants = PANTS_COLORS[(i * 5) % PANTS_COLORS.length];
+  const human = new Humanoid(skin, shirt, pants);
 
   const startSide = Math.random() < 0.5 ? -1 : 1;
-  personGroup.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
+  human.position.set(startSide * (15 + Math.random() * 3), 0, -10 + Math.random() * 18);
 
-  // Assign role per spec:
-  // 0-1: entrance browsing
-  // 2-5: wandering racks (mingle along middle aisle)
-  // 6-8: fitting rooms
-  // 9-10: register
-  // 11-15: mingling (general retail browse)
   let role;
   if (i < 2) role = 'entrance';
   else if (i < 6) role = 'rack';
@@ -760,7 +1129,7 @@ for (let i = 0; i < PEOPLE_COUNT; i++) {
   else if (role === 'fitting') homeZone = 'Fitting Rooms';
   else if (role === 'register') homeZone = 'Register Queue';
 
-  personGroup.userData = {
+  human.userData = {
     target: new THREE.Vector3(),
     speed: role === 'fitting' ? 0.55 : (role === 'register' ? 0.55 : (role === 'entrance' ? 0.7 : 1.0 + Math.random() * 0.6)),
     waitTime: 0,
@@ -769,8 +1138,8 @@ for (let i = 0; i < PEOPLE_COUNT; i++) {
     homeZone,
     bobOffset: Math.random() * Math.PI * 2,
   };
-  peopleGroup.add(personGroup);
-  people.push(personGroup);
+  peopleGroup.add(human);
+  people.push(human);
 }
 
 // Where each retail zone draws bodies in the live phase
@@ -779,7 +1148,7 @@ const TARGETS_BY_ZONE = {
   'Front Display': () => new THREE.Vector3(8 + (Math.random() - 0.5) * 4, 0, 7 + (Math.random() - 0.5) * 3),
   'Fitting Rooms': () => new THREE.Vector3(12.0 + (Math.random() - 0.5) * 1.8, 0, 1 + (Math.random() - 0.5) * 11),
   'Register Queue':() => new THREE.Vector3(-10 + (Math.random() - 0.5) * 4.5, 0, -5.5 + (Math.random() - 0.5) * 2.4),
-  // Mingle zone — middle of the floor (rack aisle)
+  // Mingle / aisle target — middle of the floor (rack aisle)
   Aisle:           () => new THREE.Vector3((Math.random() - 0.5) * 10, 0, 2 + (Math.random() - 0.5) * 6)
 };
 
@@ -865,8 +1234,7 @@ function showCaption(text) {
 function hideCaption() { captionEl.classList.remove('visible'); }
 
 // ============= TIMELINE =============
-// 4 zones now (vs 3 in the restaurant variant) — keep each zone segment 2.7s so total stays close
-// to ~31s. Math: intro 3.0 + 4*2.7 (10.8) + live 12.0 + endcard 4.5 = 30.3s
+// 4 zones (retail). Math: intro 3.0 + 4*2.7 (10.8) + live 12.0 + endcard 4.5 = 30.3s
 const TIMELINE = [
   { kind: 'intro', dur: 3.0 },                       // cinematic establishing shot
   { kind: 'zone', zoneIdx: 0, dur: 2.7 },
@@ -885,7 +1253,7 @@ function easeIn(t)  { return t * t * t; }
 // ============= SFX TRIGGER STATE (avoid replay on every frame) =============
 const sfxState = {
   zoneIdx: -1,
-  cornersPlaced: -1,    // how many corner clicks fired for current zone
+  cornersPlaced: -1,
   whooshFired: false,
   placeFired: false,
   commitFired: false,
@@ -998,6 +1366,21 @@ function enableControlsOnce() {
   controls.enabled = true;
 }
 
+// ============= POST-PROCESSING (Unreal Bloom) =============
+// Defined BEFORE first tick() so composer.render() in the loop has a target.
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+composer.setSize(window.innerWidth, window.innerHeight);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.45,   // strength
+  0.85,   // radius
+  0.85,   // threshold (only bright pixels bloom — pendant bulbs, zone glows)
+);
+composer.addPass(bloomPass);
+composer.addPass(new OutputPass());
+
 // ============= MAIN LOOP =============
 let loopT = 0;
 const clock = new THREE.Clock();
@@ -1083,7 +1466,7 @@ function tick() {
     endCardEl.classList.remove('visible');
   }
 
-  // ===== MANNEQUINS =====
+  // ===== HUMANOIDS =====
   const occ = { 'Entrance': 0, 'Front Display': 0, 'Fitting Rooms': 0, 'Register Queue': 0 };
   if (phase.kind === 'live') {
     for (const person of people) {
@@ -1091,25 +1474,28 @@ function tick() {
       if (ud.pickNew) pickTarget(person);
       const dir = new THREE.Vector3().subVectors(ud.target, person.position); dir.y = 0;
       const dist = dir.length();
+      let velocity = 0;
       if (dist > 0.4) {
-        dir.normalize().multiplyScalar(ud.speed * dt);
+        const step = ud.speed * dt;
+        dir.normalize().multiplyScalar(step);
         person.position.add(dir);
         person.rotation.y = Math.atan2(dir.x, dir.z);
-        // gentle bob while walking
-        person.position.y = Math.sin((loopT + ud.bobOffset) * 8) * 0.02;
+        velocity = ud.speed;
+        if (person.setPose) person.setPose('walk');
       } else {
         ud.waitTime -= dt;
-        person.position.y = Math.sin((loopT + ud.bobOffset) * 1.5) * 0.005;
+        velocity = 0;
+        // Retail: NO sit pose. Fitting-room arrivals stand idle.
+        if (person.setPose) person.setPose('stand');
         if (ud.waitTime <= 0) ud.pickNew = true;
       }
+      // Drive the humanoid skeleton
+      if (person.update) person.update(dt, velocity, loopT);
+      // Hit-test in floor xz
       const sample = new THREE.Vector3(person.position.x, 0, person.position.z);
-      // Priority: small zones first (Front Display, Register Queue) so they don't get
-      // shadowed by the larger Fitting Rooms corridor sample that overlaps spatially.
-      let counted = false;
+      // Priority: small zones first so they don't get shadowed by larger overlapping zones.
       for (const z of ZONES) {
-        if (pointInZone(sample, z)) {
-          occ[z.name]++; counted = true; break;
-        }
+        if (pointInZone(sample, z)) { occ[z.name]++; break; }
       }
     }
   } else if (phase.kind === 'zone') {
@@ -1124,18 +1510,27 @@ function tick() {
         ud.driftTarget = TARGETS_BY_ZONE.Aisle();
         ud.driftSet = true;
       }
+      let velocity = 0;
       if (ud.driftTarget) {
         const dx = ud.driftTarget.x - person.position.x;
         const dz = ud.driftTarget.z - person.position.z;
+        const step = Math.hypot(dx, dz) * 0.008;
         person.position.x += dx * 0.008;
         person.position.z += dz * 0.008;
         if (Math.abs(dx) > 0.05 || Math.abs(dz) > 0.05) {
           person.rotation.y = Math.atan2(dx, dz);
+          velocity = step / Math.max(dt, 0.001);
         }
       }
+      if (person.setPose) person.setPose('stand');
+      if (person.update) person.update(dt, Math.min(velocity, 1.2), loopT);
     }
-  } else if (phase.kind === 'endcard') {
-    // hold positions
+  } else if (phase.kind === 'endcard' || phase.kind === 'intro') {
+    // hold positions, idle pose
+    for (const person of people) {
+      if (person.setPose) person.setPose('stand');
+      if (person.update) person.update(dt, 0, loopT);
+    }
   }
 
   for (const z of ZONES) {
@@ -1143,8 +1538,6 @@ function tick() {
       countEls[z.name].textContent = occ[z.name];
       countEls[z.name].classList.remove('countDash');
     } else if (phase.kind === 'zone' && phase.zoneIdx >= ZONES.indexOf(ZONES.find(zo => zo.name === z.name))) {
-      // after zone is placed, show zero (no live tracking yet)
-      // keep dash for simplicity
       countEls[z.name].textContent = '—';
       countEls[z.name].classList.add('countDash');
     } else {
@@ -1153,7 +1546,7 @@ function tick() {
     }
   }
 
-  renderer.render(scene, camera);
+  composer.render();
   requestAnimationFrame(tick);
 }
 tick();
@@ -1162,13 +1555,15 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+  bloomPass.setSize(window.innerWidth, window.innerHeight);
 });
 
 document.getElementById('replay').addEventListener('click', () => {
   loopT = 0;
   liveEnabledControls = false;
   controls.enabled = false;
-  // reset mannequin drift
+  // reset humanoid drift
   people.forEach(p => { p.userData.driftSet = false; });
 });
 
